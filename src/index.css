@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Estiliza la barra de desplazamiento en Webkit (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 8px; /* Ancho de la barra */
+  height: 8px; /* Altura de la barra horizontal */
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Color de fondo de la pista */
+  border-radius: 10px; /* Bordes redondeados */
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888; /* Color del "thumb" (la parte que se mueve) */
+  border-radius: 10px; /* Bordes redondeados */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Color al pasar el mouse sobre el "thumb" */
+}
+
+/* Firefox */
+html {
+  scrollbar-width: thin; /* Barra más delgada */
+  scrollbar-color: #888 #f1f1f1; /* Color del "thumb" y de la pista */
+}
+
+.bg-layout {
+  background: radial-gradient(circle, #e0e8f4, #97c1e7);
+}
