@@ -111,8 +111,8 @@ export default function Portal() {
         onSubmit={handleSubmit(handleForm)}
         noValidate
       >
-        <div className="w-28 h-16 ">
-          <img src="/img/logos/novaLogo.png" alt="Nova Logo" width={300} height={150} />
+        <div className="">
+          <img src="/img/logos/novalogo-normal.png" alt="Nova Logo" width={150} height={150} />
         </div>
         <p className="text-sm font-medium">Ingresa tus credenciales debajo</p>
 

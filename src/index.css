@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  color-scheme: light;
+}
+
 /* Estiliza la barra de desplazamiento en Webkit (Chrome, Safari, Edge) */
 ::-webkit-scrollbar {
   width: 8px; /* Ancho de la barra */

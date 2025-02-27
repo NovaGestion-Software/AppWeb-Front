@@ -21,18 +21,22 @@ export default function DonutCard({
   categories,
   loading,
 }: DonutCardProps) {
-  console.log(fecha, titulo, total, data, categories, loading);
+  // console.log(fecha);
+  // console.log(titulo);
+  // console.log(total);
+  // console.log(data);
+  // console.log(categories);
 
-  const data1 = [
-    { name: 'Efectivo', valor: 500 },
-    { name: 'Billeteras', valor: 300 },
-    { name: 'Transferencias', valor: 200 },
-    { name: 'Débito', valor: 100 },
-  ];
+  // const data1 = [
+  //   { name: 'Efectivo', valor: 500 },
+  //   { name: 'Billeteras', valor: 300 },
+  //   { name: 'Transferencias', valor: 200 },
+  //   { name: 'Débito', valor: 100 },
+  // ];
 
-  const categories1 = data.map((item) => item.name);
+  // const categories1 = data.map((item) => item.name);
 
-  const colors = ['blue', 'cyan', 'indigo', 'violet'];
+  // const colors = ['blue', 'cyan', 'indigo', 'violet'];
 
   const valueFormatter = (number: number) => `$ ${number.toLocaleString()}`;
 
@@ -61,31 +65,21 @@ export default function DonutCard({
               ''
             )}
           </div>
-          <div className="flex flex-col flex-wrap items-center gap-6  justify-start ">
-            {/* <DonutChart
+          <div className="flex flex-col flex-wrap items-center gap-6  justify-start">
+            <DonutChart
               label={total}
               data={data}
               category="valor"
               index="name"
               valueFormatter={valueFormatter}
               colors={['blue', 'cyan', 'indigo', 'violet', 'fuchsia', 'red', 'green', 'yellow']}
-              className=" z-20"
+              className=""
             />
             <Legend
               categories={categories}
               colors={['blue', 'cyan', 'indigo', 'violet', 'fuchsia', 'red', 'green', 'yellow']}
-              className="z-10 2xl:flex hidden "
-            /> */}
-            <DonutChart
-              label="Total"
-              data={data1}
-              category="valor"
-              index="name"
-              valueFormatter={valueFormatter}
-              colors={colors}
-              className="w-60 h-60"
+              className=""
             />
-            <Legend categories={categories1} colors={colors} className="flex" />
           </div>
         </>
       )}

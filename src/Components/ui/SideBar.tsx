@@ -5,6 +5,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { TiHome } from 'react-icons/ti';
 import { RiDashboardFill } from 'react-icons/ri';
 import { MdOutlineAttachMoney } from 'react-icons/md';
+import { BsCreditCard } from 'react-icons/bs';
 import Cookies from 'js-cookie';
 // import { LuClipboardList } from 'react-icons/lu';
 // import { FaUserDoctor } from 'react-icons/fa6';
@@ -46,11 +47,11 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
       href: '/cajas',
       icon: <MdOutlineAttachMoney />,
     },
-    // {
-    //   title: 'Doctores',
-    //   href: '/doctores',
-    //   icon: <FaUserDoctor />,
-    // },
+    {
+      title: 'Ventas por Hora',
+      href: '/informes/ventas-hora',
+      icon: <BsCreditCard />,
+    },
     // {
     //   title: 'Especialidades',
     //   href: '/especialidades',

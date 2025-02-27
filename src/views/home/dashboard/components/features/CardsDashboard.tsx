@@ -10,15 +10,6 @@ type CardsDashboardProps = {
 };
 
 export default function CardsDashboard({ handleRefetch, setHandleRefetch }: CardsDashboardProps) {
-  // console.log(handleRefetch, setHandleRefetch);
-
-  // const { data } = useQuery({
-  //   queryKey: ['dashboard-cards'],
-  //   queryFn: obtenerDashboardCards,
-  // });
-
-  // console.log(data);
-
   const {
     data: dataCards,
     isLoading: loadingCards,
@@ -27,11 +18,9 @@ export default function CardsDashboard({ handleRefetch, setHandleRefetch }: Card
   } = useQuery({
     queryKey: ['dashboard cards'],
     queryFn: obtenerDashboardCards,
-    // refetchOnWindowFocus: false,
+    refetchOnWindowFocus: false,
     // staleTime: 1000 * 60 * 5, // Datos frescos por 5 minutos
   });
-
-  console.log(dataCards, loadingCards, fetchingCards);
 
   if (handleRefetch) {
     refetchCards();
@@ -55,10 +44,8 @@ export default function CardsDashboard({ handleRefetch, setHandleRefetch }: Card
     }
   }, [dataCards]);
 
-  // console.log('cards', dataCards);
   return (
     <div>
-      {/* <div className="">CardsDashboard</div> */}
       {loadingCards || fetchingCards ? (
         <div className="space-y-4 mb-5">
           {[...Array(2)].map((_, rowIndex) => (

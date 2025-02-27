@@ -14,8 +14,8 @@ export default function DashboardView() {
         <RefreshButton setRefetch={setHandleRefetch} />
       </div>
 
-      <div className="grid grid-cols-12 gap-4 py-2 px-6">
-        <div className="col-span-12">
+      <div className="grid grid-cols-12 gap-4 py-2 px-6 ">
+        <div className="col-span-12 ">
           <div className="space-y-5">
             <CardsDashboard handleRefetch={handleRefetch} setHandleRefetch={setHandleRefetch} />
             <GraficoVentas handleRefetch={handleRefetch} setHandleRefetch={setHandleRefetch} />

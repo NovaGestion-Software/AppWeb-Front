@@ -1,4 +1,4 @@
-import { Dispatch } from 'react';
+// import { Dispatch } from 'react';
 import { AreaChart, Card } from '@tremor/react';
 import { useQuery } from '@tanstack/react-query';
 import { obtenerDashboardGrafico } from '../../../../../services/AppService';
@@ -65,7 +65,7 @@ export default function GraficoVentas({ handleRefetch, setHandleRefetch }: Grafi
     gcTime: 1000 * 60 * 10,
   });
 
-  console.log('respuesta', dataGrafico);
+  // console.log('respuesta', dataGrafico);
 
   const obtenerSiglaMes = (fechaISO: string): string => {
     const meses = [
@@ -144,6 +144,8 @@ export default function GraficoVentas({ handleRefetch, setHandleRefetch }: Grafi
     xLabel: dataTraida?.xLabel ?? 'Eje X',
     yLabel: dataTraida?.yLabel ?? 'Eje Y',
   };
+
+  // console.log(dataTraida);
 
   return (
     <div>
