@@ -31,7 +31,7 @@ export default function CardWithBadge({ data }: CardWithBadgeProps) {
     simbolo,
   } = data;
 
-  console.log(simbolo);
+  // console.log(simbolo);
 
   return (
     <Card

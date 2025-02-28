@@ -5,7 +5,7 @@ export async function obtenerDashboardCards() {
   try {
     const { data } = await api('/obtener_dashboardcards');
 
-    console.log(data);
+    // console.log(data);
     return data;
   } catch (error) {
     if (isAxiosError(error) && error.response) throw new Error(error.response.data.error);

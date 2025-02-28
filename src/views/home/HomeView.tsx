@@ -1,9 +1,18 @@
+import logoNova from '../../../public/novaicon2-256.png';
+
 export default function Home() {
   return (
-    <div className="flex w-full min-h-screen justify-center items-center">
-      <div className="text-center opacity-60">
-        <h1 className="text-7xl font-extrabold text-slate-900 mb-4">NovaGestión</h1>
-        <p className="text-xl text-slate-800 mb-2">Sistema Integrado de Administración</p>
+    <div className="flex flex-col min-h-screen w-full items-center justify-center space-y-10">
+      <div className="flex flex-col items-center ">
+        <img
+          alt="logo"
+          className="transition-all duration-500 transform hover:scale-110 hover:drop-shadow-[0_0_15px_rgba(255,255,255,0.8)] hover:filter"
+          src={logoNova}
+        />
+        {/* <h1 className="mb-4 text-7xl font-extrabold text-slate-950">NovaGestión</h1> */}
+        <p className="mb-2 text-xl text-slate-950">
+          Portal de Gestión y Administración de Empresas.
+        </p>
       </div>
     </div>
   );
