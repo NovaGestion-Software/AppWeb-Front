@@ -1,16 +1,13 @@
 import { Dispatch, SetStateAction } from 'react';
-import { FaArrowCircleLeft } from 'react-icons/fa';
-import { CiLogout } from 'react-icons/ci';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { TiHome } from 'react-icons/ti';
-import { RiDashboardFill } from 'react-icons/ri';
+import { useQueryClient } from '@tanstack/react-query';
 import { MdOutlineAttachMoney } from 'react-icons/md';
+import { FaArrowCircleLeft } from 'react-icons/fa';
+import { RiDashboardFill } from 'react-icons/ri';
 import { BsCreditCard } from 'react-icons/bs';
+import { CiLogout } from 'react-icons/ci';
+import { TiHome } from 'react-icons/ti';
 import Cookies from 'js-cookie';
-// import { LuClipboardList } from 'react-icons/lu';
-// import { FaUserDoctor } from 'react-icons/fa6';
-// import { LuFolderOpenDot } from 'react-icons/lu';
-// import { TiPrinter } from 'react-icons/ti';
 
 type SideBarProps = {
   open: boolean;
@@ -20,17 +17,11 @@ type SideBarProps = {
 export default function SideBar({ open, setOpen }: SideBarProps) {
   const navigate = useNavigate();
   const location = useLocation();
+  const queryClient = useQueryClient();
 
-  const storedUser = localStorage.getItem('user');
+  const storedUser = localStorage.getItem('_u');
   const user = storedUser ? JSON.parse(storedUser) : {};
 
-  // console.log(user.nfantasia);
-
-  const usuarioIniciado = {
-    nombre: 'Juan Pérez',
-  };
-
-  // items del menu
   const Menus = [
     {
       title: 'Inicio',
@@ -52,40 +43,25 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
       href: '/informes/ventas-hora',
       icon: <BsCreditCard />,
     },
-    // {
-    //   title: 'Especialidades',
-    //   href: '/especialidades',
-    //   icon: <LuFolderOpenDot />,
-    // },
-    // {
-    //   title: 'Facturación',
-    //   href: '/facturacion',
-    //   icon: <TiPrinter />,
-    // },
   ];
 
-  // const handleLogout = () => {
-  //   document.cookie = 'accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-  //   document.cookie = 'refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-  //   navigate('/');
-  // };
-
   const handleLogout = () => {
+    queryClient.clear();
+
     Cookies.remove('token_acceso', { path: '/' });
     Cookies.remove('token_refresh', { path: '/' });
-    // Eliminar cookies adicionales para administradores
     Cookies.remove('token_acceso_prod', { path: '/' });
     Cookies.remove('token_refresh_prod', { path: '/' });
     Cookies.remove('token_acceso_des', { path: '/' });
     Cookies.remove('token_refresh_des', { path: '/' });
 
-    // Eliminar datos de usuario y ambiente
-    localStorage.removeItem('user');
-    localStorage.removeItem('currentEnv');
-    localStorage.removeItem('dbNameProd');
-    localStorage.removeItem('dbNameDev');
+    localStorage.removeItem('_u');
+    localStorage.removeItem('_tu');
+    localStorage.removeItem('_nu');
+    localStorage.removeItem('_ce');
+    localStorage.removeItem('_dbp');
+    localStorage.removeItem('_dbd');
 
-    // console.log('Se cierra sesión.');
     navigate('/');
   };
 
@@ -127,20 +103,14 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
             open ? 'opacity-100 scale-100 max-w-full' : 'opacity-0 scale-75 max-w-0'
           }`}
         ></span>
-        {!usuarioIniciado || Object.keys(usuarioIniciado).length === 0 ? (
-          <>
-            <div className="w-14 h-14 rounded-full m-auto bg-gray-200 duration-300 animate-pulse flex justify-center items-center p-2"></div>
-          </>
-        ) : (
-          <div className="w-14 h-14 rounded-full bg-white flex justify-center items-center p-2 ">
-            <img
-              width={200}
-              height={200}
-              alt="User Logo"
-              src={`data:image/jpeg;base64,${user.logoemp}`}
-            />
-          </div>
-        )}
+        <div className="w-14 h-14 rounded-full bg-white flex justify-center items-center p-2 ">
+          <img
+            width={200}
+            height={200}
+            alt="User Logo"
+            src={`data:image/jpeg;base64,${user.logoemp}`}
+          />
+        </div>
 
         <span
           className={`text-white duration-100 transition font-semibold origin-left h-8 uppercase ${
@@ -184,22 +154,24 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
       </ul>
 
       {/** Configuración */}
-      <Link
-        to="/configuracion"
-        className="flex justify-center items-center gap-1 fixed bottom-16 left-7 duration-100 hover:translate-x-1 transition-all hover:scale-105"
-      >
-        <div className="cursor-pointer w-8">
-          <img src="/img/icons/settings.png" alt="Configuración" className="w-6 h-6" />
-        </div>
-
-        <span
-          className={`transition-opacity duration-500 ${
-            !open ? 'opacity-0 invisible' : 'opacity-100 visible text-white'
-          }`}
+      {localStorage.getItem('_tu') === '1' && (
+        <Link
+          to="/configuracion"
+          className="flex justify-center items-center gap-1 fixed bottom-16 left-7 duration-100 hover:translate-x-1 transition-all hover:scale-105"
         >
-          Configuración
-        </span>
-      </Link>
+          <div className="cursor-pointer w-8">
+            <img src="/img/icons/settings.png" alt="Configuración" className="w-6 h-6" />
+          </div>
+
+          <span
+            className={`transition-opacity duration-500 ${
+              !open ? 'opacity-0 invisible' : 'opacity-100 visible text-white'
+            }`}
+          >
+            Configuración
+          </span>
+        </Link>
+      )}
 
       {/** Log out */}
       <Link

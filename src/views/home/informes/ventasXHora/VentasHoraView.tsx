@@ -1,4 +1,3 @@
-"use client";
 import { useEffect, useState } from "react";
 import FechasInforme from "./components/FechasDeInforme";
 import GrupoBotonesFunciones from "./components/GrupoBotonesFunciones";
@@ -148,7 +147,7 @@ export default function VentaPorHora() {
   };
 
  // FUNCION PARA AGRUPAR SEGUN EL RANGO DE HORARIOS
-  const agruparPorHorario = (
+   const agruparPorHorario = (
     data: DatosVenta,
     sucursalesSeleccionadas: string[] | null
   ) => {
