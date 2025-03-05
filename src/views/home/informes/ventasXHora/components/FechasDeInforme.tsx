@@ -100,10 +100,10 @@ function FechasInforme({
     }
   };
 
-  
+  // Funcion para hacer poder procesar apenas se entra a la visual. (va a ser inneesaria si al ingresar el foco esta en los inputs.)
   const handleKeyDownGlobal = (e: KeyboardEvent) => {
     if (e.key === "Enter" && dateRange.from && dateRange.to) {
-      e.preventDefault(); // Prevenimos la acción predeterminada
+      e.preventDefault();
       handleData();
     }
   };

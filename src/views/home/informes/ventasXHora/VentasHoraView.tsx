@@ -307,7 +307,7 @@ export default function VentaPorHora() {
         className="flex items-center relative w-screen right-1 py-2 
     text-3xl  xl:h-8 xl:pt-2 px-5 xl:text-lg font-medium tracking-wide  bg-[#3866a8] text-white "
       >
-        <h1 className="left-4 relative">Venta Por Hora</h1>
+        <h1 className="left-4 relative">Venta por Hora</h1>
       </div>
 
       {/** BOTONERA */}
