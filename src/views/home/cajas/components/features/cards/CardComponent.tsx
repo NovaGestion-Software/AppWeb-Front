@@ -2,7 +2,7 @@ import { Dispatch, useEffect } from 'react';
 import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query';
 import { Importes, SucursalCaja } from '@/types';
 import CardCaja from './CardCaja';
-import SkeletonCajaComponent from './SkeletonCajaComponent';
+import SkCajaComponent from './SkCajaComponent';
 
 type Valores = {
   [key: string]: number | string | undefined | any;
@@ -378,7 +378,7 @@ export default function CardComponent({
   return (
     <>
       {isFetching ? (
-        <SkeletonCajaComponent />
+        <SkCajaComponent />
       ) : (
         <div className="flex flex-col gap-4">
           {renderCardSection(0, 6)}

@@ -12,7 +12,7 @@ import {
 import { Dispatch, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { obtenerCajasSecciones } from '@/services/AppService';
-import SkeletonTablaCaja from './SkeletonTable';
+import SkeletonTablaCaja from './SkTable';
 
 type CajaSeccion = {
   seccion: string;

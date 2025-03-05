@@ -1,6 +1,6 @@
 import { Card } from '@tremor/react';
 
-export default function SkeletonChart() {
+export default function SkChart() {
   return (
     <Card className="mb-5">
       <div role="status" className="w-full h-full p-4 md:p-6 mb-5 overflow-hidden rounded shadow">

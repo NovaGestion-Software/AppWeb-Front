@@ -1,4 +1,4 @@
-import SkTable from './SkeletonTable';
+import SkTable from './SkTable';
 
 const SkTableComponent = () => {
   return (

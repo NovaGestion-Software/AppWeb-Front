@@ -2,7 +2,7 @@ import { useEffect, Dispatch } from 'react';
 import { AreaChart, Card } from '@tremor/react';
 import { useQuery } from '@tanstack/react-query';
 import { obtenerDashboardGrafico } from '@/services/AppService';
-import SkeletonChart from './SkeletonChart';
+import SkChart from './SkChart';
 
 interface ChartDataItem {
   date: string; // Propiedad específica
@@ -142,7 +142,7 @@ export default function GraficoVentas({ handleRefetch, setHandleRefetch }: Grafi
     <>
       {fetchingGrafico ? (
         <div>
-          <SkeletonChart />
+          <SkChart />
         </div>
       ) : (
         <Card className="shadow-none transition-shadow duration-300 hover:shadow-lg hover:shadow-gray-400">

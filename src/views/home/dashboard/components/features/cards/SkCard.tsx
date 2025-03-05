@@ -1,6 +1,6 @@
 import { Card } from '@tremor/react';
 
-export default function SkeletonCard() {
+export default function SkCard() {
   return (
     <Card className="w-full max-w-sm mx-auto py-5 px-6">
       <div className=" animate-pulse ">
