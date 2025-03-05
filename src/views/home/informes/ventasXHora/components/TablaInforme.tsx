@@ -1,5 +1,5 @@
-import { CSSProperties, useEffect, useRef, useState } from "react";
-import { useRowSelect } from "@table-library/react-table-library/select";
+import { CSSProperties, useEffect, useRef, useState } from 'react';
+import { useRowSelect } from '@table-library/react-table-library/select';
 import {
   Table,
   Header,
@@ -12,12 +12,9 @@ import {
   FooterRow,
   FooterCell,
   Data,
-} from "@table-library/react-table-library/table";
-import {
-  getTheme,
-  DEFAULT_OPTIONS,
-} from "@table-library/react-table-library/material-ui";
-import { useTheme } from "@table-library/react-table-library/theme";
+} from '@table-library/react-table-library/table';
+import { getTheme, DEFAULT_OPTIONS } from '@table-library/react-table-library/material-ui';
+import { useTheme } from '@table-library/react-table-library/theme';
 
 interface TableNode {
   id: string | number; // ID único para cada fila
@@ -33,10 +30,7 @@ interface TableProps<T extends TableNode> {
   columnas: TableColumn<T>[];
   datosParaTabla: TableNode[];
   estilos: object;
-  getCellProps?: (
-    item: T,
-    column: keyof T | string
-  ) => { style: CSSProperties }; // Estilos específicos para cada celda
+  getCellProps?: (item: T, column: keyof T | string) => { style: CSSProperties }; // Estilos específicos para cada celda
   footer?: boolean;
   datosFooter?: {};
 }
@@ -52,9 +46,9 @@ const TablaFooter: React.FC<TablaFooterProps> = ({ datos = {} }) => {
   return (
     <Footer layout={{ fixedHeader: true }}>
       <FooterRow>
-        {Object.entries(datos).map(([key, value], index) => (
+        {Object.entries(datos).map(([_, value], index) => (
           <FooterCell key={index}>
-            {typeof value === "number" ? value.toLocaleString("es-AR") : value}
+            {typeof value === 'number' ? value.toLocaleString('es-AR') : value}
           </FooterCell>
         ))}
       </FooterRow>
@@ -95,15 +89,13 @@ function TablaInforme<T extends TableNode>({
     const handleKeyDown = (event: KeyboardEvent) => {
       if (!isActive || !currentHorario) return; // Solo afecta la tabla activa
 
-      const currentIndex = data.nodes.findIndex(
-        (node) => node.id === currentHorario.id
-      );
+      const currentIndex = data.nodes.findIndex((node) => node.id === currentHorario.id);
       let newIndex = currentIndex;
 
-      if (event.key === "ArrowDown" && currentIndex < data.nodes.length - 1) {
+      if (event.key === 'ArrowDown' && currentIndex < data.nodes.length - 1) {
         event.preventDefault();
         newIndex = currentIndex + 1;
-      } else if (event.key === "ArrowUp" && currentIndex > 0) {
+      } else if (event.key === 'ArrowUp' && currentIndex > 0) {
         event.preventDefault();
         newIndex = currentIndex - 1;
       }
@@ -117,16 +109,16 @@ function TablaInforme<T extends TableNode>({
         setScrollPosition(newScrollPosition);
       }
 
-      if (event.key === "Enter" && currentHorario) {
-        console.log("Submitting form for:", currentHorario);
+      if (event.key === 'Enter' && currentHorario) {
+        console.log('Submitting form for:', currentHorario);
       }
     };
 
     // Agregar eventos de teclado SOLO cuando la tabla está activa
-    tableElement.addEventListener("keydown", handleKeyDown);
+    tableElement.addEventListener('keydown', handleKeyDown);
 
     return () => {
-      tableElement.removeEventListener("keydown", handleKeyDown);
+      tableElement.removeEventListener('keydown', handleKeyDown);
     };
   }, [isActive, currentHorario, data]);
 
@@ -141,15 +133,14 @@ function TablaInforme<T extends TableNode>({
 
   // MANTENER EL FOCO AL NAVEGAR EN LA TABLA.
   useEffect(() => {
-    const tableContainer = document.querySelector(".table");
+    const tableContainer = document.querySelector('.table');
     if (tableContainer) {
-      const maxScroll =
-        tableContainer.scrollHeight - tableContainer.clientHeight;
+      const maxScroll = tableContainer.scrollHeight - tableContainer.clientHeight;
       const adjustedScrollPosition = Math.min(scrollPosition, maxScroll);
 
       tableContainer.scrollTo({
         top: adjustedScrollPosition,
-        behavior: "smooth",
+        behavior: 'smooth',
       });
     }
   }, [scrollPosition]);
@@ -162,7 +153,7 @@ function TablaInforme<T extends TableNode>({
     const selectedItem = data.nodes.find((node) => node.id === state.id);
 
     if (!selectedItem) {
-      console.log("Cliente Deseleccionado.");
+      console.log('Cliente Deseleccionado.');
       setCurrentHorario(null);
     } else {
       setCurrentHorario(selectedItem);
@@ -200,7 +191,7 @@ function TablaInforme<T extends TableNode>({
                   {columnas.map((column, columnIndex) => {
                     return (
                       <Cell key={columnIndex} {...column.cellProps?.(item)}>
-                        {column.renderCell(item)}{" "}
+                        {column.renderCell(item)}{' '}
                         {/* Aquí pasamos `item` a `renderCell` correctamente */}
                       </Cell>
                     );
