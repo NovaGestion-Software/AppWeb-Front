@@ -5,11 +5,6 @@ import CardComponent from './components/features/CardComponent';
 import CajasList from './components/features/CajasList';
 
 export default function CajasView() {
-  //   // Función manejo de icono refresh
-  //   const handleRefresh = async () => {
-  //     await refetch();
-  //   };
-
   const [handleRefetch, setHandleRefetch] = useState(false);
 
   return (

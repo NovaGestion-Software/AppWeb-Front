@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import RefreshButton from '@/Components/ui/Buttons/RefreshButton';
-import CardsDashboard from './components/features/cards/CardsDashboard';
+import CardsComponent from './components/features/cards/CardsComponent';
 import GraficoVentas from './components/features/graphic/GraficoVentas';
 import GraficoTorta from './components/features/donut/GraficoTorta';
 
@@ -17,7 +17,7 @@ export default function DashboardView() {
       <div className="grid grid-cols-12 gap-4 py-2 px-6">
         <div className="col-span-12 ">
           <div className="space-y-5">
-            <CardsDashboard handleRefetch={handleRefetch} setHandleRefetch={setHandleRefetch} />
+            <CardsComponent handleRefetch={handleRefetch} setHandleRefetch={setHandleRefetch} />
             <GraficoVentas handleRefetch={handleRefetch} setHandleRefetch={setHandleRefetch} />
             <GraficoTorta handleRefetch={handleRefetch} setHandleRefetch={setHandleRefetch} />
           </div>
