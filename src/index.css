@@ -47,3 +47,13 @@ html {
 .bg-layout {
   background: radial-gradient(circle, #e0e8f4, #97c1e7);
 }
+
+
+.ant-picker-presets ul>li{
+  background-color: #f1f1f1;
+  padding: 5px!important;
+}
+.ant-picker-presets ul>li:hover{
+  background-color: #4283fa!important;
+  color: white;
+}

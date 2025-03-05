@@ -1,27 +1,34 @@
-'use client';
 
-import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from '@tremor/react';
-import { useEffect, useState } from 'react';
-import { FaCheck } from 'react-icons/fa';
-import { ImCross } from 'react-icons/im';
-import { Checkbox } from '../../../Components/Checkbox';
-import { RiStore3Fill } from '@remixicon/react';
-import { Button } from '@headlessui/react';
+import { useEffect, useState } from "react";
+import { FaCheck } from "react-icons/fa";
+import { ImCross } from "react-icons/im";
+import { RiStore3Fill } from "@remixicon/react";
+import { Button } from "@headlessui/react";
+
+interface Modal {
+  sucursales: string[];
+  sucursalesSeleccionadas: string[];
+  setSucursalesSeleccionadas: (value: string[]) => void;
+  isProcessing: boolean;
+}
 
 export default function ModalSucursales({
   sucursales,
-  onConfirm,
   isProcessing,
+  sucursalesSeleccionadas,
   setSucursalesSeleccionadas,
-}) {
+}: Modal) {
   const [showModal, setShowModal] = useState(false);
-  const [sucursalesSeleccionadasModal, setSucursalesSeleccionadasModal] = useState([]);
-  const [sucursalesDisponibles, setSucursalesDisponibles] = useState([]);
+  const [sucursalesSeleccionadasModal, setSucursalesSeleccionadasModal] =
+    useState<string[]>([]);
+  const [sucursalesDisponibles, setSucursalesDisponibles] = useState<string[]>(
+    []
+  );
 
   useEffect(() => {
     if (sucursales?.length) {
       setSucursalesDisponibles(sucursales);
-      setSucursalesSeleccionadasModal(sucursales);
+      setSucursalesSeleccionadasModal([...sucursalesSeleccionadas]);
     }
   }, [sucursales]);
 
@@ -35,10 +42,9 @@ export default function ModalSucursales({
 
   const handleConfirm = () => {
     setSucursalesSeleccionadas(sucursalesSeleccionadasModal);
-    //console.log(sucursalesSeleccionadasModal)
     setShowModal(false);
   };
-  const handleCheckboxChange = (id) => {
+  const handleCheckboxChange = (id: string) => {
     setSucursalesSeleccionadasModal(
       (prevSeleccionadas) =>
         prevSeleccionadas.includes(id)
@@ -47,6 +53,10 @@ export default function ModalSucursales({
     );
   };
 
+  const handleCloseModal = () => {
+    setShowModal(false); // Cerrar el modal
+    setSucursalesSeleccionadasModal([...sucursalesSeleccionadas]); // Revertir los cambios y restaurar las sucursales originales
+  };
   return (
     <>
       <Button
@@ -54,8 +64,8 @@ export default function ModalSucursales({
         disabled={!isProcessing}
         className={`w-44 h-9 rounded-md p-1 gap-2 flex flex-row items-center justify-center text-xs 2xl:text-base ${
           isProcessing
-            ? 'bg-blue-500 hover:bg-blue-600'
-            : 'bg-gray-500 cursor-not-allowed border-none'
+            ? "bg-blue-500 hover:bg-blue-600"
+            : "bg-gray-500 cursor-not-allowed border-none"
         } text-white`}
       >
         <span>Sucursales</span>
@@ -80,7 +90,7 @@ export default function ModalSucursales({
                     Confirmar <FaCheck />
                   </button>
                   <button
-                    onClick={() => setShowModal(false)}
+                    onClick={handleCloseModal}
                     className=" flex items-center justify-center gap-1 p-1 border rounded w-32 h-12 hover:text-white  cursor-pointer font-extrabold text-red-800 text-xs border-red-800 hover:bg-red-800"
                   >
                     Cerrar <ImCross />
@@ -101,31 +111,36 @@ export default function ModalSucursales({
                   </Button>
                 </div>
                 <div className="col-span-3 row-span-4 col-start-1 row-start-2 w-full h-[30rem] mx-auto p-4 flex flex-row gap-4 mb-4">
-                  <Table className="w-[27rem] border-2">
-                    <TableHead className="w-[26rem]">
-                      <TableRow className="bg-gray-200 border-x-6 border-gray-200 sticky top-0">
-                        <TableHeaderCell></TableHeaderCell>
-                        <TableHeaderCell>Detalle</TableHeaderCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {sucursalesDisponibles.map((sucursal, index) => (
-                        <TableRow
-                          key={index}
-                          className="hover:bg-blue-600 hover:bg-opacity-50 text-black font-semibold border border-gray-200"
-                        >
-                          <TableCell className="p-1 flex justify-center items-center h-12">
-                            <Checkbox
-                              className="w-5 h-5"
-                              checked={sucursalesSeleccionadasModal.includes(sucursal)}
-                              onCheckedChange={() => handleCheckboxChange(sucursal)}
-                            />
-                          </TableCell>
-                          <TableCell className="border border-x-gray-200">{sucursal}</TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
+                  <div className="w-[27rem] overflow-auto border border-gray-300 rounded-lg">
+                    <table className="w-full border-collapse">
+                      <thead className="bg-gray-200 sticky top-0">
+                        <tr>
+                          <th className="p-2 w-10"></th>
+                          <th className="p-2 text-left">Detalle</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {sucursalesDisponibles.map((sucursal, index) => (
+                          <tr
+                            key={index}
+                            className="hover:bg-blue-600 hover:bg-opacity-50 text-black font-semibold border-b border-gray-200"
+                          >
+                            <td className="p-2 text-center">
+                              <input
+                                type="checkbox"
+                                className="w-5 h-5 cursor-pointer"
+                                checked={sucursalesSeleccionadasModal.includes(
+                                  sucursal
+                                )}
+                                onChange={() => handleCheckboxChange(sucursal)}
+                              />
+                            </td>
+                            <td className="p-2">{sucursal}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
             </div>

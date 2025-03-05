@@ -7,7 +7,7 @@ import DashboardView from './views/home/dashboard/DashboardView';
 import CajasView from './views/home/cajas/CajasView';
 import CobranzaVencimView from './views/home/informes/cobranzaXVencim/CobranzaVencimView';
 import VentasXVendedorView from './views/home/informes/ventasXVendedor/VentasXVendedorView';
-import VentasPorHoraView from './views/home/informes/ventasXHora/VentasPorHoraView';
+import VentasHoraView from './views/home/informes/ventasXHora/VentasHoraView';
 import ConfigView from './views/home/config/ConfigView';
 
 export default function Router() {
@@ -23,7 +23,7 @@ export default function Router() {
             <Route path="/informes">
               <Route path="cobranza-vencim" element={<CobranzaVencimView />} />
               <Route path="ventas-vend" element={<VentasXVendedorView />} />
-              <Route path="ventas-hora" element={<VentasPorHoraView />} />
+              <Route path="ventas-hora" element={<VentasHoraView />} />
             </Route>
             <Route path="/cajas" element={<CajasView />} />
             <Route path="/configuracion" element={<ConfigView />} />
