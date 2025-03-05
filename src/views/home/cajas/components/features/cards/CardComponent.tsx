@@ -1,6 +1,5 @@
 import { Dispatch, useEffect } from 'react';
-import { QueryObserverResult, RefetchOptions, useQuery } from '@tanstack/react-query';
-// import { obtenerCajasImportes } from '@/services/AppService';
+import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query';
 import { Importes, SucursalCaja } from '@/types';
 import CardCaja from './CardCaja';
 import SkeletonCajaComponent from './SkeletonCajaComponent';
@@ -24,18 +23,6 @@ export default function CardComponent({
   refetch,
   isFetching,
 }: CardComponentProps) {
-  // const {
-  //   data: cajas,
-  //   isLoading,
-  //   refetch,
-  //   isFetching,
-  // } = useQuery<SucursalCaja[]>({
-  //   queryKey: ['cajas'],
-  //   queryFn: obtenerCajasImportes,
-  //   refetchOnWindowFocus: false,
-  //   staleTime: 1000 * 60 * 5, // Datos frescos por 5 minutos
-  // });
-
   useEffect(() => {
     if (handleRefetch) {
       refetch();
@@ -153,6 +140,7 @@ export default function CardComponent({
   const calcularTotalImporte = (cajas: SucursalCaja[], importeKey: string): string | undefined => {
     let keyEncontrada = false;
     const estructurasNoEncontradas = new Set<string>();
+    console.log(keyEncontrada);
 
     const total = cajas?.reduce((total, sucursal) => {
       return (
