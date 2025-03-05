@@ -19,6 +19,7 @@ type Sucursal = {
 };
 
 type DatosVenta = Sucursal[] | null;
+
 interface FechasFetch {
   from: string | null;
   to: string | null;
