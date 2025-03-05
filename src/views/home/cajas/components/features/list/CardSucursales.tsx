@@ -3,10 +3,9 @@ import { FaCashRegister } from 'react-icons/fa';
 
 type CardSucursalesProps = {
   estado: boolean; // Se refiere a si la fecha_c es null
-  key: string; // La clave única para cada caja
   nombre: string; // Nombre de la sucursal
   sucursal: string; // Nombre de la sucursal, parece repetido respecto a "nombre"
-  numero: string; // Número de la caja
+  numero: number; // Número de la caja
   apertura: string; // Fecha de apertura de la caja
   ultimaVenta: string; // Última venta registrada
   efectivo: string; // Monto de efectivo calculado
@@ -19,7 +18,6 @@ type CardSucursalesProps = {
 
 export default function CardSucursales({
   estado,
-  key,
   nombre,
   sucursal,
   numero,
@@ -68,6 +66,7 @@ export default function CardSucursales({
             <li className="font-semibold">Ult. Cobr.: {ultimaVenta}</li>
           </ul>
         </div>
+
         <div className="col-span-4 row-span-5 2xl:row-span-4 col-start-4 row-start-2 text-xs 2xl:text-lg pt-2">
           {' '}
           {/***Mov de caja */}
@@ -105,6 +104,7 @@ export default function CardSucursales({
             </li>
           </ul>
         </div>
+
         <div className="col-span-4 col-start-4 row-start-7  ">
           {' '}
           {/***DISPONIBILIDAD */}{' '}

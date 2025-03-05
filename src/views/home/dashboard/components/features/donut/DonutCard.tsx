@@ -1,8 +1,4 @@
-import { Card, DonutChart, Legend } from '@tremor/react';
-
-const valueFormatter = function (number: any) {
-  return '$ ' + new Intl.NumberFormat('us').format(number).toString();
-};
+import { DonutChart, Legend } from '@tremor/react';
 
 type DonutCardProps = {
   fecha: string;
@@ -10,7 +6,7 @@ type DonutCardProps = {
   total: string;
   data: { name: string; valor: number }[];
   categories: string[];
-  loading: boolean;
+  fetching: boolean;
 };
 
 export default function DonutCard({
@@ -19,30 +15,13 @@ export default function DonutCard({
   total,
   data,
   categories,
-  loading,
+  fetching,
 }: DonutCardProps) {
-  // console.log(fecha);
-  // console.log(titulo);
-  // console.log(total);
-  // console.log(data);
-  // console.log(categories);
-
-  // const data1 = [
-  //   { name: 'Efectivo', valor: 500 },
-  //   { name: 'Billeteras', valor: 300 },
-  //   { name: 'Transferencias', valor: 200 },
-  //   { name: 'Débito', valor: 100 },
-  // ];
-
-  // const categories1 = data.map((item) => item.name);
-
-  // const colors = ['blue', 'cyan', 'indigo', 'violet'];
-
   const valueFormatter = (number: number) => `$ ${number.toLocaleString()}`;
 
   return (
     <div className="h-full ">
-      {loading ? (
+      {fetching ? (
         <div className="h-72 w-56 overflow-hidden animate-pulse">
           <div className="flex flex-col gap-1  items-center  my-1 mb-2">
             <div className="w-full h-4 bg-gray-200 rounded mb-1"></div>
@@ -55,7 +34,7 @@ export default function DonutCard({
         </div>
       ) : (
         <>
-          <div className="flex flex-row  gap-1 justify-center items-start 2xl:items-center  2xl:my-1 2xl:mb-2">
+          <div className="flex justify-center items-start 2xl:items-center  2xl:my-1 2xl:mb-2  gap-1">
             {titulo && fecha ? (
               <>
                 <p>{titulo} </p>

@@ -1,20 +1,8 @@
 import { BadgeDelta, Card, Divider } from '@tremor/react';
-
-type CardData = {
-  titulo: string;
-  subtitulo1: string;
-  subtitulo2: string;
-  valortotal: number;
-  valor1: number;
-  valor2: number;
-  unidad: string;
-  unidad1: string;
-  unidad2: string;
-  simbolo: number;
-};
+import { DashboardCard } from '@/types';
 
 type CardWithBadgeProps = {
-  data: CardData;
+  data: DashboardCard;
 };
 
 export default function CardWithBadge({ data }: CardWithBadgeProps) {
@@ -30,8 +18,6 @@ export default function CardWithBadge({ data }: CardWithBadgeProps) {
     unidad2,
     simbolo,
   } = data;
-
-  // console.log(simbolo);
 
   return (
     <Card

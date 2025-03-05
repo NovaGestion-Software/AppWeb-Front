@@ -1,18 +1,18 @@
-export const SkeletonTableCaja = () => {
+export default function SkTable() {
   return (
-    <div className="flex flex-col gap-2 bg-white h-[52rem] w-full shadow-md rounded-md animate-pulse">
+    <div className="flex flex-col gap-10 bg-white h-[52rem] w-full shadow-md rounded-md animate-pulse p-10">
       <h3 className="h-8 bg-slate-300 rounded-md w-40"></h3>
 
       <div className="mt-5 overflow-auto max-h-[42rem] border-2 border-gray-100">
         {/* Encabezados de la tabla */}
-        <div className="sticky top-0 bg-white z-10 flex">
+        <div className="sticky top-0 bg-white z-10 flex gap-10">
           <div className="w-1/3 h-8 bg-slate-300 rounded-md"></div>
           <div className="w-1/3 h-8 bg-slate-300 rounded-md"></div>
           <div className="w-1/3 h-8 bg-slate-300 rounded-md"></div>
         </div>
 
         {/* Filas de la tabla */}
-        <div className="mt-4 space-y-2">
+        <div className="mt-4 space-y-2 gap-10">
           {[...Array(10)].map((_, index) => (
             <div
               key={index}
@@ -26,7 +26,7 @@ export const SkeletonTableCaja = () => {
         </div>
 
         {/* Pie de tabla */}
-        <div className="flex justify-between items-center p-2 sticky bottom-0 bg-white z-10">
+        <div className="flex justify-between items-center p-2 sticky bottom-0 bg-white z-10 gap-10">
           <div className="w-1/3 h-6 bg-slate-300 rounded-md"></div>
           <div className="w-1/3 h-6 bg-slate-300 rounded-md"></div>
           <div className="w-1/3 h-6 bg-slate-300 rounded-md"></div>
@@ -34,14 +34,4 @@ export const SkeletonTableCaja = () => {
       </div>
     </div>
   );
-};
-
-const SkeletonTablaCaja = () => {
-  return (
-    <div className="flex flex-col gap-2 bg-white h-full  shadow-md rounded-md p-5 ">
-      <SkeletonTableCaja />
-    </div>
-  );
-};
-
-export default SkeletonTablaCaja;
+}

@@ -1,6 +1,6 @@
 import { Card } from '@tremor/react';
 
-export default function SkeletonCardCaja() {
+export default function SkCardCaja() {
   return (
     <Card className="h-28 w-full max-w-xs p-3 animate-pulse bg-white">
       <div>
