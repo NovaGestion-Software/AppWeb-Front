@@ -1,7 +1,7 @@
 import { isAxiosError } from 'axios';
 import apiPhp from '../lib/axiosPhp';
 
-const user = JSON.parse(localStorage.getItem('user') || '{}');
+const user = JSON.parse(localStorage.getItem('_u') || '{}');
 const empresa = user.empresa ? user.empresa.toString().slice(-2) : '00'; // Extrae los últimos 2 dígitos
 export async function obtenerVentasHora({ from, to }: { from: string | null; to: string | null }) {
   try {
