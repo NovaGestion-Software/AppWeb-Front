@@ -104,7 +104,7 @@ export default function LoginForm() {
 
         // Definir el ambiente actual por defecto
         const currentEnv = 'production';
-        localStorage.setItem('currentEnv', currentEnv);
+        localStorage.setItem('_ce', currentEnv);
 
         // Guardar los tokens actuales según el ambiente por defecto
         Cookies.set(
@@ -119,8 +119,9 @@ export default function LoginForm() {
         );
 
         // Guardar nombres de base de datos en localStorage
-        localStorage.setItem('dbNameProd', data.dbnameprod);
-        localStorage.setItem('dbNameDev', data.dbnamedev);
+        localStorage.setItem('_dbp', data.dbnameprod);
+        localStorage.setItem('_dbd', data.dbnamedev);
+        localStorage.setItem('_tu', data.tusuario);
       } else {
         // Para usuarios normales, guardar tokens regulares en cookies
         Cookies.set('token_acceso', data.token_acceso, {
@@ -144,7 +145,7 @@ export default function LoginForm() {
         logonova: data.logonova,
       };
 
-      localStorage.setItem('user', JSON.stringify(dataUser));
+      localStorage.setItem('_u', JSON.stringify(dataUser));
 
       navigate('/home');
     },

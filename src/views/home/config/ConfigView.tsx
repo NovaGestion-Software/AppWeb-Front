@@ -12,10 +12,10 @@ export default function ConfigView() {
     db: '',
   });
 
-  const currentEnv = localStorage.getItem('currentEnv') || '';
-  const dbNameDev = localStorage.getItem('dbNameDev') || '';
-  const dbNameProd = localStorage.getItem('dbNameProd') || '';
-  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  const currentEnv = localStorage.getItem('_ce') || '';
+  const dbNameDev = localStorage.getItem('_dbd') || '';
+  const dbNameProd = localStorage.getItem('_dbp') || '';
+  const user = JSON.parse(localStorage.getItem('_u') || '{}');
 
   useEffect(() => {
     setEnv(currentEnv);
@@ -27,15 +27,15 @@ export default function ConfigView() {
       iphost: '46.202.146.93',
       db: currentEnv === 'production' ? dbNameProd : dbNameDev,
     });
-  }, []);
+  }, [currentEnv]);
 
   const handleSwitchChange = () => {
     const newEnv = env === 'production' ? 'development' : 'production';
     setEnv(newEnv);
-    localStorage.setItem('currentEnv', newEnv);
+    localStorage.setItem('_ce', newEnv);
 
-    const dbNameProd = localStorage.getItem('dbNameProd') || 'default_prod_db';
-    const dbNameDev = localStorage.getItem('dbNameDev') || 'default_dev_db';
+    const dbNameProd = localStorage.getItem('_dbp') || 'default_prod_db';
+    const dbNameDev = localStorage.getItem('_dbp') || 'default_dev_db';
 
     const tokenAcceso = Cookies.get(`token_acceso_${newEnv === 'production' ? 'prod' : 'des'}`);
     const tokenRefresh = Cookies.get(`token_refresh_${newEnv === 'production' ? 'prod' : 'des'}`);
