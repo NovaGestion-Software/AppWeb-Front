@@ -2,13 +2,15 @@ import { isAxiosError } from 'axios';
 import apiPhp from '../lib/axiosPhp';
 import { ResponseVentasHora } from '../types';
 
-export async function obtenerVentasHora(from: string, to: string) {
+const user = JSON.parse(localStorage.getItem("user") || "{}");
+const empresa = user.empresa ? user.empresa.toString().slice(-2) : "00"; // Extrae los últimos 2 dígitos
+export async function obtenerVentasHora({ from, to }: { from: string | null; to: string | null }) {
   try {
-    const url = `/apinova/generico/obtenerVentasHora.php?_i={"_e":"12","_m":"prod","_fi":"${from}","_ff":"${to}"}`;
+    const url = `/apinova/generico/obtenerVentasHora.php?_i={"_e":"${empresa}","_m":"prod","_fi":"${from}","_ff":"${to}"}`;
 
     const { data } = await apiPhp(url);
+    console.log('data en service', data)
 
-    // console.log(data.data);
     return data;
   } catch (error) {
     if (isAxiosError(error) && error.response) throw new Error(error.response.data.error);

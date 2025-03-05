@@ -24,7 +24,7 @@ export default function Portal() {
   const { mutate } = useMutation({
     mutationFn: loginEmpresa,
     onError: (error) => {
-      console.log(error.message);
+      console.log(error);
     },
     onSuccess: (data) => {
       if (data.tusuario === 1) {

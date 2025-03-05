@@ -25,7 +25,7 @@ export default function Layout() {
 
       <div
         className={`flex flex-col w-full min-h-screen transition-all duration-300 bg-layout ${
-          open ? 'pl-60' : 'pl-20'
+          open ? 'pl-56' : 'pl-14'
         }`}
       >
         <Outlet />
