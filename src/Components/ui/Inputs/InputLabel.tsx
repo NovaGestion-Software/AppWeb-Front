@@ -22,14 +22,14 @@ const InputLabel: React.FC<InputLabelProps> = ({
 }) => {
   return (
     <div className="w-3/4">
-      <label htmlFor={id} className="block text-sm font-semibold">
+      <label htmlFor={id} className="block text-sm font-semibold tracking-wide text-gray-500">
         {label}
       </label>
       <input
         id={id}
         type={type}
         placeholder={placeholder}
-        className="block w-full px-2 py-1 mt-1 text-gray-600 rounded bg-gray-50 border focus:border-transparent placeholder:text-sm placeholder:text-gray-400 placeholder:font-semibold focus:ring-2 focus:ring-blue-400"
+        className="block w-full px-2 py-1 mt-1 text-gray-600 rounded bg-gray-50 border-transparent placeholder:text-sm placeholder:text-gray-400 placeholder:font-semibold ring-2 ring-gray-300 focus:ring-blue-400"
         onKeyDown={onKeyDown}
         {...register(id, { required: required ? 'Este campo es obligatorio' : false })}
       />

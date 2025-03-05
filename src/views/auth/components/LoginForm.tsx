@@ -205,13 +205,13 @@ export default function LoginForm() {
         <button
           id="submitButton"
           type="submit"
-          className={`mt-6 tracking-wider transition-all block py-3 px-4 w-3/4 text-white font-bold rounded focus:bg-blue-900 
+          className={`mt-6 tracking-wider transition-all block py-3 px-4 w-3/4 font-bold rounded focus:bg-blue-900
         ${
           status === 'pending'
             ? 'bg-gradient-to-r from-emerald-600 to-emerald-900'
             : isValid
-            ? 'bg-gradient-to-r from-blue-600 to-emerald-400 hover:from-emerald-700 hover:to-blue-500 cursor-pointer transform hover:-translate-y-1  hover:shadow-lg '
-            : 'bg-gray-300 cursor-default opacity-50'
+            ? 'text-white ring-0 bg-gradient-to-r from-blue-600 to-emerald-400 hover:from-emerald-700 hover:to-blue-500 cursor-pointer transform hover:-translate-y-1  hover:shadow-lg '
+            : ' ring-2 ring-gray-400 bg-gray-400 text-gray-700 cursor-default opacity-50'
         } 
         `}
           disabled={!isValid} // Deshabilitar el botón hasta que los campos sean válidos
