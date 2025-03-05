@@ -20,7 +20,13 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "noUncheckedSideEffectImports": true,
+
+    /* Alias config */
+    "baseUrl": "./src", // Establece la base para las rutas en la carpeta src
+    "paths": {
+      "@/*": ["*"] // Configura el alias '@' para apuntar a todo dentro de 'src'
+    }
   },
   "include": ["src"]
 }

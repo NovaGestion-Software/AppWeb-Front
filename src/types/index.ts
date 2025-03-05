@@ -19,3 +19,16 @@ export interface Sucursal {
 }
 
 export type ResponseVentasHora = Sucursal[];
+
+export type DashboardCard = {
+  titulo: string;
+  valortotal: number | null;
+  unidad: string;
+  simbolo: number;
+  subtitulo1: string;
+  subtitulo2: string;
+  valor1: number;
+  valor2: number;
+  unidad1: string;
+  unidad2: string;
+};

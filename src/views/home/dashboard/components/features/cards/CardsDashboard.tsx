@@ -1,6 +1,7 @@
-import { useEffect, useState, Dispatch } from 'react';
+import { useEffect, Dispatch } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { obtenerDashboardCards } from '../../../../../services/AppService';
+import { DashboardCard } from '@/types';
+import { obtenerDashboardCards } from '@/services/AppService';
 import CardWithBadge from './CardsWithBadge';
 import SkeletonCard from './SkeletonCard';
 
@@ -10,39 +11,41 @@ type CardsDashboardProps = {
 };
 
 export default function CardsDashboard({ handleRefetch, setHandleRefetch }: CardsDashboardProps) {
+  // const [filteredCards, setFilteredCards] = useState([]);
+
   const {
-    data: dataCards,
+    data: dataCards = [],
     isLoading: loadingCards,
     refetch: refetchCards,
     isFetching: fetchingCards,
-  } = useQuery({
+  } = useQuery<DashboardCard[]>({
     queryKey: ['dashboard cards'],
     queryFn: obtenerDashboardCards,
     refetchOnWindowFocus: false,
-    // staleTime: 1000 * 60 * 5, // Datos frescos por 5 minutos
+    staleTime: 1000 * 60 * 5, // Datos frescos por 5 minutos
   });
 
-  if (handleRefetch) {
-    refetchCards();
-    setHandleRefetch(false);
-  }
+  // if (handleRefetch) {
+  //   refetchCards();
+  //   setHandleRefetch(false);
+  // }
+
+  // useEffect(() => {
+  //   if (dataCards) {
+  //     // Filtrar las cartas que no contengan la palabra "ejemplo"
+  //     const filtered = dataCards.filter((card: any) => !card.titulo.includes('Ejemplo'));
+  //     setFilteredCards(filtered);
+  //   }
+  // }, [dataCards]);
 
   useEffect(() => {
     if (handleRefetch) {
-      // refetchCards();
+      refetchCards();
       setHandleRefetch(false);
     }
   }, [handleRefetch]);
 
-  const [filteredCards, setFilteredCards] = useState([]);
-
-  useEffect(() => {
-    if (dataCards) {
-      // Filtrar las cartas que no contengan la palabra "ejemplo"
-      const filtered = dataCards.filter((card: any) => !card.titulo.includes('Ejemplo'));
-      setFilteredCards(filtered);
-    }
-  }, [dataCards]);
+  const filteredCards = dataCards?.filter((card: any) => !card.titulo.includes('Ejemplo')) || [];
 
   return (
     <div>

@@ -2,6 +2,9 @@ import { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import axios from 'axios';
 import { formatearNumero } from '../../../../utils';
+import FechasInforme from './components/FechasDeInforme';
+import GrupoBotonesFunciones from './components/GrupoBotonesFunciones';
+import Tabla01 from './components/Tabla01';
 
 //import { obtenerVentaPorHora } from "./../../../../../services/APIEndpoints";
 
@@ -35,7 +38,7 @@ interface Intervalo {
 }
 
 interface ResultadoPorHora {
-  importe: number;
+  importe: string;
   cantidad: number;
   pares: number;
 }
@@ -127,7 +130,7 @@ export default function VentaHoraView() {
 
           if (!resultado[horario]) {
             resultado[horario] = {
-              importe: 0,
+              importe: '0',
               cantidad: 0,
               pares: 0,
             };
@@ -142,7 +145,7 @@ export default function VentaHoraView() {
 
     // Formateamos los números antes de devolverlos
     for (const horario in resultado) {
-      resultado[horario].importe = parseFloat(formatearNumero(resultado[horario].importe));
+      resultado[horario].importe = formatearNumero(parseFloat(resultado[horario].importe));
     }
 
     return resultado;
