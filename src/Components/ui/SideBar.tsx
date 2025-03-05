@@ -1,16 +1,13 @@
 import { Dispatch, SetStateAction } from 'react';
-import { FaArrowCircleLeft } from 'react-icons/fa';
-import { CiLogout } from 'react-icons/ci';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { TiHome } from 'react-icons/ti';
-import { RiDashboardFill } from 'react-icons/ri';
+import { useQueryClient } from '@tanstack/react-query';
 import { MdOutlineAttachMoney } from 'react-icons/md';
+import { FaArrowCircleLeft } from 'react-icons/fa';
+import { RiDashboardFill } from 'react-icons/ri';
 import { BsCreditCard } from 'react-icons/bs';
+import { CiLogout } from 'react-icons/ci';
+import { TiHome } from 'react-icons/ti';
 import Cookies from 'js-cookie';
-// import { LuClipboardList } from 'react-icons/lu';
-// import { FaUserDoctor } from 'react-icons/fa6';
-// import { LuFolderOpenDot } from 'react-icons/lu';
-// import { TiPrinter } from 'react-icons/ti';
 
 type SideBarProps = {
   open: boolean;
@@ -20,11 +17,10 @@ type SideBarProps = {
 export default function SideBar({ open, setOpen }: SideBarProps) {
   const navigate = useNavigate();
   const location = useLocation();
+  const queryClient = useQueryClient();
 
   const storedUser = localStorage.getItem('user');
   const user = storedUser ? JSON.parse(storedUser) : {};
-
-  // console.log(user.nfantasia);
 
   const usuarioIniciado = {
     nombre: 'Juan Pérez',
@@ -52,40 +48,23 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
       href: '/informes/ventas-hora',
       icon: <BsCreditCard />,
     },
-    // {
-    //   title: 'Especialidades',
-    //   href: '/especialidades',
-    //   icon: <LuFolderOpenDot />,
-    // },
-    // {
-    //   title: 'Facturación',
-    //   href: '/facturacion',
-    //   icon: <TiPrinter />,
-    // },
   ];
 
-  // const handleLogout = () => {
-  //   document.cookie = 'accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-  //   document.cookie = 'refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-  //   navigate('/');
-  // };
-
   const handleLogout = () => {
+    queryClient.clear();
+
     Cookies.remove('token_acceso', { path: '/' });
     Cookies.remove('token_refresh', { path: '/' });
-    // Eliminar cookies adicionales para administradores
     Cookies.remove('token_acceso_prod', { path: '/' });
     Cookies.remove('token_refresh_prod', { path: '/' });
     Cookies.remove('token_acceso_des', { path: '/' });
     Cookies.remove('token_refresh_des', { path: '/' });
 
-    // Eliminar datos de usuario y ambiente
     localStorage.removeItem('user');
     localStorage.removeItem('currentEnv');
     localStorage.removeItem('dbNameProd');
     localStorage.removeItem('dbNameDev');
 
-    // console.log('Se cierra sesión.');
     navigate('/');
   };
 

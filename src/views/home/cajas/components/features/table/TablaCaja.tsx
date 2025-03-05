@@ -9,12 +9,18 @@ import {
   TableHeaderCell,
   TableRow,
 } from '@tremor/react';
-import { Dispatch } from 'react';
+import { Dispatch, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { obtenerCajasSecciones } from '../../../../../services/AppService';
-// import SkeletonComponent from "./SkeletonCajaComponent";
-// import SkeletonCajaComponent from "./SkeletonCajaComponent";
+import { obtenerCajasSecciones } from '@/services/AppService';
 import SkeletonTablaCaja from './SkeletonTable';
+
+type CajaSeccion = {
+  seccion: string;
+  nseccion: string;
+  venta: string; // Usamos string porque los valores pueden contener números con decimales.
+};
+
+type CajasSeccionResponse = CajaSeccion[];
 
 type TablaCajaProps = {
   handleRefetch: boolean;
@@ -24,52 +30,54 @@ type TablaCajaProps = {
 export default function TablaCaja({ handleRefetch, setHandleRefetch }: TablaCajaProps) {
   const {
     data: cajasSeccion,
-    error,
-    isLoading,
     refetch,
     isFetching,
-  } = useQuery({
-    queryKey: ['cajas seccion'],
+  } = useQuery<CajasSeccionResponse>({
+    queryKey: ['cajas-seccion'],
     queryFn: obtenerCajasSecciones,
     refetchOnWindowFocus: false,
     staleTime: 1000 * 60 * 5, // Datos frescos por 5 minutos
   });
 
-  const calculateTotalAndPercentages = (data: any) => {
+  useEffect(() => {
+    if (handleRefetch) {
+      refetch();
+      setHandleRefetch(false);
+    }
+  }, [handleRefetch, refetch]);
+
+  const calculateTotalAndPercentages = (data: CajasSeccionResponse) => {
     // Filtrar ventas excluyendo los items con secciones "00000D", "00000I", "00000T" y "0000GE"
     const filteredData = data?.filter(
-      (item: any) => !['00000D', '00000I', '00000T', '0000GE'].includes(item.seccion)
+      (item) => !['00000D', '00000I', '00000T', '0000GE'].includes(item.seccion)
     );
 
     // Convertir todas las ventas a números, con validación
-    const ventasNumeros = data?.map((item: any) => {
+    const ventasNumeros = data?.map((item) => {
       const ventaStr = item.venta.replace('$', '').trim();
       const ventaNum = parseFloat(ventaStr);
       return isNaN(ventaNum) ? 0 : ventaNum;
     });
 
     // Convertir las ventas de los datos filtrados
-    const ventasNumerosFiltrados = filteredData?.map((item: any) => {
+    const ventasNumerosFiltrados = filteredData?.map((item) => {
       const ventaStr = item.venta.replace('$', '').trim();
       const ventaNum = parseFloat(ventaStr);
       return isNaN(ventaNum) ? 0 : ventaNum;
     });
 
     // Sumar todas las ventas válidas
-    const totalVentas = ventasNumeros?.reduce((acc: any, venta: any) => acc + venta, 0);
+    const totalVentas = ventasNumeros?.reduce((acc, venta) => acc + venta, 0);
 
     // Sumar las ventas de los datos filtrados
-    const totalVentasFiltradas = ventasNumerosFiltrados?.reduce(
-      (acc: any, venta: any) => acc + venta,
-      0
-    );
+    const totalVentasFiltradas = ventasNumerosFiltrados?.reduce((acc, venta) => acc + venta, 0);
 
     // Si el total es 0, evitar división por 0
     if (totalVentas === 0) {
       return {
         totalVentas: '$0',
         totalVentasNetas: '$0',
-        result: data?.map((item: any) => ({
+        result: data?.map((item) => ({
           ...item,
           porcentaje: '0%',
           porcentajeNeto: '0%',
@@ -83,7 +91,7 @@ export default function TablaCaja({ handleRefetch, setHandleRefetch }: TablaCaja
     const totalVentasFiltradasFormatted = totalVentasFiltradas?.toLocaleString('es-ES');
 
     // Calcular el porcentaje de cada venta respecto al total y al total neto
-    const result = data?.map((item: any, index: any) => {
+    const result = data?.map((item, index) => {
       const porcentaje = ((ventasNumeros[index] / totalVentas) * 100).toFixed(2) + '%';
       const porcentajeNeto = !['00000D', '00000I', '00000T', '0000GE'].includes(item.seccion)
         ? ((ventasNumeros[index] / totalVentasFiltradas) * 100).toFixed(2) + '%'
@@ -105,21 +113,13 @@ export default function TablaCaja({ handleRefetch, setHandleRefetch }: TablaCaja
   };
 
   // Ejemplo de uso
-  const { totalVentas, totalVentasNetas, result } = calculateTotalAndPercentages(cajasSeccion);
+  const { totalVentas, totalVentasNetas, result } = calculateTotalAndPercentages(
+    cajasSeccion || []
+  );
 
-  if (handleRefetch) {
-    refetch();
-    setHandleRefetch(false);
-  }
-
-  /**formatear los numeros con centavos o ninguno con centavos en venta por seccion.
-   *
-   * venta se cambia por importe $.
-   */
   return (
     <div className="w-1/2 p-5 pb-1">
-      {' '}
-      {isLoading || isFetching || !cajasSeccion?.length ? (
+      {isFetching ? (
         <SkeletonTablaCaja />
       ) : (
         <Card className="flex flex-col gap-2 bg-white h-[52rem] w-full shadow-md rounded-md">

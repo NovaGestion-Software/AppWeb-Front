@@ -42,7 +42,7 @@ export default function GraficoVentas({ handleRefetch, setHandleRefetch }: Grafi
     refetch: refetchGrafico,
     isFetching: fetchingGrafico,
   } = useQuery<DataGraficoResponse[]>({
-    queryKey: ['dashboard grafico'],
+    queryKey: ['dashboard-grafico'],
     queryFn: obtenerDashboardGrafico,
     refetchOnWindowFocus: false,
     staleTime: 1000 * 60 * 5, // Datos frescos por 5 minutos

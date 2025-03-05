@@ -17,7 +17,7 @@ export default function CardsComponent({ handleRefetch, setHandleRefetch }: Card
     refetch: refetchCards,
     isFetching: fetchingCards,
   } = useQuery<DashboardCard[]>({
-    queryKey: ['dashboard cards'],
+    queryKey: ['dashboard-cards'],
     queryFn: obtenerDashboardCards,
     refetchOnWindowFocus: false,
     staleTime: 1000 * 60 * 5, // Datos frescos por 5 minutos

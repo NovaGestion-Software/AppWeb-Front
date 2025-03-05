@@ -14,7 +14,7 @@ export default function GraficoTorta({ handleRefetch, setHandleRefetch }: Grafic
     isFetching,
     refetch,
   } = useQuery({
-    queryKey: ['DataTorta'],
+    queryKey: ['dashboard-torta'],
     queryFn: obtenerTortaCobranzasR,
     refetchOnWindowFocus: false,
     staleTime: 1000 * 60 * 5, // Datos frescos por 5 minutos
