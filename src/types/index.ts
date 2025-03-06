@@ -4,6 +4,19 @@ export type Account = {
   password: string;
 };
 
+export type ColorTypes =
+  | 'gray'
+  | 'grayDefault'
+  | 'graySoft'
+  | 'grayStrong'
+  | 'grayDeshab'
+  | 'blue'
+  | 'blueSoft'
+  | 'green'
+  | 'greenSoft'
+  | 'red'
+  | 'redSoft';
+
 // INFORME VENTAS POR HORA
 export interface SucursalInfo {
   horaini: string;

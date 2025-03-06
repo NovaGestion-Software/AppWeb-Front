@@ -1,10 +1,7 @@
 import { useCallback } from 'react';
-// import { useDispatch, useSelector } from "react-redux";
 import * as XLSX from 'xlsx';
-import { RiFileExcel2Fill, RiPrinterFill } from '@remixicon/react';
-import ModalSucursales2 from './ModalSucursales2';
-// import { TOGGLE_VIEW_SUCURSAL } from "../../../../lib/features/informeCobranzaSlice";
-// import { RootState } from "../../../../lib/store";
+import ModalSucursales from './ModalSucursales';
+import HerramientasInforme from '../../_components/HerramientasInforme';
 
 interface DataItem {
   id: number;
@@ -17,7 +14,7 @@ interface DataItem {
   porcentajePares: number;
 }
 
-interface GrupoBotonesFuncionesProps {
+interface HerramientasComponentProps {
   data: DataItem[];
   store?: boolean;
   sucursales: string[];
@@ -27,17 +24,13 @@ interface GrupoBotonesFuncionesProps {
   planes?: boolean;
 }
 
-const GrupoBotonesFunciones: React.FC<GrupoBotonesFuncionesProps> = ({
+export default function HerramientasComponent({
   data,
   sucursales,
   sucursalesSeleccionadas,
   setSucursalesSeleccionadas,
   isProcessing,
-}) => {
-  // const storeInformeCobranza = useSelector(
-  //   (state: RootState) => state.informeCobranzas
-  // );
-
+}: HerramientasComponentProps) {
   const handleExportExcel = useCallback(() => {
     const datosTransformados = Object.entries(data).map(([hora, item]) => ({
       hora,
@@ -81,48 +74,21 @@ const GrupoBotonesFunciones: React.FC<GrupoBotonesFuncionesProps> = ({
     setTimeout(() => printWindow.print(), 500);
   }, []);
 
-  //   {store ? (
-  //     <ModalSucursales
-  //       storeSelector={(state: RootState) => state.informeCobranzas}
-  //       toggleAction={TOGGLE_VIEW_SUCURSAL}
-  //     />
-  //   ) : (
-  // )}
-
   return (
-    <div className="flex flex-row items-center justify-center gap-6 h-14 py-2 px-4 rounded-lg border bg-white">
-      <ModalSucursales2
-        sucursales={sucursales}
-        sucursalesSeleccionadas={sucursalesSeleccionadas}
-        setSucursalesSeleccionadas={setSucursalesSeleccionadas}
+    <>
+      <HerramientasInforme
+        data={data}
         isProcessing={isProcessing}
-      />
-
-      <button
-        onClick={handleExportExcel}
-        disabled={!isProcessing}
-        className={`w-16 h-9 rounded-md p-1 flex items-center justify-center text-white ${
-          isProcessing
-            ? 'bg-green-600 hover:bg-green-700'
-            : 'bg-gray-500 cursor-not-allowed border-none'
-        }`}
+        handleExportExcel={handleExportExcel}
+        handlePrint={handlePrint}
       >
-        <RiFileExcel2Fill />
-      </button>
-
-      <button
-        onClick={handlePrint}
-        disabled={!isProcessing}
-        className={`w-16 h-9 rounded-md flex items-center justify-center text-white ${
-          isProcessing
-            ? 'bg-sky-600 hover:bg-sky-700'
-            : 'bg-gray-500 cursor-not-allowed border-none'
-        }`}
-      >
-        <RiPrinterFill />
-      </button>
-    </div>
+        <ModalSucursales
+          sucursales={sucursales}
+          sucursalesSeleccionadas={sucursalesSeleccionadas}
+          setSucursalesSeleccionadas={setSucursalesSeleccionadas}
+          isProcessing={isProcessing}
+        />
+      </HerramientasInforme>
+    </>
   );
-};
-
-export default GrupoBotonesFunciones;
+}

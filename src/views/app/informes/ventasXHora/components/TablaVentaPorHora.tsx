@@ -1,5 +1,5 @@
-import { CSSProperties } from 'react';
-import TablaInforme from './TablaInforme';
+import { CSSProperties, useEffect } from 'react';
+import TablaInforme from '../../_components/TablaInforme';
 
 // Definicion de estructura de columnas
 interface TableColumn<T> {
@@ -36,7 +36,9 @@ export default function TablaVentaPorHora({
   footer,
   datosFooter,
 }: TablaVentaPorHoraProps) {
-  console.log(isProcessing);
+  useEffect(() => {
+    // Para evitar console.log (solo para deployar en vercel)
+  }, [isProcessing]);
   const customTheme = {
     Table: `
           grid-template-columns: minmax(0px, 0px) minmax(30px, 110px) minmax(40px, 100px) minmax(50px, 80px) minmax(50px, 80px) minmax(50px, 80px) minmax(50px, 150px) minmax(50px, 80px);

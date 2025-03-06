@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { obtenerVentasHora } from '@/services/ApiPhpService';
-import FechasInforme from './components/FechasInforme';
-import GrupoBotonesFunciones from './components/GrupoBotonesFunciones';
 import dayjs from 'dayjs';
+import FechasInforme from '../_components/FechasInforme';
+import HerramientasComponent from './components/HerramientasComponent';
 import TablaVentaPorHora from './components/TablaVentaPorHora';
+import HerramientasInforme from '../_components/HerramientasInforme';
 
 type Info = {
   horaini: string;
@@ -267,12 +268,12 @@ export default function VentasHoraView() {
       // Comprobación de la respuesta
       if (!data || !data.data || data.data.length === 0) {
         alert('La petición solicitada no contiene información');
-        console.log('response:', data);
+        // console.log('response:', data);
         setFoco(true);
         return;
       }
       setDatos(data.data);
-      console.log('response:', data.data);
+      // console.log('response:', data.data);
     } catch (error) {
       console.error('Error en la petición:', error);
       alert('Error al obtener los datos');
@@ -318,7 +319,7 @@ export default function VentasHoraView() {
 
         {/**modales y funcionabilidades */}
         <div className="col-span-5 col-start-8 2xl:col-span-4 2xl:col-start-8  ">
-          <GrupoBotonesFunciones
+          <HerramientasComponent
             data={dataParaTabla}
             sucursales={sucursalesDisponibles}
             sucursalesSeleccionadas={sucursalesSeleccionadas}
