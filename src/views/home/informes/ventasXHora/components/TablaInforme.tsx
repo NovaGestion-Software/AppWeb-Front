@@ -26,14 +26,7 @@ interface TableColumn<T> {
   cellProps?: (item: T) => any;
 }
 
-interface TableProps<T extends TableNode> {
-  columnas: TableColumn<T>[];
-  datosParaTabla: TableNode[];
-  estilos: object;
-  getCellProps?: (item: T, column: keyof T | string) => { style: CSSProperties }; // Estilos específicos para cada celda
-  footer?: boolean;
-  datosFooter?: {};
-}
+
 interface TablaFooterProps {
   datos?: {
     [key: string]: number | string; // Acepta cualquier total sin forzar nombres específicos
@@ -55,22 +48,30 @@ const TablaFooter: React.FC<TablaFooterProps> = ({ datos = {} }) => {
     </Footer>
   );
 };
-
+interface TableProps<T extends TableNode> {
+  columnas: TableColumn<T>[];
+  datosParaTabla: TableNode[];
+  estilos: object;
+  getCellProps?: (item: T, column: keyof T | string) => { style: CSSProperties }; // Estilos específicos para cada celda
+  footer?: boolean;
+  datosFooter?: {};
+  procesado: boolean;
+}
 function TablaInforme<T extends TableNode>({
   columnas,
   datosParaTabla,
   estilos,
   footer,
   datosFooter,
+  procesado, // Propiedad para saber si ya fue procesado
 }: TableProps<T>) {
   const [currentHorario, setCurrentHorario] = useState<TableNode | null>(null);
   const materialTheme = getTheme(DEFAULT_OPTIONS);
   const theme = useTheme([materialTheme, estilos]);
   const data: Data<TableNode> = {
-    nodes: datosParaTabla, // Asegura que esté dentro de un objeto con `nodes`
+    nodes: datosParaTabla, 
   };
 
-  // FUNCION PARA SELECCIONAR Y NAVEGAR CON TECLADO EN LA TABLA.
   const select = useRowSelect(data, {
     onChange: onSelectChange,
   });
@@ -80,14 +81,29 @@ function TablaInforme<T extends TableNode>({
   const headerHeight = 5;
 
   const tableRef = useRef<HTMLDivElement | null>(null);
-  const [isActive, setIsActive] = useState(false); // Indica si esta tabla es la activa
+  const [isActive, setIsActive] = useState(false);
 
+  // 👉 Establece la primera fila seleccionada si no hay ninguna y los datos ya están procesados
   useEffect(() => {
-    const tableElement = tableRef.current;
-    if (!tableElement) return;
+    if (procesado && datosParaTabla.length > 0 && !currentHorario) {
+      const firstItem = datosParaTabla[0];
+      setCurrentHorario(firstItem);
+      select.fns.onToggleByIdExclusively(firstItem.id);
+      setIsActive(true);
+    }
+  }, [procesado, datosParaTabla, select, currentHorario]);
 
+  // 👉 Si la tabla está activa, poner foco en ella automáticamente
+  useEffect(() => {
+    if (isActive && tableRef.current) {
+      tableRef.current.focus();
+    }
+  }, [isActive]);
+
+  // 👉 Manejar la navegación con el teclado en toda la página
+  useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (!isActive || !currentHorario) return; // Solo afecta la tabla activa
+      if (!isActive || !currentHorario) return;
 
       const currentIndex = data.nodes.findIndex((node) => node.id === currentHorario.id);
       let newIndex = currentIndex;
@@ -114,24 +130,24 @@ function TablaInforme<T extends TableNode>({
       }
     };
 
-    // Agregar eventos de teclado SOLO cuando la tabla está activa
-    tableElement.addEventListener('keydown', handleKeyDown);
+    document.addEventListener('keydown', handleKeyDown);
 
     return () => {
-      tableElement.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener('keydown', handleKeyDown);
     };
   }, [isActive, currentHorario, data]);
 
+  // 👉 Activa la tabla cuando se le hace click
   const handleTableClick = () => {
     setIsActive(true);
   };
 
-  // Manejar pérdida de foco para desactivar eventos
+  // 👉 Desactiva la tabla cuando pierde el foco
   const handleBlur = () => {
     setIsActive(false);
   };
 
-  // MANTENER EL FOCO AL NAVEGAR EN LA TABLA.
+  // 👉 Maneja el scroll de la tabla
   useEffect(() => {
     const tableContainer = document.querySelector('.table');
     if (tableContainer) {
@@ -145,15 +161,10 @@ function TablaInforme<T extends TableNode>({
     }
   }, [scrollPosition]);
 
-  // FUNCION PARA SELECCIONAR
   function onSelectChange(action: any, state: any) {
-    console.log(action);
-    console.log(state);
-
-    const selectedItem = data.nodes.find((node) => node.id === state.id);
+    const selectedItem = datosParaTabla.find((node) => node.id === state.id);
 
     if (!selectedItem) {
-      console.log('Cliente Deseleccionado.');
       setCurrentHorario(null);
     } else {
       setCurrentHorario(selectedItem);
@@ -185,14 +196,12 @@ function TablaInforme<T extends TableNode>({
               </HeaderRow>
             </Header>
             <Body>
-              {/* {...select} */}
               {tableList.map((item, rowIndex) => (
                 <Row key={rowIndex} item={item}>
                   {columnas.map((column, columnIndex) => {
                     return (
                       <Cell key={columnIndex} {...column.cellProps?.(item)}>
-                        {column.renderCell(item)}{' '}
-                        {/* Aquí pasamos `item` a `renderCell` correctamente */}
+                        {column.renderCell(item)}
                       </Cell>
                     );
                   })}
@@ -207,5 +216,6 @@ function TablaInforme<T extends TableNode>({
     </div>
   );
 }
+
 
 export default TablaInforme;

@@ -213,7 +213,7 @@ console.log(isProcessing)
  
   return (
     <div>
-      <TablaInforme columnas={COLUMNS} datosParaTabla={datos} estilos={customTheme} footer={footer} datosFooter={datosFooter} />
+      <TablaInforme columnas={COLUMNS} datosParaTabla={datos} estilos={customTheme} footer={footer} datosFooter={datosFooter} procesado={isProcessing} />
     </div>
   );
 }
