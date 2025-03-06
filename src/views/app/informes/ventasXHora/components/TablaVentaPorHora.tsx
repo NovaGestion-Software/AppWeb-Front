@@ -1,5 +1,5 @@
-import { CSSProperties } from "react";
-import TablaInforme from "./TablaInforme";
+import { CSSProperties, useEffect } from 'react';
+import TablaInforme from '../../_components/TablaInforme';
 
 // Definicion de estructura de columnas
 interface TableColumn<T> {
@@ -18,23 +18,29 @@ interface VentaPorHora {
   porcentajeImporte: number | string;
   pares: number | string;
   porcentajePares: number | string;
-//   totalImporte: number | string;
-//   totalOperaciones: number | string;
-//   totalPares: number | string;
+  //   totalImporte: number | string;
+  //   totalOperaciones: number | string;
+  //   totalPares: number | string;
 }
-
 
 interface TablaVentaPorHoraProps {
-    datos: VentaPorHora[];
-    isProcessing: boolean;
-    footer: boolean;
-    datosFooter?: {};
+  datos: VentaPorHora[];
+  isProcessing: boolean;
+  footer: boolean;
+  datosFooter?: {};
 }
 
-function TablaVentaPorHora({datos, isProcessing,footer, datosFooter}: TablaVentaPorHoraProps) {
-console.log(isProcessing)
-    const customTheme = {
-        Table: `
+export default function TablaVentaPorHora({
+  datos,
+  isProcessing,
+  footer,
+  datosFooter,
+}: TablaVentaPorHoraProps) {
+  useEffect(() => {
+    // Para evitar console.log (solo para deployar en vercel)
+  }, [isProcessing]);
+  const customTheme = {
+    Table: `
           grid-template-columns: minmax(0px, 0px) minmax(30px, 110px) minmax(40px, 100px) minmax(50px, 80px) minmax(50px, 80px) minmax(50px, 80px) minmax(50px, 150px) minmax(50px, 80px);
           border-radius: 12px;
           width: 680px;
@@ -46,16 +52,16 @@ console.log(isProcessing)
             height: 500px;
           }
         `,
-      
-        Row: `
+
+    Row: `
           &:nth-of-type(odd) { background-color: #fff; }
           &:nth-of-type(even) { background-color: #eaf5fd; }
           &:hover { background-color: #CAE0BC; }
           &.row-select-single-selected { background-color: #84ceeb !important; }
           border-bottom: 1px solid #ccc;
         `,
-      
-        HeaderCell: `
+
+    HeaderCell: `
           background: #2973B2;
           color: white;
           height: 10px;
@@ -63,8 +69,8 @@ console.log(isProcessing)
             text-align: center;
           }
         `,
-      
-        Cell: `
+
+    Cell: `
           padding: 8px;
           border-right: 1px solid #ccc;
       
@@ -76,8 +82,8 @@ console.log(isProcessing)
             text-align: right;
           }
         `,
-      
-        FooterCell: `
+
+    FooterCell: `
           position: sticky;
           bottom: 0px;
           padding: 8px;
@@ -107,49 +113,47 @@ console.log(isProcessing)
             font-weight: bold;
           }
         `,
-      };
-      
+  };
+
   // COLUMNAS DE TABLA
   const COLUMNS: TableColumn<VentaPorHora>[] = [
     {
-      label: "",
+      label: '',
       renderCell: (item: VentaPorHora) => item.id,
     },
     {
-      label: "Hora",
+      label: 'Hora',
       renderCell: (item: VentaPorHora) => item.hora,
     },
     {
-      label: "N. Opera",
+      label: 'N. Opera',
       renderCell: (item: VentaPorHora) => item.nOperaciones,
-      cellProps: (item: VentaPorHora) => getCellProps(item, "nOperaciones"),
+      cellProps: (item: VentaPorHora) => getCellProps(item, 'nOperaciones'),
     },
     {
-      label: "%",
+      label: '%',
       renderCell: (item: VentaPorHora) => item.porcentajeOperaciones,
-      cellProps: (item: VentaPorHora) =>
-        getCellProps(item, "porcentajeOperaciones"),
+      cellProps: (item: VentaPorHora) => getCellProps(item, 'porcentajeOperaciones'),
     },
     {
-      label: "Pares",
+      label: 'Pares',
       renderCell: (item: VentaPorHora) => item.pares,
-      cellProps: (item: VentaPorHora) => getCellProps(item, "pares"),
+      cellProps: (item: VentaPorHora) => getCellProps(item, 'pares'),
     },
     {
-      label: "%",
+      label: '%',
       renderCell: (item: VentaPorHora) => item.porcentajePares,
-      cellProps: (item: VentaPorHora) => getCellProps(item, "porcentajePares"),
+      cellProps: (item: VentaPorHora) => getCellProps(item, 'porcentajePares'),
     },
     {
-      label: "Importes",
+      label: 'Importes',
       renderCell: (item: VentaPorHora) => item.importe,
-      cellProps: (item: VentaPorHora) => getCellProps(item, "importe"),
+      cellProps: (item: VentaPorHora) => getCellProps(item, 'importe'),
     },
     {
-      label: "%",
+      label: '%',
       renderCell: (item: VentaPorHora) => item.porcentajeImporte,
-      cellProps: (item: VentaPorHora) =>
-        getCellProps(item, "porcentajeImporte"),
+      cellProps: (item: VentaPorHora) => getCellProps(item, 'porcentajeImporte'),
     },
   ];
 
@@ -158,29 +162,26 @@ console.log(isProcessing)
 
     return array.reduce((maxItem, currentItem) => {
       const currentValue =
-        typeof currentItem[key] === "string"
-          ? parseFloat(currentItem[key].replace(/\./g, ""))
+        typeof currentItem[key] === 'string'
+          ? parseFloat(currentItem[key].replace(/\./g, ''))
           : currentItem[key];
 
       const maxValue =
-        typeof maxItem[key] === "string"
-          ? parseFloat(maxItem[key].replace(/\./g, ""))
+        typeof maxItem[key] === 'string'
+          ? parseFloat(maxItem[key].replace(/\./g, ''))
           : maxItem[key];
 
       return currentValue > maxValue ? currentItem : maxItem;
     }, array[0]);
   };
-  const maxNOperaciones = findMaxByKey(datos, "nOperaciones");
-  const maxImporte = findMaxByKey(datos, "importe");
-  const maxPares = findMaxByKey(datos, "pares");
+  const maxNOperaciones = findMaxByKey(datos, 'nOperaciones');
+  const maxImporte = findMaxByKey(datos, 'importe');
+  const maxPares = findMaxByKey(datos, 'pares');
   const maxParesId = maxPares ? maxPares.id : null;
   const maxNOperacionesId = maxNOperaciones ? maxNOperaciones.id : null;
   const maxImporteId = maxImporte ? maxImporte.id : null;
 
-  const getCellProps = (
-    item: VentaPorHora,
-    column: keyof VentaPorHora | string
-  ) => {
+  const getCellProps = (item: VentaPorHora, column: keyof VentaPorHora | string) => {
     const isMaxNOperaciones = item.id === maxNOperacionesId;
     const isMaxImporte = item.id === maxImporteId;
     const isMaxPares = item.id === maxParesId;
@@ -188,34 +189,29 @@ console.log(isProcessing)
     let style: CSSProperties = {}; // Inicializar el estilo como un objeto vacío
 
     if (
-      (column === "nOperaciones" && isMaxNOperaciones) ||
-      (column === "porcentajeOperaciones" && isMaxNOperaciones)
+      (column === 'nOperaciones' && isMaxNOperaciones) ||
+      (column === 'porcentajeOperaciones' && isMaxNOperaciones)
     ) {
-      style = { color: "white", fontWeight: "bolder", background: "green" };
+      style = { color: 'white', fontWeight: 'bolder', background: 'green' };
     }
 
     if (
-      (column === "importe" && isMaxImporte) ||
-      (column === "porcentajeImporte" && isMaxImporte)
+      (column === 'importe' && isMaxImporte) ||
+      (column === 'porcentajeImporte' && isMaxImporte)
     ) {
-      style = { color: "white", fontWeight: "bolder", background: "green" };
+      style = { color: 'white', fontWeight: 'bolder', background: 'green' };
     }
 
-    if (
-      (column === "pares" && isMaxPares) ||
-      (column === "porcentajePares" && isMaxPares)
-    ) {
-      style = { color: "white", fontWeight: "bolder", background: "green" };
+    if ((column === 'pares' && isMaxPares) || (column === 'porcentajePares' && isMaxPares)) {
+      style = { color: 'white', fontWeight: 'bolder', background: 'green' };
     }
 
     return { style }; // Devolver siempre un objeto con la propiedad 'style'
   };
- 
+
   return (
     <div>
       <TablaInforme columnas={COLUMNS} datosParaTabla={datos} estilos={customTheme} footer={footer} datosFooter={datosFooter} procesado={isProcessing} />
     </div>
   );
 }
-
-export default TablaVentaPorHora;

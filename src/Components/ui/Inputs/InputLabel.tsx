@@ -22,7 +22,7 @@ const InputLabel: React.FC<InputLabelProps> = ({
 }) => {
   return (
     <div className="w-3/4">
-      <label htmlFor={id} className="block text-sm font-semibold tracking-wide text-gray-500">
+      <label htmlFor={id} className="block text-sm font-semibold tracking-wide text-gray-700">
         {label}
       </label>
       <input

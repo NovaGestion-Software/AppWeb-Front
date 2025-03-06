@@ -4,6 +4,19 @@ export type Account = {
   password: string;
 };
 
+export type ColorTypes =
+  | 'gray'
+  | 'grayDefault'
+  | 'graySoft'
+  | 'grayStrong'
+  | 'grayDeshab'
+  | 'blue'
+  | 'blueSoft'
+  | 'green'
+  | 'greenSoft'
+  | 'red'
+  | 'redSoft';
+
 // INFORME VENTAS POR HORA
 export interface SucursalInfo {
   horaini: string;
@@ -65,4 +78,9 @@ export type SucursalCaja = {
   sucursal: string;
   nsucursal: string;
   datcaja: DatCaja[];
+};
+
+export type FechasRango = {
+  from: string | null;
+  to: string | null;
 };
