@@ -79,3 +79,8 @@ export type SucursalCaja = {
   nsucursal: string;
   datcaja: DatCaja[];
 };
+
+export type FechasRango = {
+  from: string | null;
+  to: string | null;
+};
