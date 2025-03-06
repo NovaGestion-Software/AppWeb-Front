@@ -287,6 +287,7 @@ export default function VentasHoraView() {
             isProcessing={isProcessing}
             store={false}
             planes={false}
+            datosParaFooter={datosParaFooter}
           />
         </div>
       </div>
