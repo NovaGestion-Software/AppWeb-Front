@@ -1,14 +1,14 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Layout from './layouts/Layout';
 import Portal from './views/auth/Portal';
-import HomeView from './views/home/HomeView';
 import ProtectedRoute from './Components/features/ProtectedRoute';
-import DashboardView from './views/home/dashboard/DashboardView';
-import CajasView from './views/home/cajas/CajasView';
-import CobranzaVencimView from './views/home/informes/cobranzaXVencim/CobranzaVencimView';
-import VentasXVendedorView from './views/home/informes/ventasXVendedor/VentasXVendedorView';
-import VentasHoraView from './views/home/informes/ventasXHora/VentasHoraView';
-import ConfigView from './views/home/config/ConfigView';
+import HomeView from './views/app/home/HomeView';
+import DashboardView from './views/app/dashboard/DashboardView';
+import CajasView from './views/app/cajas/CajasView';
+import CobranzaVencimView from './views/app/informes/cobranzaXVencim/CobranzaVencimView';
+import VentasXVendedorView from './views/app/informes/ventasXVendedor/VentasXVendedorView';
+import VentasHoraView from './views/app/informes/ventasXHora/VentasHoraView';
+import ConfigView from './views/app/config/ConfigView';
 
 export default function Router() {
   return (

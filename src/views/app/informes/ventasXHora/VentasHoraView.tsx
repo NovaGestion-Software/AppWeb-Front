@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react';
 import { obtenerVentasHora } from '@/services/ApiPhpService';
-import FechasInforme from './components/FechasDeInforme';
-import GrupoBotonesFunciones from './components/GrupoBotonesFunciones';
-import dayjs from 'dayjs';
+import FechasInforme from '../_components/FechasInforme';
+import HerramientasComponent from './components/HerramientasComponent';
 import TablaVentaPorHora from './components/TablaVentaPorHora';
+import ViewTitle from '@/Components/ui/Labels/ViewTitle';
+import { formatearNumero } from '@/utils';
+import { useQuery } from '@tanstack/react-query';
+import { FechasRango } from '@/types';
 
 type Info = {
   horaini: string;
@@ -20,11 +23,6 @@ type Sucursal = {
 
 type DatosVenta = Sucursal[] | null;
 
-interface FechasFetch {
-  from: string | null;
-  to: string | null;
-}
-
 type DatosAgrupados = Record<string, { cantidad: number; importe: string; pares: number }>;
 
 type Totales = {
@@ -33,8 +31,11 @@ type Totales = {
   totalPares: number;
 };
 
-export default function VentaPorHora() {
+export default function VentasHoraView() {
   const [datos, setDatos] = useState<DatosVenta | null>(null);
+  const [fechas, setFechas] = useState<FechasRango>({ from: null, to: null });
+  console.log(fechas);
+
   const [sucursalesSeleccionadas, setSucursalesSeleccionadas] = useState<string[]>([]);
   const [sucursalesDisponibles, setSucursalesDisponibles] = useState<string[]>([]);
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
@@ -42,6 +43,12 @@ export default function VentaPorHora() {
   const [foco, setFoco] = useState<boolean>(false);
   const [limpiarFechas, setLimpiarFechas] = useState(false);
 
+  const { data } = useQuery({
+    queryKey: ['ventas-hora'],
+    queryFn: () => obtenerVentasHora({ from: '2025-02-01', to: '2025-03-01' }),
+  });
+
+  console.log(data);
   // SETEAR ESTADOS SI DATOS TIENE INFO.
   useEffect(() => {
     if (datos?.length) {
@@ -88,59 +95,6 @@ export default function VentaPorHora() {
       window.removeEventListener('keydown', handleEscapeKey);
     };
   }, [datos]);
-
-  // HANDLE FETCH
-  const handleFetchData = async (params: FechasFetch) => {
-    const { from, to } = params;
-
-    try {
-      const data = await obtenerVentasHora({ from, to });
-      // Comprobación de la respuesta
-      if (!data || !data.data || data.data.length === 0) {
-        alert('La petición solicitada no contiene información');
-        console.log('response:', data);
-        setFoco(true);
-        return;
-      }
-      setDatos(data.data);
-      console.log('response:', data.data);
-    } catch (error) {
-      console.error('Error en la petición:', error);
-      alert('Error al obtener los datos');
-      setFoco(true);
-    }
-  };
-
-  // CLEAR DATA
-  const handleClearData = () => {
-    setDatos(null);
-    setIsProcessing(false);
-    setFooter(false);
-    setFoco(true);
-    setLimpiarFechas(true);
-    setTimeout(() => setLimpiarFechas(false), 0);
-  };
-
-  // FORMATEO SIN DECIMALES:
-  // const formatearNumero = (numero) => {
-  //   // Redondeamos el número y eliminamos los decimales
-  //   const numeroRedondeado = Math.round(numero);
-
-  //   // Formateamos el número con separadores de miles
-  //   return numeroRedondeado.toLocaleString("es-AR");
-  // };
-
-  // FORMATEO CON 2 DECIMALES.
-  const formatearNumero = (numero: number) => {
-    // Redondeamos el número a 2 decimales
-    const numeroRedondeado = Math.round(numero * 100) / 100;
-
-    // Formateamos el número con separadores de miles y 2 decimales
-    return numeroRedondeado.toLocaleString('es-AR', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    });
-  };
 
   // FUNCION PARA AGRUPAR SEGUN EL RANGO DE HORARIOS
   const agruparPorHorario = (data: DatosVenta, sucursalesSeleccionadas: string[] | null) => {
@@ -197,6 +151,7 @@ export default function VentaPorHora() {
       totalPares,
     };
   };
+
   // FUNCION PARA ORDENAR LOS DATOS SEGUN LA ESTRUCTURA PARA LA TABLA
   const crearDataParaTabla = ({
     datosAgrupados,
@@ -227,17 +182,19 @@ export default function VentaPorHora() {
     });
   };
 
-  //  IMPLEMENTACION DE FUNCIONES
+  // IMPLEMENTACION DE FUNCIONES
   const { datosAgrupados, totalImporte, totalOperaciones, totalPares } = agruparPorHorario(
     datos,
     sucursalesSeleccionadas
   );
+
   const dataParaTabla = crearDataParaTabla({
     datosAgrupados,
     totalImporte,
     totalOperaciones,
     totalPares,
   });
+
   // FOOTER TABLA 1
   const datosParaFooter = {
     id: '',
@@ -249,50 +206,42 @@ export default function VentaPorHora() {
     totalImporte: totalImporte,
     porcentajeImporte: '',
   };
-  // RANGOS PERSONALIZADOS PARA INPUT DE FECHAS
-  const rangePresets: { label: string; value: [dayjs.Dayjs, dayjs.Dayjs] }[] = [
-    {
-      label: 'Ayer',
-      value: [dayjs().subtract(1, 'day'), dayjs().subtract(1, 'day')],
-    },
-    { label: 'Últimos 7 Días', value: [dayjs().subtract(7, 'days'), dayjs()] },
-    {
-      label: 'Últimos 15 Días',
-      value: [dayjs().subtract(15, 'days'), dayjs()],
-    },
-    {
-      label: 'Últimos 30 Días',
-      value: [dayjs().subtract(30, 'days'), dayjs()],
-    },
-    {
-      label: 'Últimos 90 Días',
-      value: [dayjs().subtract(90, 'days'), dayjs()],
-    },
-    { label: 'Este Mes', value: [dayjs().startOf('month'), dayjs()] },
-    {
-      label: 'Mes Pasado',
-      value: [
-        dayjs().subtract(1, 'month').startOf('month'),
-        dayjs().subtract(1, 'month').endOf('month'),
-      ],
-    },
-    {
-      label: 'Año Pasado',
-      value: [
-        dayjs().subtract(1, 'year').startOf('year'),
-        dayjs().subtract(1, 'year').endOf('year'),
-      ],
-    },
-  ];
+
+  // HANDLE FETCH
+  const handleFetchData = async (params: FechasRango) => {
+    const { from, to } = params;
+
+    try {
+      const data = await obtenerVentasHora({ from, to });
+      // Comprobación de la respuesta
+      if (!data || !data.data || data.data.length === 0) {
+        alert('La petición solicitada no contiene información');
+        // console.log('response:', data);
+        setFoco(true);
+        return;
+      }
+      setDatos(data.data);
+      // console.log('response:', data.data);
+    } catch (error) {
+      console.error('Error en la petición:', error);
+      alert('Error al obtener los datos');
+      setFoco(true);
+    }
+  };
+
+  // CLEAR DATA
+  const handleClearData = () => {
+    setDatos(null);
+    setIsProcessing(false);
+    setFooter(false);
+    setFoco(true);
+    setLimpiarFechas(true);
+    setTimeout(() => setLimpiarFechas(false), 0);
+  };
 
   return (
     <div className=" w-full h-full p-4 pt-0 overflow-hidden ">
-      <div
-        className="flex items-center relative w-screen right-1 py-2 
-    text-3xl  xl:h-8 xl:pt-2 px-5 xl:text-lg font-medium tracking-wide  bg-[#3866a8] text-white "
-      >
-        <h1 className="left-4 relative">Venta Por Hora</h1>
-      </div>
+      <ViewTitle title={'Ventas por Hora'} />
 
       {/** BOTONERA */}
       <div className="grid grid-cols-12 grid-rows-1 gap-4 mt-6 rounded p-2  h-16 items-center ">
@@ -300,20 +249,20 @@ export default function VentaPorHora() {
         <div className="col-start-2 col-span-6 2xl:col-span-6 2xl:col-start-2 ">
           <FechasInforme
             setFocus={foco}
+            setFechas={setFechas}
             onFetchData={handleFetchData} // Ahora usa la nueva función
             onClearData={handleClearData}
             isProcessing={isProcessing}
             placeholders={['Inicio', 'Fin']}
             buttonText={{ fetch: 'Procesar', clear: 'Borrar' }}
             whitButttons={true}
-            presets={rangePresets}
             clearTrigger={limpiarFechas}
           />
         </div>
 
         {/**modales y funcionabilidades */}
         <div className="col-span-5 col-start-8 2xl:col-span-4 2xl:col-start-8  ">
-          <GrupoBotonesFunciones
+          <HerramientasComponent
             data={dataParaTabla}
             sucursales={sucursalesDisponibles}
             sucursalesSeleccionadas={sucursalesSeleccionadas}

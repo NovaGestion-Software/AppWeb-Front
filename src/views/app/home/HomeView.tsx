@@ -1,4 +1,4 @@
-import logoNova from '../../../public/novaicon2-256.png';
+import logoNova from '../../../../public/novaicon2-256.png';
 
 export default function Home() {
   return (

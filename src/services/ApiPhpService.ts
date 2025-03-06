@@ -7,8 +7,10 @@ export async function obtenerVentasHora({ from, to }: { from: string | null; to:
   try {
     const url = `/apinova/generico/obtenerVentasHora.php?_i={"_e":"${empresa}","_m":"prod","_fi":"${from}","_ff":"${to}"}`;
 
+    // console.log(url);
+
     const { data } = await apiPhp(url);
-    console.log('data en service', data);
+    // console.log('data en service', data);
 
     return data;
   } catch (error) {
