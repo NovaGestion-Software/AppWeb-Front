@@ -1,9 +1,8 @@
-
-import { useEffect, useState } from "react";
-import { FaCheck } from "react-icons/fa";
-import { ImCross } from "react-icons/im";
-import { RiStore3Fill } from "@remixicon/react";
-import { Button } from "@headlessui/react";
+import { useEffect, useState } from 'react';
+import { FaCheck } from 'react-icons/fa';
+import { ImCross } from 'react-icons/im';
+import { RiStore3Fill } from '@remixicon/react';
+import { Button } from '@headlessui/react';
 
 interface Modal {
   sucursales: string[];
@@ -19,11 +18,8 @@ export default function ModalSucursales({
   setSucursalesSeleccionadas,
 }: Modal) {
   const [showModal, setShowModal] = useState(false);
-  const [sucursalesSeleccionadasModal, setSucursalesSeleccionadasModal] =
-    useState<string[]>([]);
-  const [sucursalesDisponibles, setSucursalesDisponibles] = useState<string[]>(
-    []
-  );
+  const [sucursalesSeleccionadasModal, setSucursalesSeleccionadasModal] = useState<string[]>([]);
+  const [sucursalesDisponibles, setSucursalesDisponibles] = useState<string[]>([]);
 
   useEffect(() => {
     if (sucursales?.length) {
@@ -44,6 +40,7 @@ export default function ModalSucursales({
     setSucursalesSeleccionadas(sucursalesSeleccionadasModal);
     setShowModal(false);
   };
+
   const handleCheckboxChange = (id: string) => {
     setSucursalesSeleccionadasModal(
       (prevSeleccionadas) =>
@@ -57,6 +54,7 @@ export default function ModalSucursales({
     setShowModal(false); // Cerrar el modal
     setSucursalesSeleccionadasModal([...sucursalesSeleccionadas]); // Revertir los cambios y restaurar las sucursales originales
   };
+
   return (
     <>
       <Button
@@ -64,8 +62,8 @@ export default function ModalSucursales({
         disabled={!isProcessing}
         className={`w-44 h-9 rounded-md p-1 gap-2 flex flex-row items-center justify-center text-xs 2xl:text-base ${
           isProcessing
-            ? "bg-blue-500 hover:bg-blue-600"
-            : "bg-gray-500 cursor-not-allowed border-none"
+            ? 'bg-blue-500 hover:bg-blue-600'
+            : 'bg-gray-500 cursor-not-allowed border-none'
         } text-white`}
       >
         <span>Sucursales</span>
@@ -129,9 +127,7 @@ export default function ModalSucursales({
                               <input
                                 type="checkbox"
                                 className="w-5 h-5 cursor-pointer"
-                                checked={sucursalesSeleccionadasModal.includes(
-                                  sucursal
-                                )}
+                                checked={sucursalesSeleccionadasModal.includes(sucursal)}
                                 onChange={() => handleCheckboxChange(sucursal)}
                               />
                             </td>

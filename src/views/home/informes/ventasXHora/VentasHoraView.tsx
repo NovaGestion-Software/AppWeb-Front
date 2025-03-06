@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { obtenerVentasHora } from '@/services/ApiPhpService';
-import FechasInforme from './components/FechasDeInforme';
+import FechasInforme from './components/FechasInforme';
 import GrupoBotonesFunciones from './components/GrupoBotonesFunciones';
 import dayjs from 'dayjs';
 import TablaVentaPorHora from './components/TablaVentaPorHora';
@@ -33,7 +33,7 @@ type Totales = {
   totalPares: number;
 };
 
-export default function VentaPorHora() {
+export default function VentasHoraView() {
   const [datos, setDatos] = useState<DatosVenta | null>(null);
   const [sucursalesSeleccionadas, setSucursalesSeleccionadas] = useState<string[]>([]);
   const [sucursalesDisponibles, setSucursalesDisponibles] = useState<string[]>([]);
@@ -89,38 +89,7 @@ export default function VentaPorHora() {
     };
   }, [datos]);
 
-  // HANDLE FETCH
-  const handleFetchData = async (params: FechasFetch) => {
-    const { from, to } = params;
-
-    try {
-      const data = await obtenerVentasHora({ from, to });
-      // Comprobación de la respuesta
-      if (!data || !data.data || data.data.length === 0) {
-        alert('La petición solicitada no contiene información');
-        console.log('response:', data);
-        setFoco(true);
-        return;
-      }
-      setDatos(data.data);
-      console.log('response:', data.data);
-    } catch (error) {
-      console.error('Error en la petición:', error);
-      alert('Error al obtener los datos');
-      setFoco(true);
-    }
-  };
-
-  // CLEAR DATA
-  const handleClearData = () => {
-    setDatos(null);
-    setIsProcessing(false);
-    setFooter(false);
-    setFoco(true);
-    setLimpiarFechas(true);
-    setTimeout(() => setLimpiarFechas(false), 0);
-  };
-
+  // FUNCIONS O ARROW
   // FORMATEO SIN DECIMALES:
   // const formatearNumero = (numero) => {
   //   // Redondeamos el número y eliminamos los decimales
@@ -197,6 +166,7 @@ export default function VentaPorHora() {
       totalPares,
     };
   };
+
   // FUNCION PARA ORDENAR LOS DATOS SEGUN LA ESTRUCTURA PARA LA TABLA
   const crearDataParaTabla = ({
     datosAgrupados,
@@ -227,17 +197,19 @@ export default function VentaPorHora() {
     });
   };
 
-  //  IMPLEMENTACION DE FUNCIONES
+  // IMPLEMENTACION DE FUNCIONES
   const { datosAgrupados, totalImporte, totalOperaciones, totalPares } = agruparPorHorario(
     datos,
     sucursalesSeleccionadas
   );
+
   const dataParaTabla = crearDataParaTabla({
     datosAgrupados,
     totalImporte,
     totalOperaciones,
     totalPares,
   });
+
   // FOOTER TABLA 1
   const datosParaFooter = {
     id: '',
@@ -249,6 +221,7 @@ export default function VentaPorHora() {
     totalImporte: totalImporte,
     porcentajeImporte: '',
   };
+
   // RANGOS PERSONALIZADOS PARA INPUT DE FECHAS
   const rangePresets: { label: string; value: [dayjs.Dayjs, dayjs.Dayjs] }[] = [
     {
@@ -284,6 +257,38 @@ export default function VentaPorHora() {
       ],
     },
   ];
+
+  // HANDLE FETCH
+  const handleFetchData = async (params: FechasFetch) => {
+    const { from, to } = params;
+
+    try {
+      const data = await obtenerVentasHora({ from, to });
+      // Comprobación de la respuesta
+      if (!data || !data.data || data.data.length === 0) {
+        alert('La petición solicitada no contiene información');
+        console.log('response:', data);
+        setFoco(true);
+        return;
+      }
+      setDatos(data.data);
+      console.log('response:', data.data);
+    } catch (error) {
+      console.error('Error en la petición:', error);
+      alert('Error al obtener los datos');
+      setFoco(true);
+    }
+  };
+
+  // CLEAR DATA
+  const handleClearData = () => {
+    setDatos(null);
+    setIsProcessing(false);
+    setFooter(false);
+    setFoco(true);
+    setLimpiarFechas(true);
+    setTimeout(() => setLimpiarFechas(false), 0);
+  };
 
   return (
     <div className=" w-full h-full p-4 pt-0 overflow-hidden ">

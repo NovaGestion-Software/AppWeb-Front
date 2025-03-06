@@ -1,8 +1,8 @@
-import { useCallback } from "react";
+import { useCallback } from 'react';
 // import { useDispatch, useSelector } from "react-redux";
-import * as XLSX from "xlsx";
-import { RiFileExcel2Fill, RiPrinterFill } from "@remixicon/react";
-import ModalSucursales2 from "./ModalSucursales2";
+import * as XLSX from 'xlsx';
+import { RiFileExcel2Fill, RiPrinterFill } from '@remixicon/react';
+import ModalSucursales2 from './ModalSucursales2';
 // import { TOGGLE_VIEW_SUCURSAL } from "../../../../lib/features/informeCobranzaSlice";
 // import { RootState } from "../../../../lib/store";
 
@@ -48,15 +48,15 @@ const GrupoBotonesFunciones: React.FC<GrupoBotonesFuncionesProps> = ({
 
     const wb = XLSX.utils.book_new();
     const ws = XLSX.utils.json_to_sheet(datosTransformados);
-    XLSX.utils.book_append_sheet(wb, ws, "Informe1");
-    XLSX.writeFile(wb, "Informe.xlsx");
+    XLSX.utils.book_append_sheet(wb, ws, 'Informe1');
+    XLSX.writeFile(wb, 'Informe.xlsx');
   }, [data]);
 
   const handlePrint = useCallback(() => {
-    const tableElement = document.getElementById("table-to-print");
+    const tableElement = document.getElementById('table-to-print');
     if (!tableElement) return;
 
-    const printWindow = window.open("", "_blank", "width=600,height=800");
+    const printWindow = window.open('', '_blank', 'width=600,height=800');
     if (!printWindow) return;
 
     printWindow.document.write(`
@@ -81,31 +81,30 @@ const GrupoBotonesFunciones: React.FC<GrupoBotonesFuncionesProps> = ({
     setTimeout(() => printWindow.print(), 500);
   }, []);
 
-//   {store ? (
-//     <ModalSucursales
-//       storeSelector={(state: RootState) => state.informeCobranzas}
-//       toggleAction={TOGGLE_VIEW_SUCURSAL}
-//     />
-//   ) : (
-// )}
+  //   {store ? (
+  //     <ModalSucursales
+  //       storeSelector={(state: RootState) => state.informeCobranzas}
+  //       toggleAction={TOGGLE_VIEW_SUCURSAL}
+  //     />
+  //   ) : (
+  // )}
+
   return (
     <div className="flex flex-row items-center justify-center gap-6 h-14 py-2 px-4 rounded-lg border bg-white">
-    
-        <ModalSucursales2
-          sucursales={sucursales}
-          sucursalesSeleccionadas={sucursalesSeleccionadas}
-          setSucursalesSeleccionadas={setSucursalesSeleccionadas}
-          isProcessing={isProcessing}
-        />
-    
+      <ModalSucursales2
+        sucursales={sucursales}
+        sucursalesSeleccionadas={sucursalesSeleccionadas}
+        setSucursalesSeleccionadas={setSucursalesSeleccionadas}
+        isProcessing={isProcessing}
+      />
 
       <button
         onClick={handleExportExcel}
         disabled={!isProcessing}
         className={`w-16 h-9 rounded-md p-1 flex items-center justify-center text-white ${
           isProcessing
-            ? "bg-green-600 hover:bg-green-700"
-            : "bg-gray-500 cursor-not-allowed border-none"
+            ? 'bg-green-600 hover:bg-green-700'
+            : 'bg-gray-500 cursor-not-allowed border-none'
         }`}
       >
         <RiFileExcel2Fill />
@@ -116,8 +115,8 @@ const GrupoBotonesFunciones: React.FC<GrupoBotonesFuncionesProps> = ({
         disabled={!isProcessing}
         className={`w-16 h-9 rounded-md flex items-center justify-center text-white ${
           isProcessing
-            ? "bg-sky-600 hover:bg-sky-700"
-            : "bg-gray-500 cursor-not-allowed border-none"
+            ? 'bg-sky-600 hover:bg-sky-700'
+            : 'bg-gray-500 cursor-not-allowed border-none'
         }`}
       >
         <RiPrinterFill />
