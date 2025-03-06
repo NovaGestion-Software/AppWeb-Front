@@ -155,8 +155,8 @@ export default function FechasInforme({
     }
     const periodoIni = dateRange.from.format('YYYY-MM-DD');
     const periodoFin = dateRange.to.format('YYYY-MM-DD');
-    // await onFetchData({ from: periodoIni, to: periodoFin });
-    setFechas({ from: periodoIni, to: periodoFin });
+    await onFetchData({ from: periodoIni, to: periodoFin });
+    // setFechas({ from: periodoIni, to: periodoFin });
   };
 
   const handleClear = () => {
