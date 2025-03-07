@@ -1,4 +1,4 @@
-import { CSSProperties, useEffect, useRef, useState } from 'react';
+import {  CSSProperties, useEffect, useRef, useState } from 'react';
 import { useRowSelect } from '@table-library/react-table-library/select';
 import {
   Table,
@@ -163,7 +163,7 @@ function TablaInforme<T extends TableNode>({
 
   function onSelectChange(action: any, state: any) {
     const selectedItem = datosParaTabla.find((node) => node.id === state.id);
-
+console.log(action)
     if (!selectedItem) {
       setCurrentHorario(null);
     } else {

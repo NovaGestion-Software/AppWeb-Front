@@ -46,6 +46,7 @@ export default function HerramientasComponent({
 }: HerramientasComponentProps) {
   const { totalOperaciones, totalPares, totalImporte } = datosParaFooter;
   const datosTotales = {
+    horas: "", // Identificador en la columna de horas
     hora: "Totales", // Identificador en la columna de horas
     operaciones: totalOperaciones,
     porcentajeOperaciones: "",
@@ -56,7 +57,8 @@ export default function HerramientasComponent({
   };
 
   const handleExportExcel = useCallback(() => {
-    const datosTransformados = Object.entries(data).map(([hora, item]) => ({
+    const datosTransformados = Object.entries(data).map(([horas, item]) => ({
+      horas,
       hora: item.hora,
       operaciones: item.nOperaciones,
       porcentajeOperaciones: item.porcentajeOperaciones,
