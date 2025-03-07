@@ -1,11 +1,13 @@
-import { Dispatch, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { useVentasHoraStore } from '@/store/useVentasHoraStore';
 import { DatePicker, ConfigProvider } from 'antd';
+import { FechasRango } from '@/types';
 import { RiPlayCircleFill, RiCloseCircleFill } from '@remixicon/react';
 import 'dayjs/locale/es';
 import dayjs, { Dayjs } from 'dayjs';
 import locale from 'antd/locale/es_ES';
 import ActionButton from '@/Components/ui/Buttons/ActionButton';
-import { FechasRango } from '@/types';
+import showAlert from '@/utils/showAlert';
 
 interface DateRange {
   from: Dayjs | null;
@@ -13,42 +15,43 @@ interface DateRange {
 }
 
 interface FechasInformeProps {
-  setFechas: Dispatch<React.SetStateAction<FechasRango>>;
   onFetchData: (params: FechasRango) => Promise<void>;
   onClearData: () => void;
   isProcessing: boolean;
-  placeholders?: [string, string];
   buttonText?: { fetch: string; clear: string };
   whitButttons?: boolean;
   showPresets?: boolean;
   setFocus: boolean;
-  clearTrigger: boolean;
 }
 
 export default function FechasInforme({
-  setFechas,
   onFetchData,
   onClearData,
   isProcessing = false,
-  placeholders = ['Fecha inicio', 'Fecha fin'],
   buttonText,
   whitButttons,
   showPresets = true,
   setFocus,
-  clearTrigger,
 }: FechasInformeProps) {
   dayjs.locale('es');
   const defaultDate = {
     from: dayjs().startOf('month'),
     to: dayjs(),
   };
-  console.log(onFetchData);
   const [dateRange, setDateRange] = useState<DateRange>(defaultDate);
   const disabledFutureDates = (current: dayjs.Dayjs) => current && current > dayjs().endOf('day');
   const rangePickerRef = useRef<any>(null);
-  const focusDatePicker = () => {
-    rangePickerRef.current?.focus();
-  };
+  const { status, setFechas } = useVentasHoraStore();
+
+  useEffect(() => {
+    if (dateRange.from && dateRange.to) {
+      const periodoIni = dateRange.from.format('YYYY-MM-DD');
+      const periodoFin = dateRange.to.format('YYYY-MM-DD');
+      setFechas({ from: periodoIni, to: periodoFin });
+    } else {
+      setFechas({ from: '', to: '' });
+    }
+  }, [dateRange]);
 
   useEffect(() => {
     if (setFocus) {
@@ -56,12 +59,6 @@ export default function FechasInforme({
       focusDatePicker();
     }
   }, [setFocus]);
-
-  useEffect(() => {
-    if (clearTrigger) {
-      setDateRange({ from: null, to: null }); // Limpiar estado
-    }
-  }, [clearTrigger]);
 
   // Usamos useEffect para escuchar el evento 'keydown' global
   useEffect(() => {
@@ -72,6 +69,10 @@ export default function FechasInforme({
       document.removeEventListener('keydown', handleKeyDownGlobal);
     };
   }, [dateRange]);
+
+  const focusDatePicker = () => {
+    rangePickerRef.current?.focus();
+  };
 
   const rangePresets: { label: string; value: [dayjs.Dayjs, dayjs.Dayjs] }[] = [
     {
@@ -100,6 +101,10 @@ export default function FechasInforme({
       ],
     },
     {
+      label: 'Este Año',
+      value: [dayjs().startOf('year'), dayjs()],
+    },
+    {
       label: 'Año Pasado',
       value: [
         dayjs().subtract(1, 'year').startOf('year'),
@@ -123,45 +128,35 @@ export default function FechasInforme({
     }
   };
 
-  const handleChange = (dates: [Dayjs | null, Dayjs | null] | null) => {
-    // Si dates es nulo, limpiar el estado
-    if (!dates) {
-      setDateRange({ from: null, to: null });
-      setFechas({ from: null, to: null });
-      return;
-    }
-
-    const [newFrom, newTo] = dates;
-
-    // Establecer el nuevo rango de fechas
-    setDateRange({ from: newFrom, to: newTo });
-
-    // Solo establecer las fechas en setFechas si ambas fechas son válidas
-    if (newFrom && newTo) {
-      const periodoIni = newFrom.format('YYYY-MM-DD');
-      const periodoFin = newTo.format('YYYY-MM-DD');
-      setFechas({ from: periodoIni, to: periodoFin });
-      // } else {
-      //   // Si alguna fecha es null, limpiar las fechas
-      //   setFechas({ from: null, to: null });
-    }
-  };
-
   const handleData = async () => {
-    if (!dateRange?.from || !dateRange?.to) {
-      alert('Rango de fechas inválido');
-      focusDatePicker();
-      return;
+    try {
+      const { from, to } = dateRange;
+
+      if (!from || !to) {
+        showAlert({
+          text: 'Debes elegir un rango de fechas',
+          icon: 'warning',
+          confirmButtonText: 'OK',
+          showConfirmButton: true,
+          timer: 1800,
+          willClose: () => focusDatePicker(),
+        });
+        return;
+      }
+
+      const dates = {
+        from: from.format('YYYY-MM-DD'),
+        to: to.format('YYYY-MM-DD'),
+      };
+
+      await onFetchData(dates);
+    } catch (error) {
+      console.log(error);
     }
-    const periodoIni = dateRange.from.format('YYYY-MM-DD');
-    const periodoFin = dateRange.to.format('YYYY-MM-DD');
-    await onFetchData({ from: periodoIni, to: periodoFin });
-    // setFechas({ from: periodoIni, to: periodoFin });
   };
 
   const handleClear = () => {
     setDateRange({ from: null, to: null });
-    // console.log('handle clear usado en el hijo');
     onClearData();
   };
 
@@ -172,9 +167,9 @@ export default function FechasInforme({
           ref={rangePickerRef}
           value={[dateRange.from, dateRange.to]}
           format="DD/MM/YYYY"
-          onChange={handleChange}
+          onChange={(dates) => setDateRange({ from: dates?.[0] ?? null, to: dates?.[1] ?? null })}
           className="w-[35rem] 2xl:w-56 2xl:h-10"
-          placeholder={placeholders}
+          placeholder={['Inicio', 'Fin']}
           disabled={isProcessing}
           disabledDate={disabledFutureDates}
           presets={showPresets ? rangePresets : undefined}
@@ -186,11 +181,11 @@ export default function FechasInforme({
       {whitButttons && (
         <>
           <ActionButton
-            text={buttonText?.fetch || ''}
+            text={status === 'pending' ? 'Procesando...' : buttonText?.fetch || ''}
             icon={<RiPlayCircleFill className="w-5 h-5" />}
             color="green"
             onClick={handleData}
-            disabled={isProcessing}
+            disabled={isProcessing || status === 'pending'}
           />
 
           <ActionButton

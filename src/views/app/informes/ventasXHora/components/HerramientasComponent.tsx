@@ -26,9 +26,9 @@ interface HerramientasComponentProps {
 
 export default function HerramientasComponent({
   data,
-  sucursales,
-  sucursalesSeleccionadas,
-  setSucursalesSeleccionadas,
+  // sucursales,
+  // sucursalesSeleccionadas,
+  // setSucursalesSeleccionadas,
   isProcessing,
 }: HerramientasComponentProps) {
   const handleExportExcel = useCallback(() => {
@@ -83,9 +83,9 @@ export default function HerramientasComponent({
         handlePrint={handlePrint}
       >
         <ModalSucursales
-          sucursales={sucursales}
-          sucursalesSeleccionadas={sucursalesSeleccionadas}
-          setSucursalesSeleccionadas={setSucursalesSeleccionadas}
+          // sucursales={sucursales}
+          // sucursalesSeleccionadas={sucursalesSeleccionadas}
+          // setSucursalesSeleccionadas={setSucursalesSeleccionadas}
           isProcessing={isProcessing}
         />
       </HerramientasInforme>

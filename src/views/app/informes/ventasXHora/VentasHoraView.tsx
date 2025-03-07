@@ -1,27 +1,14 @@
 import { useEffect, useState } from 'react';
+import { useMutation } from '@tanstack/react-query';
+import { useVentasHoraStore } from '@/store/useVentasHoraStore';
 import { obtenerVentasHora } from '@/services/ApiPhpService';
+import { ApiResponse, FechasRango, Sucursal } from '@/types';
+import { formatearNumero } from '@/utils';
+import ViewTitle from '@/Components/ui/Labels/ViewTitle';
 import FechasInforme from '../_components/FechasInforme';
 import HerramientasComponent from './components/HerramientasComponent';
 import TablaVentaPorHora from './components/TablaVentaPorHora';
-import ViewTitle from '@/Components/ui/Labels/ViewTitle';
-import { formatearNumero } from '@/utils';
-import { useQuery } from '@tanstack/react-query';
-import { FechasRango } from '@/types';
-
-type Info = {
-  horaini: string;
-  importe: string;
-  cantidad: number;
-  pares: number;
-};
-
-type Sucursal = {
-  sucursal: string;
-  nsucursal: string;
-  info: Info[];
-};
-
-type DatosVenta = Sucursal[] | null;
+import showAlert from '@/utils/showAlert';
 
 type DatosAgrupados = Record<string, { cantidad: number; importe: string; pares: number }>;
 
@@ -32,32 +19,68 @@ type Totales = {
 };
 
 export default function VentasHoraView() {
-  const [datos, setDatos] = useState<DatosVenta | null>(null);
-  const [fechas, setFechas] = useState<FechasRango>({ from: null, to: null });
-  console.log(fechas);
-
-  const [sucursalesSeleccionadas, setSucursalesSeleccionadas] = useState<string[]>([]);
-  const [sucursalesDisponibles, setSucursalesDisponibles] = useState<string[]>([]);
+  // const [sucursalesSeleccionadas, setSucursalesSeleccionadas] = useState<string[]>([]);
+  // const [sucursalesDisponibles, setSucursalesDisponibles] = useState<string[]>([]);
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const [footer, setFooter] = useState<boolean>(false);
   const [foco, setFoco] = useState<boolean>(false);
-  const [limpiarFechas, setLimpiarFechas] = useState(false);
 
-  const { data } = useQuery({
-    queryKey: ['ventas-hora'],
-    queryFn: () => obtenerVentasHora({ from: '2025-02-01', to: '2025-03-01' }),
+  const {
+    fechas,
+    sucursalesSeleccionadas,
+    sucursalesDisponibles,
+    clearFechas,
+    ventasPorHora,
+    setVentasPorHora,
+    setSucursalesSeleccionadas,
+    setSucursalesDisponibles,
+    setStatus,
+    clearVentasPorHora,
+    clearSucursalesDisponibles,
+    clearSucursalesSeleccionadas,
+  } = useVentasHoraStore();
+
+  const { mutate } = useMutation<ApiResponse, Error, FechasRango>({
+    mutationFn: () => obtenerVentasHora(fechas),
+    onMutate: () => {
+      setStatus('pending');
+    },
+    onError: (error) => {
+      console.error('Error al obtener los datos:', error);
+      setStatus('error');
+    },
+    onSuccess: (data) => {
+      // console.log(data.data);
+      if (data.data.length === 0) {
+        showAlert({
+          text: 'El rango de fecha seleccionado no contiene información',
+          icon: 'error',
+          cancelButtonText: 'Cerrar',
+          showCancelButton: true,
+          timer: 2200,
+        });
+      }
+      setVentasPorHora(data.data);
+      // setSucursalesDisponibles(data.data.map((sucursal) => sucursal.nsucursal));
+      // setSucursalesSeleccionadas(data.data.map((sucursal) => sucursal.nsucursal));
+      // setIsProcessing(true);
+      // setFooter(true);
+      setStatus('success');
+    },
+    onSettled: () => {
+      setStatus('idle');
+    },
   });
 
-  console.log(data);
   // SETEAR ESTADOS SI DATOS TIENE INFO.
   useEffect(() => {
-    if (datos?.length) {
-      setSucursalesSeleccionadas(datos.map((sucursal) => sucursal.nsucursal));
-      setSucursalesDisponibles(datos.map((sucursal) => sucursal.nsucursal));
+    if (ventasPorHora?.length) {
+      setSucursalesDisponibles(ventasPorHora.map((sucursal) => sucursal.nsucursal));
+      setSucursalesSeleccionadas(ventasPorHora.map((sucursal) => sucursal.nsucursal));
       setIsProcessing(true);
       setFooter(true);
     }
-  }, [datos]);
+  }, [ventasPorHora]);
 
   // SACAR FOOTER SI NO HAY DATOS SELECCIONADOS PARA MOSTRARSE
   useEffect(() => {
@@ -82,7 +105,7 @@ export default function VentasHoraView() {
   // USAR ESCAPE PARA VACIAR INFORME
   useEffect(() => {
     const handleEscapeKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && datos) {
+      if (e.key === 'Escape' && ventasPorHora) {
         handleClearData();
       }
     };
@@ -94,10 +117,10 @@ export default function VentasHoraView() {
     return () => {
       window.removeEventListener('keydown', handleEscapeKey);
     };
-  }, [datos]);
+  }, [ventasPorHora]);
 
   // FUNCION PARA AGRUPAR SEGUN EL RANGO DE HORARIOS
-  const agruparPorHorario = (data: DatosVenta, sucursalesSeleccionadas: string[] | null) => {
+  const agruparPorHorario = (data: Sucursal[] | null, sucursalesSeleccionadas: string[] | null) => {
     const resultado: Record<string, { importe: string; cantidad: number; pares: number }> = {};
     let totalImporte = 0;
     let totalOperaciones = 0;
@@ -184,7 +207,7 @@ export default function VentasHoraView() {
 
   // IMPLEMENTACION DE FUNCIONES
   const { datosAgrupados, totalImporte, totalOperaciones, totalPares } = agruparPorHorario(
-    datos,
+    ventasPorHora,
     sucursalesSeleccionadas
   );
 
@@ -208,20 +231,13 @@ export default function VentasHoraView() {
   };
 
   // HANDLE FETCH
-  const handleFetchData = async (params: FechasRango) => {
-    const { from, to } = params;
-
+  const handleFetchData = async () => {
     try {
-      const data = await obtenerVentasHora({ from, to });
-      // Comprobación de la respuesta
-      if (!data || !data.data || data.data.length === 0) {
-        alert('La petición solicitada no contiene información');
-        // console.log('response:', data);
-        setFoco(true);
+      if (!fechas.from || !fechas.to) {
+        console.log('Rango de fechas inválido');
         return;
       }
-      setDatos(data.data);
-      // console.log('response:', data.data);
+      mutate(fechas);
     } catch (error) {
       console.error('Error en la petición:', error);
       alert('Error al obtener los datos');
@@ -231,13 +247,15 @@ export default function VentasHoraView() {
 
   // CLEAR DATA
   const handleClearData = () => {
-    setDatos(null);
     setIsProcessing(false);
     setFooter(false);
-    setFoco(true);
-    setLimpiarFechas(true);
-    setTimeout(() => setLimpiarFechas(false), 0);
+    clearVentasPorHora();
+    clearFechas();
+    clearSucursalesDisponibles(), clearSucursalesSeleccionadas(), setFoco(true);
   };
+
+  // console.log(sucursalesSeleccionadas);
+  // console.log(sucursalesDisponibles);
 
   return (
     <div className=" w-full h-full p-4 pt-0 overflow-hidden ">
@@ -249,14 +267,11 @@ export default function VentasHoraView() {
         <div className="col-start-2 col-span-6 2xl:col-span-6 2xl:col-start-2 ">
           <FechasInforme
             setFocus={foco}
-            setFechas={setFechas}
-            onFetchData={handleFetchData} // Ahora usa la nueva función
+            onFetchData={handleFetchData}
             onClearData={handleClearData}
             isProcessing={isProcessing}
-            placeholders={['Inicio', 'Fin']}
             buttonText={{ fetch: 'Procesar', clear: 'Borrar' }}
             whitButttons={true}
-            clearTrigger={limpiarFechas}
           />
         </div>
 
@@ -297,6 +312,7 @@ export default function VentasHoraView() {
         <div className={`col-start-4 2xl:col-start-3 `}>
           <TablaVentaPorHora
             isProcessing={isProcessing}
+            // status={status || 'idle'}
             datos={dataParaTabla}
             datosFooter={datosParaFooter}
             footer={footer}

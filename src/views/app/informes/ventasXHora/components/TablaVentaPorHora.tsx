@@ -8,7 +8,6 @@ interface TableColumn<T> {
   cellProps?: (item: T) => any;
 }
 
-// VENTA POR HORA
 interface VentaPorHora {
   id: number;
   hora: string;

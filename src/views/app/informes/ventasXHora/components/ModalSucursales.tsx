@@ -1,31 +1,55 @@
 import { useEffect, useState } from 'react';
+import { useVentasHoraStore } from '@/store/useVentasHoraStore';
 import { RiStore3Fill } from '@remixicon/react';
 import ActionButton from '@/Components/ui/Buttons/ActionButton';
 import ModalInforme from '../../_components/ModalInforme';
 
 interface ModalSucursalesProps {
-  sucursales: string[];
-  sucursalesSeleccionadas: string[];
-  setSucursalesSeleccionadas: (value: string[]) => void;
+  // sucursales: string[];
+  // sucursalesSeleccionadas: string[];
+  // setSucursalesSeleccionadas: (value: string[]) => void;
   isProcessing: boolean;
 }
 
 export default function ModalSucursales({
-  sucursales,
+  // sucursales,
   isProcessing,
-  sucursalesSeleccionadas,
-  setSucursalesSeleccionadas,
-}: ModalSucursalesProps) {
+}: // sucursalesSeleccionadas,
+// setSucursalesSeleccionadas,
+ModalSucursalesProps) {
   const [showModal, setShowModal] = useState(false);
-  const [sucursalesSeleccionadasModal, setSucursalesSeleccionadasModal] = useState<string[]>([]);
-  const [sucursalesDisponibles, setSucursalesDisponibles] = useState<string[]>([]);
+  // const [sucursalesSeleccionadasModal, setSucursalesSeleccionadasModal] = useState<string[]>([]);
+  // const [sucursalesDisponibles, setSucursalesDisponibles] = useState<string[]>([]);
 
+  const {
+    sucursalesSeleccionadas,
+    sucursalesDisponibles,
+    // setSucursalesDisponibles,
+    setSucursalesSeleccionadas,
+  } = useVentasHoraStore();
+
+  // useEffect(() => {
+  //   if (sucursalesDisponibles?.length) {
+  //     setSucursalesDisponibles(sucursalesDisponibles);
+  //     setSucursalesSeleccionadas([...sucursalesSeleccionadas]);
+  //   }
+  // }, []);
+
+  // Sincroniza el estado con sessionStorage
   useEffect(() => {
-    if (sucursales?.length) {
-      setSucursalesDisponibles(sucursales);
-      setSucursalesSeleccionadasModal([...sucursalesSeleccionadas]);
+    const storedData = sessionStorage.getItem('ventas-hora-storage');
+    if (storedData) {
+      const parsedData = JSON.parse(storedData);
+      if (parsedData?.sucursalesSeleccionadas) {
+        setSucursalesSeleccionadas(parsedData.sucursalesSeleccionadas);
+      }
     }
-  }, [sucursales]);
+  }, []);
+
+  // Sincroniza el sessionStorage cada vez que cambia sucursalesSeleccionadas
+  useEffect(() => {
+    sessionStorage.setItem('ventas-hora-storage', JSON.stringify({ sucursalesSeleccionadas }));
+  }, [sucursalesSeleccionadas]);
 
   useEffect(() => {
     if (showModal) {
@@ -43,31 +67,33 @@ export default function ModalSucursales({
   }, [showModal]); // Se ejecuta cuando showModal cambia
 
   const handleSelectAll = () => {
-    setSucursalesSeleccionadasModal(sucursalesDisponibles); // Selecciona todos los nombres de sucursales
+    setSucursalesSeleccionadas(sucursalesDisponibles); // Selecciona todos los nombres de sucursales
   };
 
   const handleDeselectAll = () => {
-    setSucursalesSeleccionadasModal([]); // Deselecciona todas las sucursales
+    setSucursalesSeleccionadas([]); // Deselecciona todas las sucursales
   };
 
   const handleConfirm = () => {
-    setSucursalesSeleccionadas(sucursalesSeleccionadasModal);
+    setSucursalesSeleccionadas(sucursalesSeleccionadas);
     setShowModal(false);
   };
 
+  // Cambiar estado cuando se selecciona/deselecciona una sucursal
   const handleCheckboxChange = (id: string) => {
-    setSucursalesSeleccionadasModal(
-      (prevSeleccionadas) =>
-        prevSeleccionadas.includes(id)
-          ? prevSeleccionadas.filter((suc) => suc !== id) // Quitar si ya estaba
-          : [...prevSeleccionadas, id] // Agregar si no estaba
-    );
+    const updatedSelection = sucursalesSeleccionadas.includes(id)
+      ? sucursalesSeleccionadas.filter((suc: string) => suc !== id) // Eliminar si ya estaba
+      : [...sucursalesSeleccionadas, id]; // Agregar si no estaba
+
+    setSucursalesSeleccionadas(updatedSelection); // Actualiza directamente el array
   };
 
   const handleCloseModal = () => {
     setShowModal(false); // Cerrar el modal
-    setSucursalesSeleccionadasModal([...sucursalesSeleccionadas]); // Revertir los cambios y restaurar las sucursales originales
+    setSucursalesSeleccionadas([...sucursalesSeleccionadas]); // Revertir los cambios y restaurar las sucursales originales
   };
+
+  console.log(sucursalesSeleccionadas);
 
   return (
     <>
@@ -109,7 +135,7 @@ export default function ModalSucursales({
                             <input
                               type="checkbox"
                               className="w-5 h-5 cursor-pointer"
-                              checked={sucursalesSeleccionadasModal.includes(sucursal)}
+                              checked={sucursalesSeleccionadas.includes(sucursal)}
                               onChange={() => handleCheckboxChange(sucursal)}
                               id={`checkbox-${index}`} // ID único para el checkbox
                             />
