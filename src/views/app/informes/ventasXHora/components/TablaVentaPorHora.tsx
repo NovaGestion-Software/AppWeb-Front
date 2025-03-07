@@ -208,6 +208,7 @@ export default function TablaVentaPorHora({
     return { style }; // Devolver siempre un objeto con la propiedad 'style'
   };
 
+  
   return (
     <div>
       <TablaInforme columnas={COLUMNS} datosParaTabla={datos} estilos={customTheme} footer={footer} datosFooter={datosFooter} procesado={isProcessing} />

@@ -1,6 +1,11 @@
 import { FechasRango, Sucursal } from '@/types';
+import dayjs from 'dayjs';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
+  const defaultDate = {
+    from: dayjs().startOf('month'),
+    to: dayjs(),
+  };
 
 type VentasHoraProps = {
   fechas: FechasRango;
@@ -22,7 +27,7 @@ type VentasHoraProps = {
 export const useVentasHoraStore = create<VentasHoraProps>()(
   persist(
     (set) => ({
-      fechas: { from: '', to: '' },
+      fechas: { from: defaultDate.from, to: defaultDate.to },
       ventasPorHora: null,
       sucursalesSeleccionadas: [],
       sucursalesDisponibles: [],

@@ -9,6 +9,7 @@ import FechasInforme from '../_components/FechasInforme';
 import HerramientasComponent from './components/HerramientasComponent';
 import TablaVentaPorHora from './components/TablaVentaPorHora';
 import showAlert from '@/utils/showAlert';
+import  GraficoInforme  from '../_components/GraficoInforme';
 
 type DatosAgrupados = Record<
   string,
@@ -32,7 +33,7 @@ export default function VentasHoraView() {
     fechas,
     sucursalesSeleccionadas,
     sucursalesDisponibles,
-    clearFechas,
+   
     ventasPorHora,
     setVentasPorHora,
     setSucursalesSeleccionadas,
@@ -232,12 +233,53 @@ export default function VentasHoraView() {
     sucursalesSeleccionadas
   );
 
+
   const dataParaTabla = crearDataParaTabla({
     datosAgrupados,
     totalImporte,
     totalOperaciones,
     totalPares,
   });
+  //puesto aca para hacer la build
+  interface VentaPorHora {
+    id: number;
+    hora: string;
+    nOperaciones: number | string;
+    porcentajeOperaciones: number | string;
+    importe: string;
+    porcentajeImporte: number | string;
+    pares: number | string;
+    porcentajePares: number | string;
+    //   totalImporte: number | string;
+    //   totalOperaciones: number | string;
+    //   totalPares: number | string;
+  }
+  const findMaxValueAndHourByKey = (
+    array: VentaPorHora[],
+    key: keyof VentaPorHora
+  ): { maxValue: number; hora: string | null } => {
+  
+  
+    let maxValue = -Infinity;
+    let hora = "";
+  
+    array.forEach((currentItem) => {
+      const currentValue =
+        typeof currentItem[key] === "string"
+          ? parseFloat(currentItem[key].replace(/\./g, ""))
+          : currentItem[key];
+  
+      if (currentValue > maxValue) {
+        maxValue = currentValue;
+        hora = currentItem.hora; // Guardamos la hora correspondiente al valor máximo
+      }
+    });
+  
+    return { maxValue, hora };
+  };
+  const maxImporteValor = findMaxValueAndHourByKey(dataParaTabla, 'importe');
+const maxImporteFormateado = formatearNumero(maxImporteValor.maxValue)
+
   // formateo con miles y centavos
   const totalImporteFormateado = formatearNumero(totalImporte);
   // FOOTER TABLA 1
@@ -256,6 +298,7 @@ export default function VentasHoraView() {
   const handleFetchData = async () => {
     try {
       if (!fechas.from || !fechas.to) {
+        console.log(fechas, 'fechas')
         console.log('Rango de fechas inválido');
         return;
       }
@@ -271,17 +314,14 @@ export default function VentasHoraView() {
   const handleClearData = () => {
     setIsProcessing(false);
     setFooter(false);
-
     clearVentasPorHora();
-    clearFechas();
     clearSucursalesDisponibles(); 
     clearSucursalesSeleccionadas(); 
     setFoco(true);
   };
 
-  // console.log(sucursalesSeleccionadas);
-  // console.log(sucursalesDisponibles);
 
+  
   return (
     <div className=" w-full h-full p-4 pt-0 overflow-hidden ">
       <ViewTitle title={'Ventas por Hora'} />
@@ -315,9 +355,11 @@ export default function VentasHoraView() {
         </div>
       </div>
 
-      <div className="grid grid-cols-12 gap-2 py-5 pl-4">
+      <div className="grid grid-cols-12 grid-rows-12  gap-2 py-5 pl-4">
         {isProcessing && (
-          <div className="col-span-1 col-start-2 2xl:right-0 2xl:col-start-1 2xl:left-4 relative right-4  bg-white rounded-lg p-4  h-fit w-44 font-semibold text-base shadow-md ">
+          <div className=" col-span-1 col-start-8 row-span-1 relative left-6
+           bg-white rounded-lg p-4  h-fit w-44 font-semibold text-base shadow-md 
+          2xl:right-0 2xl:col-start-2 2xl:-left-12  ">
             <h3 className="font-bold text-xs 2xl:text-sm text-green-700 mb-2">
               Sucursales:
             </h3>
@@ -337,7 +379,8 @@ export default function VentasHoraView() {
             </ul>
           </div>
         )}
-        <div className={`col-start-4 2xl:col-start-3 `}>
+        <div className={`col-start-1 col-span-7 row-span-9 row-start-1   
+          2xl:col-start-3 h-fit `}>
           <TablaVentaPorHora
             isProcessing={isProcessing}
             // status={status || 'idle'}
@@ -346,6 +389,20 @@ export default function VentasHoraView() {
             footer={footer}
           />
         </div>
+
+        {isProcessing && (
+           <div className=' flex flex-col gap-3 relative left-6 
+           col-start-8 col-span-6 row-span-4  2xl:row-start-1
+            h-fit w-fit '>
+           <div className='  bg-white rounded-lg py-2 px-3 w-[29rem]  h-fit flex flex-col gap-1 '>
+           <p className='text-blue-500'>El mayor importe de venta es: <span className='text-xl text-green-600 font-bold'> ${maxImporteFormateado}</span> </p>
+           <p className='text-blue-500'>En el horario de <span className='font-bold'>{maxImporteValor.hora}</span> </p>
+           </div>
+             <GraficoInforme datosParaGraficos={dataParaTabla} />
+           </div>
+        )}
+      
+      
       </div>
     </div>
   );

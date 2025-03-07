@@ -44,16 +44,15 @@ export default function FechasInforme({
   const rangePickerRef = useRef<any>(null);
 
   // BRANCH INFORME
-  const { status, setFechas } = useVentasHoraStore();
+  const { status,fechas ,setFechas } = useVentasHoraStore();
 
   useEffect(() => {
     if (dateRange.from && dateRange.to) {
       const periodoIni = dateRange.from.format('YYYY-MM-DD');
       const periodoFin = dateRange.to.format('YYYY-MM-DD');
       setFechas({ from: periodoIni, to: periodoFin });
-    } else {
-      setFechas({ from: '', to: '' });
-    }
+      console.log('fechas steads',fechas )
+    } 
   }, [dateRange]);
 
   // BRANCH MAIN

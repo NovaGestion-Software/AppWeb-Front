@@ -1,3 +1,5 @@
+import { Dayjs } from "dayjs";
+
 export type Account = {
   empresa: string;
   usuario: string;
@@ -87,6 +89,6 @@ export type ApiResponse = {
 };
 
 export type FechasRango = {
-  from: string;
-  to: string;
+  from: string | Dayjs;
+  to: string | Dayjs;
 };
