@@ -1,10 +1,12 @@
 import { isAxiosError } from 'axios';
 import apiPhp from '../lib/axiosPhp';
+import { FechasRango } from '@/types';
 
 const user = JSON.parse(localStorage.getItem('_u') || '{}');
 const empresa = user.empresa ? user.empresa.toString().slice(-2) : '00'; // Extrae los últimos 2 dígitos
-export async function obtenerVentasHora({ from, to }: { from: string | null; to: string | null }) {
+export async function obtenerVentasHora(fechas: FechasRango) {
   try {
+    const { from, to } = fechas;
     const url = `/apinova/generico/obtenerVentasHora.php?_i={"_e":"${empresa}","_m":"prod","_fi":"${from}","_ff":"${to}"}`;
 
     // console.log(url);

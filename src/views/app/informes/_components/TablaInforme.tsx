@@ -1,4 +1,4 @@
-import {  CSSProperties, useEffect, useRef, useState } from 'react';
+import { CSSProperties, useEffect, useRef, useState } from 'react';
 import { useRowSelect } from '@table-library/react-table-library/select';
 import {
   Table,
@@ -15,6 +15,8 @@ import {
 } from '@table-library/react-table-library/table';
 import { getTheme, DEFAULT_OPTIONS } from '@table-library/react-table-library/material-ui';
 import { useTheme } from '@table-library/react-table-library/theme';
+import { useVentasHoraStore } from '@/store/useVentasHoraStore';
+import { ClipLoader } from 'react-spinners';
 
 interface TableNode {
   id: string | number; // ID único para cada fila
@@ -25,7 +27,6 @@ interface TableColumn<T> {
   renderCell: (item: T) => React.ReactNode;
   cellProps?: (item: T) => any;
 }
-
 
 interface TablaFooterProps {
   datos?: {
@@ -48,6 +49,7 @@ const TablaFooter: React.FC<TablaFooterProps> = ({ datos = {} }) => {
     </Footer>
   );
 };
+
 interface TableProps<T extends TableNode> {
   columnas: TableColumn<T>[];
   datosParaTabla: TableNode[];
@@ -57,7 +59,8 @@ interface TableProps<T extends TableNode> {
   datosFooter?: {};
   procesado: boolean;
 }
-function TablaInforme<T extends TableNode>({
+
+export default function TablaInforme<T extends TableNode>({
   columnas,
   datosParaTabla,
   estilos,
@@ -65,23 +68,21 @@ function TablaInforme<T extends TableNode>({
   datosFooter,
   procesado, // Propiedad para saber si ya fue procesado
 }: TableProps<T>) {
+  const [isActive, setIsActive] = useState(false);
   const [currentHorario, setCurrentHorario] = useState<TableNode | null>(null);
+  const [scrollPosition, setScrollPosition] = useState(0);
+  const { status } = useVentasHoraStore();
+  const tableRef = useRef<HTMLDivElement | null>(null);
   const materialTheme = getTheme(DEFAULT_OPTIONS);
   const theme = useTheme([materialTheme, estilos]);
+  const rowHeight = 30;
+  const headerHeight = 5;
   const data: Data<TableNode> = {
-    nodes: datosParaTabla, 
+    nodes: datosParaTabla,
   };
-
   const select = useRowSelect(data, {
     onChange: onSelectChange,
   });
-
-  const [scrollPosition, setScrollPosition] = useState(0);
-  const rowHeight = 30;
-  const headerHeight = 5;
-
-  const tableRef = useRef<HTMLDivElement | null>(null);
-  const [isActive, setIsActive] = useState(false);
 
   // 👉 Establece la primera fila seleccionada si no hay ninguna y los datos ya están procesados
   useEffect(() => {
@@ -137,16 +138,6 @@ function TablaInforme<T extends TableNode>({
     };
   }, [isActive, currentHorario, data]);
 
-  // 👉 Activa la tabla cuando se le hace click
-  const handleTableClick = () => {
-    setIsActive(true);
-  };
-
-  // 👉 Desactiva la tabla cuando pierde el foco
-  const handleBlur = () => {
-    setIsActive(false);
-  };
-
   // 👉 Maneja el scroll de la tabla
   useEffect(() => {
     const tableContainer = document.querySelector('.table');
@@ -163,13 +154,22 @@ function TablaInforme<T extends TableNode>({
 
   function onSelectChange(action: any, state: any) {
     const selectedItem = datosParaTabla.find((node) => node.id === state.id);
-console.log(action)
+    console.log(action);
     if (!selectedItem) {
       setCurrentHorario(null);
     } else {
       setCurrentHorario(selectedItem);
     }
   }
+
+  const handleTableClick = () => {
+    setIsActive(true);
+  };
+
+  // Manejar pérdida de foco para desactivar eventos
+  const handleBlur = () => {
+    setIsActive(false);
+  };
 
   return (
     <div
@@ -196,6 +196,15 @@ console.log(action)
               </HeaderRow>
             </Header>
             <Body>
+              {status === 'pending' && (
+                <div className="absolute inset-0 flex justify-center items-center z-10">
+                  <div className="flex flex-col items-center">
+                    <ClipLoader color="#36d7b7" size={50} speedMultiplier={0.5} />
+                    <p className="mt-2 text-gray-600">Cargando...</p>
+                  </div>
+                </div>
+              )}
+
               {tableList.map((item, rowIndex) => (
                 <Row key={rowIndex} item={item}>
                   {columnas.map((column, columnIndex) => {
@@ -216,6 +225,3 @@ console.log(action)
     </div>
   );
 }
-
-
-export default TablaInforme;

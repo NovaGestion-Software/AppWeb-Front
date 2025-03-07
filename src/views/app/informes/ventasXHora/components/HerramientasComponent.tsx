@@ -38,10 +38,12 @@ interface HerramientasComponentProps {
 
 export default function HerramientasComponent({
   data,
-  sucursales,
-  sucursalesSeleccionadas,
-  datosParaFooter,
-  setSucursalesSeleccionadas,
+
+  // sucursales,
+  // sucursalesSeleccionadas,
+  // setSucursalesSeleccionadas,
+        datosParaFooter,
+
   isProcessing,
 }: HerramientasComponentProps) {
   const { totalOperaciones, totalPares, totalImporte } = datosParaFooter;
@@ -112,9 +114,9 @@ export default function HerramientasComponent({
         handlePrint={handlePrint}
       >
         <ModalSucursales
-          sucursales={sucursales}
-          sucursalesSeleccionadas={sucursalesSeleccionadas}
-          setSucursalesSeleccionadas={setSucursalesSeleccionadas}
+          // sucursales={sucursales}
+          // sucursalesSeleccionadas={sucursalesSeleccionadas}
+          // setSucursalesSeleccionadas={setSucursalesSeleccionadas}
           isProcessing={isProcessing}
         />
       </HerramientasInforme>

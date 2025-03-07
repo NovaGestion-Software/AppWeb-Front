@@ -17,22 +17,6 @@ export type ColorTypes =
   | 'red'
   | 'redSoft';
 
-// INFORME VENTAS POR HORA
-export interface SucursalInfo {
-  horaini: string;
-  importe: string;
-  cantidad: number;
-  pares?: number;
-}
-
-export interface Sucursal {
-  sucursal: string;
-  nsucursal: string;
-  info: SucursalInfo[];
-}
-
-export type ResponseVentasHora = Sucursal[];
-
 export type DashboardCard = {
   titulo: string;
   valortotal: number | null;
@@ -80,7 +64,29 @@ export type SucursalCaja = {
   datcaja: DatCaja[];
 };
 
+// INFORMES
+
+export type SucursalInfo = {
+  horaini: string;
+  importe: string;
+  cantidad: number;
+  pares: number;
+};
+
+export type Sucursal = {
+  sucursal: string;
+  nsucursal: string;
+  info: SucursalInfo[];
+};
+
+export type ApiResponse = {
+  status: string;
+  data: Sucursal[];
+  message: string;
+  code: number;
+};
+
 export type FechasRango = {
-  from: string | null;
-  to: string | null;
+  from: string;
+  to: string;
 };
