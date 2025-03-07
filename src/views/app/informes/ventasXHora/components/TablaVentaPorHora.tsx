@@ -56,8 +56,8 @@ export default function TablaVentaPorHora({
     Row: `
           &:nth-of-type(odd) { background-color: #fff; }
           &:nth-of-type(even) { background-color: #eaf5fd; }
-          &:hover { background-color: #CAE0BC; }
-          &.row-select-single-selected { background-color: #84ceeb !important; }
+          
+          &.row-select-single-selected { background-color: #CAE0BC !important; }
           border-bottom: 1px solid #ccc;
         `,
 

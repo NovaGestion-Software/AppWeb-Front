@@ -81,6 +81,7 @@ export default function FechasInforme({
     }
   };
 
+  // shorcut
   useEffect(() => {
     const inputs = document.querySelectorAll(".ant-picker input");
   
@@ -97,6 +98,12 @@ export default function FechasInforme({
           keyboardEvent.preventDefault();
           handleData();
         }
+     
+      // Nuevo atajo: Escape para volver al primer input
+      if (keyboardEvent.key === "Escape" && document.activeElement === inputs[1]) {
+        keyboardEvent.preventDefault();
+        (inputs[0] as HTMLInputElement).focus();
+      }
       }
     };
   
@@ -187,7 +194,6 @@ export default function FechasInforme({
           disabled={isProcessing}
           disabledDate={disabledFutureDates}
           presets={showPresets ? rangePresets : undefined}
-          needConfirm
           />
       </ConfigProvider>
 
