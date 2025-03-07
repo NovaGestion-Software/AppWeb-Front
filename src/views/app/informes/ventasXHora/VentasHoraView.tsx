@@ -113,16 +113,16 @@ export default function VentasHoraView() {
     let totalImporte = 0;
     let totalOperaciones = 0;
     let totalPares = 0;
-
+  
     if (!sucursalesSeleccionadas) {
       return {
         datosAgrupados: resultado,
-        totalImporte,
-        totalOperaciones,
-        totalPares,
+        totalImporte, // Número sin formatear
+        totalOperaciones, // Número sin formatear
+        totalPares, // Número sin formatear
       };
     }
-
+  
     data
       ?.filter((sucursal) =>
         sucursalesSeleccionadas.includes(sucursal.nsucursal)
@@ -130,45 +130,46 @@ export default function VentasHoraView() {
       .forEach((sucursal) => {
         sucursal.info.forEach((intervalo) => {
           const horario = intervalo.horaini;
-
+  
           if (!resultado[horario]) {
             resultado[horario] = { importe: "0", cantidad: 0, pares: 0 };
           }
-
-          // Convertimos el importe a número, sumamos y luego guardamos como string
+  
+          // Convertimos el importe a número, sumamos y luego redondeamos a 2 decimales
           const importeNumerico =
             parseFloat(intervalo.importe.replace(/\./g, "")) || 0;
+          totalImporte = parseFloat((totalImporte + importeNumerico).toFixed(2)); // Aseguramos 2 decimales
+  
+          // Actualizamos el importe en el resultado
           const nuevoImporte =
             parseFloat(resultado[horario].importe.replace(/\./g, "")) +
             importeNumerico;
           resultado[horario].importe = nuevoImporte.toString(); // Guardamos como string
-
+  
           // Sumamos otros valores
           resultado[horario].cantidad += intervalo.cantidad;
           resultado[horario].pares += intervalo.pares || 0;
-
+  
           // Sumamos a los totales globales
-          totalImporte += importeNumerico;
           totalOperaciones += intervalo.cantidad;
           totalPares += intervalo.pares || 0;
         });
       });
-
+  
     // Formateamos los importes en el resultado
     for (const horario in resultado) {
       resultado[horario].importe = formatearNumero(
         parseFloat(resultado[horario].importe)
       );
     }
-
+  
     return {
       datosAgrupados: resultado,
-      totalImporte,
-      totalOperaciones,
-      totalPares,
+      totalImporte, // Número con 2 decimales
+      totalOperaciones, // Número entero
+      totalPares, // Número entero
     };
   };
-
   // FUNCION PARA ORDENAR LOS DATOS SEGUN LA ESTRUCTURA PARA LA TABLA
   const crearDataParaTabla = ({
     datosAgrupados,
@@ -189,17 +190,17 @@ export default function VentasHoraView() {
         nOperaciones: datos.cantidad,
         porcentajeOperaciones:
           totalOperaciones > 0
-            ? parseFloat(((datos.cantidad / totalOperaciones) * 100).toFixed(2))
+            ? ((datos.cantidad / totalOperaciones) * 100).toFixed(2)
             : 0,
         importe: datos.importe,
         porcentajeImporte:
           totalImporte > 0
-            ? parseFloat(((importeNumerico / totalImporte) * 100).toFixed(2))
+            ? ((importeNumerico / totalImporte) * 100).toFixed(2)
             : 0,
         pares: datos.pares,
         porcentajePares:
           totalPares > 0
-            ? parseFloat(((datos.pares / totalPares) * 100).toFixed(2))
+            ? ((datos.pares / totalPares) * 100).toFixed(2)
             : 0,
       };
     });
@@ -214,7 +215,8 @@ export default function VentasHoraView() {
     totalOperaciones,
     totalPares,
   });
-
+  // formateo con miles y centavos
+  const totalImporteFormateado = formatearNumero(totalImporte);
   // FOOTER TABLA 1
   const datosParaFooter = {
     id: "",
@@ -223,7 +225,7 @@ export default function VentasHoraView() {
     porcentajeOperaciones: "",
     totalPares: totalPares,
     porcentajePares: "",
-    totalImporte: totalImporte,
+    totalImporte: totalImporteFormateado,
     porcentajeImporte: "",
   };
 
