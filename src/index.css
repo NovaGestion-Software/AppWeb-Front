@@ -48,13 +48,12 @@ html {
   background: radial-gradient(circle, #e0e8f4, #859cb1);
 }
 
-
-.ant-picker-presets ul>li{
+.ant-picker-presets ul > li {
   background-color: #f1f1f1;
-  padding: 5px!important;
+  padding: 5px !important;
 }
-.ant-picker-presets ul>li:hover{
-  background-color: #4283fa!important;
+.ant-picker-presets ul > li:hover {
+  background-color: #4283fa !important;
   color: white;
 }
 
@@ -66,3 +65,4 @@ html {
 .ant-picker-disabled {
   font-weight: 700;
 }
+

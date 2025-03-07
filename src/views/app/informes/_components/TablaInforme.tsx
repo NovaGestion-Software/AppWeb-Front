@@ -15,6 +15,8 @@ import {
 } from '@table-library/react-table-library/table';
 import { getTheme, DEFAULT_OPTIONS } from '@table-library/react-table-library/material-ui';
 import { useTheme } from '@table-library/react-table-library/theme';
+import { useVentasHoraStore } from '@/store/useVentasHoraStore';
+import { ClipLoader } from 'react-spinners';
 
 interface TableNode {
   id: string | number; // ID único para cada fila
@@ -48,6 +50,7 @@ const TablaFooter: React.FC<TablaFooterProps> = ({ datos = {} }) => {
     </Footer>
   );
 };
+
 interface TableProps<T extends TableNode> {
   columnas: TableColumn<T>[];
   datosParaTabla: TableNode[];
@@ -57,7 +60,8 @@ interface TableProps<T extends TableNode> {
   datosFooter?: {};
   procesado: boolean;
 }
-function TablaInforme<T extends TableNode>({
+
+export default function TablaInforme<T extends TableNode>({
   columnas,
   datosParaTabla,
   estilos,
@@ -65,23 +69,21 @@ function TablaInforme<T extends TableNode>({
   datosFooter,
   procesado, // Propiedad para saber si ya fue procesado
 }: TableProps<T>) {
+  const [isActive, setIsActive] = useState(false);
   const [currentHorario, setCurrentHorario] = useState<TableNode | null>(null);
+  const [scrollPosition, setScrollPosition] = useState(0);
+  const { status } = useVentasHoraStore();
+  const tableRef = useRef<HTMLDivElement | null>(null);
   const materialTheme = getTheme(DEFAULT_OPTIONS);
   const theme = useTheme([materialTheme, estilos]);
-  const data: Data<TableNode> = {
-    nodes: datosParaTabla, 
-  };
-
-  const select = useRowSelect(data, {
-    onChange: onSelectChange,
-  });
-
-  const [scrollPosition, setScrollPosition] = useState(0);
   const rowHeight = 30;
   const headerHeight = 5;
-
-  const tableRef = useRef<HTMLDivElement | null>(null);
-  const [isActive, setIsActive] = useState(false);
+  const data: Data<TableNode> = {
+    nodes: datosParaTabla,
+  };
+     const select = useRowSelect(data, {
+    onChange: onSelectChange,
+  });
 
   // 👉 Establece la primera fila seleccionada si no hay ninguna y los datos ya están procesados
   useEffect(() => {
@@ -171,6 +173,20 @@ console.log(action)
     }
   }
 
+  // FUNCION PARA SELECCIONAR Y NAVEGAR CON TECLADO EN LA TABLA.
+  const select = useRowSelect(data, {
+    onChange: onSelectChange,
+  });
+
+  const handleTableClick = () => {
+    setIsActive(true);
+  };
+
+  // Manejar pérdida de foco para desactivar eventos
+  const handleBlur = () => {
+    setIsActive(false);
+  };
+
   return (
     <div
       className="p-2 w-fit rounded-xl bg-white"
@@ -196,6 +212,15 @@ console.log(action)
               </HeaderRow>
             </Header>
             <Body>
+              {status === 'pending' && (
+                <div className="absolute inset-0 flex justify-center items-center z-10">
+                  <div className="flex flex-col items-center">
+                    <ClipLoader color="#36d7b7" size={50} speedMultiplier={0.5} />
+                    <p className="mt-2 text-gray-600">Cargando...</p>
+                  </div>
+                </div>
+              )}
+
               {tableList.map((item, rowIndex) => (
                 <Row key={rowIndex} item={item}>
                   {columnas.map((column, columnIndex) => {
@@ -217,5 +242,3 @@ console.log(action)
   );
 }
 
-
-export default TablaInforme;

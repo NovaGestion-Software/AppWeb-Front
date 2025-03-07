@@ -36,15 +36,15 @@ export default function ModalInforme({
                 text="Confirmar"
                 onClick={onConfirm || (() => {})}
                 color="greenSoft"
-                className="w-full"
+                className="w-full rounded-md"
                 size="md"
                 disabled={!disabled}
               />
               <ActionButton
                 text="Cerrar"
                 onClick={onClose}
-                color="redSoft"
-                className="w-full"
+                color="grayStrong"
+                className="w-full rounded-md"
                 textClassName=""
                 size="md"
                 disabled={!disabled}

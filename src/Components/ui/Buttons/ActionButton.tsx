@@ -38,14 +38,14 @@ export default function ActionButton({
     gray: 'bg-gray-500 hover:bg-gray-600',
     grayDefault: 'bg-gray-400 hover:bg-gray-500',
     graySoft: 'bg-gray-400 hover:bg-gray-400/90',
-    grayStrong: 'bg-slate-500/80 hover:bg-slate-600/60',
+    grayStrong: 'bg-slate-600/90 hover:bg-slate-600/80',
     grayDeshab: 'bg-gray-100 cursor-default',
     green: 'bg-green-600 hover:bg-green-700',
     greenSoft: 'bg-green-700/95 hover:bg-green-700/80',
     blue: 'bg-blue-600 hover:bg-blue-700',
     blueSoft: 'bg-blue-700/90 hover:bg-blue-700/80',
-    red: 'bg-red-500 hover:bg-red-600',
-    redSoft: 'bg-red-600/90 hover:bg-red-600/80',
+    red: 'bg-red-600/90 hover:bg-red-600/80',
+    redSoft: 'bg-red-500/90 hover:bg-red-500/80',
   };
 
   const disabledStyles = 'bg-gray-400 cursor-not-allowed';
