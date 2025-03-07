@@ -5,12 +5,12 @@ import { useEffect } from 'react';
 interface DataItem {
   id: number;
   hora: string;
-  nOperaciones: number;
-  porcentajeOperaciones: number;
+  nOperaciones: number |  string;
+  porcentajeOperaciones: number | string;
   importe: string;
-  porcentajeImporte: number;
-  pares: number;
-  porcentajePares: number;
+  porcentajeImporte: number | string;
+  pares: number | string;
+  porcentajePares: number | string;
 }
 
 interface HerramientasInformeProps {

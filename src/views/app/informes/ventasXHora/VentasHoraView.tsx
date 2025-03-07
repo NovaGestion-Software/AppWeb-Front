@@ -10,7 +10,10 @@ import HerramientasComponent from './components/HerramientasComponent';
 import TablaVentaPorHora from './components/TablaVentaPorHora';
 import showAlert from '@/utils/showAlert';
 
-type DatosAgrupados = Record<string, { cantidad: number; importe: string; pares: number }>;
+type DatosAgrupados = Record<
+  string,
+  { cantidad: number; importe: string; pares: number }
+>;
 
 type Totales = {
   totalImporte: number;
@@ -102,26 +105,30 @@ export default function VentasHoraView() {
     }
   }, [foco]);
 
+
+   
   // USAR ESCAPE PARA VACIAR INFORME
   useEffect(() => {
     const handleEscapeKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && ventasPorHora) {
+
         handleClearData();
       }
     };
 
     // Escuchar el evento de la tecla Escape
-    window.addEventListener('keydown', handleEscapeKey);
+    window.addEventListener("keydown", handleEscapeKey);
 
     // Limpiar el event listener cuando el componente se desmonte
     return () => {
-      window.removeEventListener('keydown', handleEscapeKey);
+      window.removeEventListener("keydown", handleEscapeKey);
     };
   }, [ventasPorHora]);
 
   // FUNCION PARA AGRUPAR SEGUN EL RANGO DE HORARIOS
   const agruparPorHorario = (data: Sucursal[] | null, sucursalesSeleccionadas: string[] | null) => {
     const resultado: Record<string, { importe: string; cantidad: number; pares: number }> = {};
+
     let totalImporte = 0;
     let totalOperaciones = 0;
     let totalPares = 0;
@@ -136,19 +143,23 @@ export default function VentasHoraView() {
     }
 
     data
-      ?.filter((sucursal) => sucursalesSeleccionadas.includes(sucursal.nsucursal))
+      ?.filter((sucursal) =>
+        sucursalesSeleccionadas.includes(sucursal.nsucursal)
+      )
       .forEach((sucursal) => {
         sucursal.info.forEach((intervalo) => {
           const horario = intervalo.horaini;
 
           if (!resultado[horario]) {
-            resultado[horario] = { importe: '0', cantidad: 0, pares: 0 };
+            resultado[horario] = { importe: "0", cantidad: 0, pares: 0 };
           }
 
           // Convertimos el importe a número, sumamos y luego guardamos como string
-          const importeNumerico = parseFloat(intervalo.importe.replace(/\./g, '')) || 0;
+          const importeNumerico =
+            parseFloat(intervalo.importe.replace(/\./g, "")) || 0;
           const nuevoImporte =
-            parseFloat(resultado[horario].importe.replace(/\./g, '')) + importeNumerico;
+            parseFloat(resultado[horario].importe.replace(/\./g, "")) +
+            importeNumerico;
           resultado[horario].importe = nuevoImporte.toString(); // Guardamos como string
 
           // Sumamos otros valores
@@ -164,7 +175,9 @@ export default function VentasHoraView() {
 
     // Formateamos los importes en el resultado
     for (const horario in resultado) {
-      resultado[horario].importe = formatearNumero(parseFloat(resultado[horario].importe));
+      resultado[horario].importe = formatearNumero(
+        parseFloat(resultado[horario].importe)
+      );
     }
 
     return {
@@ -182,10 +195,12 @@ export default function VentasHoraView() {
     totalOperaciones,
     totalPares,
   }: { datosAgrupados: DatosAgrupados } & Totales) => {
-    const entries = Object.entries(datosAgrupados).sort((a, b) => a[0].localeCompare(b[0]));
+    const entries = Object.entries(datosAgrupados).sort((a, b) =>
+      a[0].localeCompare(b[0])
+    );
 
     return entries.map(([horario, datos], index) => {
-      const importeNumerico = parseFloat(datos.importe.replace(/\./g, ''));
+      const importeNumerico = parseFloat(datos.importe.replace(/\./g, ""));
 
       return {
         id: index + 1,
@@ -197,13 +212,18 @@ export default function VentasHoraView() {
             : 0,
         importe: datos.importe,
         porcentajeImporte:
-          totalImporte > 0 ? parseFloat(((importeNumerico / totalImporte) * 100).toFixed(2)) : 0,
+          totalImporte > 0
+            ? parseFloat(((importeNumerico / totalImporte) * 100).toFixed(2))
+            : 0,
         pares: datos.pares,
         porcentajePares:
-          totalPares > 0 ? parseFloat(((datos.pares / totalPares) * 100).toFixed(2)) : 0,
+          totalPares > 0
+            ? parseFloat(((datos.pares / totalPares) * 100).toFixed(2))
+            : 0,
       };
     });
   };
+
 
   // IMPLEMENTACION DE FUNCIONES
   const { datosAgrupados, totalImporte, totalOperaciones, totalPares } = agruparPorHorario(
@@ -220,14 +240,14 @@ export default function VentasHoraView() {
 
   // FOOTER TABLA 1
   const datosParaFooter = {
-    id: '',
-    hora: '',
+    id: "",
+    hora: "",
     totalOperaciones: totalOperaciones,
-    porcentajeOperaciones: '',
+    porcentajeOperaciones: "",
     totalPares: totalPares,
-    porcentajePares: '',
+    porcentajePares: "",
     totalImporte: totalImporte,
-    porcentajeImporte: '',
+    porcentajeImporte: "",
   };
 
   // HANDLE FETCH
@@ -249,9 +269,12 @@ export default function VentasHoraView() {
   const handleClearData = () => {
     setIsProcessing(false);
     setFooter(false);
+
     clearVentasPorHora();
     clearFechas();
-    clearSucursalesDisponibles(), clearSucursalesSeleccionadas(), setFoco(true);
+    clearSucursalesDisponibles(); 
+    clearSucursalesSeleccionadas(); 
+    setFoco(true);
   };
 
   // console.log(sucursalesSeleccionadas);
@@ -285,6 +308,7 @@ export default function VentasHoraView() {
             isProcessing={isProcessing}
             store={false}
             planes={false}
+            datosParaFooter={datosParaFooter}
           />
         </div>
       </div>
@@ -292,15 +316,17 @@ export default function VentasHoraView() {
       <div className="grid grid-cols-12 gap-2 py-5 pl-4">
         {isProcessing && (
           <div className="col-span-1 col-start-2 2xl:right-0 2xl:col-start-1 2xl:left-4 relative right-4  bg-white rounded-lg p-4  h-fit w-44 font-semibold text-base shadow-md ">
-            <h3 className="font-bold text-xs 2xl:text-sm text-green-700 mb-2">Sucursales:</h3>
+            <h3 className="font-bold text-xs 2xl:text-sm text-green-700 mb-2">
+              Sucursales:
+            </h3>
             <ul className="list-disc list-inside w-full text-sm 2xl:text-sm">
               {sucursalesDisponibles.map((sucursal, index) => (
                 <li
                   key={index}
                   className={` ${
                     sucursalesSeleccionadas.includes(sucursal)
-                      ? 'text-green-600' // Estilo para sucursales seleccionadas
-                      : 'text-gray-400 line-through' // Estilo para sucursales no seleccionadas
+                      ? "text-green-600" // Estilo para sucursales seleccionadas
+                      : "text-gray-400 line-through" // Estilo para sucursales no seleccionadas
                   }`}
                 >
                   {sucursal}
