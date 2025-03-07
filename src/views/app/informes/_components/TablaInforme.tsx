@@ -1,4 +1,4 @@
-import {  CSSProperties, useEffect, useRef, useState } from 'react';
+import { CSSProperties, useEffect, useRef, useState } from 'react';
 import { useRowSelect } from '@table-library/react-table-library/select';
 import {
   Table,
@@ -27,7 +27,6 @@ interface TableColumn<T> {
   renderCell: (item: T) => React.ReactNode;
   cellProps?: (item: T) => any;
 }
-
 
 interface TablaFooterProps {
   datos?: {
@@ -81,7 +80,7 @@ export default function TablaInforme<T extends TableNode>({
   const data: Data<TableNode> = {
     nodes: datosParaTabla,
   };
-     const select = useRowSelect(data, {
+  const select = useRowSelect(data, {
     onChange: onSelectChange,
   });
 
@@ -139,16 +138,6 @@ export default function TablaInforme<T extends TableNode>({
     };
   }, [isActive, currentHorario, data]);
 
-  // 👉 Activa la tabla cuando se le hace click
-  const handleTableClick = () => {
-    setIsActive(true);
-  };
-
-  // 👉 Desactiva la tabla cuando pierde el foco
-  const handleBlur = () => {
-    setIsActive(false);
-  };
-
   // 👉 Maneja el scroll de la tabla
   useEffect(() => {
     const tableContainer = document.querySelector('.table');
@@ -165,18 +154,13 @@ export default function TablaInforme<T extends TableNode>({
 
   function onSelectChange(action: any, state: any) {
     const selectedItem = datosParaTabla.find((node) => node.id === state.id);
-console.log(action)
+    console.log(action);
     if (!selectedItem) {
       setCurrentHorario(null);
     } else {
       setCurrentHorario(selectedItem);
     }
   }
-
-  // FUNCION PARA SELECCIONAR Y NAVEGAR CON TECLADO EN LA TABLA.
-  const select = useRowSelect(data, {
-    onChange: onSelectChange,
-  });
 
   const handleTableClick = () => {
     setIsActive(true);
@@ -241,4 +225,3 @@ console.log(action)
     </div>
   );
 }
-
