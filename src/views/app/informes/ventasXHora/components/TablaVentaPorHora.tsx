@@ -145,7 +145,7 @@ export default function TablaVentaPorHora({
       cellProps: (item: VentaPorHora) => getCellProps(item, 'porcentajePares'),
     },
     {
-      label: 'Importes',
+      label: 'Importes $',
       renderCell: (item: VentaPorHora) => item.importe,
       cellProps: (item: VentaPorHora) => getCellProps(item, 'importe'),
     },

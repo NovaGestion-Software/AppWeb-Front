@@ -93,7 +93,6 @@ ModalSucursalesProps) {
     setSucursalesSeleccionadas([...sucursalesSeleccionadas]); // Revertir los cambios y restaurar las sucursales originales
   };
 
-  console.log(sucursalesSeleccionadas);
 
   return (
     <>
@@ -113,6 +112,7 @@ ModalSucursalesProps) {
             onClose={handleCloseModal}
             onConfirm={handleConfirm}
             disabled={isProcessing}
+            buttons={true}
           >
             {/* Contenido del Modal */}
             <div className="flex w-full h-[30rem] mx-auto p-4 gap-4 mb-4">

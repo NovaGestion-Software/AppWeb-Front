@@ -1,15 +1,15 @@
-import { useEffect, useState } from 'react';
-import { useMutation } from '@tanstack/react-query';
-import { useVentasHoraStore } from '@/store/useVentasHoraStore';
-import { obtenerVentasHora } from '@/services/ApiPhpService';
-import { ApiResponse, FechasRango, Sucursal } from '@/types';
-import { formatearNumero } from '@/utils';
-import ViewTitle from '@/Components/ui/Labels/ViewTitle';
-import FechasInforme from '../_components/FechasInforme';
-import HerramientasComponent from './components/HerramientasComponent';
-import TablaVentaPorHora from './components/TablaVentaPorHora';
-import showAlert from '@/utils/showAlert';
-import  GraficoInforme  from '../_components/GraficoInforme';
+import { useEffect, useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+import { useVentasHoraStore } from "@/store/useVentasHoraStore";
+import { obtenerVentasHora } from "@/services/ApiPhpService";
+import { ApiResponse, FechasRango, Sucursal } from "@/types";
+import { formatearNumero } from "@/utils";
+import ViewTitle from "@/Components/ui/Labels/ViewTitle";
+import FechasInforme from "../_components/FechasInforme";
+import HerramientasComponent from "./components/HerramientasComponent";
+import TablaVentaPorHora from "./components/TablaVentaPorHora";
+import showAlert from "@/utils/showAlert";
+import GraficoInforme from "../_components/GraficoInforme";
 
 type DatosAgrupados = Record<
   string,
@@ -33,7 +33,7 @@ export default function VentasHoraView() {
     fechas,
     sucursalesSeleccionadas,
     sucursalesDisponibles,
-   
+
     ventasPorHora,
     setVentasPorHora,
     setSucursalesSeleccionadas,
@@ -47,19 +47,19 @@ export default function VentasHoraView() {
   const { mutate } = useMutation<ApiResponse, Error, FechasRango>({
     mutationFn: () => obtenerVentasHora(fechas),
     onMutate: () => {
-      setStatus('pending');
+      setStatus("pending");
     },
     onError: (error) => {
-      console.error('Error al obtener los datos:', error);
-      setStatus('error');
+      console.error("Error al obtener los datos:", error);
+      setStatus("error");
     },
     onSuccess: (data) => {
       // console.log(data.data);
       if (data.data.length === 0) {
         showAlert({
-          text: 'El rango de fecha seleccionado no contiene información',
-          icon: 'error',
-          cancelButtonText: 'Cerrar',
+          text: "El rango de fecha seleccionado no contiene información",
+          icon: "error",
+          cancelButtonText: "Cerrar",
           showCancelButton: true,
           timer: 2200,
         });
@@ -69,18 +69,22 @@ export default function VentasHoraView() {
       // setSucursalesSeleccionadas(data.data.map((sucursal) => sucursal.nsucursal));
       // setIsProcessing(true);
       // setFooter(true);
-      setStatus('success');
+      setStatus("success");
     },
     onSettled: () => {
-      setStatus('idle');
+      setStatus("idle");
     },
   });
 
   // SETEAR ESTADOS SI DATOS TIENE INFO.
   useEffect(() => {
     if (ventasPorHora?.length) {
-      setSucursalesDisponibles(ventasPorHora.map((sucursal) => sucursal.nsucursal));
-      setSucursalesSeleccionadas(ventasPorHora.map((sucursal) => sucursal.nsucursal));
+      setSucursalesDisponibles(
+        ventasPorHora.map((sucursal) => sucursal.nsucursal)
+      );
+      setSucursalesSeleccionadas(
+        ventasPorHora.map((sucursal) => sucursal.nsucursal)
+      );
       setIsProcessing(true);
       setFooter(true);
     }
@@ -106,13 +110,10 @@ export default function VentasHoraView() {
     }
   }, [foco]);
 
-
-   
   // USAR ESCAPE PARA VACIAR INFORME
   useEffect(() => {
     const handleEscapeKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && ventasPorHora) {
-
+      if (e.key === "Escape" && ventasPorHora) {
         handleClearData();
       }
     };
@@ -127,13 +128,19 @@ export default function VentasHoraView() {
   }, [ventasPorHora]);
 
   // FUNCION PARA AGRUPAR SEGUN EL RANGO DE HORARIOS
-  const agruparPorHorario = (data: Sucursal[] | null, sucursalesSeleccionadas: string[] | null) => {
-    const resultado: Record<string, { importe: string; cantidad: number; pares: number }> = {};
+  const agruparPorHorario = (
+    data: Sucursal[] | null,
+    sucursalesSeleccionadas: string[] | null
+  ) => {
+    const resultado: Record<
+      string,
+      { importe: string; cantidad: number; pares: number }
+    > = {};
 
     let totalImporte = 0;
     let totalOperaciones = 0;
     let totalPares = 0;
-  
+
     if (!sucursalesSeleccionadas) {
       return {
         datosAgrupados: resultado,
@@ -142,7 +149,7 @@ export default function VentasHoraView() {
         totalPares, // Número sin formatear
       };
     }
-  
+
     data
       ?.filter((sucursal) =>
         sucursalesSeleccionadas.includes(sucursal.nsucursal)
@@ -150,39 +157,41 @@ export default function VentasHoraView() {
       .forEach((sucursal) => {
         sucursal.info.forEach((intervalo) => {
           const horario = intervalo.horaini;
-  
+
           if (!resultado[horario]) {
             resultado[horario] = { importe: "0", cantidad: 0, pares: 0 };
           }
-  
+
           // Convertimos el importe a número, sumamos y luego redondeamos a 2 decimales
           const importeNumerico =
             parseFloat(intervalo.importe.replace(/\./g, "")) || 0;
-          totalImporte = parseFloat((totalImporte + importeNumerico).toFixed(2)); // Aseguramos 2 decimales
-  
+          totalImporte = parseFloat(
+            (totalImporte + importeNumerico).toFixed(2)
+          ); // Aseguramos 2 decimales
+
           // Actualizamos el importe en el resultado
           const nuevoImporte =
             parseFloat(resultado[horario].importe.replace(/\./g, "")) +
             importeNumerico;
           resultado[horario].importe = nuevoImporte.toString(); // Guardamos como string
-  
+
           // Sumamos otros valores
           resultado[horario].cantidad += intervalo.cantidad;
           resultado[horario].pares += intervalo.pares || 0;
-  
+
           // Sumamos a los totales globales
           totalOperaciones += intervalo.cantidad;
           totalPares += intervalo.pares || 0;
         });
       });
-  
+
     // Formateamos los importes en el resultado
     for (const horario in resultado) {
       resultado[horario].importe = formatearNumero(
         parseFloat(resultado[horario].importe)
       );
     }
-  
+
     return {
       datosAgrupados: resultado,
       totalImporte, // Número con 2 decimales
@@ -219,20 +228,14 @@ export default function VentasHoraView() {
             : 0,
         pares: datos.pares,
         porcentajePares:
-          totalPares > 0
-            ? ((datos.pares / totalPares) * 100).toFixed(2)
-            : 0,
+          totalPares > 0 ? ((datos.pares / totalPares) * 100).toFixed(2) : 0,
       };
     });
   };
 
-
   // IMPLEMENTACION DE FUNCIONES
-  const { datosAgrupados, totalImporte, totalOperaciones, totalPares } = agruparPorHorario(
-    ventasPorHora,
-    sucursalesSeleccionadas
-  );
-
+  const { datosAgrupados, totalImporte, totalOperaciones, totalPares } =
+    agruparPorHorario(ventasPorHora, sucursalesSeleccionadas);
 
   const dataParaTabla = crearDataParaTabla({
     datosAgrupados,
@@ -258,27 +261,25 @@ export default function VentasHoraView() {
     array: VentaPorHora[],
     key: keyof VentaPorHora
   ): { maxValue: number; hora: string | null } => {
-  
-  
     let maxValue = -Infinity;
     let hora = "";
-  
+
     array.forEach((currentItem) => {
       const currentValue =
         typeof currentItem[key] === "string"
           ? parseFloat(currentItem[key].replace(/\./g, ""))
           : currentItem[key];
-  
+
       if (currentValue > maxValue) {
         maxValue = currentValue;
         hora = currentItem.hora; // Guardamos la hora correspondiente al valor máximo
       }
     });
-  
+
     return { maxValue, hora };
   };
-  const maxImporteValor = findMaxValueAndHourByKey(dataParaTabla, 'importe');
-const maxImporteFormateado = formatearNumero(maxImporteValor.maxValue)
+  const maxImporteValor = findMaxValueAndHourByKey(dataParaTabla, "importe");
+  const maxImporteFormateado = formatearNumero(maxImporteValor.maxValue);
 
   // formateo con miles y centavos
   const totalImporteFormateado = formatearNumero(totalImporte);
@@ -298,14 +299,14 @@ const maxImporteFormateado = formatearNumero(maxImporteValor.maxValue)
   const handleFetchData = async () => {
     try {
       if (!fechas.from || !fechas.to) {
-        console.log(fechas, 'fechas')
-        console.log('Rango de fechas inválido');
+        console.log(fechas, "fechas");
+        console.log("Rango de fechas inválido");
         return;
       }
       mutate(fechas);
     } catch (error) {
-      console.error('Error en la petición:', error);
-      alert('Error al obtener los datos');
+      console.error("Error en la petición:", error);
+      alert("Error al obtener los datos");
       setFoco(true);
     }
   };
@@ -315,16 +316,14 @@ const maxImporteFormateado = formatearNumero(maxImporteValor.maxValue)
     setIsProcessing(false);
     setFooter(false);
     clearVentasPorHora();
-    clearSucursalesDisponibles(); 
-    clearSucursalesSeleccionadas(); 
+    clearSucursalesDisponibles();
+    clearSucursalesSeleccionadas();
     setFoco(true);
   };
 
-
-  
   return (
     <div className=" w-full h-full p-4 pt-0 overflow-hidden ">
-      <ViewTitle title={'Ventas por Hora'} />
+      <ViewTitle title={"Ventas Por Hora"} />
 
       {/** BOTONERA */}
       <div className="grid grid-cols-12 grid-rows-1 gap-4 mt-6 rounded p-2  h-16 items-center ">
@@ -335,7 +334,7 @@ const maxImporteFormateado = formatearNumero(maxImporteValor.maxValue)
             onFetchData={handleFetchData}
             onClearData={handleClearData}
             isProcessing={isProcessing}
-            buttonText={{ fetch: 'Procesar', clear: 'Borrar' }}
+            buttonText={{ fetch: "Procesar", clear: "Borrar" }}
             whitButttons={true}
           />
         </div>
@@ -355,11 +354,13 @@ const maxImporteFormateado = formatearNumero(maxImporteValor.maxValue)
         </div>
       </div>
 
-      <div className="grid grid-cols-12 grid-rows-12  gap-2 py-5 pl-4">
+      <div className="grid grid-cols-12 grid-rows-5  gap-2 py-5 pl-4 ">
         {isProcessing && (
-          <div className=" col-span-1 col-start-8 row-span-1 relative left-6
+          <div
+            className=" col-span-1 col-start-8 row-span-1 relative left-6
            bg-white rounded-lg p-4  h-fit w-44 font-semibold text-base shadow-md 
-          2xl:right-0 2xl:col-start-2 2xl:-left-12  ">
+          2xl:right-0 2xl:col-start-2 2xl:-left-12  "
+          >
             <h3 className="font-bold text-xs 2xl:text-sm text-green-700 mb-2">
               Sucursales:
             </h3>
@@ -379,8 +380,10 @@ const maxImporteFormateado = formatearNumero(maxImporteValor.maxValue)
             </ul>
           </div>
         )}
-        <div className={`col-start-1 col-span-7 row-span-9 row-start-1   
-          2xl:col-start-3 h-fit `}>
+        <div
+          className={`col-start-1 col-span-7 row-span-9 row-start-1   
+          2xl:col-start-3 h-fit `}
+        >
           <TablaVentaPorHora
             isProcessing={isProcessing}
             // status={status || 'idle'}
@@ -391,19 +394,27 @@ const maxImporteFormateado = formatearNumero(maxImporteValor.maxValue)
         </div>
 
         {isProcessing && (
-           <div className=' flex flex-col gap-3 relative left-6 
+          <div
+            className=" flex flex-col gap-3 relative left-6 
            col-start-8 col-span-6 row-span-4  2xl:row-start-1
-            h-fit w-fit '>
-           <div className='  bg-white rounded-lg py-2 px-3 w-[29rem]  h-fit flex flex-col gap-1 '>
-           <p className='text-blue-500'>El mayor importe de venta es: <span className='text-xl text-green-600 font-bold'> ${maxImporteFormateado}</span> </p>
-           <p className='text-blue-500'>En el horario de <span className='font-bold'>{maxImporteValor.hora}</span> </p>
-           </div>
-             <GraficoInforme datosParaGraficos={dataParaTabla} />
-           </div>
+            h-fit w-fit  "
+          >
+            <div className="  bg-white rounded-lg py-2 px-3 w-[29rem]  h-fit f ">
+              <p className="text-blue-500 font-semibold">
+                Mayor Importe:{" "}
+                <span className="text-xl text-green-600 font-bold">
+                  {" "}
+                  ${maxImporteFormateado}
+                </span>,  <span className="text-blue-500">{maxImporteValor.hora}</span>
+               
+              </p>
+            </div>
+            <GraficoInforme datosParaGraficos={dataParaTabla} />
+    
+          </div>
         )}
-      
-      
       </div>
+
     </div>
   );
 }

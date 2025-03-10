@@ -4,8 +4,8 @@ interface ViewTitleProps {
 
 export default function ViewTitle({ title }: ViewTitleProps) {
   return (
-    <div className="flex h-14 w-screen relative right-1 py-3 px-3 text-xl text-white font-medium tracking-wide bg-[#2973B2] border-b-8 border-[#3866a8]">
-    <h1 className="relative left-4">{title}</h1>
+    <div className="flex items-center justify-center h-16 w-screen relative right-1 py-3 px-3 text-xl text-white font-medium tracking-wide bg-[#3866a8] border-b-8 border-[#2973B2]">
+    <h1 className="relative right-24 font-roboto font-bold">{title}</h1>
   </div>
   );
 }
