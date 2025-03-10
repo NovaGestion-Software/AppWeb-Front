@@ -2,10 +2,11 @@ import { FechasRango, Sucursal } from '@/types';
 import dayjs from 'dayjs';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
-  const defaultDate = {
-    from: dayjs().startOf('month'),
-    to: dayjs(),
-  };
+
+const defaultDate = {
+  from: dayjs().startOf('month'),
+  to: dayjs(),
+};
 
 type VentasHoraProps = {
   fechas: FechasRango;

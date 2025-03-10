@@ -154,7 +154,7 @@ export default function TablaInforme<T extends TableNode>({
 
   function onSelectChange(action: any, state: any) {
     const selectedItem = datosParaTabla.find((node) => node.id === state.id);
-    console.log(action);
+    // console.log(action);
     if (!selectedItem) {
       setCurrentHorario(null);
     } else {

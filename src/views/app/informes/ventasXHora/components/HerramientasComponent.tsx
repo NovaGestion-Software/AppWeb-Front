@@ -1,7 +1,7 @@
-import { useCallback } from "react";
-import * as XLSX from "xlsx";
-import ModalSucursales from "./ModalSucursales";
-import HerramientasInforme from "../../_components/HerramientasInforme";
+import { useCallback } from 'react';
+import * as XLSX from 'xlsx';
+import ModalSucursales from './ModalSucursales';
+import HerramientasInforme from '../../_components/HerramientasInforme';
 
 interface DataItem {
   id: number;
@@ -24,38 +24,27 @@ interface DataFooter {
   porcentajePares: number | string;
 }
 
- 
 interface HerramientasComponentProps {
   data: DataItem[];
-  store?: boolean;
-  sucursales: string[];
-  sucursalesSeleccionadas: string[];
-  setSucursalesSeleccionadas: (value: string[]) => void;
-  isProcessing: boolean;
-  planes?: boolean;
   datosParaFooter: DataFooter;
+  isProcessing: boolean;
 }
 
 export default function HerramientasComponent({
   data,
-
-  // sucursales,
-  // sucursalesSeleccionadas,
-  // setSucursalesSeleccionadas,
-        datosParaFooter,
-
+  datosParaFooter,
   isProcessing,
 }: HerramientasComponentProps) {
   const { totalOperaciones, totalPares, totalImporte } = datosParaFooter;
   const datosTotales = {
-    horas: "", // Identificador en la columna de horas
-    hora: "Totales", // Identificador en la columna de horas
+    horas: '', // Identificador en la columna de horas
+    hora: 'Totales', // Identificador en la columna de horas
     operaciones: totalOperaciones,
-    porcentajeOperaciones: "",
+    porcentajeOperaciones: '',
     pares: totalPares,
-    porcentajePares: "",
+    porcentajePares: '',
     importe: totalImporte.toString(),
-    porcentajeImporte: "",
+    porcentajeImporte: '',
   };
 
   const handleExportExcel = useCallback(() => {
@@ -72,15 +61,15 @@ export default function HerramientasComponent({
     datosTransformados.push(datosTotales);
     const wb = XLSX.utils.book_new();
     const ws = XLSX.utils.json_to_sheet(datosTransformados);
-    XLSX.utils.book_append_sheet(wb, ws, "Informe1");
-    XLSX.writeFile(wb, "Informe.xlsx");
+    XLSX.utils.book_append_sheet(wb, ws, 'Informe1');
+    XLSX.writeFile(wb, 'Informe.xlsx');
   }, [data]);
 
   const handlePrint = useCallback(() => {
-    const tableElement = document.getElementById("table-to-print");
+    const tableElement = document.getElementById('table-to-print');
     if (!tableElement) return;
 
-    const printWindow = window.open("", "_blank", "width=600,height=800");
+    const printWindow = window.open('', '_blank', 'width=600,height=800');
     if (!printWindow) return;
 
     printWindow.document.write(`
@@ -113,12 +102,7 @@ export default function HerramientasComponent({
         handleExportExcel={handleExportExcel}
         handlePrint={handlePrint}
       >
-        <ModalSucursales
-          // sucursales={sucursales}
-          // sucursalesSeleccionadas={sucursalesSeleccionadas}
-          // setSucursalesSeleccionadas={setSucursalesSeleccionadas}
-          isProcessing={isProcessing}
-        />
+        <ModalSucursales isProcessing={isProcessing} />
       </HerramientasInforme>
     </>
   );

@@ -1,25 +1,12 @@
 import { CSSProperties, useEffect } from 'react';
 import TablaInforme from '../../_components/TablaInforme';
+import { VentaPorHora } from '@/types';
 
 // Definicion de estructura de columnas
 interface TableColumn<T> {
   label: string;
   renderCell: (item: T) => JSX.Element | number | string;
   cellProps?: (item: T) => any;
-}
-
-interface VentaPorHora {
-  id: number;
-  hora: string;
-  nOperaciones: number | string;
-  porcentajeOperaciones: number | string;
-  importe: string;
-  porcentajeImporte: number | string;
-  pares: number | string;
-  porcentajePares: number | string;
-  //   totalImporte: number | string;
-  //   totalOperaciones: number | string;
-  //   totalPares: number | string;
 }
 
 interface TablaVentaPorHoraProps {
@@ -208,10 +195,16 @@ export default function TablaVentaPorHora({
     return { style }; // Devolver siempre un objeto con la propiedad 'style'
   };
 
-  
   return (
     <div>
-      <TablaInforme columnas={COLUMNS} datosParaTabla={datos} estilos={customTheme} footer={footer} datosFooter={datosFooter} procesado={isProcessing} />
+      <TablaInforme
+        columnas={COLUMNS}
+        datosParaTabla={datos}
+        estilos={customTheme}
+        footer={footer}
+        datosFooter={datosFooter}
+        procesado={isProcessing}
+      />
     </div>
   );
 }
