@@ -247,6 +247,7 @@ export default function FechasInforme({
       const periodoIni = newFrom.format('YYYY-MM-DD');
       const periodoFin = newTo.format('YYYY-MM-DD');
       setFechas({ from: periodoIni, to: periodoFin });
+      // console.log('fechas steads', fechas);
     }
   };
   */

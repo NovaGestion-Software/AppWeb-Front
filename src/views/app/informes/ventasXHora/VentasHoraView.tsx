@@ -343,12 +343,7 @@ export default function VentasHoraView() {
         <div className="col-span-5 col-start-8 2xl:col-span-4 2xl:col-start-8  ">
           <HerramientasComponent
             data={dataParaTabla}
-            sucursales={sucursalesDisponibles}
-            sucursalesSeleccionadas={sucursalesSeleccionadas}
-            setSucursalesSeleccionadas={setSucursalesSeleccionadas}
             isProcessing={isProcessing}
-            store={false}
-            planes={false}
             datosParaFooter={datosParaFooter}
           />
         </div>

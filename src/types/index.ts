@@ -1,4 +1,4 @@
-import { Dayjs } from "dayjs";
+import { Dayjs } from 'dayjs';
 
 export type Account = {
   empresa: string;
@@ -92,3 +92,17 @@ export type FechasRango = {
   from: string | Dayjs;
   to: string | Dayjs;
 };
+
+export interface VentaPorHora {
+  id: number;
+  hora: string;
+  nOperaciones: number | string;
+  porcentajeOperaciones: number | string;
+  importe: string;
+  porcentajeImporte: number | string;
+  pares: number | string;
+  porcentajePares: number | string;
+  //   totalImporte: number | string;
+  //   totalOperaciones: number | string;
+  //   totalPares: number | string;
+}
