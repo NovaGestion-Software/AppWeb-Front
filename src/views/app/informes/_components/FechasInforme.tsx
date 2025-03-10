@@ -40,7 +40,7 @@ export default function FechasInforme({
   };
   const [dateRange, setDateRange] = useState<DateRange>(defaultDate);
   const [isLoading, setIsLoading] = useState(true);
-  const { status, fechas, setFechas } = useVentasHoraStore();
+  const { status, setFechas } = useVentasHoraStore();
   const rangePickerRef = useRef<any>(null);
   const activeInput = document.querySelector('.ant-picker-input-active');
   const disabledFutureDates = (current: dayjs.Dayjs) => current && current > dayjs().endOf('day');

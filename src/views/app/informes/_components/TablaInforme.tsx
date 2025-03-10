@@ -152,7 +152,7 @@ export default function TablaInforme<T extends TableNode>({
     }
   }, [scrollPosition]);
 
-  function onSelectChange(action: any, state: any) {
+  function onSelectChange(state: any) {
     const selectedItem = datosParaTabla.find((node) => node.id === state.id);
     // console.log(action);
     if (!selectedItem) {
