@@ -68,7 +68,7 @@ const obtenerNuevoTokenAcceso = async () => {
   if (!refreshToken) throw new Error('No hay refresh token disponible');
 
   try {
-    const response = await api.post('/auth/refresh_token', { token_refresh: refreshToken });
+    const response = await api.post('/refresh_token', { token_refresh: refreshToken });
     const { nuevo_token_acceso } = response.data;
 
     // Almacenar el nuevo token de acceso
