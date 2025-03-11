@@ -9,7 +9,7 @@ import CobranzaVencimView from './views/app/informes/cobranzaXVencim/CobranzaVen
 import VentasXVendedorView from './views/app/informes/ventasXVendedor/VentasXVendedorView';
 import VentasHoraView from './views/app/informes/ventasXHora/VentasHoraView';
 import ConfigView from './views/app/config/ConfigView';
-import StockPorSeccion from './views/app/stockSeccion/StockPorSeccion';
+// import StockPorSeccion from './views/app/stockSeccion/StockPorSeccion';
 
 export default function Router() {
   return (
