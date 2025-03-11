@@ -321,6 +321,8 @@ export default function VentasHoraView() {
     setFoco(true);
   };
 
+  console.log(dataParaTabla)
+
   return (
     <div className=" w-full h-full p-4 pt-0 overflow-hidden ">
       <ViewTitle title={"Ventas Por Hora"} />

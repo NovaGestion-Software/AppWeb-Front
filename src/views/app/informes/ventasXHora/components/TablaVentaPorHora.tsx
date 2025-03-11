@@ -27,78 +27,78 @@ export default function TablaVentaPorHora({
   }, [isProcessing]);
   const customTheme = {
     Table: `
-          grid-template-columns: minmax(0px, 0px) minmax(30px, 110px) minmax(40px, 100px) minmax(50px, 80px) minmax(50px, 80px) minmax(50px, 80px) minmax(50px, 150px) minmax(50px, 80px);
-          border-radius: 12px;
-          width: 680px;
-          height: 650px;
-          scrollbar-width: thin;
-          border: 1px solid black;
-          font-variant-numeric: tabular-nums;
-          @media (min-width: 1280px) and (max-width: 1380px) {
-            height: 500px;
-          }
-        `,
-
+      grid-template-columns: minmax(0px, 0px) minmax(30px, 110px) minmax(40px, 100px) minmax(50px, 80px) minmax(50px, 80px) minmax(50px, 80px) minmax(50px, 150px) minmax(50px, 80px);
+      border-radius: 12px;
+      width: 680px;
+      height: 650px;
+      scrollbar-width: thin;
+      border: 1px solid black;
+      font-variant-numeric: tabular-nums;
+      @media (min-width: 1280px) and (max-width: 1380px) {
+        height: 500px;
+      }
+    `,
+  
     Row: `
-          &:nth-of-type(odd) { background-color: #fff; }
-          &:nth-of-type(even) { background-color: #eaf5fd; }
-          
-          &.row-select-single-selected { background-color: #CAE0BC !important; }
-          border-bottom: 1px solid #ccc;
-        `,
-
+      &:nth-of-type(odd) { background-color: #fff; }
+      &:nth-of-type(even) { background-color: #eaf5fd; }
+      
+      &.row-select-single-selected { background-color: #CAE0BC !important; }
+      border-bottom: 1px solid #ccc;
+    `,
+  
     HeaderCell: `
-          background: #2973B2;
-          color: white;
-          height: 10px;
-          &:nth-of-type(n+3) {
-            text-align: center;
-          }
-        `,
-
+      background: #2973B2;
+      color: white;
+      height: 10px;
+      &:nth-of-type(n+3) {
+        text-align: center;
+      }
+    `,
+  
     Cell: `
-          padding: 8px;
-          border-right: 1px solid #ccc;
-      
-          &:last-child {
-            border-right: none;
-          }
-      
-          &:nth-of-type(n+3) {
-            text-align: right;
-          }
-        `,
-
+      padding: 8px;
+      border-right: 1px solid #ccc;
+  
+      &:last-child {
+        border-right: none;
+      }
+  
+      &:nth-of-type(n+3) {
+        text-align: right;
+      }
+    `,
+  
     FooterCell: `
-          position: sticky;
-          bottom: 0px;
-          padding: 8px;
-          border-right: 1px solid #ccc;
-          background-color: #fff;
-          text-align: right;
-      
-          &:last-child {
-            border-right: none;
-          }
-      
-          &:nth-of-type(3) {
-            border-right: 1px solid black;
-            background-color: #A5C9FF;
-            font-weight: bold;
-          }
-      
-          &:nth-of-type(5) {
-            border-right: 1px solid black;
-            background-color: #A5C9FF;
-            font-weight: bold;
-          }
-      
-          &:nth-of-type(7) {
-            border-right: 1px solid black;
-            background-color: #A5C9FF;
-            font-weight: bold;
-          }
-        `,
+      position: sticky;
+      bottom: 0px;
+      padding: 8px;
+      border-right: 1px solid #ccc;
+      background-color: #fff;
+      text-align: right;
+  
+      &:last-child {
+        border-right: none;
+      }
+  
+      &:nth-of-type(3) {
+        border-right: 1px solid black;
+        background-color: #A5C9FF;
+        font-weight: bold;
+      }
+  
+      &:nth-of-type(5) {
+        border-right: 1px solid black;
+        background-color: #A5C9FF;
+        font-weight: bold;
+      }
+  
+      &:nth-of-type(7) {
+        border-right: 1px solid black;
+        background-color: #A5C9FF;
+        font-weight: bold;
+      }
+    `,
   };
 
   // COLUMNAS DE TABLA

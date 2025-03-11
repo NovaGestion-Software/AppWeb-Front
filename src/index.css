@@ -66,3 +66,24 @@ html {
   font-weight: 700;
 }
 
+
+.text-container {
+  width: 200px; /* Ancho fijo del contenedor */
+  white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+  overflow: hidden; /* Oculta el texto que no cabe */
+}
+
+.text-content {
+  display: inline-block; /* Permite que el texto se desplace horizontalmente */
+  padding-left: 100%; /* Inicia el texto fuera del contenedor */
+  animation: scroll-text 10s linear infinite; /* Animación de desplazamiento */
+}
+
+@keyframes scroll-text {
+  0% {
+    transform: translateX(100%); /* Comienza fuera del contenedor */
+  }
+  100% {
+    transform: translateX(-100%); /* Termina fuera del contenedor */
+  }
+}

@@ -17,11 +17,11 @@ interface DateRange {
 interface FechasInformeProps {
   onFetchData: (params: FechasRango) => Promise<void>;
   onClearData: () => void;
-  isProcessing: boolean;
+  isProcessing?: boolean;
   buttonText?: { fetch: string; clear: string };
   whitButttons?: boolean;
   showPresets?: boolean;
-  setFocus: boolean;
+  setFocus?: boolean;
 }
 
 export default function FechasInforme({
