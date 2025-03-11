@@ -28,7 +28,7 @@ export default function TablaVentaPorHora({
   const empresa = JSON.parse(localStorage.getItem('_u') || '{}')
     ?.empresa.toString()
     .slice(-2);
-  // console.log(empresa);
+  console.log(empresa);
   const customTheme = {
     Table: `
       grid-template-columns: minmax(0px, 0px) minmax(30px, 110px) minmax(40px, 100px) minmax(50px, 80px) minmax(50px, 80px) minmax(50px, 80px) minmax(50px, 150px) minmax(50px, 80px);
