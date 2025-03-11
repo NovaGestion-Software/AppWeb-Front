@@ -1,33 +1,32 @@
-import { AreaChart } from "@tremor/react";
-import ModalInforme from "./ModalInforme";
-import { useState } from "react";
-import ActionButton from "@/Components/ui/Buttons/ActionButton";
-import { BsZoomIn } from "react-icons/bs";
+import { AreaChart } from '@tremor/react';
+import ModalInforme from './ModalInforme';
+import { useState } from 'react';
+import ActionButton from '@/Components/ui/Buttons/ActionButton';
+import { BsZoomIn } from 'react-icons/bs';
 
 function GraficoInforme({ datosParaGraficos }: { datosParaGraficos: any }) {
   const [showModal, setShowModal] = useState(false);
 
-    // label enteros
-    const transformarDatosParaGrafico = (datosOriginales: any) => {
-      // Si datosOriginales es undefined o null, usa un arreglo vacío
-      console.log("datos pasados a graficos", datosOriginales);
-      const datos = datosOriginales || []; // Usa datosOriginales directamente
-      return datos.map((item: any) => ({
-        horas: item.hora, // Usamos la hora como etiqueta
-        Operaciones: item.nOperaciones, // Usamos el número de operaciones
-      }));
-    };
-  // label recortados
-  const transformarDatosParaGrafico2 = (datosOriginales: any) => {
+  // label enteros
+  const transformarDatosParaGrafico = (datosOriginales: any) => {
     // Si datosOriginales es undefined o null, usa un arreglo vacío
-    console.log("datos pasados a graficos", datosOriginales);
+    console.log('datos pasados a graficos', datosOriginales);
     const datos = datosOriginales || []; // Usa datosOriginales directamente
     return datos.map((item: any) => ({
-      horas: item.hora.split("/")[0], // Tomamos solo la primera parte del label (antes de "/")
+      horas: item.hora, // Usamos la hora como etiqueta
       Operaciones: item.nOperaciones, // Usamos el número de operaciones
     }));
   };
-
+  // label recortados
+  const transformarDatosParaGrafico2 = (datosOriginales: any) => {
+    // Si datosOriginales es undefined o null, usa un arreglo vacío
+    console.log('datos pasados a graficos', datosOriginales);
+    const datos = datosOriginales || []; // Usa datosOriginales directamente
+    return datos.map((item: any) => ({
+      horas: item.hora.split('/')[0], // Tomamos solo la primera parte del label (antes de "/")
+      Operaciones: item.nOperaciones, // Usamos el número de operaciones
+    }));
+  };
 
   const chartdata = transformarDatosParaGrafico(datosParaGraficos);
   const chartdata2 = transformarDatosParaGrafico2(datosParaGraficos);
@@ -41,37 +40,31 @@ function GraficoInforme({ datosParaGraficos }: { datosParaGraficos: any }) {
   return (
     <div className="p-2 bg-white rounded-lg w-fit h-fit">
       <div className="flex justify-end">
-        <ActionButton
-          icon={<BsZoomIn />}
-          onClick={() => setShowModal(true)}
-          color={"blue"}
-        />
+        <ActionButton icon={<BsZoomIn />} onClick={() => setShowModal(true)} color={'blue'} />
       </div>
       <AreaChart
         className="h-64 w-[28rem] 2xl:w-[36rem]"
         data={chartdata}
         index="horas"
-        categories={["Operaciones"]}
-        valueFormatter={(number: number) =>
-          `${Intl.NumberFormat("us").format(number).toString()}`
-        }
+        categories={['Operaciones']}
+        valueFormatter={(number: number) => `${Intl.NumberFormat('us').format(number).toString()}`}
         onValueChange={(v) => console.log(v)}
       />
 
       <ModalInforme
         show={showModal}
-        title="N. Operaciones Por Hora"
+        title="N° Operaciones por Hora"
         onClose={handleCloseModal}
         onConfirm={handleConfirm}
         buttons={false}
       >
         <AreaChart
-          className="h-56 w-[50rem]"
+          className="w-[60rem]"
           data={chartdata2}
           index="horas"
-          categories={["Operaciones"]}
+          categories={['Operaciones']}
           valueFormatter={(number: number) =>
-            `${Intl.NumberFormat("us").format(number).toString()}`
+            `${Intl.NumberFormat('us').format(number).toString()}`
           }
           onValueChange={(v) => console.log(v)}
         />

@@ -25,6 +25,10 @@ export default function TablaVentaPorHora({
   useEffect(() => {
     // Para evitar console.log (solo para deployar en vercel)
   }, [isProcessing]);
+  const empresa = JSON.parse(localStorage.getItem('_u') || '{}')
+    ?.empresa.toString()
+    .slice(-2);
+  // console.log(empresa);
   const customTheme = {
     Table: `
       grid-template-columns: minmax(0px, 0px) minmax(30px, 110px) minmax(40px, 100px) minmax(50px, 80px) minmax(50px, 80px) minmax(50px, 80px) minmax(50px, 150px) minmax(50px, 80px);
@@ -38,7 +42,7 @@ export default function TablaVentaPorHora({
         height: 500px;
       }
     `,
-  
+
     Row: `
       &:nth-of-type(odd) { background-color: #fff; }
       &:nth-of-type(even) { background-color: #eaf5fd; }
@@ -46,7 +50,7 @@ export default function TablaVentaPorHora({
       &.row-select-single-selected { background-color: #CAE0BC !important; }
       border-bottom: 1px solid #ccc;
     `,
-  
+
     HeaderCell: `
       background: #2973B2;
       color: white;
@@ -55,7 +59,7 @@ export default function TablaVentaPorHora({
         text-align: center;
       }
     `,
-  
+
     Cell: `
       padding: 8px;
       border-right: 1px solid #ccc;
@@ -68,7 +72,7 @@ export default function TablaVentaPorHora({
         text-align: right;
       }
     `,
-  
+
     FooterCell: `
       position: sticky;
       bottom: 0px;

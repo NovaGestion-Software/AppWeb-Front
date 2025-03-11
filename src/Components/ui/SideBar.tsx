@@ -10,6 +10,7 @@ import Cookies from 'js-cookie';
 import { GrDocumentTime } from 'react-icons/gr';
 import { BiBarChartSquare } from 'react-icons/bi';
 import { FaBoxesPacking } from 'react-icons/fa6';
+import { useVentasHoraStore } from '@/store/useVentasHoraStore';
 type SideBarProps = {
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
@@ -21,12 +22,12 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
   const queryClient = useQueryClient();
   const [openMenus, setOpenMenus] = useState<{ [key: string]: boolean }>({}); // Estado para manejar los menús desplegables
 
+  const { clearVentasPorHora } = useVentasHoraStore();
+
   const storedUser = localStorage.getItem('_u');
   const user = storedUser ? JSON.parse(storedUser) : {};
 
-  useEffect(() => {
-    // console.log(FaBoxesPacking)
-  }, [FaBoxesPacking]);
+  useEffect(() => {}, [FaBoxesPacking]); // solucion al console.log para deploy vercel -- se puede borrar cuando ya este secicon
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -79,26 +80,6 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
       ],
     },
   ];
-
-  const handleLogout = () => {
-    queryClient.clear();
-
-    Cookies.remove('token_acceso', { path: '/' });
-    Cookies.remove('token_refresh', { path: '/' });
-    Cookies.remove('token_acceso_prod', { path: '/' });
-    Cookies.remove('token_refresh_prod', { path: '/' });
-    Cookies.remove('token_acceso_des', { path: '/' });
-    Cookies.remove('token_refresh_des', { path: '/' });
-
-    localStorage.removeItem('_u');
-    localStorage.removeItem('_tu');
-    localStorage.removeItem('_nu');
-    localStorage.removeItem('_ce');
-    localStorage.removeItem('_dbp');
-    localStorage.removeItem('_dbd');
-
-    navigate('/');
-  };
 
   // Función para alternar el estado de un menú desplegable
   const toggleMenu = (title: string) => {
@@ -205,9 +186,32 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
       </li>
     );
   };
+
+  const handleLogout = () => {
+    queryClient.clear();
+
+    Cookies.remove('token_acceso', { path: '/' });
+    Cookies.remove('token_refresh', { path: '/' });
+    Cookies.remove('token_acceso_prod', { path: '/' });
+    Cookies.remove('token_refresh_prod', { path: '/' });
+    Cookies.remove('token_acceso_des', { path: '/' });
+    Cookies.remove('token_refresh_des', { path: '/' });
+
+    localStorage.removeItem('_u');
+    localStorage.removeItem('_tu');
+    localStorage.removeItem('_nu');
+    localStorage.removeItem('_ce');
+    localStorage.removeItem('_dbp');
+    localStorage.removeItem('_dbd');
+
+    clearVentasPorHora();
+
+    navigate('/');
+  };
+
   return (
     <div
-      className={`fixed top-0 left-0 h-full bg-gradient-to-b from-slate-900 to-[#081A51] 
+      className={`fixed top-0 left-0 h-full border-r border-r-slate-400 bg-gradient-to-b from-slate-900 to-[#081A51] 
     duration-300 pl-3 z-50 overflow-hidden ${open ? 'w-60' : 'w-20'} `}
     >
       {/**arrow */}

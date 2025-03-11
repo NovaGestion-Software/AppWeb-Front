@@ -55,7 +55,6 @@ export default function ModalSucursales({ isProcessing }: ModalSucursalesProps) 
     setSucursalesSeleccionadas([...sucursalesSeleccionadas]); // Revertir los cambios y restaurar las sucursales originales
   };
 
-
   return (
     <>
       <ActionButton
@@ -77,7 +76,7 @@ export default function ModalSucursales({ isProcessing }: ModalSucursalesProps) 
             buttons={true}
           >
             {/* Contenido del Modal */}
-            <div className="flex w-full h-[30rem] mx-auto p-4 gap-4 mb-4">
+            <div className="flex h-[30rem] mx-auto p-4 gap-4 mb-4">
               <div className="w-[27rem] overflow-auto border border-gray-300 rounded-lg">
                 <table className="w-full border-collapse">
                   <thead className="bg-gray-200 sticky top-0">

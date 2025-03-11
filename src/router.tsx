@@ -21,12 +21,12 @@ export default function Router() {
           <Route element={<Layout />}>
             <Route path="/home" element={<HomeView />} />
             <Route path="/dashboard" element={<DashboardView />} />
+            <Route path="/cajas" element={<CajasView />} />
             <Route path="/informes">
               <Route path="cobranza-vencim" element={<CobranzaVencimView />} />
               <Route path="ventas-vend" element={<VentasXVendedorView />} />
               <Route path="ventas-hora" element={<VentasHoraView />} />
             </Route>
-            <Route path="/cajas" element={<CajasView />} />
             {/* <Route path="/stock-seccion" element={<StockPorSeccion />} /> */}
             <Route path="/configuracion" element={<ConfigView />} />
           </Route>

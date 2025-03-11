@@ -1,20 +1,17 @@
 import { useState } from 'react';
-import RefreshButton from '@/Components/ui/Buttons/RefreshButton';
 import CardsComponent from './components/features/cards/CardsComponent';
 import GraficoVentas from './components/features/graphic/GraficoVentas';
 import GraficoTorta from './components/features/donut/GraficoTorta';
+import ViewTitle from '@/Components/ui/Labels/ViewTitle';
 
 export default function DashboardView() {
   const [handleRefetch, setHandleRefetch] = useState(false);
 
   return (
     <>
-      <div className="text-2xl font-bold px-6 py-2 flex flex-row items-center gap-x-3">
-        <h1>Dashboard</h1>
-        <RefreshButton setRefetch={setHandleRefetch} />
-      </div>
+      <ViewTitle title={'Dashboard'} showRefreshButton={true} setHandleRefetch={setHandleRefetch} />
 
-      <div className="grid grid-cols-12 gap-4 py-2 px-6">
+      <div className="grid grid-cols-12 gap-4 py-2 px-10">
         <div className="col-span-12 ">
           <div className="space-y-5">
             <CardsComponent handleRefetch={handleRefetch} setHandleRefetch={setHandleRefetch} />

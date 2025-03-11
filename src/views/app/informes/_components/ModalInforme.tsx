@@ -1,5 +1,5 @@
-import ActionButton from "@/Components/ui/Buttons/ActionButton";
-import { useEffect, useRef } from "react";
+import ActionButton from '@/Components/ui/Buttons/ActionButton';
+import { useEffect, useRef } from 'react';
 
 interface ModalInformeProps {
   show: boolean;
@@ -25,21 +25,17 @@ export default function ModalInforme({
   // Cerrar el modal al hacer clic fuera de él
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (
-        modalRef.current &&
-        !modalRef.current.contains(event.target as Node) &&
-        !buttons
-      ) {
+      if (modalRef.current && !modalRef.current.contains(event.target as Node) && !buttons) {
         onClose();
       }
     };
 
     if (show) {
-      document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener('mousedown', handleClickOutside);
     }
 
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [show, onClose, buttons]);
 
@@ -48,17 +44,26 @@ export default function ModalInforme({
   return (
     <>
       <div className="fixed inset-0 z-50 flex justify-center items-center overflow-x-hidden outline-none focus:outline-none">
-        <div className="relative w-auto p-6 mx-auto " ref={modalRef}>
-          <div className="relative grid grid-cols-4 grid-rows-[3rem_auto_auto_auto_auto] gap-1 w-full  p-6 bg-white rounded-lg shadow-lg outline-none focus:outline-none ">
-            <div className="col-span-3 flex items-center justify-start p-5">
+        <div className="relative" ref={modalRef}>
+          <div className="relative grid grid-cols-3 grid-rows-[3rem_auto_auto_auto_auto] gap-1  p-6 bg-white rounded-lg shadow-lg outline-none focus:outline-none ">
+            <div className="col-span-3 flex items-center justify-between p-5 ">
               <h3 className="w-full text-3xl font-semibold underline underline-offset-4 decoration-4 decoration-gray-600">
                 {title}
               </h3>
+
+              <ActionButton
+                text="X"
+                onClick={onClose}
+                color="redSoft"
+                className="h-8 w-10 rounded border border-slate-900/50"
+                textClassName="text-slate-600"
+                size="md"
+              />
             </div>
 
             {/* Botones de Acción por Defecto: Confirmar y Cerrar */}
             {buttons && (
-              <div className="row-span-2 col-start-4 row-start-4 flex flex-col justify-center items-center w-full gap-3 mb-5">
+              <div className="col-start-3 flex flex-col  w-full gap-3 bg-red-200">
                 <ActionButton
                   text="Confirmar"
                   onClick={onConfirm || (() => {})}
@@ -70,7 +75,7 @@ export default function ModalInforme({
                 <ActionButton
                   text="Cerrar"
                   onClick={onClose}
-                  color="grayStrong"
+                  color="red"
                   className="w-full rounded-md"
                   textClassName=""
                   size="md"
@@ -81,11 +86,8 @@ export default function ModalInforme({
 
             {/* Contenido dinámico */}
             <div
-              className={` w-full h-auto mx-auto p-4 flex gap-4 mb-4 ${
-                buttons
-                  ? "col-span-3 row-span-4 col-start-1 row-start-2"
-                  : "col-span-full  col-start-1"
-              }`}
+              className={`flex p-4 gap-4 mb-4 bg-blue-200 
+                ${buttons ? 'col-span-3 col-start-1 row-start-2' : 'col-span-full  col-start-1'}`}
             >
               {children}
             </div>
