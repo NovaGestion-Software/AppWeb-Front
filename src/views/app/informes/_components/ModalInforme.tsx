@@ -45,8 +45,8 @@ export default function ModalInforme({
     <>
       <div className="fixed inset-0 z-50 flex justify-center items-center overflow-x-hidden outline-none focus:outline-none">
         <div className="relative" ref={modalRef}>
-          <div className="relative grid grid-cols-3 grid-rows-[3rem_auto_auto_auto_auto] gap-1  p-6 bg-white rounded-lg shadow-lg outline-none focus:outline-none ">
-            <div className="col-span-3 flex items-center justify-between p-5 ">
+          <div className="relative grid grid-cols-3 grid-rows-[3rem_auto_auto_auto_auto] gap-1 p-4 bg-white rounded-lg shadow-lg outline-none focus:outline-none ">
+            <div className="col-span-3 flex items-center justify-between px-5">
               <h3 className="w-full text-3xl font-semibold underline underline-offset-4 decoration-4 decoration-gray-600">
                 {title}
               </h3>
@@ -61,35 +61,35 @@ export default function ModalInforme({
               />
             </div>
 
-            {/* Botones de Acción por Defecto: Confirmar y Cerrar */}
-            {buttons && (
-              <div className="col-start-3 flex flex-col  w-full gap-3 bg-red-200">
-                <ActionButton
-                  text="Confirmar"
-                  onClick={onConfirm || (() => {})}
-                  color="greenSoft"
-                  className="w-full rounded-md"
-                  size="md"
-                  disabled={!disabled}
-                />
-                <ActionButton
-                  text="Cerrar"
-                  onClick={onClose}
-                  color="red"
-                  className="w-full rounded-md"
-                  textClassName=""
-                  size="md"
-                  disabled={!disabled}
-                />
-              </div>
-            )}
-
             {/* Contenido dinámico */}
             <div
-              className={`flex p-4 gap-4 mb-4 bg-blue-200 
+              className={`p-2 
                 ${buttons ? 'col-span-3 col-start-1 row-start-2' : 'col-span-full  col-start-1'}`}
             >
-              {children}
+              <div className="flex ">
+                {children}
+                <div className="flex items-end mb-10">
+                  {buttons && (
+                    <div className="flex flex-col gap-3">
+                      <ActionButton
+                        icon={<img src="/icons/done.png" alt="Confirmar" className="w-6 h-6" />}
+                        size="md"
+                        color="grayDefault"
+                        // className="border-2 border-slate-500 bg-gray-100 rounded-md"
+                        onClick={onConfirm || (() => {})}
+                        disabled={!disabled}
+                      />
+                      <ActionButton
+                        icon={<img src="/icons/close.png" alt="Confirmar" className="w-6 h-6" />}
+                        size="md"
+                        className="rounded-md"
+                        onClick={onClose}
+                        disabled={!disabled}
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
         </div>

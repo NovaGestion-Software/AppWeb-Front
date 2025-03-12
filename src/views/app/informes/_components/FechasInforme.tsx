@@ -1,13 +1,13 @@
-import { useEffect, useRef, useState } from "react";
-import { useVentasHoraStore } from "@/store/useVentasHoraStore";
-import { DatePicker, ConfigProvider } from "antd";
-import { FechasRango } from "@/types";
-import { RiPlayCircleFill, RiCloseCircleFill } from "@remixicon/react";
-import "dayjs/locale/es";
-import dayjs, { Dayjs } from "dayjs";
-import locale from "antd/locale/es_ES";
-import ActionButton from "@/Components/ui/Buttons/ActionButton";
-import showAlert from "@/utils/showAlert";
+import { useEffect, useRef, useState } from 'react';
+import { useVentasHoraStore } from '@/store/useVentasHoraStore';
+import { DatePicker, ConfigProvider } from 'antd';
+import { FechasRango } from '@/types';
+import { RiPlayCircleFill, RiCloseCircleFill } from '@remixicon/react';
+import 'dayjs/locale/es';
+import dayjs, { Dayjs } from 'dayjs';
+import locale from 'antd/locale/es_ES';
+import ActionButton from '@/Components/ui/Buttons/ActionButton';
+import showAlert from '@/utils/showAlert';
 
 interface DateRange {
   from: Dayjs | null;
@@ -33,14 +33,13 @@ export default function FechasInforme({
   showPresets = true,
   setFocus,
 }: FechasInformeProps) {
-  dayjs.locale("es");
+  dayjs.locale('es');
   const defaultDate = {
-    from: dayjs().startOf("month"),
+    from: dayjs().startOf('month'),
     to: dayjs(),
   };
   const [dateRange, setDateRange] = useState<DateRange>(defaultDate);
-  const disabledFutureDates = (current: dayjs.Dayjs) =>
-    current && current > dayjs().endOf("day");
+  const disabledFutureDates = (current: dayjs.Dayjs) => current && current > dayjs().endOf('day');
 
   const rangePickerRef = useRef<any>(null);
 
@@ -49,10 +48,10 @@ export default function FechasInforme({
 
   useEffect(() => {
     if (dateRange.from && dateRange.to) {
-      const periodoIni = dateRange.from.format("YYYY-MM-DD");
-      const periodoFin = dateRange.to.format("YYYY-MM-DD");
+      const periodoIni = dateRange.from.format('YYYY-MM-DD');
+      const periodoFin = dateRange.to.format('YYYY-MM-DD');
       setFechas({ from: periodoIni, to: periodoFin });
-      console.log("fechas steads", fechas);
+      console.log('fechas steads', fechas);
     }
   }, [dateRange]);
 
@@ -93,39 +92,39 @@ export default function FechasInforme({
 
   const rangePresets: { label: string; value: [dayjs.Dayjs, dayjs.Dayjs] }[] = [
     {
-      label: "Ayer",
-      value: [dayjs().subtract(1, "day"), dayjs().subtract(1, "day")],
+      label: 'Ayer',
+      value: [dayjs().subtract(1, 'day'), dayjs().subtract(1, 'day')],
     },
-    { label: "Últimos 7 Días", value: [dayjs().subtract(7, "days"), dayjs()] },
+    { label: 'Últimos 7 Días', value: [dayjs().subtract(7, 'days'), dayjs()] },
     {
-      label: "Últimos 15 Días",
-      value: [dayjs().subtract(15, "days"), dayjs()],
-    },
-    {
-      label: "Últimos 30 Días",
-      value: [dayjs().subtract(30, "days"), dayjs()],
+      label: 'Últimos 15 Días',
+      value: [dayjs().subtract(15, 'days'), dayjs()],
     },
     {
-      label: "Últimos 90 Días",
-      value: [dayjs().subtract(90, "days"), dayjs()],
+      label: 'Últimos 30 Días',
+      value: [dayjs().subtract(30, 'days'), dayjs()],
     },
-    { label: "Este Mes", value: [dayjs().startOf("month"), dayjs()] },
     {
-      label: "Mes Pasado",
+      label: 'Últimos 90 Días',
+      value: [dayjs().subtract(90, 'days'), dayjs()],
+    },
+    { label: 'Este Mes', value: [dayjs().startOf('month'), dayjs()] },
+    {
+      label: 'Mes Pasado',
       value: [
-        dayjs().subtract(1, "month").startOf("month"),
-        dayjs().subtract(1, "month").endOf("month"),
+        dayjs().subtract(1, 'month').startOf('month'),
+        dayjs().subtract(1, 'month').endOf('month'),
       ],
     },
     {
-      label: "Este Año",
-      value: [dayjs().startOf("year"), dayjs()],
+      label: 'Este Año',
+      value: [dayjs().startOf('year'), dayjs()],
     },
     {
-      label: "Año Pasado",
+      label: 'Año Pasado',
       value: [
-        dayjs().subtract(1, "year").startOf("year"),
-        dayjs().subtract(1, "year").endOf("year"),
+        dayjs().subtract(1, 'year').startOf('year'),
+        dayjs().subtract(1, 'year').endOf('year'),
       ],
     },
   ];
@@ -156,7 +155,7 @@ export default function FechasInforme({
   // }, [isProcessing]);
 
   const focusDatePicker = () => {
-    const inputs = document.querySelectorAll(".ant-picker input");
+    const inputs = document.querySelectorAll('.ant-picker input');
     if (inputs.length > 0) {
       const input1 = inputs[0] as HTMLInputElement;
       input1.focus();
@@ -165,7 +164,7 @@ export default function FechasInforme({
 
   // shorcut
   useEffect(() => {
-    const inputs = document.querySelectorAll(".ant-picker input");
+    const inputs = document.querySelectorAll('.ant-picker input');
 
     const selectAllText = (input: HTMLInputElement) => {
       if (input) input.select();
@@ -186,19 +185,13 @@ export default function FechasInforme({
     const handleKeyDown = (e: Event) => {
       const keyboardEvent = e as KeyboardEvent; // Hacemos un type assertion aquí
       if (inputs.length === 2) {
-        if (
-          document.activeElement === inputs[0] &&
-          keyboardEvent.key === "Enter"
-        ) {
+        if (document.activeElement === inputs[0] && keyboardEvent.key === 'Enter') {
           keyboardEvent.preventDefault();
           (inputs[1] as HTMLInputElement).focus();
           return;
         }
 
-        if (
-          keyboardEvent.key === "Enter" &&
-          document.activeElement === inputs[1]
-        ) {
+        if (keyboardEvent.key === 'Enter' && document.activeElement === inputs[1]) {
           keyboardEvent.preventDefault();
           handleData();
           deselectText(inputs[1] as HTMLInputElement);
@@ -206,10 +199,7 @@ export default function FechasInforme({
         }
 
         // Nuevo atajo: Escape para volver al primer input
-        if (
-          keyboardEvent.key === "Escape" &&
-          document.activeElement === inputs[1]
-        ) {
+        if (keyboardEvent.key === 'Escape' && document.activeElement === inputs[1]) {
           keyboardEvent.preventDefault();
           (inputs[0] as HTMLInputElement).focus();
         }
@@ -220,15 +210,15 @@ export default function FechasInforme({
     inputs.forEach((input) => {
       const htmlInput = input as HTMLInputElement;
       // Seleccionar todo el texto cuando el input recibe el foco
-      input.addEventListener("focus", () => selectAllText(htmlInput));
+      input.addEventListener('focus', () => selectAllText(htmlInput));
       // Manejar atajos de teclado
-      input.addEventListener("keydown", handleKeyDown);
+      input.addEventListener('keydown', handleKeyDown);
     });
     return () => {
       inputs.forEach((input) => {
         const htmlInput = input as HTMLInputElement;
-        input.removeEventListener("focus", () => selectAllText(htmlInput));
-        input.removeEventListener("keydown", handleKeyDown);
+        input.removeEventListener('focus', () => selectAllText(htmlInput));
+        input.removeEventListener('keydown', handleKeyDown);
       });
     };
   }, []);
@@ -258,9 +248,9 @@ export default function FechasInforme({
 
       if (!from || !to) {
         showAlert({
-          text: "Debes elegir un rango de fechas",
-          icon: "warning",
-          confirmButtonText: "OK",
+          text: 'Debes elegir un rango de fechas',
+          icon: 'warning',
+          confirmButtonText: 'OK',
           showConfirmButton: true,
           timer: 1800,
           willClose: () => focusDatePicker(),
@@ -269,8 +259,8 @@ export default function FechasInforme({
       }
 
       const dates = {
-        from: from.format("YYYY-MM-DD"),
-        to: to.format("YYYY-MM-DD"),
+        from: from.format('YYYY-MM-DD'),
+        to: to.format('YYYY-MM-DD'),
       };
 
       await onFetchData(dates);
@@ -290,17 +280,15 @@ export default function FechasInforme({
   };
 
   return (
-    <div className="flex items-center justify-center h-14 py-2 px-4 gap-6 bg-white rounded-lg">
+    <div className="flex items-center justify-around h-10 bg-white rounded-lg 2xl:h-14">
       <ConfigProvider locale={locale}>
         <DatePicker.RangePicker
           ref={rangePickerRef}
           value={[dateRange.from, dateRange.to]}
           format="DD/MM/YYYY"
-          onChange={(dates) =>
-            setDateRange({ from: dates?.[0] ?? null, to: dates?.[1] ?? null })
-          }
-          className="w-[35rem] xl:w-60 2xl:w-64 2xl:h-10"
-          placeholder={["Inicio", "Fin"]}
+          onChange={(dates) => setDateRange({ from: dates?.[0] ?? null, to: dates?.[1] ?? null })}
+          className="h-6 w-64 2xl:h-8"
+          placeholder={['Inicio', 'Fin']}
           disabled={isProcessing}
           disabledDate={disabledFutureDates}
           presets={showPresets ? rangePresets : undefined}
@@ -308,25 +296,27 @@ export default function FechasInforme({
       </ConfigProvider>
 
       {whitButttons && (
-        <>
+        <div className="flex gap-3">
           <ActionButton
-            text={
-              status === "pending" ? "Procesando..." : buttonText?.fetch || ""
-            }
+            text={status === 'pending' ? 'Procesando...' : buttonText?.fetch || ''}
             icon={<RiPlayCircleFill className="w-5 h-5" />}
             color="green"
+            size="xs"
+            className="2xl:h-8 2xl:text-sm rounded-md"
             onClick={handleData}
-            disabled={isProcessing || status === "pending"}
+            disabled={isProcessing || status === 'pending'}
           />
 
           <ActionButton
-            text={buttonText?.clear || ""}
+            text={buttonText?.clear || ''}
             icon={<RiCloseCircleFill className="w-5 h-5" />}
             color="red"
+            size="xs"
+            className="2xl:h-8 2xl:text-sm rounded-md"
             onClick={handleClear}
             disabled={!isProcessing}
           />
-        </>
+        </div>
       )}
     </div>
   );

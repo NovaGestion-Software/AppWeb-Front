@@ -152,8 +152,8 @@ export default function TablaInforme<T extends TableNode>({
     }
   }, [scrollPosition]);
 
-  function onSelectChange(action:any,state: any) {
-    console.log(action)
+  function onSelectChange(action: any, state: any) {
+    console.log(action);
     const selectedItem = datosParaTabla.find((node) => node.id === state.id);
     // console.log(action);
     if (!selectedItem) {
@@ -174,7 +174,7 @@ export default function TablaInforme<T extends TableNode>({
 
   return (
     <div
-      className="p-2 w-fit rounded-xl bg-white"
+      className="p-1 w-fit rounded-xl bg-white"
       id="table-to-print"
       ref={tableRef}
       tabIndex={0}

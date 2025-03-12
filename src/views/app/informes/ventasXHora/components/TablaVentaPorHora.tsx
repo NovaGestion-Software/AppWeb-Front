@@ -25,13 +25,13 @@ export default function TablaVentaPorHora({
   useEffect(() => {
     // Para evitar console.log (solo para deployar en vercel)
   }, [isProcessing]);
-  const empresa = JSON.parse(localStorage.getItem('_u') || '{}')
-    ?.empresa.toString()
-    .slice(-2);
-  console.log(empresa);
+  // const empresa = JSON.parse(localStorage.getItem('_u') || '{}')
+  //   ?.empresa.toString()
+  //   .slice(-2);
+  // console.log(empresa);
   const customTheme = {
     Table: `
-      grid-template-columns: minmax(0px, 0px) minmax(30px, 110px) minmax(40px, 100px) minmax(50px, 80px) minmax(50px, 80px) minmax(50px, 80px) minmax(50px, 150px) minmax(50px, 80px);
+      grid-template-columns: minmax(0px, 0px) minmax(90px, 90px) minmax(100px, 100px) minmax(80px, 80px) minmax(80px, 80px) minmax(80px, 80px) minmax(50px, 180px) minmax(50px, 80px);
       border-radius: 12px;
       width: 680px;
       height: 650px;
@@ -41,6 +41,20 @@ export default function TablaVentaPorHora({
       @media (min-width: 1280px) and (max-width: 1380px) {
         height: 500px;
       }
+      @media (min-width: 1536px) {
+      width: 790px;
+      height: 780px;
+      grid-template-columns: 
+        minmax(0px, 0px) 
+        minmax(100px, 100px) 
+        minmax(100px, 100px) 
+        minmax(100px, 100px) 
+        minmax(100px, 100px) 
+        minmax(100px, 100px) 
+        minmax(80px, 200px)
+        minmax(80px, 100px);
+    }
+
     `,
 
     Row: `
@@ -54,16 +68,18 @@ export default function TablaVentaPorHora({
     HeaderCell: `
       background: #2973B2;
       color: white;
-      height: 10px;
+      min-height: 23px;
+      height: 23px;
+      font-size: 13px;
+      padding: 12px;
       &:nth-of-type(n+3) {
         text-align: center;
       }
     `,
 
     Cell: `
-      padding: 8px;
+      padding: 0.5px 4px;
       border-right: 1px solid #ccc;
-  
       &:last-child {
         border-right: none;
       }
@@ -71,16 +87,25 @@ export default function TablaVentaPorHora({
       &:nth-of-type(n+3) {
         text-align: right;
       }
+
+       @media (min-width: 1536px) {
+        padding: 5px;
+        font-size: 15px;
+       }
     `,
 
     FooterCell: `
       position: sticky;
       bottom: 0px;
-      padding: 8px;
+      padding: 2px;
       border-right: 1px solid #ccc;
       background-color: #fff;
       text-align: right;
   
+      @media (min-width: 1536px) {
+        padding: 6px;
+        font-size: 15px;
+      }
       &:last-child {
         border-right: none;
       }

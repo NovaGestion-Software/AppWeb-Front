@@ -57,15 +57,14 @@ html {
   color: white;
 }
 
-.ant-picker-input-active{
-  padding: 0.1rem 0.2rem;
-  color: white;
-  background-color: rgb(0, 115, 255);
+.ant-picker-input-active {
+  /* padding: 0.1rem 0.2rem; */
+  color: black;
+  /* background-color: rgb(0, 115, 255); */
 }
 .ant-picker-disabled {
   font-weight: 700;
 }
-
 
 .text-container {
   width: 200px; /* Ancho fijo del contenedor */

@@ -6,7 +6,7 @@ export type ActionButtonProps = {
   icon?: React.ReactNode;
   onClick: () => void;
   disabled?: boolean;
-  size?: 'xs' | 'sm' | 'md' | 'lg';
+  size?: 'xxs' | 'xs' | 'sm' | 'md' | 'lg';
   color?: ColorTypes;
   className?: string;
   textClassName?: string;
@@ -28,6 +28,7 @@ export default function ActionButton({
     'flex items-center justify-center gap-2 font-semibold transition px-4 text-white';
 
   const sizeStyles = {
+    xxs: 'h-4 text-xs',
     xs: 'h-6 text-xs',
     sm: 'h-8 text-sm',
     md: 'h-10 text-base',
@@ -36,8 +37,8 @@ export default function ActionButton({
 
   const colorClasses: Record<ColorTypes, string> = {
     gray: 'bg-gray-500 hover:bg-gray-600',
-    grayDefault: 'bg-gray-400 hover:bg-gray-500',
-    graySoft: 'bg-gray-400 hover:bg-gray-400/90',
+    grayDefault: 'bg-gray-200 hover:bg-gray-300 border border-slate-400',
+    graySoft: 'bg-gray-200 hover:bg-gray-200/90',
     grayStrong: 'bg-slate-600/90 hover:bg-slate-600/80',
     grayDeshab: 'bg-gray-100 cursor-default',
     green: 'bg-green-600 hover:bg-green-700',

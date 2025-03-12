@@ -51,7 +51,7 @@ export default function VentasHoraView() {
       setStatus('error');
     },
     onSuccess: (data) => {
-      // console.log(data.data);
+      console.log(data.data);
       if (data.data.length === 0) {
         showAlert({
           text: 'El rango de fecha seleccionado no contiene información',
@@ -129,6 +129,7 @@ export default function VentasHoraView() {
     let totalPares = 0;
 
     if (!sucursalesSeleccionadas) {
+      console.log('No se seleccionaron sucursales');
       return {
         datosAgrupados: resultado,
         totalImporte, // Número sin formatear
@@ -147,28 +148,40 @@ export default function VentasHoraView() {
             resultado[horario] = { importe: '0', cantidad: 0, pares: 0 };
           }
 
-          // Convertimos el importe a número, sumamos y luego redondeamos a 2 decimales
-          const importeNumerico = parseFloat(intervalo.importe.replace(/\./g, '')) || 0;
-          totalImporte = parseFloat((totalImporte + importeNumerico).toFixed(2)); // Aseguramos 2 decimales
+          // console.log(intervalo.importe);
 
-          // Actualizamos el importe en el resultado
-          const nuevoImporte =
-            parseFloat(resultado[horario].importe.replace(/\./g, '')) + importeNumerico;
-          resultado[horario].importe = nuevoImporte.toString(); // Guardamos como string
+          // Corrección: Convertimos el importe correctamente respetando los decimales
+          const importeNumerico =
+            parseFloat(intervalo.importe.replace(/\./g, '').replace(',', '.')) || 0;
 
-          // Sumamos otros valores
+          // console.log(importeNumerico);
+
+          // Sumar correctamente sin perder decimales
+          totalImporte += importeNumerico;
+          // console.log(totalImporte);
+
+          // Actualizamos el importe en el resultado sin perder precisión
+          const importeActual =
+            parseFloat(resultado[horario].importe.replace(/\./g, '').replace(',', '.')) || 0;
+          const nuevoImporte = importeActual + importeNumerico;
+          resultado[horario].importe = nuevoImporte.toString(); // Guardamos como string sin formatear aún
+
+          // console.log(nuevoImporte);
+
+          // Sumar otros valores
           resultado[horario].cantidad += intervalo.cantidad;
           resultado[horario].pares += intervalo.pares || 0;
 
-          // Sumamos a los totales globales
+          // Sumar a los totales globales
           totalOperaciones += intervalo.cantidad;
           totalPares += intervalo.pares || 0;
         });
       });
 
-    // Formateamos los importes en el resultado
+    // **Formateamos los importes en el resultado antes de devolverlos**
     for (const horario in resultado) {
       resultado[horario].importe = formatearNumero(parseFloat(resultado[horario].importe));
+      // console.log(`Importe final formateado para ${horario}:`, resultado[horario].importe);
     }
 
     return {
@@ -190,6 +203,7 @@ export default function VentasHoraView() {
     return entries.map(([horario, datos], index) => {
       const importeNumerico = parseFloat(datos.importe.replace(/\./g, ''));
 
+      // console.log(`Importe: ${importeNumerico}`)
       return {
         id: index + 1,
         hora: horario,
@@ -298,15 +312,14 @@ export default function VentasHoraView() {
   // console.log(dataParaTabla);
 
   return (
-    <>
-      <div className="">
-        <ViewTitle title={'Ventas por Hora'} />
-      </div>
-      <div className=" w-full h-full p-4 pt-0 overflow-hidden">
+    <div className="h-screen ">
+      <ViewTitle title={'Ventas por Hora'} />
+
+      <div className="flex flex-col h-fit mx-4">
         {/** BOTONERA */}
-        <div className="grid grid-cols-12 grid-rows-1 gap-4 mt-6 rounded p-2  h-16 items-center ">
+        <div className="grid grid-cols-12 grid-rows-1 h-11 px-4 gap-4 mt-2 mb-1 rounded">
           {/**ingresar fechas y Botones de procesado */}
-          <div className="col-start-2 col-span-6 2xl:col-span-6 2xl:col-start-2 ">
+          <div className="col-start-1 col-span-6 2xl:col-span-4 2xl:col-start-3 ">
             <FechasInforme
               setFocus={foco}
               onFetchData={handleFetchData}
@@ -318,7 +331,7 @@ export default function VentasHoraView() {
           </div>
 
           {/**modales y funcionabilidades */}
-          <div className="col-span-5 col-start-8 2xl:col-span-4 2xl:col-start-8  ">
+          <div className="col-span-4 col-start-8 2xl:col-span-3 2xl:col-start-8">
             <HerramientasComponent
               data={dataParaTabla}
               isProcessing={isProcessing}
@@ -327,31 +340,53 @@ export default function VentasHoraView() {
           </div>
         </div>
 
-        <div className="grid grid-cols-12 grid-rows-5  gap-2 py-5 pl-4 ">
+        <div className="grid grid-cols-12 gap-2 ml-4 2xl:ml-0 2xl:mt-5 ">
           {isProcessing && (
-            <div
-              className=" col-span-1 col-start-8 row-span-1 relative left-6
-           bg-white rounded-lg p-4  h-fit w-44 font-semibold text-base shadow-md 
-          2xl:right-0 2xl:col-start-2 2xl:-left-12  "
-            >
-              <h3 className="font-bold text-xs 2xl:text-sm text-green-700 mb-2">Sucursales:</h3>
-              <ul className="list-disc list-inside w-full text-sm 2xl:text-sm">
-                {sucursalesDisponibles.map((sucursal, index) => (
-                  <li
-                    key={index}
-                    className={` ${
-                      sucursalesSeleccionadas.includes(sucursal)
-                        ? 'text-green-600' // Estilo para sucursales seleccionadas
-                        : 'text-gray-400 line-through' // Estilo para sucursales no seleccionadas
-                    }`}
-                  >
-                    {sucursal}
-                  </li>
-                ))}
-              </ul>
+            <div className="col-span-5 2xl:col-start-2 flex flex-col justify-between 2xl:justify-evenly 2xl:items-center transition-all duration-500 ease-out">
+              {/* Sucursales */}
+              <div className="col-start-1 col-span-5 row-start-1 w-fit h-fit py-2 px-4 bg-white rounded-lg font-semibold shadow-md space-y-2">
+                <ul className="grid grid-cols-3 grid-rows-4 list-disc list-inside text-xs 2xl:text-base 2xl:p-2">
+                  {sucursalesDisponibles.map((sucursal, index) => (
+                    <li
+                      key={index}
+                      className={`${
+                        sucursalesSeleccionadas.includes(sucursal)
+                          ? 'text-green-600' // Estilo para sucursales seleccionadas
+                          : 'text-gray-400 line-through' // Estilo para sucursales no seleccionadas
+                      }`}
+                    >
+                      {sucursal}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Información de ventas */}
+              <div className="flex flex-col w-fit 2xl:w-[25rem] 2xl:text-lg bg-white rounded-lg py-1 px-3">
+                <div className="flex gap-4">
+                  <p className="text-blue-500 font-semibold">Mayores Ventas: </p>
+                  <span className="text-green-600 font-bold ">{maxImporteValor.hora}</span>
+                </div>
+                <div className="flex gap-5">
+                  <p className="text-blue-500 font-semibold">Mayor Importe: </p>
+                  <p className=" text-green-600 font-bold ">{'$' + maxImporteFormateado}</p>
+                </div>
+              </div>
+
+              {/* Gráfico */}
+              <div className="w-full">
+                <GraficoInforme datosParaGraficos={dataParaTabla} />
+              </div>
             </div>
           )}
-          <div className={`col-start-1 col-span-7 row-span-9 row-start-1 2xl:col-start-3 h-fit `}>
+
+          <div
+            className={`flex h-fit w-fit ml-5 transition-all duration-500 ease-out ${
+              isProcessing
+                ? 'col-start-6 2xl:col-start-7 transform'
+                : ' col-start-3 2xl:col-start-4 transform translate-x-0'
+            }`}
+          >
             <TablaVentaPorHora
               isProcessing={isProcessing}
               datos={dataParaTabla}
@@ -359,25 +394,8 @@ export default function VentasHoraView() {
               footer={footer}
             />
           </div>
-
-          {isProcessing && (
-            <div
-              className=" flex flex-col gap-3 relative left-6 
-           col-start-8 col-span-6 row-span-4  2xl:row-start-1
-            h-fit w-fit  "
-            >
-              <div className="  bg-white rounded-lg py-2 px-3 w-[29rem]  h-fit f ">
-                <p className="text-blue-500 font-semibold">
-                  Mayor Importe:{' '}
-                  <span className="text-xl text-green-600 font-bold"> ${maxImporteFormateado}</span>
-                  , <span className="text-blue-500">{maxImporteValor.hora}</span>
-                </p>
-              </div>
-              <GraficoInforme datosParaGraficos={dataParaTabla} />
-            </div>
-          )}
         </div>
       </div>
-    </>
+    </div>
   );
 }

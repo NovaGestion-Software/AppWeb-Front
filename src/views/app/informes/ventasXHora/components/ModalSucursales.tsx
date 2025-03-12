@@ -60,6 +60,8 @@ export default function ModalSucursales({ isProcessing }: ModalSucursalesProps) 
       <ActionButton
         text="Sucursales"
         icon={<RiStore3Fill size={20} />}
+        size="xs"
+        className="2xl:h-11 2xl:text-sm rounded-md"
         onClick={() => setShowModal(true)}
         disabled={!isProcessing}
         color={'blue'}
@@ -76,13 +78,17 @@ export default function ModalSucursales({ isProcessing }: ModalSucursalesProps) 
             buttons={true}
           >
             {/* Contenido del Modal */}
-            <div className="flex h-[30rem] mx-auto p-4 gap-4 mb-4">
-              <div className="w-[27rem] overflow-auto border border-gray-300 rounded-lg">
-                <table className="w-full border-collapse">
-                  <thead className="bg-gray-200 sticky top-0">
+            <div className="flex h-[29.3rem] mx-auto p-4 gap-4 mb-4">
+              <div className="w-[25rem] overflow-auto border border-gray-300 rounded-lg">
+                <table className="w-full border-collapse text-sm">
+                  {' '}
+                  {/* Reducimos el tamaño de la fuente */}
+                  <thead className="bg-gray-200 sticky top-0 text-sm">
+                    {' '}
+                    {/* Reducimos el tamaño del header */}
                     <tr>
-                      <th className="p-2 w-10"></th>
-                      <th className="p-2 text-left">Detalle</th>
+                      <th className="p-1 w-10"></th>
+                      <th className="p-1 text-left">Detalle</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -91,19 +97,19 @@ export default function ModalSucursales({ isProcessing }: ModalSucursalesProps) 
                         key={index}
                         className="hover:bg-blue-600 hover:bg-opacity-50 text-black font-semibold border-b border-gray-200"
                       >
-                        <td className="p-2 text-center">
+                        <td className="p-1 text-center">
                           <label className="cursor-pointer w-full h-full flex items-center justify-center">
                             <input
                               type="checkbox"
-                              className="w-5 h-5 cursor-pointer"
+                              className="w-3 h-3 cursor-pointer"
                               checked={sucursalesSeleccionadasModal.includes(sucursal)}
                               onChange={() => handleCheckboxChange(sucursal)}
-                              id={`checkbox-${index}`} // ID único para el checkbox
+                              id={`checkbox-${index}`}
                             />
                           </label>
                         </td>
                         <td
-                          className="p-2 cursor-pointer"
+                          className="p-1 cursor-pointer"
                           onClick={() => handleCheckboxChange(sucursal)}
                         >
                           {sucursal}
