@@ -86,3 +86,37 @@ html {
     transform: translateX(-100%); /* Termina fuera del contenedor */
   }
 }
+
+/* Estilos generales para el contenedor con scroll */
+.scrollbar-custom {
+  overflow-y: auto; /* La barra de desplazamiento solo se muestra si es necesario */
+  scrollbar-width: thin; /* Barra más delgada en Firefox */
+  scrollbar-color: #888 transparent; /* Barra sin fondo en Firefox */
+}
+
+/* Estilo para WebKit (Chrome, Safari, Edge) */
+.scrollbar-custom::-webkit-scrollbar {
+  width: 8px; /* Ancho de la barra de desplazamiento vertical */
+  height: 8px; /* Altura de la barra de desplazamiento horizontal */
+}
+
+/* Elimina las flechas de desplazamiento */
+.scrollbar-custom::-webkit-scrollbar-button {
+  display: none; /* No mostrar las flechas de arriba y abajo */
+}
+
+/* Pista del scrollbar (fondo) */
+.scrollbar-custom::-webkit-scrollbar-track {
+  background: transparent; /* Fondo transparente en la pista */
+}
+
+/* El "thumb" o la parte que se mueve en el scrollbar */
+.scrollbar-custom::-webkit-scrollbar-thumb {
+  background-color: #888; /* Color del "thumb" */
+  border-radius: 10px; /* Bordes redondeados */
+}
+
+/* Cambiar color cuando el "thumb" es hover */
+.scrollbar-custom::-webkit-scrollbar-thumb:hover {
+  background-color: #555; /* Color del "thumb" al pasar el ratón */
+}

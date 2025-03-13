@@ -11,6 +11,7 @@ import { GrDocumentTime } from 'react-icons/gr';
 import { BiBarChartSquare } from 'react-icons/bi';
 import { FaBoxesPacking } from 'react-icons/fa6';
 import { useVentasHoraStore } from '@/store/useVentasHoraStore';
+
 type SideBarProps = {
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
@@ -30,12 +31,12 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
 
   useEffect(() => {}, [FaBoxesPacking]); // solucion al console.log para deploy vercel -- se puede borrar cuando ya este secicon
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setOpen(false);
-    }, 1000);
-    return () => clearTimeout(timer);
-  }, [location.pathname]);
+  // useEffect(() => {
+  //   const timer = setTimeout(() => {
+  //     setOpen(false);
+  //   }, 1000);
+  //   return () => clearTimeout(timer);
+  // }, [location.pathname]);
 
   useEffect(() => {
     if (!open) {
@@ -55,7 +56,7 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
       icon: <RiDashboardFill />,
     },
     {
-      title: 'Mov. de Caja',
+      title: 'Movimientos de Caja',
       href: '/cajas',
       icon: <MdOutlineAttachMoney />,
     },
@@ -90,17 +91,28 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
     }));
   };
 
+  const isMenuActive = (menu: any) => {
+    if (menu.href === location.pathname) return true; // Si el menú principal es activo
+    if (!menu.submenus) return false; // Si no tiene submenús, salir
+
+    return menu.submenus.some(
+      (submenu: any) =>
+        submenu.href === location.pathname ||
+        (submenu.submenus &&
+          submenu.submenus.some((subsub: any) => subsub.href === location.pathname))
+    );
+  };
+
   const renderMenu = (menu: any) => {
-    const isOpen = openMenus[menu.title]; // Verificar si el menú está abierto
+    const isOpen = openMenus[menu.title];
 
     return (
       <li key={menu.title}>
         {menu.href ? (
           <Link
             to={menu.href}
-            className={`text-white text-base flex items-center gap-x-2 cursor-pointer p-2 rounded-l-md rounded-r-none mt-2
-            hover:bg-[#FFFFFF2B] hover:-translate-y-1 duration-300 overflow-hidden ${
-              location.pathname === menu.href ? 'bg-[#FFFFFF2B] -translate-y-1' : ''
+            className={`text-white text-sm flex items-center gap-x-2 cursor-pointer p-2 rounded-l-md rounded-r-none mt-1 hover:bg-[#FFFFFF2B] hover:-translate-y-0.5 duration-300 overflow-hidden ${
+              location.pathname === menu.href ? 'bg-[#FFFFFF2B] -translate-y-0.5' : ''
             }`}
           >
             <span className={`duration-300 ${location.pathname === menu.href ? 'scale-110' : ''}`}>
@@ -116,11 +128,8 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
           </Link>
         ) : (
           <div
-            className={`text-white text-base flex items-center gap-x-2 cursor-pointer p-2 rounded-l-md rounded-r-none mt-2
-            hover:bg-[#FFFFFF2B] hover:-translate-y-1 duration-300 overflow-hidden ${
-              menu.submenus?.some((submenu: any) => submenu.href === location.pathname)
-                ? 'bg-[#FFFFFF2B] -translate-y-1'
-                : ''
+            className={`flex items-center text-white text-sm gap-x-2 cursor-pointer p-2 rounded-l-md rounded-r-none mt-1 hover:bg-[#FFFFFF2B] hover:-translate-y-0.5 duration-300 overflow-hidden  ${
+              isMenuActive(menu) ? 'bg-[#FFFFFF2B] -translate-y-0.5' : ''
             }`}
             onClick={() => toggleMenu(menu.title)}
           >
@@ -142,7 +151,9 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
             </span>
             {menu.submenus &&
               open && ( // Mostrar flecha solo si el menú está abierto
-                <span className="ml-auto">{isOpen ? <FaChevronUp /> : <FaChevronDown />}</span>
+                <span className="ml-auto text-xs">
+                  {isOpen ? <FaChevronUp /> : <FaChevronDown />}
+                </span>
               )}
           </div>
         )}
@@ -151,18 +162,17 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
         {menu.submenus &&
           isOpen &&
           open && ( // Solo renderizar submenús si el SideBar está abierto
-            <ul className="pl-6">
+            <ul className="pl-4 ">
               {menu.submenus.map((submenu: any) => (
-                <li key={submenu.title}>
+                <p key={submenu.title} style={{ fontSize: '10px' }}>
                   {submenu.submenus ? (
                     renderMenu(submenu)
                   ) : (
                     <Link
                       to={submenu.href}
-                      className={`text-white text-sm flex items-center gap-x-2 cursor-pointer p-2 rounded-l-md rounded-r-none mt-2
-                    hover:bg-[#FFFFFF2B] hover:-translate-y-1 duration-300 overflow-hidden ${
-                      submenu.href === location.pathname ? 'bg-[#FFFFFF2B] -translate-y-1 ' : ''
-                    }`}
+                      className={`text-white text-sm flex items-center gap-x-2 cursor-pointer p-2 pl-4 rounded-l-md rounded-r-none mt-1 hover:bg-[#FFFFFF2B] hover:-translate-y-0.5 duration-300 overflow-hidden ${
+                        submenu.href === location.pathname ? 'bg-[#FFFFFF2B] -translate-y-0.5 ' : ''
+                      }`}
                     >
                       <span
                         className={`duration-300 ${
@@ -180,7 +190,7 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
                       </span>
                     </Link>
                   )}
-                </li>
+                </p>
               ))}
             </ul>
           )}
@@ -220,69 +230,84 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
 
   return (
     <div
-      className={`fixed top-0 left-0 z-50 h-full pl-3 border-r border-r-slate-400 bg-gradient-to-b from-slate-900 to-[#081A51] duration-300 overflow-hidden ${
-        open ? 'w-60' : 'w-20'
+      className={`fixed top-0 left-0 z-50 h-full border-r border-r-slate-400 bg-gradient-to-b from-slate-900 to-[#081A51] duration-300 overflow-hidden ${
+        open ? 'w-56' : 'w-20'
       } `}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
       {/**arrow */}
-      <div className="flex justify-end left-1 relative py-3 mb-5">
+      <div className="flex justify-end left-1">
         <FaArrowCircleLeft
-          className={`w-6 h-5 relative right-[2px] cursor-pointer text-white duration-300 ${
+          className={`w-6 h-5 pt-1 mt-0.5 cursor-pointer text-white duration-300 ${
             !open && 'rotate-180'
           }`}
           onClick={() => setOpen(!open)}
         />
       </div>
 
-      {/**logo */}
-      <div className={`${open ? 'w-60' : 'w-16 '} duration-300 m-auto absolute top-8`}>
-        <div
-          className={`duration-300 m-auto bg-white rounded-full ${open ? 'w-20 p-2' : 'w-14 p-1'}`}
-        >
+      {/* Logo Nova */}
+      <div className="flex items-center justify-start w-full ml-1 gap-1">
+        <div className="flex justify-center items-center w-16 h-16 p-2 bg-white rounded-full shadow-md border border-gray-300 flex-shrink-0">
           <img
             width={200}
             height={200}
             src={`data:image/jpeg;base64,${user.logonova}`}
             alt="Nova Logo"
-            className="rounded-full"
-          />
-        </div>
-      </div>
-
-      {/**usuario */}
-      <div className="flex flex-col justify-around items-center gap-1 relative top-12">
-        <span
-          className={`text-white font-semibold text-sm h-6 origin-left transition-all duration-500 overflow-hidden ${
-            open ? 'opacity-100 scale-100 max-w-full' : 'opacity-0 scale-75 max-w-0'
-          }`}
-        ></span>
-        <div className="w-14 h-14 rounded-full bg-white flex justify-center items-center p-2 ">
-          <img
-            width={200}
-            height={200}
-            alt="User Logo"
-            src={`data:image/jpeg;base64,${user.logoemp}`}
+            className="rounded-full w-full h-full object-contain"
           />
         </div>
 
-        <span
-          className={`text-white duration-100 transition font-semibold origin-left h-8 uppercase ${
-            open ? '' : ' opacity-0 scale-0 '
+        <div
+          className={`overflow-hidden transition-all duration-500 min-w-0 ${
+            open ? 'max-w-[150px] opacity-100' : 'max-w-0 opacity-0'
           }`}
         >
-          {user.nfantasia}
-        </span>
+          <span className="text-slate-400 font-bold text-2xl whitespace-nowrap">NovaGestión</span>
+        </div>
       </div>
 
+      <hr className="w-full border-t border-gray-700 mt-4" />
+
+      {/** Empresa */}
+      <div className="flex flex-col justify-center items-center gap-1">
+        <div className="relative flex flex-col justify-center items-center gap-1 w-16 h-28 ">
+          {/* Logo de la empresa */}
+          <div
+            className={`flex justify-center items-center p-2 w-14 h-14 rounded-full bg-white transition-all duration-500 ${
+              open ? 'translate-y-1' : 'translate-y-5'
+            }`}
+          >
+            <img
+              width={200}
+              height={200}
+              alt="logoempresa"
+              src={`data:image/jpeg;base64,${user.logoemp}`}
+              className="transition-all duration-500"
+            />
+          </div>
+
+          {/* Nombre de la empresa (nfantasia) */}
+          <span
+            className={`h-8 text-sm text-white font-semibold origin-left transition-all  ${
+              open
+                ? 'opacity-100 translate-y-3 duration-500'
+                : 'opacity-0 translate-y-2 duration-100'
+            } overflow-hidden whitespace-nowrap`}
+          >
+            {user.nfantasia}
+          </span>
+        </div>
+      </div>
+
+      <hr className="w-full border-t border-gray-700" />
+
       {/**menu */}
-      <ul
-        className={`pt-6 absolute top-52 transition-all   ${
-          !open ? 'duration-500 w-[4.2rem]' : 'w-[14.2rem] duration-0'
-        }`}
-      >
-        {Menus.map((menu) => renderMenu(menu))}
+      <ul className={`absolute top-52 mt-3 ml-1 w-full transition-all`}>
+        <div className="min-h-[20rem] 2xl:min-h-[40rem] overflow-y-auto scrollbar-custom">
+          {Menus.map((menu) => renderMenu(menu))}
+        </div>
+        <hr className="w-full border-t border-gray-700" />
       </ul>
 
       {/** Configuración */}
@@ -306,6 +331,7 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
       )}
 
       {/** Log out */}
+
       <Link
         to="/"
         className="flex items-center gap-3 fixed bottom-2 left-5 duration-100 hover:translate-x-1 transition-all hover:scale-105"

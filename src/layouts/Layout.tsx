@@ -6,7 +6,7 @@ import Cookies from 'js-cookie';
 export default function Layout() {
   const navigate = useNavigate();
 
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
 
   useEffect(() => {
     // const accessToken = Cookies.get('token_acceso');
