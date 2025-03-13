@@ -34,7 +34,7 @@ export default function TablaVentaPorHora({
       grid-template-columns: minmax(0px, 0px) minmax(90px, 90px) minmax(100px, 100px) minmax(80px, 80px) minmax(80px, 80px) minmax(80px, 80px) minmax(50px, 180px) minmax(50px, 80px);
       border-radius: 12px;
       width: 680px;
-      height: 650px;
+      height: 600px;
       scrollbar-width: thin;
       border: 1px solid black;
       font-variant-numeric: tabular-nums;
