@@ -76,9 +76,11 @@ export default function VentasHoraView() {
   useEffect(() => {
     if (ventasPorHora?.length) {
       setSucursalesDisponibles(ventasPorHora.map((sucursal) => sucursal.nsucursal));
-      setSucursalesSeleccionadas(ventasPorHora.map((sucursal) => sucursal.nsucursal));
       setIsProcessing(true);
       setFooter(true);
+      if (sucursalesSeleccionadas.length === 0) {
+        setSucursalesSeleccionadas(ventasPorHora.map((sucursal) => sucursal.nsucursal));
+      }
     }
   }, [ventasPorHora]);
 

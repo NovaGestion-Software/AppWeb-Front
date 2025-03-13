@@ -22,6 +22,13 @@ export default function ModalInforme({
 }: ModalInformeProps) {
   const modalRef = useRef<HTMLDivElement>(null); // Referencia al contenedor del modal
 
+  // Asignar el foco al modal cuando se abre
+  useEffect(() => {
+    if (show && modalRef.current) {
+      modalRef.current.focus(); // Coloca el foco en el primer input
+    }
+  }, [show]);
+
   // Cerrar el modal al hacer clic fuera de él
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -32,19 +39,34 @@ export default function ModalInforme({
 
     if (show) {
       document.addEventListener('mousedown', handleClickOutside);
-    }
 
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [show, onClose, buttons]);
+      // Escuchar los eventos de teclado cuando el modal está abierto
+      const handleKeydown = (event: KeyboardEvent) => {
+        if (event.key === 'Escape') {
+          onClose(); // Cerrar el modal con Escape
+        }
+      };
+
+      document.addEventListener('keydown', handleKeydown);
+
+      // Limpiar el evento cuando el componente se desmonta o el modal se cierra
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside);
+        document.removeEventListener('keydown', handleKeydown);
+      };
+    }
+  }, [show, onClose, onConfirm, buttons]);
 
   if (!show) return null;
 
   return (
     <>
       <div className="fixed inset-0 z-50 flex justify-center items-center overflow-x-hidden outline-none focus:outline-none">
-        <div className="relative" ref={modalRef}>
+        <div
+          className="relative"
+          ref={modalRef}
+          tabIndex={-1} // Esto hace que el div sea enfocable
+        >
           <div className="relative grid grid-cols-3 grid-rows-[3rem_auto_auto_auto_auto] gap-1 p-4 bg-white rounded-lg shadow-lg outline-none focus:outline-none ">
             <div className="col-span-3 flex items-center justify-between px-5">
               <h3 className="w-full text-3xl font-semibold underline underline-offset-4 decoration-4 decoration-gray-600">

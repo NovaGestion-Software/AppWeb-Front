@@ -3,6 +3,7 @@ import React from 'react';
 
 export type ActionButtonProps = {
   text?: string;
+  textShortcut?: React.ReactNode;
   icon?: React.ReactNode;
   onClick: () => void;
   disabled?: boolean;
@@ -11,10 +12,12 @@ export type ActionButtonProps = {
   className?: string;
   textClassName?: string;
   iconClassName?: string;
+  children?: React.ReactNode;
 };
 
 export default function ActionButton({
   text,
+  textShortcut,
   icon,
   onClick,
   disabled = false,
@@ -62,6 +65,7 @@ export default function ActionButton({
       className={`${baseStyles} ${sizeStyles}  ${colorStyles} ${className}`}
     >
       {text && <span className={textClassName}>{text}</span>}
+      {textShortcut && <span className={textClassName}>{textShortcut}</span>}
       {icon && <span className={iconClassName}>{icon}</span>}
     </button>
   );
