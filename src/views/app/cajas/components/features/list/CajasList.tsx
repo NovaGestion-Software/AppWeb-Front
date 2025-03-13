@@ -116,8 +116,8 @@ export default function CajasList({
       ) : (
         <>
           <ViewTitle type="subtitle" title="Detalle de Cajas" className="rounded-t-md" />
-          <div className="flex flex-col gap-2 bg-white h-[40rem] shadow-md rounded-b-md ">
-            <div className="flex flex-col gap-y-5 h-[52rem] scrollbar-thin overflow-auto p-4">
+          <div className="flex flex-col gap-2 bg-white h-[40rem] 2xl:h-[60rem] shadow-md rounded-b-md ">
+            <div className="flex flex-col gap-y-5 scrollbar-thin overflow-auto p-4">
               {cajas
                 .slice() // Creamos una copia para evitar mutar el estado original
                 .sort((a: any, b: any) => a.sucursal - b.sucursal) // Ordena según el número de sucursal

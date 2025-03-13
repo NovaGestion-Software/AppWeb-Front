@@ -124,23 +124,23 @@ export default function TablaCaja({ handleRefetch, setHandleRefetch }: TablaCaja
       ) : (
         <>
           <ViewTitle type="subtitle" title="Venta por Sección" className="rounded-t-md" />
-          <div className="flex flex-col gap-2 bg-white h-fit w-full  shadow-md rounded-b-md p-4">
-            <Table className="overflow-auto border-2 border-gray-300 scrollbar-thin">
-              <TableHead>
-                <TableRow className="sticky top-0 bg-white z-10">
-                  <TableHeaderCell>
+          <div className="flex flex-col gap-2 bg-white h-fit w-full shadow-md rounded-b-md p-4">
+            <Table className="overflow-auto border-2 border-gray-300 scrollbar-thin rounded-md">
+              <TableHead className="">
+                <TableRow className="sticky top-0  bg-white z-10">
+                  <TableHeaderCell className="border-r-2 border-gray-300">
                     <p className="flex flex-col font-semibold gap-1">Seccion</p>
                   </TableHeaderCell>
 
-                  <TableHeaderCell>
+                  <TableHeaderCell className="border-r-2 border-gray-300">
                     <p className="flex flex-col font-semibold gap-1 text-center">Importe $</p>
                   </TableHeaderCell>
 
-                  <TableHeaderCell>
+                  <TableHeaderCell className="border-r-2 border-gray-300">
                     <p className="text-center">%</p>
                   </TableHeaderCell>
 
-                  <TableHeaderCell>
+                  <TableHeaderCell className="border-r-2 border-gray-300">
                     <p className="text-center">Neto</p>
                   </TableHeaderCell>
                 </TableRow>
@@ -148,21 +148,25 @@ export default function TablaCaja({ handleRefetch, setHandleRefetch }: TablaCaja
               <TableBody>
                 {result.map((item: any, index: any) => (
                   <TableRow key={index} className="odd:bg-gray-200  even:bg-white  ">
-                    <TableCell className="">{item.nseccion}</TableCell>
-                    <TableCell className="text-end">{item.venta}</TableCell>
-                    <TableCell className="text-end">{item.porcentaje}</TableCell>
+                    <TableCell className="border-r-2 border-gray-300">{item.nseccion}</TableCell>
+                    <TableCell className="border-r-2 border-gray-300 text-end">
+                      {item.venta}
+                    </TableCell>
+                    <TableCell className="border-r-2 border-gray-300 text-end">
+                      {item.porcentaje}
+                    </TableCell>
                     <TableCell className="text-end">{item.porcentajeNeto}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
 
-              <TableFoot className=" border-gray-300 rounded-md sticky bottom-0 bg-white z-10 ">
-                <TableFooterCell>Total</TableFooterCell>
-                <TableFooterCell className="border border-gray-300 bg-slate-100 font-extrabold text-blue-600 text-right">
+              <TableFoot className="rounded-md sticky bottom-0 bg-white z-10 ">
+                <TableFooterCell className="border-r-2 border-gray-300">Total</TableFooterCell>
+                <TableFooterCell className="border-r-2 border-gray-300 bg-slate-100 font-extrabold text-blue-600 text-right">
                   {totalVentas}
                 </TableFooterCell>
-                <TableFooterCell className="border border-gray-300 bg-slate-100 font-extrabold text-blue-600"></TableFooterCell>
-                <TableFooterCell className="border border-gray-300 bg-slate-100 font-extrabold text-blue-600 text-end">
+                <TableFooterCell className="border-r-2 border-gray-300 bg-slate-100 font-extrabold text-blue-600"></TableFooterCell>
+                <TableFooterCell className="bg-slate-100 font-extrabold text-blue-600 text-end">
                   {totalVentasNetas}
                 </TableFooterCell>
               </TableFoot>

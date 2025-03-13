@@ -23,7 +23,7 @@ export default function ViewTitle({
       textSize: 'text-lg 2xl:text-2xl font-bold',
     },
     subtitle: {
-      bgColor: 'bg-gradient-to-b from-slate-700/80 to-slate-900/80',
+      bgColor: 'bg-[#1F5A8D]',
       height: 'h-8 2xl:h-10',
       textSize: 'text-base 2xl:text-lg font-semibold',
     },
