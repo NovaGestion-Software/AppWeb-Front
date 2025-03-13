@@ -44,7 +44,7 @@ export default function FechasInforme({
   const rangePickerRef = useRef<any>(null);
 
   // BRANCH INFORME
-  const { status, fechas, setFechas } = useVentasHoraStore();
+  const { status, setFechas } = useVentasHoraStore();
 
   // BRANCH MAIN
   const [isLoading, setIsLoading] = useState(true);
@@ -162,7 +162,7 @@ export default function FechasInforme({
       const periodoIni = dateRange.from.format('YYYY-MM-DD');
       const periodoFin = dateRange.to.format('YYYY-MM-DD');
       setFechas({ from: periodoIni, to: periodoFin });
-      console.log('fechas steads', fechas);
+      // console.log('fechas steads', fechas);
     }
   }, [dateRange]);
 

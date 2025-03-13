@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { useVentasHoraStore } from '@/store/useVentasHoraStore';
 import { obtenerVentasHora } from '@/services/ApiPhpService';
-import { ApiResponse, FechasRango, Sucursal } from '@/types';
+import { ApiResponse, FechasRango, Sucursal, VentaPorHora } from '@/types';
 import { formatearNumero } from '@/utils';
 import ViewTitle from '@/Components/ui/Labels/ViewTitle';
 import FechasInforme from '../_components/FechasInforme';
@@ -30,7 +30,6 @@ export default function VentasHoraView() {
     fechas,
     sucursalesSeleccionadas,
     sucursalesDisponibles,
-
     ventasPorHora,
     setVentasPorHora,
     setSucursalesSeleccionadas,
@@ -51,7 +50,7 @@ export default function VentasHoraView() {
       setStatus('error');
     },
     onSuccess: (data) => {
-      console.log(data.data);
+      // console.log(data.data);
       if (data.data.length === 0) {
         showAlert({
           text: 'El rango de fecha seleccionado no contiene información',
@@ -120,16 +119,126 @@ export default function VentasHoraView() {
     };
   }, [ventasPorHora]);
 
-  // FUNCION PARA AGRUPAR SEGUN EL RANGO DE HORARIOS
+  // const agruparPorHorario = (data: Sucursal[] | null, sucursalesSeleccionadas: string[] | null) => {
+  //   const resultado: Record<string, { importe: string; cantidad: number; pares: number }> = {};
+  //   const horarios: Set<string> = new Set(); // Usamos un Set para evitar duplicados
+
+  //   let totalImporte = 0;
+  //   let totalOperaciones = 0;
+  //   let totalPares = 0;
+
+  //   if (!sucursalesSeleccionadas) {
+  //     console.log('No se seleccionaron sucursales');
+  //     return {
+  //       datosAgrupados: resultado,
+  //       totalImporte, // Número sin formatear
+  //       totalOperaciones, // Número sin formatear
+  //       totalPares, // Número sin formatear
+  //     };
+  //   }
+
+  //   data
+  //     ?.filter((sucursal) => sucursalesSeleccionadas.includes(sucursal.nsucursal))
+  //     .forEach((sucursal) => {
+  //       sucursal.info.forEach((intervalo) => {
+  //         const horario = intervalo.horaini;
+
+  //         // Guardamos los horarios en el objeto de horarios
+  //         horarios[horario] = true;
+
+  //         if (!resultado[horario]) {
+  //           resultado[horario] = { importe: '0', cantidad: 0, pares: 0 };
+  //         }
+
+  //         // console.log(intervalo.importe);
+
+  //         // Corrección: Convertimos el importe correctamente respetando los decimales
+  //         const importeNumerico = parseFloat(intervalo.importe) || 0;
+  //         // parseFloat(intervalo.importe.replace(/\./g, '').replace(',', '.')) || 0;
+
+  //         // console.log(importeNumerico);
+
+  //         // Sumar correctamente sin perder decimales
+  //         totalImporte += importeNumerico;
+  //         // Asegurar que totalImporte tenga solo dos decimales
+  //         totalImporte = parseFloat(totalImporte.toFixed(2));
+  //         // console.log(totalImporte);
+
+  //         // Actualizamos el importe en el resultado sin perder precisión
+  //         let importeActual =
+  //           // parseFloat(resultado[horario].importe.replace(/\./g, '').replace(',', '.')) || 0;
+  //           parseFloat(resultado[horario].importe) || 0;
+  //         importeActual = parseFloat(importeActual.toFixed(2));
+  //         // console.log(importeActual);
+  //         let nuevoImporte = importeActual + importeNumerico;
+  //         // console.log(nuevoImporte);
+  //         // nuevoImporte = parseFloat(nuevoImporte.toFixed(2));
+  //         resultado[horario].importe = nuevoImporte.toString(); // Guardamos como string sin formatear aún
+
+  //         // Sumar otros valores
+  //         resultado[horario].cantidad += intervalo.cantidad;
+  //         resultado[horario].pares += intervalo.pares || 0;
+
+  //         // Sumar a los totales globales
+  //         totalOperaciones += intervalo.cantidad;
+  //         totalPares += intervalo.pares || 0;
+  //       });
+  //     });
+
+  //   // Después de la iteración, agregamos los horarios que no tengan datos a 'resultado'
+  //   for (const horario in horarios) {
+  //     if (!resultado[horario]) {
+  //       resultado[horario] = { importe: '0', cantidad: 0, pares: 0 }; // Asignamos 0 si no existe el horario
+  //     }
+  //   }
+
+  //   // **Formateamos los importes en el resultado antes de devolverlos**
+  //   for (const horario in resultado) {
+  //     resultado[horario].importe = formatearNumero(parseFloat(resultado[horario].importe));
+  //     // console.log(resultado[horario].importe);
+  //     // console.log(`Importe final formateado para ${horario}:`, resultado[horario].importe);
+  //   }
+
+  //   return {
+  //     datosAgrupados: resultado,
+  //     totalImporte, // Número con 2 decimales
+  //     totalOperaciones, // Número entero
+  //     totalPares, // Número entero
+  //   };
+  // };
+
+  const obtenerHorarios = () => {
+    // Crear un conjunto para almacenar horarios únicos
+    const horarios = new Set<string>();
+
+    // Iterar sobre ventasPorHora y obtener todos los horarios
+    ventasPorHora?.forEach((sucursal) => {
+      sucursal.info.forEach((intervalo) => {
+        // Agregar cada horario al set, lo que asegura que sean únicos
+        horarios.add(intervalo.horaini);
+      });
+    });
+
+    // Convertir el Set a un array de horarios y ordenar de menor a mayor
+    const horariosOrdenados = Array.from(horarios).sort();
+
+    return horariosOrdenados;
+  };
+
+  // const horarios = obtenerHorarios();
+  // console.log(horarios);
+
   const agruparPorHorario = (data: Sucursal[] | null, sucursalesSeleccionadas: string[] | null) => {
     const resultado: Record<string, { importe: string; cantidad: number; pares: number }> = {};
+
+    const horarios = obtenerHorarios();
 
     let totalImporte = 0;
     let totalOperaciones = 0;
     let totalPares = 0;
 
-    if (!sucursalesSeleccionadas) {
-      console.log('No se seleccionaron sucursales');
+    if (!sucursalesSeleccionadas || sucursalesSeleccionadas.length === 0) {
+      // console.log('No se seleccionaron sucursales');
       return {
         datosAgrupados: resultado,
         totalImporte, // Número sin formatear
@@ -138,50 +247,47 @@ export default function VentasHoraView() {
       };
     }
 
+    // 2️⃣ Inicializamos el resultado con todos los horarios posibles, incluso vacíos
+    horarios.forEach((horario) => {
+      resultado[horario] = { importe: '0', cantidad: 0, pares: 0 }; // Aseguramos que todos los horarios tengan un valor inicial
+    });
+
+    // 3️⃣ Procesamos las sucursales seleccionadas y agrupamos por horario
     data
       ?.filter((sucursal) => sucursalesSeleccionadas.includes(sucursal.nsucursal))
       .forEach((sucursal) => {
         sucursal.info.forEach((intervalo) => {
-          const horario = intervalo.horaini;
+          const horario = intervalo.horaini.trim(); // Aseguramos que el horario esté bien formateado
 
-          if (!resultado[horario]) {
-            resultado[horario] = { importe: '0', cantidad: 0, pares: 0 };
+          // Solo actualizamos el horario si ya existe en el resultado
+          if (resultado[horario]) {
+            // Convertimos el importe correctamente respetando los decimales
+            const importeNumerico = parseFloat(intervalo.importe) || 0;
+
+            // Sumar correctamente sin perder decimales
+            totalImporte += importeNumerico;
+            totalImporte = parseFloat(totalImporte.toFixed(2));
+
+            // Actualizamos el importe en el resultado sin perder precisión
+            let importeActual = parseFloat(resultado[horario].importe) || 0;
+            importeActual = parseFloat(importeActual.toFixed(2));
+            let nuevoImporte = importeActual + importeNumerico;
+            resultado[horario].importe = nuevoImporte.toString(); // Guardamos como string sin formatear aún
+
+            // Sumar otros valores
+            resultado[horario].cantidad += intervalo.cantidad;
+            resultado[horario].pares += intervalo.pares || 0;
+
+            // Sumar a los totales globales
+            totalOperaciones += intervalo.cantidad;
+            totalPares += intervalo.pares || 0;
           }
-
-          // console.log(intervalo.importe);
-
-          // Corrección: Convertimos el importe correctamente respetando los decimales
-          const importeNumerico =
-            parseFloat(intervalo.importe.replace(/\./g, '').replace(',', '.')) || 0;
-
-          // console.log(importeNumerico);
-
-          // Sumar correctamente sin perder decimales
-          totalImporte += importeNumerico;
-          // console.log(totalImporte);
-
-          // Actualizamos el importe en el resultado sin perder precisión
-          const importeActual =
-            parseFloat(resultado[horario].importe.replace(/\./g, '').replace(',', '.')) || 0;
-          const nuevoImporte = importeActual + importeNumerico;
-          resultado[horario].importe = nuevoImporte.toString(); // Guardamos como string sin formatear aún
-
-          // console.log(nuevoImporte);
-
-          // Sumar otros valores
-          resultado[horario].cantidad += intervalo.cantidad;
-          resultado[horario].pares += intervalo.pares || 0;
-
-          // Sumar a los totales globales
-          totalOperaciones += intervalo.cantidad;
-          totalPares += intervalo.pares || 0;
         });
       });
 
     // **Formateamos los importes en el resultado antes de devolverlos**
     for (const horario in resultado) {
       resultado[horario].importe = formatearNumero(parseFloat(resultado[horario].importe));
-      // console.log(`Importe final formateado para ${horario}:`, resultado[horario].importe);
     }
 
     return {
@@ -191,7 +297,7 @@ export default function VentasHoraView() {
       totalPares, // Número entero
     };
   };
-  // FUNCION PARA ORDENAR LOS DATOS SEGUN LA ESTRUCTURA PARA LA TABLA
+
   const crearDataParaTabla = ({
     datosAgrupados,
     totalImporte,
@@ -199,11 +305,12 @@ export default function VentasHoraView() {
     totalPares,
   }: { datosAgrupados: DatosAgrupados } & Totales) => {
     const entries = Object.entries(datosAgrupados).sort((a, b) => a[0].localeCompare(b[0]));
-
+    // console.log(entries);
     return entries.map(([horario, datos], index) => {
       const importeNumerico = parseFloat(datos.importe.replace(/\./g, ''));
 
       // console.log(`Importe: ${importeNumerico}`)
+      // console.log(horario);
       return {
         id: index + 1,
         hora: horario,
@@ -225,39 +332,26 @@ export default function VentasHoraView() {
     sucursalesSeleccionadas
   );
 
+  // console.log(datosAgrupados);
   const dataParaTabla = crearDataParaTabla({
     datosAgrupados,
     totalImporte,
     totalOperaciones,
     totalPares,
   });
-  //puesto aca para hacer la build
-  interface VentaPorHora {
-    id: number;
-    hora: string;
-    nOperaciones: number | string;
-    porcentajeOperaciones: number | string;
-    importe: string;
-    porcentajeImporte: number | string;
-    pares: number | string;
-    porcentajePares: number | string;
-    //   totalImporte: number | string;
-    //   totalOperaciones: number | string;
-    //   totalPares: number | string;
-  }
+
   const findMaxValueAndHourByKey = (
-    array: VentaPorHora[],
+    datos: VentaPorHora[],
     key: keyof VentaPorHora
   ): { maxValue: number; hora: string | null } => {
     let maxValue = -Infinity;
     let hora = '';
 
-    array.forEach((currentItem) => {
+    datos.forEach((currentItem) => {
       const currentValue =
         typeof currentItem[key] === 'string'
-          ? parseFloat(currentItem[key].replace(/\./g, ''))
+          ? parseFloat(currentItem[key].replace(/\./g, '').replace(',', '.'))
           : currentItem[key];
-
       if (currentValue > maxValue) {
         maxValue = currentValue;
         hora = currentItem.hora; // Guardamos la hora correspondiente al valor máximo
@@ -266,11 +360,13 @@ export default function VentasHoraView() {
 
     return { maxValue, hora };
   };
+
   const maxImporteValor = findMaxValueAndHourByKey(dataParaTabla, 'importe');
   const maxImporteFormateado = formatearNumero(maxImporteValor.maxValue);
 
   // formateo con miles y centavos
   const totalImporteFormateado = formatearNumero(totalImporte);
+
   // FOOTER TABLA 1
   const datosParaFooter = {
     id: '',
@@ -342,10 +438,14 @@ export default function VentasHoraView() {
 
         <div className="grid grid-cols-12 gap-2 ml-4 2xl:ml-0 2xl:mt-5 ">
           {isProcessing && (
-            <div className="col-span-5 2xl:col-start-2 flex flex-col justify-between 2xl:justify-evenly 2xl:items-center transition-all duration-500 ease-out">
+            <div className="col-span-5 2xl:col-start-2 flex flex-col items-center justify-evenly 2xl:justify-evenly 2xl:items-center transition-all duration-500 ease-out">
               {/* Sucursales */}
               <div className="col-start-1 col-span-5 row-start-1 w-fit h-fit py-2 px-4 bg-white rounded-lg font-semibold shadow-md space-y-2">
-                <ul className="grid grid-cols-3 grid-rows-4 list-disc list-inside text-xs 2xl:text-base 2xl:p-2">
+                <ul
+                  className={`grid gap-x-4 ${
+                    sucursalesDisponibles.length > 3 ? 'grid-cols-3' : 'grid-cols-1' // Si hay más de 3 sucursales, divide en 3 columnas
+                  } grid-rows-auto list-disc list-inside text-xs 2xl:text-base 2xl:p-2`}
+                >
                   {sucursalesDisponibles.map((sucursal, index) => (
                     <li
                       key={index}
@@ -389,7 +489,7 @@ export default function VentasHoraView() {
           >
             <TablaVentaPorHora
               isProcessing={isProcessing}
-              datos={dataParaTabla}
+              dataParaTabla={dataParaTabla}
               datosFooter={datosParaFooter}
               footer={footer}
             />

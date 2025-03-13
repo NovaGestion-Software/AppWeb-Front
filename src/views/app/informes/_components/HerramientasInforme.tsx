@@ -30,7 +30,7 @@ export default function HerramientasInforme<T>({
         size="xs"
         className="2xl:h-11 rounded-md"
         color={isProcessing ? 'green' : 'grayDeshab'}
-        icon={<RiFileExcel2Fill />}
+        icon={<RiFileExcel2Fill size={20} />}
       />
       <ActionButton
         onClick={handlePrint}
@@ -38,7 +38,7 @@ export default function HerramientasInforme<T>({
         size="xs"
         className="2xl:h-11 rounded-md"
         color={isProcessing ? 'blue' : 'grayDeshab'}
-        icon={<RiPrinterFill />}
+        icon={<RiPrinterFill size={20} />}
       />
     </div>
   );

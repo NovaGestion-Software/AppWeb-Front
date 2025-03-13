@@ -10,14 +10,14 @@ interface TableColumn<T> {
 }
 
 interface TablaVentaPorHoraProps {
-  datos: VentaPorHora[];
+  dataParaTabla: VentaPorHora[];
   isProcessing: boolean;
   footer: boolean;
   datosFooter?: {};
 }
 
 export default function TablaVentaPorHora({
-  datos,
+  dataParaTabla,
   isProcessing,
   footer,
   datosFooter,
@@ -53,7 +53,7 @@ export default function TablaVentaPorHora({
         minmax(100px, 100px) 
         minmax(80px, 200px)
         minmax(80px, 100px);
-    }
+      }
     `,
 
     Row: `
@@ -79,6 +79,8 @@ export default function TablaVentaPorHora({
     Cell: `
       padding: 0.5px 4px;
       border-right: 1px solid #ccc;
+      max-height: 30px;
+
       &:last-child {
         border-right: none;
       }
@@ -100,7 +102,8 @@ export default function TablaVentaPorHora({
       border-right: 1px solid #ccc;
       background-color: #fff;
       text-align: right;
-  
+      max-height: 30px;
+
       @media (min-width: 1536px) {
         padding: 6px;
         font-size: 15px;
@@ -188,9 +191,10 @@ export default function TablaVentaPorHora({
       return currentValue > maxValue ? currentItem : maxItem;
     }, array[0]);
   };
-  const maxNOperaciones = findMaxByKey(datos, 'nOperaciones');
-  const maxImporte = findMaxByKey(datos, 'importe');
-  const maxPares = findMaxByKey(datos, 'pares');
+
+  const maxNOperaciones = findMaxByKey(dataParaTabla, 'nOperaciones');
+  const maxImporte = findMaxByKey(dataParaTabla, 'importe');
+  const maxPares = findMaxByKey(dataParaTabla, 'pares');
   const maxParesId = maxPares ? maxPares.id : null;
   const maxNOperacionesId = maxNOperaciones ? maxNOperaciones.id : null;
   const maxImporteId = maxImporte ? maxImporte.id : null;
@@ -227,7 +231,7 @@ export default function TablaVentaPorHora({
     <div>
       <TablaInforme
         columnas={COLUMNS}
-        datosParaTabla={datos}
+        dataParaTabla={dataParaTabla}
         estilos={customTheme}
         footer={footer}
         datosFooter={datosFooter}

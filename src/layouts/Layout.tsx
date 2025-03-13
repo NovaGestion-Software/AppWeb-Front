@@ -1,23 +1,21 @@
-import { useState } from 'react';
-// import { useNavigate } from 'react-router-dom';
-import { Outlet } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Outlet, useNavigate } from 'react-router-dom';
 import SideBar from '../Components/ui/SideBar';
+import Cookies from 'js-cookie';
 
 export default function Layout() {
-  // const navigate = useNavigate();
-
-  // console.log(navigate);
+  const navigate = useNavigate();
 
   const [open, setOpen] = useState(false);
 
-  //   useEffect(() => {
-  //     const accessToken = Cookies.get("accessToken");
-  //     const refreshToken = Cookies.get("refreshToken");
+  useEffect(() => {
+    // const accessToken = Cookies.get('token_acceso');
+    const refreshToken = Cookies.get('token_refresh');
 
-  //     if (!accessToken || !refreshToken) {
-  //       navigate("/");
-  //     }
-  //   }, [navigate]);
+    if (!refreshToken) {
+      navigate('/');
+    }
+  }, [navigate]);
 
   return (
     <div className="min-h-screen flex flex-col">
