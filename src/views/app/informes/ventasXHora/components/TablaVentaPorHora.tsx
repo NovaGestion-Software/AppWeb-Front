@@ -54,7 +54,6 @@ export default function TablaVentaPorHora({
         minmax(80px, 200px)
         minmax(80px, 100px);
     }
-
     `,
 
     Row: `

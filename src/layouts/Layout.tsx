@@ -24,9 +24,7 @@ export default function Layout() {
       <SideBar open={open} setOpen={setOpen} />
 
       <div
-        className={`flex flex-col w-full min-h-screen transition-all duration-300 bg-layout ${
-          open ? 'pl-56' : 'pl-14'
-        }`}
+        className={`flex flex-col w-full min-h-screen pl-14 transition-all duration-300 bg-layout `}
       >
         <Outlet />
       </div>

@@ -20,7 +20,8 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
   const navigate = useNavigate();
   const location = useLocation();
   const queryClient = useQueryClient();
-  const [openMenus, setOpenMenus] = useState<{ [key: string]: boolean }>({}); // Estado para manejar los menús desplegables
+  const [openMenus, setOpenMenus] = useState<{ [key: string]: boolean }>({});
+  // const [hovering, setHovering] = useState(false);
 
   const { clearVentasPorHora } = useVentasHoraStore();
 
@@ -187,6 +188,14 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
     );
   };
 
+  const handleMouseEnter = () => {
+    if (!open) setOpen(true);
+  };
+
+  const handleMouseLeave = () => {
+    if (open) setOpen(false);
+  };
+
   const handleLogout = () => {
     queryClient.clear();
 
@@ -211,8 +220,11 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
 
   return (
     <div
-      className={`fixed top-0 left-0 h-full border-r border-r-slate-400 bg-gradient-to-b from-slate-900 to-[#081A51] 
-    duration-300 pl-3 z-50 overflow-hidden ${open ? 'w-60' : 'w-20'} `}
+      className={`fixed top-0 left-0 z-50 h-full pl-3 border-r border-r-slate-400 bg-gradient-to-b from-slate-900 to-[#081A51] duration-300 overflow-hidden ${
+        open ? 'w-60' : 'w-20'
+      } `}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
       {/**arrow */}
       <div className="flex justify-end left-1 relative py-3 mb-5">

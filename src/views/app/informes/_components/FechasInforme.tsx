@@ -46,49 +46,8 @@ export default function FechasInforme({
   // BRANCH INFORME
   const { status, fechas, setFechas } = useVentasHoraStore();
 
-  useEffect(() => {
-    if (dateRange.from && dateRange.to) {
-      const periodoIni = dateRange.from.format('YYYY-MM-DD');
-      const periodoFin = dateRange.to.format('YYYY-MM-DD');
-      setFechas({ from: periodoIni, to: periodoFin });
-      console.log('fechas steads', fechas);
-    }
-  }, [dateRange]);
-
   // BRANCH MAIN
   const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 1000);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  useEffect(() => {
-    if (setFocus) {
-      focusDatePicker();
-    }
-  }, [setFocus]);
-
-  /*
-        // BRANCH INFORME
-        // Usamos useEffect para escuchar el evento 'keydown' global
-  useEffect(() => {
-    document.addEventListener('keydown', handleKeyDownGlobal);
-
-    // Limpiamos el evento cuando el componente se desmonta
-    return () => {
-      document.removeEventListener('keydown', handleKeyDownGlobal);
-    };
-  }, [dateRange]);
-
-  const focusDatePicker = () => {
-    rangePickerRef.current?.focus();
-  };
-        
-   */
 
   const rangePresets: { label: string; value: [dayjs.Dayjs, dayjs.Dayjs] }[] = [
     {
@@ -104,10 +63,10 @@ export default function FechasInforme({
       label: 'Últimos 30 Días',
       value: [dayjs().subtract(30, 'days'), dayjs()],
     },
-    {
-      label: 'Últimos 90 Días',
-      value: [dayjs().subtract(90, 'days'), dayjs()],
-    },
+    // {
+    //   label: 'Últimos 90 Días',
+    //   value: [dayjs().subtract(90, 'days'), dayjs()],
+    // },
     { label: 'Este Mes', value: [dayjs().startOf('month'), dayjs()] },
     {
       label: 'Mes Pasado',
@@ -129,38 +88,13 @@ export default function FechasInforme({
     },
   ];
 
-  /*
-        //BRANCH INFORME
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    // Comprobamos si ambos campos están llenos y si la tecla presionada es Enter
-    if (e.key === 'Enter' && dateRange.from && dateRange.to) {
-      e.preventDefault();
-      handleData();
-        */
-
   useEffect(() => {
-    if (!isLoading) {
-      focusDatePicker();
-    }
-  }, [isLoading]);
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
 
-  // const activeInput = document.querySelector(".ant-picker-input-active");
-
-  // useEffect(() => {
-  //   if (isProcessing) {
-  //     (activeInput as HTMLInputElement).blur()
-  //     activeInput?.classList.remove("ant-picker-input-active");
-
-  //   }
-  // }, [isProcessing]);
-
-  const focusDatePicker = () => {
-    const inputs = document.querySelectorAll('.ant-picker input');
-    if (inputs.length > 0) {
-      const input1 = inputs[0] as HTMLInputElement;
-      input1.focus();
-    }
-  };
+    return () => clearTimeout(timer);
+  }, []);
 
   // shorcut
   useEffect(() => {
@@ -222,25 +156,35 @@ export default function FechasInforme({
       });
     };
   }, []);
-  /*
-  const handleChange = (dates: [Dayjs | null, Dayjs | null] | null) => {
-    if (!dates) {
-      setDateRange({ from: null, to: null });
-      setFechas({ from: null, to: null });
-      return;
-    }
 
-    const [newFrom, newTo] = dates;
-    setDateRange({ from: newFrom, to: newTo });
-
-    if (newFrom && newTo) {
-      const periodoIni = newFrom.format('YYYY-MM-DD');
-      const periodoFin = newTo.format('YYYY-MM-DD');
+  useEffect(() => {
+    if (dateRange.from && dateRange.to) {
+      const periodoIni = dateRange.from.format('YYYY-MM-DD');
+      const periodoFin = dateRange.to.format('YYYY-MM-DD');
       setFechas({ from: periodoIni, to: periodoFin });
-      // console.log('fechas steads', fechas);
+      console.log('fechas steads', fechas);
+    }
+  }, [dateRange]);
+
+  useEffect(() => {
+    if (setFocus) {
+      focusDatePicker();
+    }
+  }, [setFocus]);
+
+  useEffect(() => {
+    if (!isLoading) {
+      focusDatePicker();
+    }
+  }, [isLoading]);
+
+  const focusDatePicker = () => {
+    const inputs = document.querySelectorAll('.ant-picker input');
+    if (inputs.length > 0) {
+      const input1 = inputs[0] as HTMLInputElement;
+      input1.focus();
     }
   };
-  */
 
   const handleData = async () => {
     try {
