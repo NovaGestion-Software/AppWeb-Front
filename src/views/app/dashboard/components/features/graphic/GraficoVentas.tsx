@@ -1,8 +1,9 @@
 import { useEffect, Dispatch } from 'react';
-import { AreaChart, Card } from '@tremor/react';
+import { AreaChart } from '@tremor/react';
 import { useQuery } from '@tanstack/react-query';
 import { obtenerDashboardGrafico } from '@/services/AppService';
 import SkChart from './SkChart';
+import ViewTitle from '@/Components/ui/Labels/ViewTitle';
 
 interface ChartDataItem {
   date: string; // Propiedad específica
@@ -145,20 +146,25 @@ export default function GraficoVentas({ handleRefetch, setHandleRefetch }: Grafi
           <SkChart />
         </div>
       ) : (
-        <Card className="shadow-none transition-shadow duration-300 hover:shadow-lg hover:shadow-gray-400">
-          <p className="text-2xl text-tremor-content-strong font-semibold">{data.titulo}</p>
-          <AreaChart
-            className="h-[400px]"
-            data={chartData.length > 0 ? chartData : placeholderChartData}
-            index="date"
-            yAxisWidth={95}
-            categories={data?.categorias}
-            colors={data?.colores}
-            valueFormatter={valueFormatter}
-            xAxisLabel={data.xLabel}
-            yAxisLabel={data.yLabel}
-          />
-        </Card>
+        <div className="flex w-full justify-center">
+          <div className="w-full bg-white transition-shadow duration-300 hover:shadow-lg hover:shadow-gray-400 rounded-md">
+            <ViewTitle type="subtitle" title="Ventas Anuales" className="rounded-t-md" />
+            {/* <p className="text-2xl text-tremor-content-strong font-semibold">{data.titulo}</p> */}
+            <div className="p-5">
+              <AreaChart
+                className="h-[400px]"
+                data={chartData.length > 0 ? chartData : placeholderChartData}
+                index="date"
+                yAxisWidth={95}
+                categories={data?.categorias}
+                colors={data?.colores}
+                valueFormatter={valueFormatter}
+                xAxisLabel={data.xLabel}
+                yAxisLabel={data.yLabel}
+              />
+            </div>
+          </div>
+        </div>
       )}
     </>
   );

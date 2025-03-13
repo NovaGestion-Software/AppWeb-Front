@@ -123,7 +123,7 @@ export default function TablaCaja({ handleRefetch, setHandleRefetch }: TablaCaja
         <SkeletonTablaCaja />
       ) : (
         <>
-          <ViewTitle title="Venta por Sección" className="rounded-t-md" />
+          <ViewTitle type="subtitle" title="Venta por Sección" className="rounded-t-md" />
           <div className="flex flex-col gap-2 bg-white h-fit w-full  shadow-md rounded-b-md p-4">
             <Table className="overflow-auto border-2 border-gray-300 scrollbar-thin">
               <TableHead>

@@ -2,6 +2,7 @@ import { Dispatch, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { obtenerTortaCobranzasR } from '@/services/AppService';
 import DonutCard from './DonutCard';
+import ViewTitle from '@/Components/ui/Labels/ViewTitle';
 
 interface GraficoTortaProps {
   handleRefetch: boolean;
@@ -136,34 +137,34 @@ export default function GraficoTorta({ handleRefetch, setHandleRefetch }: Grafic
   const cardDos = crearCard(totalAnterior, tImportesAnterior, categorias);
 
   return (
-    <div
-      className="flex flex-col w-full h-full rounded-lg 
-    shadow-none transition-shadow duration-300  hover:shadow-lg hover:shadow-gray-400 bg-white p-12"
-    >
-      <div className="text flex flex-col gap-1 mb-5">
-        <p className="text-2xl text-tremor-content-strong  font-semibold">Cobranza de Créditos</p>
-        <p className="text-tremor-default text-tremor-content left-1 relative text">
-          Distribución según Forma de Pago:
-        </p>
-      </div>
+    <div className="mt-10">
+      <ViewTitle type="subtitle" title="Cobranza de Créditos" className="rounded-t-md" />
+      <div className="flex flex-col w-full h-full px-12 py-6 bg-white rounded-b-md shadow-none transition-shadow duration-300 hover:shadow-lg hover:shadow-gray-400 ">
+        <div className="flex flex-col gap-1 mb-5">
+          <p className="text-slate-500 left-1">Distribución según Forma de Pago:</p>
+        </div>
 
-      <div className="flex justify-around items-center w-full p-2 gap-2">
-        <DonutCard
-          fecha={fechaActual}
-          titulo="Año"
-          total={`$ ${formatearNumero(totalActual)}`}
-          data={cardUno.data}
-          categories={cardUno.categoria}
-          fetching={isFetching}
-        />
-        <DonutCard
-          fecha={fechaAnioAnterior}
-          titulo="Año"
-          total={`$ ${formatearNumero(totalAnterior)}`}
-          data={cardDos.data}
-          categories={cardDos.categoria}
-          fetching={isFetching}
-        />
+        <div className="flex justify-around items-center w-full p-2 gap-2">
+          <DonutCard
+            fecha={fechaActual}
+            titulo="Año"
+            total={`$ ${formatearNumero(totalActual)}`}
+            data={cardUno.data}
+            categories={cardUno.categoria}
+            fetching={isFetching}
+          />
+
+          <div className="w-px h-60 ml-5 mr-10 bg-gray-300"></div>
+
+          <DonutCard
+            fecha={fechaAnioAnterior}
+            titulo="Año"
+            total={`$ ${formatearNumero(totalAnterior)}`}
+            data={cardDos.data}
+            categories={cardDos.categoria}
+            fetching={isFetching}
+          />
+        </div>
       </div>
     </div>
   );

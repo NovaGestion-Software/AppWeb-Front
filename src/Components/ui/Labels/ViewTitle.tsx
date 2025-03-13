@@ -2,6 +2,7 @@ import { Dispatch } from 'react';
 import RefreshButton from '../Buttons/RefreshButton';
 
 interface ViewTitleProps {
+  type?: 'title' | 'subtitle';
   title: string;
   className?: string;
   showRefreshButton?: boolean;
@@ -9,16 +10,32 @@ interface ViewTitleProps {
 }
 
 export default function ViewTitle({
+  type,
   title,
   className,
   showRefreshButton,
   setHandleRefetch,
 }: ViewTitleProps) {
+  const styles = {
+    title: {
+      bgColor: 'bg-gradient-to-b from-slate-800 to-[#081A51]',
+      height: 'h-10 2xl:h-12',
+      textSize: 'text-lg 2xl:text-2xl font-bold',
+    },
+    subtitle: {
+      bgColor: 'bg-gradient-to-b from-slate-700/80 to-slate-900/80',
+      height: 'h-8 2xl:h-10',
+      textSize: 'text-base 2xl:text-lg font-semibold',
+    },
+  };
+
+  const { bgColor, height, textSize } = styles[type || 'title'];
+
   return (
     <div
-      className={`flex items-center h-8 2xl:h-10 w-full px-10 gap-2 bg-gradient-to-b from-slate-800 to-[#081A51] border-[#2973B2] shadow-lg 2xl:px-12 ${className}`}
+      className={`flex items-center ${height} w-full px-10 gap-2 ${bgColor} border-[#2973B2] shadow-lg 2xl:px-12 ${className}`}
     >
-      <h1 className="text-lg text-white font-semibold tracking-wide font-roboto">{title}</h1>
+      <h1 className={`${textSize} text-white tracking-wide font-roboto`}>{title}</h1>
 
       {showRefreshButton && setHandleRefetch && (
         <RefreshButton setHandleRefetch={setHandleRefetch} />

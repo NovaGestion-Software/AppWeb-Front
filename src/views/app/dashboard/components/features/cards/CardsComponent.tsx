@@ -34,7 +34,7 @@ export default function CardsComponent({ handleRefetch, setHandleRefetch }: Card
   return (
     <div>
       {fetchingCards ? (
-        <div className="space-y-4 mb-5">
+        <div className="space-y-2 mb-5">
           {[...Array(2)].map((_, rowIndex) => (
             <div key={rowIndex} className="flex justify-center w-full gap-5">
               {rowIndex === 0 ? (
@@ -54,7 +54,7 @@ export default function CardsComponent({ handleRefetch, setHandleRefetch }: Card
           ))}
         </div>
       ) : (
-        <div className="space-y-4 mb-5">
+        <div className="space-y-2 mb-5">
           {filteredCards
             .reduce<(typeof filteredCards)[]>((rows, card, index) => {
               const rowIndex = Math.floor(index / 4);

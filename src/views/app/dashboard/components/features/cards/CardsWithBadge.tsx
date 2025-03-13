@@ -21,15 +21,15 @@ export default function CardWithBadge({ data }: CardWithBadgeProps) {
 
   return (
     <Card
-      className="shadow-none transition-shadow duration-300  hover:shadow-lg hover:shadow-gray-400"
+      className="shadow-none w-full max-w-96 transition-shadow duration-300  hover:shadow-lg hover:shadow-gray-400 py-3 px-5"
       decoration="top"
       decorationColor={simbolo === 1 ? 'green' : simbolo === 2 ? 'yellow' : 'red'}
     >
-      <div className="flex flex-col h-24 justify-center">
-        <div className="flex justify-between relative">
+      <div className="flex flex-col justify-center ">
+        <div className="flex justify-between">
           <div>
-            <p className="text-tremor-default  text-tremor-content">{titulo}</p>
-            <p className="text-3xl text-tremor-content-strong font-semibold pt-1">
+            <p className="text-xs text-slate-500/80">{titulo}</p>
+            <p className="text-3xl font-semibold pt-2">
               {valortotal} {unidad}
             </p>
           </div>
@@ -43,12 +43,13 @@ export default function CardWithBadge({ data }: CardWithBadgeProps) {
             size="xs"
           ></BadgeDelta>
         </div>
+
         <Divider className="my-2"></Divider>
 
-        <div className="relative flex flex-col gap-1 ">
-          <p className="text-xs  text-tremor-content-strong font-semibold">
+        <div className="flex flex-col gap-1">
+          <p className="text-xs font-semibold">
             {subtitulo1}:{' '}
-            <span className="font-bold">
+            <span className="text-amber-500 font-bold">
               {unidad1} {valor1}
             </span>
           </p>
