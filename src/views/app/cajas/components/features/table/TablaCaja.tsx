@@ -13,6 +13,7 @@ import { Dispatch, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { obtenerCajasSecciones } from '@/services/AppService';
 import SkeletonTablaCaja from './SkTable';
+import ViewTitle from '@/Components/ui/Labels/ViewTitle';
 
 type CajaSeccion = {
   seccion: string;
@@ -122,55 +123,53 @@ export default function TablaCaja({ handleRefetch, setHandleRefetch }: TablaCaja
       {isFetching ? (
         <SkeletonTablaCaja />
       ) : (
-        <Card className="flex flex-col gap-2 bg-white h-[52rem] w-full shadow-md rounded-md">
-          <h3 className="text-3xl font-bold ">Venta por Seccion</h3>
-          <Table className="mt-5 overflow-auto max-h-[43rem] border-2 border-gray-100 scrollbar-thin">
-            <TableHead>
-              <TableRow className="sticky top-0 bg-white z-10">
-                <TableHeaderCell>
-                  <p className="flex flex-col font-semibold gap-1">Seccion</p>
-                </TableHeaderCell>
+        <>
+          <ViewTitle title="Venta por Sección" className="rounded-t-md" />
+          <div className="flex flex-col gap-2 bg-white h-fit w-full  shadow-md rounded-b-md p-4">
+            <Table className="overflow-auto border-2 border-gray-300 scrollbar-thin">
+              <TableHead>
+                <TableRow className="sticky top-0 bg-white z-10">
+                  <TableHeaderCell>
+                    <p className="flex flex-col font-semibold gap-1">Seccion</p>
+                  </TableHeaderCell>
 
-                <TableHeaderCell>
-                  <p className="flex flex-col font-semibold gap-1 text-center">Importe $</p>
-                </TableHeaderCell>
+                  <TableHeaderCell>
+                    <p className="flex flex-col font-semibold gap-1 text-center">Importe $</p>
+                  </TableHeaderCell>
 
-                <TableHeaderCell>
-                  <p className="text-center">%</p>
-                </TableHeaderCell>
+                  <TableHeaderCell>
+                    <p className="text-center">%</p>
+                  </TableHeaderCell>
 
-                <TableHeaderCell>
-                  <p className="text-center">Neto</p>
-                </TableHeaderCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {result.map((item: any, index: any) => (
-                <TableRow key={index} className="odd:bg-gray-200  even:bg-white  ">
-                  <TableCell className="border-gray-300 border-2 ">{item.nseccion}</TableCell>
-                  <TableCell className="border-gray-300 border-2 text-end">{item.venta}</TableCell>
-                  <TableCell className="border-gray-300 border-2 text-end">
-                    {item.porcentaje}
-                  </TableCell>
-                  <TableCell className="border-gray-300 border-2 text-end">
-                    {item.porcentajeNeto}
-                  </TableCell>
+                  <TableHeaderCell>
+                    <p className="text-center">Neto</p>
+                  </TableHeaderCell>
                 </TableRow>
-              ))}
-            </TableBody>
+              </TableHead>
+              <TableBody>
+                {result.map((item: any, index: any) => (
+                  <TableRow key={index} className="odd:bg-gray-200  even:bg-white  ">
+                    <TableCell className="">{item.nseccion}</TableCell>
+                    <TableCell className="text-end">{item.venta}</TableCell>
+                    <TableCell className="text-end">{item.porcentaje}</TableCell>
+                    <TableCell className="text-end">{item.porcentajeNeto}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
 
-            <TableFoot className=" border-2 border-gray-300 rounded-md sticky bottom-0 bg-white z-10 ">
-              <TableFooterCell>Total</TableFooterCell>
-              <TableFooterCell className="border border-gray-300 bg-slate-100 font-extrabold text-blue-600 text-right">
-                {totalVentas}
-              </TableFooterCell>
-              <TableFooterCell className="border border-gray-300 bg-slate-100 font-extrabold text-blue-600"></TableFooterCell>
-              <TableFooterCell className="border border-gray-300 bg-slate-100 font-extrabold text-blue-600 text-end">
-                {totalVentasNetas}
-              </TableFooterCell>
-            </TableFoot>
-          </Table>
-        </Card>
+              <TableFoot className=" border-gray-300 rounded-md sticky bottom-0 bg-white z-10 ">
+                <TableFooterCell>Total</TableFooterCell>
+                <TableFooterCell className="border border-gray-300 bg-slate-100 font-extrabold text-blue-600 text-right">
+                  {totalVentas}
+                </TableFooterCell>
+                <TableFooterCell className="border border-gray-300 bg-slate-100 font-extrabold text-blue-600"></TableFooterCell>
+                <TableFooterCell className="border border-gray-300 bg-slate-100 font-extrabold text-blue-600 text-end">
+                  {totalVentasNetas}
+                </TableFooterCell>
+              </TableFoot>
+            </Table>
+          </div>
+        </>
       )}
     </div>
   );

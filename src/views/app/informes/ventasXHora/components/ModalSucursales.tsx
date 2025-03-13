@@ -82,10 +82,8 @@ export default function ModalSucursales({ isProcessing }: ModalSucursalesProps) 
               <div className="w-[25rem] overflow-auto border border-gray-300 rounded-lg">
                 <table className="w-full border-collapse text-sm">
                   {' '}
-                  {/* Reducimos el tamaño de la fuente */}
                   <thead className="bg-gray-200 sticky top-0 text-sm">
                     {' '}
-                    {/* Reducimos el tamaño del header */}
                     <tr>
                       <th className="p-1 w-10"></th>
                       <th className="p-1 text-left">Detalle</th>

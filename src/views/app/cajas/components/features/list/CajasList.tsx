@@ -3,6 +3,7 @@ import CardSucursales from './CardSucursales';
 import SkListComponent from './SkListComponent';
 import { Dispatch, useEffect } from 'react';
 import { DatCaja, Importes, SucursalCaja } from '@/types';
+import ViewTitle from '@/Components/ui/Labels/ViewTitle';
 
 type CajasListProps = {
   handleRefetch: boolean;
@@ -113,33 +114,35 @@ export default function CajasList({
       {isFetching ? (
         <SkListComponent />
       ) : (
-        <div className="flex flex-col gap-2 bg-white h-[52rem]  shadow-md rounded-md p-5 ">
-          <h3 className="text-3xl pt-4 px-4 font-bold">Detalle de Cajas</h3>
-          <div className="flex flex-col gap-y-5 h-[52rem] scrollbar-thin overflow-auto p-4">
-            {cajas
-              .slice() // Creamos una copia para evitar mutar el estado original
-              .sort((a: any, b: any) => a.sucursal - b.sucursal) // Ordena según el número de sucursal
-              .map((sucursal) =>
-                sucursal.datcaja.map((caja: DatCaja) => (
-                  <CardSucursales
-                    estado={caja.fecha_c === null}
-                    // key={`${sucursal.nsucursal}-${caja.ncaja}`} // Añadir una clave única para cada caja
-                    nombre={sucursal.nsucursal}
-                    sucursal={sucursal.sucursal}
-                    numero={caja.ncaja}
-                    apertura={formatearFecha(caja.fecha_a)} // Formatear la fecha de apertura
-                    ultimaVenta={formatearFecha(caja.fecha_c || '')}
-                    efectivo={calcularEfectivo(caja)}
-                    ventas={calcularTotalVentas(caja)}
-                    cobranza={calcularTotalCobranza(caja)}
-                    planP={calcularTotalPlanP(caja)}
-                    egresos={caja.retiro}
-                    saldo={calcularDisponibilidad(caja)} // Llama a la función para cada caja
-                  />
-                ))
-              )}
+        <>
+          <ViewTitle title="Detalle de Cajas" className="rounded-t-md" />
+          <div className="flex flex-col gap-2 bg-white h-[40rem] shadow-md rounded-b-md ">
+            <div className="flex flex-col gap-y-5 h-[52rem] scrollbar-thin overflow-auto p-4">
+              {cajas
+                .slice() // Creamos una copia para evitar mutar el estado original
+                .sort((a: any, b: any) => a.sucursal - b.sucursal) // Ordena según el número de sucursal
+                .map((sucursal) =>
+                  sucursal.datcaja.map((caja: DatCaja) => (
+                    <CardSucursales
+                      estado={caja.fecha_c === null}
+                      // key={`${sucursal.nsucursal}-${caja.ncaja}`} // Añadir una clave única para cada caja
+                      nombre={sucursal.nsucursal}
+                      sucursal={sucursal.sucursal}
+                      numero={caja.ncaja}
+                      apertura={formatearFecha(caja.fecha_a)} // Formatear la fecha de apertura
+                      ultimaVenta={formatearFecha(caja.fecha_c || '')}
+                      efectivo={calcularEfectivo(caja)}
+                      ventas={calcularTotalVentas(caja)}
+                      cobranza={calcularTotalCobranza(caja)}
+                      planP={calcularTotalPlanP(caja)}
+                      egresos={caja.retiro}
+                      saldo={calcularDisponibilidad(caja)} // Llama a la función para cada caja
+                    />
+                  ))
+                )}
+            </div>
           </div>
-        </div>
+        </>
       )}
     </div>
   );
