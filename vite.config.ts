@@ -11,7 +11,9 @@ export default defineConfig({
     createHtmlPlugin({
       inject: {
         data: {
-          title: `NovaGestión - V${packageInfo.version}`,
+          title: `NovaGestión - V${packageInfo.version} ${
+            packageInfo.customEnv === 'development' ? ' - DEV' : ''
+          }`,
         },
       },
     }),

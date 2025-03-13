@@ -111,7 +111,7 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
         {menu.href ? (
           <Link
             to={menu.href}
-            className={`text-white text-sm flex items-center gap-x-2 cursor-pointer p-2 rounded-l-md rounded-r-none mt-1 hover:bg-[#FFFFFF2B] hover:-translate-y-0.5 duration-300 overflow-hidden ${
+            className={`text-white text-sm  flex items-center gap-x-2 cursor-pointer p-2 rounded-l-md rounded-r-none mt-1 hover:bg-[#FFFFFF2B] hover:-translate-y-0.5 duration-300 overflow-hidden 2xl:text-base ${
               location.pathname === menu.href ? 'bg-[#FFFFFF2B] -translate-y-0.5' : ''
             }`}
           >
@@ -128,7 +128,7 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
           </Link>
         ) : (
           <div
-            className={`flex items-center text-white text-sm gap-x-2 cursor-pointer p-2 rounded-l-md rounded-r-none mt-1 hover:bg-[#FFFFFF2B] hover:-translate-y-0.5 duration-300 overflow-hidden  ${
+            className={`flex items-center text-white text-sm gap-x-2 cursor-pointer p-2 rounded-l-md rounded-r-none mt-1 hover:bg-[#FFFFFF2B] hover:-translate-y-0.5 duration-300 overflow-hidden 2xl:text-base  ${
               isMenuActive(menu) ? 'bg-[#FFFFFF2B] -translate-y-0.5' : ''
             }`}
             onClick={() => toggleMenu(menu.title)}
@@ -151,7 +151,7 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
             </span>
             {menu.submenus &&
               open && ( // Mostrar flecha solo si el menú está abierto
-                <span className="ml-auto text-xs">
+                <span className="ml-auto text-xs 2xl:text-base">
                   {isOpen ? <FaChevronUp /> : <FaChevronDown />}
                 </span>
               )}
@@ -272,7 +272,6 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
       {/** Empresa */}
       <div className="flex flex-col justify-center items-center gap-1">
         <div className="relative flex flex-col justify-center items-center gap-1 w-16 h-28 ">
-          {/* Logo de la empresa */}
           <div
             className={`flex justify-center items-center p-2 w-14 h-14 rounded-full bg-white transition-all duration-500 ${
               open ? 'translate-y-1' : 'translate-y-5'
@@ -287,12 +286,9 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
             />
           </div>
 
-          {/* Nombre de la empresa (nfantasia) */}
           <span
-            className={`h-8 text-sm text-white font-semibold origin-left transition-all  ${
-              open
-                ? 'opacity-100 translate-y-3 duration-500'
-                : 'opacity-0 translate-y-2 duration-100'
+            className={`h-8 text-sm text-white font-semibold origin-left transition-all  translate-y-2 2xl:text-xl ${
+              open ? 'opacity-100 duration-500' : 'opacity-0 duration-100'
             } overflow-hidden whitespace-nowrap`}
           >
             {user.nfantasia}
