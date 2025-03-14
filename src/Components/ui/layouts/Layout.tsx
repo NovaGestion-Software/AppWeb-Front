@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
-import SideBar from '../Components/ui/SideBar';
 import Cookies from 'js-cookie';
+import SideBar from '../SideBar';
 
 export default function Layout() {
   const navigate = useNavigate();

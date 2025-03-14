@@ -1,5 +1,4 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import Layout from './layouts/Layout';
 import Portal from './views/auth/Portal';
 import ProtectedRoute from './Components/features/ProtectedRoute';
 import HomeView from './views/app/home/HomeView';
@@ -9,6 +8,7 @@ import CobranzaVencimView from './views/app/informes/cobranzaXVencim/CobranzaVen
 import VentasXVendedorView from './views/app/informes/ventasXVendedor/VentasXVendedorView';
 import VentasHoraView from './views/app/informes/ventasXHora/VentasHoraView';
 import ConfigView from './views/app/config/ConfigView';
+import Layout from './Components/ui/layouts/Layout';
 // import StockPorSeccion from './views/app/stockSeccion/StockPorSeccion';
 
 export default function Router() {
