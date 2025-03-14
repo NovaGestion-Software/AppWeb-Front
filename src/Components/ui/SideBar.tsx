@@ -136,7 +136,7 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
           </Link>
         ) : (
           <div
-            className={`flex items-center text-white text-sm gap-x-2 p-2 rounded-l-md rounded-r-none mt-1 hover:bg-[#FFFFFF2B] hover:-translate-y-0.5 duration-300 overflow-hidden cursor-pointer 2xl:text-base  ${
+            className={`flex items-center text-white text-sm gap-x-2 p-2 rounded-l-md rounded-r-none mt-0.5 hover:bg-[#FFFFFF2B] hover:-translate-y-0.5 duration-300 overflow-hidden cursor-pointer 2xl:text-base  ${
               isMenuActive(menu) ? 'bg-[#FFFFFF2B] -translate-y-0.5' : ''
             }`}
             onClick={() => toggleMenu(menu.title)}
