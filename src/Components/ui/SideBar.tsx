@@ -12,6 +12,15 @@ import { BiBarChartSquare } from 'react-icons/bi';
 import { FaBoxesPacking } from 'react-icons/fa6';
 import { useVentasHoraStore } from '@/store/useVentasHoraStore';
 
+interface SubMenuItem {
+  title: string;
+  icon?: JSX.Element;
+  href?: string;
+  submenus?: SubMenuItem[];
+}
+
+type MenuItem = SubMenuItem;
+
 type SideBarProps = {
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
@@ -44,7 +53,7 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
     }
   }, [open]);
 
-  const Menus = [
+  const Menus: MenuItem[] = [
     {
       title: 'Inicio',
       href: '/home',
@@ -91,19 +100,18 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
     }));
   };
 
-  const isMenuActive = (menu: any) => {
-    if (menu.href === location.pathname) return true; // Si el menú principal es activo
-    if (!menu.submenus) return false; // Si no tiene submenús, salir
+  const isMenuActive = (menu: MenuItem) => {
+    if (menu.href === location.pathname) return true;
+    if (!menu.submenus) return false;
 
     return menu.submenus.some(
-      (submenu: any) =>
+      (submenu) =>
         submenu.href === location.pathname ||
-        (submenu.submenus &&
-          submenu.submenus.some((subsub: any) => subsub.href === location.pathname))
+        (submenu.submenus && submenu.submenus.some((subsub) => subsub.href === location.pathname))
     );
   };
 
-  const renderMenu = (menu: any) => {
+  const renderMenu = (menu: MenuItem) => {
     const isOpen = openMenus[menu.title];
 
     return (
@@ -135,7 +143,7 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
           >
             <span
               className={`duration-300 ${
-                menu.submenus?.some((submenu: any) => submenu.href === location.pathname)
+                menu.submenus?.some((submenu) => submenu.href === location.pathname)
                   ? 'scale-110'
                   : ''
               }`}
@@ -163,13 +171,13 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
           isOpen &&
           open && ( // Solo renderizar submenús si el SideBar está abierto
             <ul className="pl-4 ">
-              {menu.submenus.map((submenu: any) => (
+              {menu.submenus.map((submenu) => (
                 <p key={submenu.title} style={{ fontSize: '10px' }}>
                   {submenu.submenus ? (
                     renderMenu(submenu)
                   ) : (
                     <Link
-                      to={submenu.href}
+                      to={submenu.href ?? '#'}
                       className={`text-white text-sm flex items-center gap-x-2 cursor-pointer p-2 pl-4 rounded-l-md rounded-r-none mt-1 hover:bg-[#FFFFFF2B] hover:-translate-y-0.5 duration-300 overflow-hidden ${
                         submenu.href === location.pathname ? 'bg-[#FFFFFF2B] -translate-y-0.5 ' : ''
                       }`}
@@ -327,7 +335,6 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
       )}
 
       {/** Log out */}
-
       <Link
         to="/"
         className="flex items-center gap-3 fixed bottom-2 left-5 duration-100 hover:translate-x-1 transition-all hover:scale-105"
