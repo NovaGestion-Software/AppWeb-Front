@@ -22,36 +22,34 @@ export default function CajasView() {
   });
 
   return (
-    <>
-      <div className="overflow-hidden">
-        <ViewTitle
-          title={'Movimientos de Cajas'}
-          showRefreshButton={true}
-          setHandleRefetch={setHandleRefetch}
-        />
+    <div className="overflow-hidden">
+      <ViewTitle
+        title={'Movimientos de Cajas'}
+        showRefreshButton={true}
+        setHandleRefetch={setHandleRefetch}
+      />
 
-        <div className="grid grid-cols-12 w-full p-4 gap-8">
-          <div className="col-span-12 mx-4 ">
-            <CardComponent
-              handleRefetch={handleRefetch}
-              setHandleRefetch={setHandleRefetch}
-              cajas={cajas || []}
-              refetch={refetch}
-              isFetching={isFetching}
-            />
-          </div>
-          <div className="col-span-12  flex flex-row gap-8 justify-center ">
-            <CajasList
-              handleRefetch={handleRefetch}
-              setHandleRefetch={setHandleRefetch}
-              cajas={cajas || []}
-              refetch={refetch}
-              isFetching={isFetching}
-            />
-            <TablaCaja handleRefetch={handleRefetch} setHandleRefetch={setHandleRefetch} />
-          </div>
+      <div className="grid grid-cols-12 w-full pt-4 pl-2 gap-8">
+        <div className="col-span-12 ml-4 ">
+          <CardComponent
+            handleRefetch={handleRefetch}
+            setHandleRefetch={setHandleRefetch}
+            cajas={cajas || []}
+            refetch={refetch}
+            isFetching={isFetching}
+          />
+        </div>
+        <div className="col-span-12  flex flex-row gap-8 justify-center ">
+          <CajasList
+            handleRefetch={handleRefetch}
+            setHandleRefetch={setHandleRefetch}
+            cajas={cajas || []}
+            refetch={refetch}
+            isFetching={isFetching}
+          />
+          <TablaCaja handleRefetch={handleRefetch} setHandleRefetch={setHandleRefetch} />
         </div>
       </div>
-    </>
+    </div>
   );
 }
