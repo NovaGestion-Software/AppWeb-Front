@@ -9,6 +9,7 @@ import VentasXVendedorView from './views/app/informes/ventasXVendedor/VentasXVen
 import VentasHoraView from './views/app/informes/ventasXHora/VentasHoraView';
 import ConfigView from './views/app/config/ConfigView';
 import Layout from './Components/ui/layouts/Layout';
+import StockPorSeccionView from './views/app/stockSeccion/StockPorSeccionView';
 // import StockPorSeccion from './views/app/stockSeccion/StockPorSeccion';
 
 export default function Router() {
@@ -28,6 +29,7 @@ export default function Router() {
               <Route path="ventas-hora" element={<VentasHoraView />} />
             </Route>
             {/* <Route path="/stock-seccion" element={<StockPorSeccion />} /> */}
+            <Route path="/stock-seccion1" element={<StockPorSeccionView />} />
             <Route path="/configuracion" element={<ConfigView />} />
           </Route>
         </Route>

@@ -69,11 +69,11 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
       href: '/cajas',
       icon: <MdOutlineAttachMoney />,
     },
-    // {
-    //   title: "Stock Por Seccion",
-    //   href: "/stock-seccion",
-    //   icon: <FaBoxesPacking />,
-    // },
+    {
+      title: 'Stock por Seccion',
+      href: '/stock-seccion1',
+      icon: <FaBoxesPacking />,
+    },
     {
       title: 'Informes', // Menú desplegable principal
       icon: <BiBarChartSquare />,
@@ -178,7 +178,7 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
                   ) : (
                     <Link
                       to={submenu.href ?? '#'}
-                      className={`text-white text-sm flex items-center gap-x-2 cursor-pointer p-2 pl-4 rounded-l-md rounded-r-none mt-1 hover:bg-[#FFFFFF2B] hover:-translate-y-0.5 duration-300 overflow-hidden ${
+                      className={`text-white text-sm flex items-center gap-x-2 cursor-pointer p-2 pl-4 rounded-l-md rounded-r-none mt-0.5 hover:bg-[#FFFFFF2B] hover:-translate-y-0.5 duration-300 overflow-hidden ${
                         submenu.href === location.pathname ? 'bg-[#FFFFFF2B] -translate-y-0.5 ' : ''
                       }`}
                     >

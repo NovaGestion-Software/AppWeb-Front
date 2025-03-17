@@ -17,16 +17,17 @@ import { getTheme, DEFAULT_OPTIONS } from '@table-library/react-table-library/ma
 import { useTheme } from '@table-library/react-table-library/theme';
 import { useVentasHoraStore } from '@/store/useVentasHoraStore';
 import { ClipLoader } from 'react-spinners';
+import { TableColumn } from '@/types';
 
 interface TableNode {
   id: string | number; // ID único para cada fila
 }
 
-interface TableColumn<T> {
-  label: string;
-  renderCell: (item: T) => React.ReactNode;
-  cellProps?: (item: T) => any;
-}
+// interface TableColumn<T> {
+//   label: string;
+//   renderCell: (item: T) => React.ReactNode;
+//   cellProps?: (item: T) => any;
+// }
 
 interface TablaFooterProps {
   datos?: {

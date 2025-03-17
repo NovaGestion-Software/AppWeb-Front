@@ -1,3 +1,4 @@
+// import { TableNode } from '@table-library/react-table-library/types/table';
 import { Dayjs } from 'dayjs';
 
 export type Account = {
@@ -105,4 +106,26 @@ export interface VentaPorHora {
   //   totalImporte: number | string;
   //   totalOperaciones: number | string;
   //   totalPares: number | string;
+}
+
+export interface TablaStocks extends TableNode {
+  codigo: string;
+  talle: string;
+  descripcion: string;
+  marca: string;
+  precio: string;
+  total: string;
+  stockPorDeposito: {
+    [depositoId: string]: string; // Cada depósito tiene un stock como string
+  };
+}
+
+export interface TableColumn<T> {
+  label: string;
+  renderCell: (item: T) => React.ReactNode;
+  cellProps?: (item: T) => any;
+}
+
+export interface TableNode {
+  id: string | number; // ID único para cada fila
 }
