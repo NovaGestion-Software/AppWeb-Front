@@ -146,27 +146,6 @@ export default function TablaStock({ dataParaTabla }: TableProps<TableNode>) {
       }
     `,
 
-    Row: `
-      height: 10px; /* Altura de fila por defecto */
-      font-size: 14px; /* Tamaño de fuente por defecto */
-      border: 1px solid #ccc; /* Borde superior para cada fila */ 
-      border-left: 1px solid black; /* Borde izquierdo */
-      border-right: 1px solid black; /* Borde derecho */  
-      margin-top: 10px; /* Margen superior de 10px */
- 
-
-      &:nth-of-type(odd) { background-color: #fff; }
-      &:nth-of-type(even) { background-color: #eaf5fd; }
-      
-      &.row-select-single-selected { background-color: #CAE0BC !important; }
-      border-bottom: 1px solid #ccc;
-
-      @media (min-width: 1280px) and (max-width: 1380px) {
-        height: 8px; /* Altura de fila reducida */
-        font-size: 12px; /* Tamaño de fuente más pequeño */
-      }
-    `,
-
     Cell: `
       padding: 6px; /* Padding por defecto */
       border-right: 1px solid #ccc; /* Borde derecho */
@@ -190,6 +169,27 @@ export default function TablaStock({ dataParaTabla }: TableProps<TableNode>) {
 
       @media (min-width: 1280px) and (max-width: 1380px) {
         padding: 4px; /* Padding reducido */
+        font-size: 12px; /* Tamaño de fuente más pequeño */
+      }
+    `,
+
+    Row: `
+      height: 10px; /* Altura de fila por defecto */
+      font-size: 14px; /* Tamaño de fuente por defecto */
+      border: 1px solid #ccc; /* Borde superior para cada fila */ 
+      border-left: 1px solid black; /* Borde izquierdo */
+      border-right: 1px solid black; /* Borde derecho */  
+      margin-top: 10px; /* Margen superior de 10px */
+ 
+
+      &:nth-of-type(odd) { background-color: #fff; }
+      &:nth-of-type(even) { background-color: #eaf5fd; }
+      
+      &.row-select-single-selected { background-color: #CAE0BC !important; }
+      border-bottom: 1px solid #ccc;
+
+      @media (min-width: 1280px) and (max-width: 1380px) {
+        height: 8px; /* Altura de fila reducida */
         font-size: 12px; /* Tamaño de fuente más pequeño */
       }
     `,
