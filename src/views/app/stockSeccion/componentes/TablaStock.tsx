@@ -25,9 +25,9 @@ interface TableProps<T extends TableNode> {
 export default function TablaStock({ dataParaTabla }: TableProps<TableNode>) {
   let idCounter = 0;
   const depositos = obtenerDepositos(dataParaTabla);
-  const columnasFijas = 6;
-  const columnasDinamicas = depositos.size;
-  const columnasTotales = columnasFijas + columnasDinamicas;
+  // const columnasFijas = 6;
+  // const columnasDinamicas = depositos.size;
+  // const columnasTotales = columnasFijas + columnasDinamicas;
   const datosAgrupados = agruparPorProducto(dataParaTabla);
   let cantidadItems = datosAgrupados.length;
   let totalGeneral = 0;
