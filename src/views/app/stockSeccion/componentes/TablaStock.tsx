@@ -90,122 +90,153 @@ export default function TablaStock({ dataParaTabla }: TableProps<TableNode>) {
 
   const customTheme = {
     Table: `
-    grid-template-columns: 
-        minmax(80px, 100px)       /* CODIGO */
-        minmax(50px, 70px)       /* TALLE */
-        minmax(200px, 300px)     /* DESCRIPCION */
-        minmax(100px, 150px)     /* MARCA */
-        minmax(90px, 150px)      /* PRECIO */
-        ${'minmax(70px, 90px)'.repeat(depositos.size)} /* DEPOSITOS */
-        minmax(80px, 100px);      /* TOTAL */
-    border-radius: 12px;
-    width: 70rem;
-    max-height: 550px; /* Reducir la altura máxima para dejar espacio al footer */
-    overflow-y: auto; /* Habilitar scroll vertical */
-    scrollbar-width: thin;
-    border: 1px solid black;
-    font-variant-numeric: tabular-nums;
-    font-size: 14px; /* Tamaño de fuente por defecto */
-    margin-bottom: 40px; /* Espacio para el footer */
-    z-index: 0; /* Asegurarse de que la tabla está debajo del footer */
-  
-    @media (min-width: 1280px) and (max-width: 1380px) {
-      width: 55rem; /* Ancho reducido */
-      max-height: 350px; /* Altura máxima reducida */
-      font-size: 12px; /* Tamaño de fuente más pequeño */
-      height: 360px; /* Altura reducida para pantallas medianas */
-      margin-bottom: 10px; /* Espacio reducido para el footer */
-    }
-  `,
-
-    Row: `
-    height: 10px; /* Altura de fila por defecto */
-    font-size: 14px; /* Tamaño de fuente por defecto */
-    &:nth-of-type(odd) { background-color: #fff; }
-    &:nth-of-type(even) { background-color: #eaf5fd; }
+      grid-template-columns: 
+          minmax(80px, 100px)       /* CODIGO */
+          minmax(50px, 70px)       /* TALLE */
+          minmax(200px, 300px)     /* DESCRIPCION */
+          minmax(100px, 150px)     /* MARCA */
+          minmax(90px, 150px)      /* PRECIO */
+          ${'minmax(70px, 90px)'.repeat(depositos.size)} /* DEPOSITOS */
+          minmax(80px, 100px);      /* TOTAL */
+      width: 70rem;
+      max-height: 550px; /* Reducir la altura máxima para dejar espacio al footer */
+      overflow-y: auto; /* Habilitar scroll vertical */
+      scrollbar-width: thin;
+      font-variant-numeric: tabular-nums;
+      font-size: 14px; /* Tamaño de fuente por defecto */
+      margin-bottom: 40px; /* Espacio para el footer */
+      
     
-    &.row-select-single-selected { background-color: #CAE0BC !important; }
-    border-bottom: 1px solid #ccc;
-
-    @media (min-width: 1280px) and (max-width: 1380px) {
-      height: 8px; /* Altura de fila reducida */
-      font-size: 12px; /* Tamaño de fuente más pequeño */
-    }
-  `,
+      @media (min-width: 1280px) and (max-width: 1380px) {
+        width: 55rem; /* Ancho reducido */
+        max-height: 350px; /* Altura máxima reducida */
+        font-size: 12px; /* Tamaño de fuente más pequeño */
+        height: 360px; /* Altura reducida para pantallas medianas */
+        margin-bottom: 10px; /* Espacio reducido para el footer */
+      }
+    `,
 
     HeaderCell: `
-    background: #2973B2;
-    color: white;
-    height: 30px; /* Altura por defecto */
-    font-size: 14px; /* Tamaño de fuente por defecto */
-    padding: 14px; /* Padding por defecto */
-    &:nth-of-type(n+3) {
-      text-align: center;
-    }
+      background: #2973B2;
+      color: white;
+      height: 30px; /* Altura por defecto */
+      font-size: 14px; /* Tamaño de fuente por defecto */
+      padding: 14px; /* Padding por defecto */
+      border-top: 1px solid black; /* Borde superior */
+      border-bottom: 1px solid black; /* Borde superior */
+      
+      &:first-child {
+        border-top-left-radius: 12px; /* Solo el borde superior izquierdo tendrá el radio */
+        border-left: 1px solid black; /* Borde izquierdo */
+      }
 
-    @media (min-width: 1280px) and (max-width: 1380px) {
-      height: 20px; /* Altura reducida */
-      font-size: 12px; /* Tamaño de fuente más pequeño */
-      padding: 8px; /* Padding reducido */
-    }
-  `,
+      &:last-child {
+        border-top-right-radius: 12px; /* Solo el borde superior izquierdo tendrá el radio */
+        border-right: 1px solid black; /* Borde derecho */
+      }
+
+      &:nth-of-type(n+3) {
+        text-align: center;
+      }
+
+      @media (min-width: 1280px) and (max-width: 1380px) {
+        height: 20px; /* Altura reducida */
+        font-size: 12px; /* Tamaño de fuente más pequeño */
+        padding: 8px; /* Padding reducido */
+      }
+    `,
+
+    Row: `
+      height: 10px; /* Altura de fila por defecto */
+      font-size: 14px; /* Tamaño de fuente por defecto */
+      border: 1px solid #ccc; /* Borde superior para cada fila */ 
+      border-left: 1px solid black; /* Borde izquierdo */
+      border-right: 1px solid black; /* Borde derecho */  
+      margin-top: 10px; /* Margen superior de 10px */
+ 
+
+      &:nth-of-type(odd) { background-color: #fff; }
+      &:nth-of-type(even) { background-color: #eaf5fd; }
+      
+      &.row-select-single-selected { background-color: #CAE0BC !important; }
+      border-bottom: 1px solid #ccc;
+
+      @media (min-width: 1280px) and (max-width: 1380px) {
+        height: 8px; /* Altura de fila reducida */
+        font-size: 12px; /* Tamaño de fuente más pequeño */
+      }
+    `,
 
     Cell: `
-    padding: 6px; /* Padding por defecto */
-    border-right: 1px solid #ccc;
-    font-size: 14px; /* Tamaño de fuente por defecto */
+      padding: 6px; /* Padding por defecto */
+      border-right: 1px solid #ccc; /* Borde derecho */
+      
+      font-size: 14px; /* Tamaño de fuente por defecto */
 
-    &:last-child {
-      border-right: none;
-    }
+      &:first-child {
+        border-left: 1px solid black; /* Borde izquierdo negro */
+        /* border-top-left-radius: 12px; */
+      }
 
-    &:nth-of-type(n+3) {
-      text-align: right;
-    }
+      &:last-child {
+        border-right: 1px solid black; /* Borde derecho */
+        /*border-top-right-radius: 12px; */
+      }
 
-    @media (min-width: 1280px) and (max-width: 1380px) {
-      padding: 4px; /* Padding reducido */
-      font-size: 12px; /* Tamaño de fuente más pequeño */
-    }
-  `,
+
+      &:nth-of-type(n+3) {
+        text-align: right;
+      }
+
+      @media (min-width: 1280px) and (max-width: 1380px) {
+        padding: 4px; /* Padding reducido */
+        font-size: 12px; /* Tamaño de fuente más pequeño */
+      }
+    `,
 
     FooterCell: `
-    position: sticky;
-    bottom: 0;
-    padding: 8px;
-    border-top: 1px solid #ccc;
-    
-    background-color: #fff; /* Fondo sólido para ocultar el contenido de la tabla */
-    text-align: right;
-    font-size: 14px;
-    z-index: 1; /* Asegurar que el footer esté por encima del contenido */
+      position: sticky;
+      bottom: 0;
+      padding: 8px;
+      border-top: 1px solid black;
+      background-color: #fff; /* Fondo sólido para ocultar el contenido de la tabla */
+      text-align: right;
+      font-size: 14px;
+      z-index: 1; /* Asegurar que el footer esté por encima del contenido */
 
-    &:last-child {
-      border-right: none;
-      color: red;
-    }
+      &:last-child {
+        border-left: 1px solid black;
+        border-bottom-right-radius: 12px;
+        color: red;
+      }
 
-    &:nth-of-type(1) {
-      border: 1px solid black;
-      background-color: #A5C9FF;
-      font-weight: bold;
-      border-bottom-left-radius: 8px; /* Redondeo en la esquina inferior izquierda */
-    }
+      &:nth-of-type(1) {
+        border: 1px solid black;
+        background-color: #A5C9FF;
+        font-weight: bold;
+        border-bottom-left-radius: 8px; /* Redondeo en la esquina inferior izquierda */
+      }
 
-     /* Aplica color desde la columna 6 en adelante */
-    &:nth-of-type(n+6) {
-      background-color: #A5C9FF; 
-      border: 1px solid black; 
-      border-bottom: none;
-    }
+      
+      &:nth-of-type(6) {
+        background-color: #A5C9FF; 
+        border-left: 1px solid black; 
+      }
 
-    @media (min-width: 1280px) and (max-width: 1380px) {
-      padding: 4px; /* Padding reducido */
-      font-size: 12px;
-      height: 30px;
-      bottom: 0px; /* Ajuste fino para alinear el footer */
-    }
-  `,
+      /* Aplica color desde la columna 6 en adelante */
+      &:nth-of-type(n+6) {
+        background-color: #A5C9FF; 
+        border-bottom: 1px solid black; 
+        border-right: 1px solid black; 
+      }
+
+      @media (min-width: 1280px) and (max-width: 1380px) {
+        padding: 4px; /* Padding reducido */
+        font-size: 12px;
+        height: 30px;
+        bottom: 0px; /* Ajuste fino para alinear el footer */
+      }
+    `,
   };
 
   function agruparPorProducto(data: any): ProductoAgrupado[] {
