@@ -21,3 +21,16 @@ export async function obtenerVentasHora(fechas: FechasRango) {
     console.log(error);
   }
 }
+
+
+export async function obtenerProductos() {
+  try {
+    const url = `/apinovades/generico/obtenerProducto.php`;
+
+    const { data } = await apiPhp(url);
+    return data;
+  } catch (error) {
+    if (isAxiosError(error) && error.response) throw new Error(error.response.data.error);
+    console.log(error);
+  }
+}

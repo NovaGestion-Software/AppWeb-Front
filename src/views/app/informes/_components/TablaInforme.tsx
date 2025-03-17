@@ -82,7 +82,7 @@ export default function TablaInforme<T extends TableNode>({
     onChange: onSelectChange,
   });
 
-  // 👉 Establece la primera fila seleccionada si no hay ninguna y los datos ya están procesados
+  //  Establece la primera fila seleccionada si no hay ninguna y los datos ya están procesados
   useEffect(() => {
     if (procesado && datosParaTabla.length > 0 && !currentHorario) {
       const firstItem = datosParaTabla[0];
@@ -92,14 +92,14 @@ export default function TablaInforme<T extends TableNode>({
     }
   }, [procesado, datosParaTabla, select, currentHorario]);
 
-  // 👉 Si la tabla está activa, poner foco en ella automáticamente
+  //  Si la tabla está activa, poner foco en ella automáticamente
   useEffect(() => {
     if (isActive && tableRef.current) {
       tableRef.current.focus();
     }
   }, [isActive]);
 
-  // 👉 Manejar la navegación con el teclado en toda la página
+  //  Manejar la navegación con el teclado en toda la página
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (!isActive || !currentHorario) return;
@@ -136,7 +136,7 @@ export default function TablaInforme<T extends TableNode>({
     };
   }, [isActive, currentHorario, data]);
 
-  // 👉 Maneja el scroll de la tabla
+  //  Maneja el scroll de la tabla
   useEffect(() => {
     const tableContainer = document.querySelector('.table');
     if (tableContainer) {
@@ -169,7 +169,7 @@ export default function TablaInforme<T extends TableNode>({
   const handleBlur = () => {
     setIsActive(false);
   };
-  // seleccion por busqueda
+  // SELECCION POR BUSQUEDA
   useEffect(() => {
     // Solo ejecutar si se está buscando y los valores son válidos
     if (
@@ -203,9 +203,7 @@ export default function TablaInforme<T extends TableNode>({
     tabIndex={0}
     onClick={handleTableClick}
     onBlur={handleBlur}
-  >
-    
-
+  > 
     <Table
       data={{ nodes: datosParaTabla }}
       theme={theme}

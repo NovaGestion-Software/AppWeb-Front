@@ -16,6 +16,7 @@ import FiltrarPorTipo from "./componentes/FiltrarPorTipo";
 import FiltrarSegunLista from "./componentes/FiltrarSegunLista";
 import VerFoto from "./componentes/VerFoto";
 import FiltroModal from "@/layouts/FiltrosModal";
+import { obtenerProductos } from "@/services/ApiPhpService";
 
 export async function obtenerRubrosDisponibles() {
   try {
@@ -61,8 +62,11 @@ export default function StockPorSeccion() {
     temporadasSeleccionadas,
     setTemporadasDisponibles,
     setTemporadasSeleccionadas
+    , tablaStock
   } = useStockPorSeccion();
  
+  // console.log('stock renderizado', stockRenderizado)
+  // console.log('stock ', tablaStock )
 
   // TABLA PARA RUBROS
   const { data: rubrosDis } = useQuery({
@@ -76,6 +80,16 @@ export default function StockPorSeccion() {
       setDatos(rubrosDis.data);
     }
   }, [rubrosDis]);
+
+
+  const {
+    data: stockDis,
+  } = useQuery({
+    queryKey: ['rubros-stock'],
+    queryFn: obtenerProductos,
+    refetchOnWindowFocus: false,
+    staleTime: 1000 * 60 * 5, // Datos frescos por 5 minutos
+  });
 
   return (
     <div className="w-full h-full px-4 pt-0 overflow-hidden">
@@ -113,7 +127,7 @@ export default function StockPorSeccion() {
       {/** HERRAMIENTAS DE LA VISTA */}
       <div className="grid grid-cols-11 grid-rows-2 px-8 pb-0 pt-0 ">
         {/**FOTO Y BOTONES */}
-        <div className="col-start-1 row-start-1 col-span-2 row-span-2 relative left-14 2xl:left-0 2xl:col-start-2 ">
+        <div className="relative left-14 col-start-1 row-start-1 col-span-2 row-span-2  2xl:left-0 2xl:col-start-2 ">
           <VerFoto />
         </div>
         {/**CON STOCK, TODOS, NEGATIVOS - CONTADO, LISTA 2, LISTA 3 */}
@@ -162,7 +176,7 @@ export default function StockPorSeccion() {
       {/**TABLA STOCK */}
       <div className="grid grid-cols-12 px-4 py-2">
         <div className="flex items-center justify-center col-span-full ">
-          <TablaStock datosParaTabla={stockRenderizado} />
+          <TablaStock datosParaTabla={stockDis.data} />
         </div>
       </div>
 

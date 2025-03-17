@@ -30,7 +30,6 @@ export default function TablaSeccionRubro({
     clearSeccionesSeleccionadas,
   } = useStockPorSeccion();
  
-  console.log('store', rubrosToFetch, rubrosSeleccionados)
   const COLUMNS: TableColumn<TablaSecciones>[] = [
     {
       label: "Codigo",
@@ -151,7 +150,7 @@ const areArraysEqual = (array1: any[], array2: any[]) => {
     // Si rubrosSeleccionados tiene contenido, habilitar el botón de confirmar
     if (rubrosSeleccionados.length > 0 && !areArraysEqual(rubrosSeleccionados, rubrosToFetch)) {
       setIsConfirmEnabled(true);
-      console.log('Habilitar confirmar:', isConfirmEnabled, rubrosSeleccionados, rubrosToFetch, seccionesSeleccionadas, seccionesToFetch);
+   //   console.log('Habilitar confirmar:', isConfirmEnabled, rubrosSeleccionados, rubrosToFetch, seccionesSeleccionadas, seccionesToFetch);
     } else {
       setIsConfirmEnabled(false);
     }

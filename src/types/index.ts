@@ -122,6 +122,7 @@ export interface TableColumn<T> {
   cellProps?: (item: T) => any;
 }
 
+
 export interface TablaStocks extends TableNode {
   codigo: string;
   talle: string;
@@ -129,4 +130,7 @@ export interface TablaStocks extends TableNode {
   marca: string;
   precio: string;
   total: string;
+  stockPorDeposito: {
+    [depositoId: string]: string; // Cada depósito tiene un stock como string
+  };
 }

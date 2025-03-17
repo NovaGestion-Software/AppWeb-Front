@@ -30,7 +30,7 @@ export default function BusquedaStock({ data }: any) {
     });
 
     const ids = filtered.map((item: any) => item.id);
-    console.log("IDs Coincidentes:", ids);
+    //console.log("IDs Coincidentes:", ids);
 
     setIdsCoincidentes(ids);
     setIndiceSeleccionado(0); // Resetear la selección al primer ítem de la lista filtrada
