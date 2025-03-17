@@ -30,6 +30,26 @@ export default function TablaStock({ dataParaTabla }: TableProps<TableNode>) {
   const columnasTotales = columnasFijas + columnasDinamicas;
   const datosAgrupados = agruparPorProducto(dataParaTabla);
   let cantidadItems = datosAgrupados.length;
+  let totalGeneral = 0;
+  const totalesPorDeposito: { [deposito: string]: number } = {};
+
+  datosAgrupados.forEach((producto) => {
+    // Sumar cada depósito dentro del producto
+    for (const deposito in producto.stockPorDeposito) {
+      if (producto.stockPorDeposito.hasOwnProperty(deposito)) {
+        const stock = parseFloat(producto.stockPorDeposito[deposito]) || 0;
+
+        // Acumular en el total por depósito
+        totalesPorDeposito[deposito] = (totalesPorDeposito[deposito] || 0) + stock;
+
+        // Sumar al total general
+        totalGeneral += stock;
+      }
+    }
+  });
+
+  // console.log('Total por depósito:', totalesPorDeposito);
+  // console.log('Total general:', totalGeneral);
 
   const COLUMNS: TableColumn<TablaStocks>[] = [
     {
@@ -90,7 +110,7 @@ export default function TablaStock({ dataParaTabla }: TableProps<TableNode>) {
     z-index: 0; /* Asegurarse de que la tabla está debajo del footer */
   
     @media (min-width: 1280px) and (max-width: 1380px) {
-      width: 50rem; /* Ancho reducido */
+      width: 55rem; /* Ancho reducido */
       max-height: 350px; /* Altura máxima reducida */
       font-size: 12px; /* Tamaño de fuente más pequeño */
       height: 360px; /* Altura reducida para pantallas medianas */
@@ -154,6 +174,7 @@ export default function TablaStock({ dataParaTabla }: TableProps<TableNode>) {
     bottom: 0;
     padding: 8px;
     border-top: 1px solid #ccc;
+    
     background-color: #fff; /* Fondo sólido para ocultar el contenido de la tabla */
     text-align: right;
     font-size: 14px;
@@ -161,6 +182,7 @@ export default function TablaStock({ dataParaTabla }: TableProps<TableNode>) {
 
     &:last-child {
       border-right: none;
+      color: red;
     }
 
     &:nth-of-type(1) {
@@ -168,6 +190,13 @@ export default function TablaStock({ dataParaTabla }: TableProps<TableNode>) {
       background-color: #A5C9FF;
       font-weight: bold;
       border-bottom-left-radius: 8px; /* Redondeo en la esquina inferior izquierda */
+    }
+
+     /* Aplica color desde la columna 6 en adelante */
+    &:nth-of-type(n+6) {
+      background-color: #A5C9FF; 
+      border: 1px solid black; 
+      border-bottom: none;
     }
 
     @media (min-width: 1280px) and (max-width: 1380px) {
@@ -255,14 +284,22 @@ export default function TablaStock({ dataParaTabla }: TableProps<TableNode>) {
   const datosFooter: { [key: string]: string } = {
     id: cantidadItems.toString(),
   };
-
-  // Generamos columnas dinamicas segun deposito
-  for (let i = 1; i <= columnasTotales - 1; i++) {
+  // Llenamos las primeras 5 columnas fijas con valores vacíos
+  for (let i = 1; i <= 5; i++) {
     datosFooter[`columna${i}`] = '';
   }
 
-  // console.log(datosAgrupados);
+  // Insertamos los totales de los depósitos a partir de la columna 6
+  let columnaIndex = 5;
+  Object.keys(totalesPorDeposito).forEach((deposito) => {
+    datosFooter[`columna${columnaIndex}`] = totalesPorDeposito[deposito].toString();
+    columnaIndex++;
+  });
 
+  // Insertamos el total general en la última columna
+  datosFooter[`columna${columnaIndex}`] = totalGeneral.toString();
+
+  // console.log(datosFooter);
   return (
     <div className="flex justify-center w-full h-fit my-20">
       <TablaInforme<TablaStocks>
