@@ -27,7 +27,7 @@ export default function Router() {
               <Route path="ventas-hora" element={<VentasHoraView />} />
             </Route>
             <Route path="/cajas" element={<CajasView />} />
-            {/* <Route path="/stock-seccion" element={<StockPorSeccion />} /> */}
+            <Route path="/stock-seccion" element={<StockPorSeccion />} />
             <Route path="/configuracion" element={<ConfigView />} />
           </Route>
         </Route>

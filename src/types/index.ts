@@ -106,3 +106,27 @@ export interface VentaPorHora {
   //   totalOperaciones: number | string;
   //   totalPares: number | string;
 }
+
+export interface TableNode {
+  id: string | number; // ID único para cada fila
+}
+export interface TablaSecciones extends TableNode {
+  seccion: string;
+  nseccion: string;
+  rubros: { rubro: string; nrubro: string }[];
+}
+
+export interface TableColumn<T> {
+  label: string;
+  renderCell: (item: T) => React.ReactNode;
+  cellProps?: (item: T) => any;
+}
+
+export interface TablaStocks extends TableNode {
+  codigo: string;
+  talle: string;
+  descripcion: string;
+  marca: string;
+  precio: string;
+  total: string;
+}

@@ -7,6 +7,7 @@ interface ModalInformeProps {
   onClose: () => void;
   onConfirm?: () => void;
   disabled?: boolean;
+  disabled2?: boolean;
   children?: React.ReactNode;
   buttons: boolean;
 }
@@ -17,6 +18,7 @@ export default function ModalInforme({
   onClose,
   onConfirm,
   disabled,
+  disabled2,
   children,
   buttons,
 }: ModalInformeProps) {
@@ -74,7 +76,7 @@ export default function ModalInforme({
                   className="w-full rounded-md"
                   textClassName=""
                   size="md"
-                  disabled={!disabled}
+                  disabled={!disabled2}
                 />
               </div>
             )}

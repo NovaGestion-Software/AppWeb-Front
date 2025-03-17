@@ -55,11 +55,11 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
       href: "/cajas",
       icon: <MdOutlineAttachMoney />,
     },
-    // {
-    //   title: "Stock Por Seccion",
-    //   href: "/stock-seccion",
-    //   icon: <FaBoxesPacking />,
-    // },
+    {
+      title: "Stock Por Seccion",
+      href: "/stock-seccion",
+      icon: <FaBoxesPacking />,
+    },
     {
       title: "Informes", // Menú desplegable principal
       icon: <BiBarChartSquare />,
