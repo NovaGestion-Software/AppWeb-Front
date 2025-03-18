@@ -105,12 +105,12 @@ export default function FiltroModal({
               size="md"
             />
           </div>
-          <div className="w-[27rem] overflow-auto border border-gray-300 rounded-lg">
+          <div className="w-[27rem] h-[25rem] overflow-auto border border-gray-300 rounded-lg">
             <table className="w-full border-collapse">
               <thead className="bg-gray-200 sticky top-0">
                 <tr>
-                  <th className="p-2 w-10"></th>
-                  <th className="p-2 text-left">Detalle</th>
+                  <th className="p-1 w-10"></th>
+                  <th className="p-1 text-left">Detalle</th>
                 </tr>
               </thead>
               <tbody>
@@ -120,17 +120,17 @@ export default function FiltroModal({
                     className="hover:bg-blue-600 hover:bg-opacity-50 text-black font-semibold border-b border-gray-200"
                   >
                     <td className="p-2 text-center">
-                      <label className="cursor-pointer w-full h-full flex items-center justify-center">
+                      <label className="cursor-pointer w-full h-fit flex items-center justify-center">
                         <input
                           type="checkbox"
-                          className="w-5 h-5 cursor-pointer"
+                          className="w-3 h-3 cursor-pointer"
                           checked={itemsSeleccionadasModal.includes(item)}
                           onChange={() => handleCheckboxChange(item)}
                           id={`checkbox-${index}`} // ID único para el checkbox
                         />
                       </label>
                     </td>
-                    <td className="p-2 cursor-pointer" onClick={() => handleCheckboxChange(item)}>
+                    <td className="p-1 cursor-pointer" onClick={() => handleCheckboxChange(item)}>
                       {item}
                     </td>
                   </tr>
