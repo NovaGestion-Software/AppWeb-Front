@@ -35,6 +35,8 @@ export default function BusquedaStock({ data }: any) {
     setDepositosSeleccionadas,
   } = useStockPorSeccion();
 
+  useEffect(() => {}, [data]);
+
   useEffect(() => {
     if (codigoBusqueda.length <= 0 && textoBusqueda.length <= 0) {
       setBuscado(false);

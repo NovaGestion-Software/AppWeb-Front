@@ -28,7 +28,7 @@ export default function TablaSeccionRubro({
     rubrosSeleccionados,
     rubrosToFetch,
     seccionesToFetch,
-    stockRenderizado,
+    // stockRenderizado,
     setSeccionesToFetch,
     setRubrosToFetch,
     setRubrosSeleccionados,

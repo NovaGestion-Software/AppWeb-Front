@@ -31,6 +31,7 @@ export default function TablaStock({ datosParaTabla }: TableProps<TableNode>) {
   } = useStockPorSeccion();
 
   // console.log(stockRenderizado);
+  useEffect(() => {}, [datosParaTabla]);
 
   let idCounter = 0;
   const depositos = obtenerDepositos(stockRenderizado);
