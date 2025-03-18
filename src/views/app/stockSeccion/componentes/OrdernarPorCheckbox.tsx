@@ -1,4 +1,4 @@
-import { useStockPorSeccion } from '@/store/useStockPorSeccion';
+import { useStockPorSeccion } from '@/views/app/stockSeccion/store/useStockPorSeccion';
 import { useEffect, useState } from 'react';
 import { useFiltros } from '../hooks/useFiltros';
 import CheckboxInput from '@/Components/ui/Inputs/Checkbox';

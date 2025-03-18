@@ -1,6 +1,6 @@
 import { TablaStocks, TableColumn } from '@/types';
 import TablaInforme from '../../informes/_components/TablaInforme';
-import { useStockPorSeccion } from '@/store/useStockPorSeccion';
+import { useStockPorSeccion } from '@/views/app/stockSeccion/store/useStockPorSeccion';
 import { useEffect } from 'react';
 import { TableNode } from '@table-library/react-table-library/types/table';
 
@@ -23,6 +23,7 @@ interface TableProps<T extends TableNode> {
 
 export default function TablaStock({ datosParaTabla }: TableProps<TableNode>) {
   const {
+    footer,
     indiceSeleccionado,
     idsCoincidentes,
     stockRenderizado,
@@ -349,7 +350,7 @@ export default function TablaStock({ datosParaTabla }: TableProps<TableNode>) {
   // Insertamos el total general en la última columna
   datosFooter[`columna${columnaIndex}`] = totalGeneral.toString();
 
-  // console.log(stockRenderizado);
+  console.log(footer);
   return (
     <>
       <TablaInforme
@@ -357,7 +358,7 @@ export default function TablaStock({ datosParaTabla }: TableProps<TableNode>) {
         datosParaTabla={datosAgrupados}
         procesado={false}
         estilos={customTheme}
-        footer={true}
+        footer={footer}
         datosFooter={datosFooter}
         idsCoincidentes={idsCoincidentes}
         indiceSeleccionado={indiceSeleccionado}

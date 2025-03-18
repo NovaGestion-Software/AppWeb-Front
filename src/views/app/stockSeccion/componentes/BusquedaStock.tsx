@@ -1,6 +1,6 @@
 import ActionButton from '@/Components/ui/Buttons/ActionButton';
 import FlexibleInputField from '@/Components/ui/Inputs/FlexibleInputs';
-import { useStockPorSeccion } from '@/store/useStockPorSeccion';
+import { useStockPorSeccion } from '@/views/app/stockSeccion/store/useStockPorSeccion';
 import { useEffect, useRef, useState } from 'react';
 import { BiSearch } from 'react-icons/bi';
 import { TbArrowBigRightLinesFilled } from 'react-icons/tb';
@@ -33,6 +33,7 @@ export default function BusquedaStock({ data }: any) {
     setTemporadasSeleccionadas,
     setDepositosDisponibles,
     setDepositosSeleccionadas,
+    setFooter,
   } = useStockPorSeccion();
 
   useEffect(() => {}, [data]);
@@ -150,6 +151,7 @@ export default function BusquedaStock({ data }: any) {
       setRubrosSeleccionados([]);
       setRubrosToFetch([]);
       setStatus('idle');
+      setFooter(false);
 
       setCheckboxSeleccionados('grupo1', null);
       setCheckboxSeleccionados('grupo2', null);

@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
-import { useStockPorSeccion } from '@/store/useStockPorSeccion';
+import { useStockPorSeccion } from '@/views/app/stockSeccion/store/useStockPorSeccion';
 import { obtenerProductos } from '@/services/ApiPhpService';
 import { TablaSecciones, TablaStocks, TableColumn } from '@/types';
 import TablaExpandible from './TablaExpandible';
@@ -24,6 +24,8 @@ export default function TablaSeccionRubro({
 
   // console.log(datos);
   const {
+    footer,
+    setFooter,
     seccionesSeleccionadas,
     rubrosSeleccionados,
     rubrosToFetch,
@@ -140,6 +142,7 @@ export default function TablaSeccionRubro({
       const arrayDeRubros: TablaStocks[] = Object.values(data.data);
       // console.log(arrayDeRubros);
       setStockRenderizado(arrayDeRubros);
+      setFooter(true);
       // console.log(datos);
       // setDatos(data.data);
       // console.log(datos);
@@ -164,6 +167,11 @@ export default function TablaSeccionRubro({
     }
   }, [rubrosSeleccionados, rubrosToFetch]);
 
+  // Usar useEffect para escuchar cambios en el estado de `footer`
+  // useEffect(() => {
+  //   console.log('footer actualizado:', footer);
+  // }, [footer]);
+
   const handleCloseModal = () => {
     // console.log("handle close");
     clearRubrosSeleccionados();
@@ -179,6 +187,7 @@ export default function TablaSeccionRubro({
   }
 
   const handleModalConfirm = () => {
+    // setFooter(true);
     mutate();
     handleConfirm(seccionesSeleccionadas ?? {}, rubrosSeleccionados ?? []);
     setShowRubrosModal(false);

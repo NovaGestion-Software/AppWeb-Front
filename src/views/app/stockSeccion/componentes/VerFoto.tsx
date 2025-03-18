@@ -1,7 +1,7 @@
 import ActionButton from '@/Components/ui/Buttons/ActionButton';
 import { BiZoomIn } from 'react-icons/bi';
 import { useState } from 'react';
-import { useStockPorSeccion } from '@/store/useStockPorSeccion';
+import { useStockPorSeccion } from '@/views/app/stockSeccion/store/useStockPorSeccion';
 import CheckboxInput from '@/Components/ui/Inputs/Checkbox';
 
 export default function VerFoto() {

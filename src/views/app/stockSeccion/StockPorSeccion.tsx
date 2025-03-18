@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { TablaSecciones } from '@/types';
-import { useStockPorSeccion } from '@/store/useStockPorSeccion';
+import { useStockPorSeccion } from '@/views/app/stockSeccion/store/useStockPorSeccion';
 import { obtenerRubrosDisponibles } from '@/services/ApiPhpService';
 import ViewTitle from '@/Components/ui/Labels/ViewTitle';
 import HerramientasComponent from '../informes/ventasXHora/components/HerramientasComponent';

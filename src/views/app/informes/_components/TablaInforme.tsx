@@ -17,7 +17,7 @@ import { getTheme, DEFAULT_OPTIONS } from '@table-library/react-table-library/ma
 import { useTheme } from '@table-library/react-table-library/theme';
 import { useVentasHoraStore } from '@/store/useVentasHoraStore';
 import { ClipLoader } from 'react-spinners';
-import { useStockPorSeccion } from '@/store/useStockPorSeccion';
+import { useStockPorSeccion } from '@/views/app/stockSeccion/store/useStockPorSeccion';
 import { TableColumn, TableNode } from '@/types';
 
 interface TablaFooterProps {
@@ -46,7 +46,7 @@ interface TableProps<T extends TableNode> {
   columnas: TableColumn<T>[];
   datosParaTabla: TableNode[];
   estilos: object;
-  getCellProps?: (item: T, column: keyof T | string) => { style: CSSProperties }; // Estilos específicos para cada celda
+  getCellProps?: (item: T, column: keyof T | string) => { style: CSSProperties };
   footer?: boolean;
   datosFooter?: {};
   procesado: boolean;

@@ -12,6 +12,9 @@ interface CheckboxState {
 type StockPorSeccionProps = {
   status: 'error' | 'idle' | 'pending' | 'success' | null;
   // MODAL PARA SELECCION DE SECCION Y RUBRO
+  footer: boolean;
+  setFooter: (footer: boolean) => void; // El setter para cambiar el estado de `footer`
+
   seccionesSeleccionadas: { [key: string]: boolean } | null;
   rubrosSeleccionados: string[];
   seccionesToFetch: { [key: string]: boolean } | null;
@@ -75,7 +78,8 @@ export const useStockPorSeccion = create<StockPorSeccionProps>()(
   persist(
     (set) => ({
       status: 'idle',
-
+      footer: true,
+      setFooter: (footer: boolean) => set({ footer }),
       seccionesSeleccionadas: null,
       rubrosSeleccionados: [],
       seccionesToFetch: null,
