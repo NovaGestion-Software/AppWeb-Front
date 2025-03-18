@@ -92,37 +92,6 @@ export default function TablaSeccionRubro({
       border-bottom: 1px solid #ccc;
         &.called { background-color: #ffecb3; } 
     `,
-
-    // FooterCell: `
-    //   position: sticky;
-    //   bottom: 0px;
-    //   padding: 8px;
-    //   border-right: 1px solid #ccc;
-    //   background-color: #fff;
-    //   text-align: right;
-
-    //   &:last-child {
-    //     border-right: none;
-    //   }
-
-    //   &:nth-of-type(3) {
-    //     border-right: 1px solid black;
-    //     background-color: #A5C9FF;
-    //     font-weight: bold;
-    //   }
-
-    //   &:nth-of-type(5) {
-    //     border-right: 1px solid black;
-    //     background-color: #A5C9FF;
-    //     font-weight: bold;
-    //   }
-
-    //   &:nth-of-type(7) {
-    //     border-right: 1px solid black;
-    //     background-color: #A5C9FF;
-    //     font-weight: bold;
-    //   }
-    // `,
   };
 
   const { mutate } = useMutation({

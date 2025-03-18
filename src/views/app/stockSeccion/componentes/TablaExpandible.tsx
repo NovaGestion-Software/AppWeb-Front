@@ -8,9 +8,6 @@ import {
   Body,
   Row,
   Cell,
-  // Footer,
-  // FooterRow,
-  // FooterCell,
   Data,
   TableNode,
 } from '@table-library/react-table-library/table';
@@ -19,35 +16,12 @@ import { useTheme } from '@table-library/react-table-library/theme';
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa'; // Importar íconos de flecha
 import { TableColumn } from '@/types';
 import CheckboxInput from '@/Components/ui/Inputs/Checkbox';
-// interface TablaFooterProps {
-//   datos?: {
-//     [key: string]: number | string;
-//   };
-// }
-
-// const TablaFooter: React.FC<TablaFooterProps> = ({ datos = {} }) => {
-//   if (!Object.keys(datos).length) return null;
-
-//   return (
-//     <Footer layout={{ fixedHeader: true }}>
-//       <FooterRow>
-//         {Object.entries(datos).map(([_, value], index) => (
-//           <FooterCell key={index}>
-//             {typeof value === 'number' ? value.toLocaleString('es-AR') : value}
-//           </FooterCell>
-//         ))}
-//       </FooterRow>
-//     </Footer>
-//   );
-// };
 
 interface TableProps<T extends TableNode> {
   columnas: TableColumn<T>[];
   datosParaTabla: T[];
   estilos: object;
   getCellProps?: (item: T, column: keyof T | string) => { style: CSSProperties };
-  // footer?: boolean;
-  // datosFooter?: {};
   procesado: boolean;
   subItemsProperty: string;
   subItemKeyProperty: string;
@@ -65,8 +39,6 @@ export default function TablaExpandible<T extends TableNode>({
   columnas,
   datosParaTabla,
   estilos,
-  // footer,
-  // datosFooter,
   procesado,
   subItemsProperty,
   subItemKeyProperty,
@@ -91,6 +63,48 @@ export default function TablaExpandible<T extends TableNode>({
     onChange: onSelectChange,
   });
 
+  const elementosCoincidentes = localSelectedSubItems.filter((item) =>
+    subItemToFetch.includes(String(item))
+  );
+
+  // FUNC SELECCIONAR LA PRIMERA FILA AL RENDERIZAR DATOS.
+  useEffect(() => {
+    if (procesado && datosParaTabla.length > 0 && !currentHorario) {
+      const firstItem = datosParaTabla[0];
+      setCurrentHorario(firstItem);
+      select.fns.onToggleByIdExclusively(firstItem.seccion);
+      setIsActive(true);
+    }
+  }, [procesado, datosParaTabla, select, currentHorario]);
+
+  // FOCUS EN TABLA
+  useEffect(() => {
+    if (isActive && tableRef.current) {
+      tableRef.current.focus();
+    }
+  }, [isActive]);
+
+  useEffect(() => {
+    // Si hay rubros (subitems) guardados en la store, los seteamos en el estado local
+    if (subItemToFetch.length > 0) {
+      setLocalSelectedSubItems(subItemToFetch);
+    }
+
+    // Si hay secciones (items) guardadas en la store, los seteamos en el estado local
+    if (itemToFetch && Object.keys(itemToFetch).length > 0) {
+      setLocalSelectedItems(itemToFetch);
+    }
+  }, [subItemToFetch, itemToFetch]);
+
+  // use efffect para actualizar la store de items seleccionados
+  useEffect(() => {
+    setItemsStore(localSelectedItems);
+  }, [localSelectedItems]); // Sincronizar store cuando cambie el estado local
+
+  useEffect(() => {
+    setSubItemsStore(localSelectedSubItems);
+  }, [localSelectedSubItems]); // Sincronizar store cuando cambie el estado local
+
   // FUNC SELECCIONAR
   function onSelectChange(action: any, state: any) {
     console.log(action);
@@ -109,23 +123,6 @@ export default function TablaExpandible<T extends TableNode>({
       setExpandedIds([...expandedIds, item.seccion]);
     }
   };
-
-  // FUNC SELECCIONAR LA PRIMERA FILA AL RENDERIZAR DATOS.
-  useEffect(() => {
-    if (procesado && datosParaTabla.length > 0 && !currentHorario) {
-      const firstItem = datosParaTabla[0];
-      setCurrentHorario(firstItem);
-      select.fns.onToggleByIdExclusively(firstItem.seccion);
-      setIsActive(true);
-    }
-  }, [procesado, datosParaTabla, select, currentHorario]);
-
-  // FOCUS EN TABLA
-  useEffect(() => {
-    if (isActive && tableRef.current) {
-      tableRef.current.focus();
-    }
-  }, [isActive]);
 
   const handleTableClick = () => {
     setIsActive(true);
@@ -223,31 +220,6 @@ export default function TablaExpandible<T extends TableNode>({
   //     ? "called"
   //     : ""
   // }
-
-  useEffect(() => {
-    // Si hay rubros (subitems) guardados en la store, los seteamos en el estado local
-    if (subItemToFetch.length > 0) {
-      setLocalSelectedSubItems(subItemToFetch);
-    }
-
-    // Si hay secciones (items) guardadas en la store, los seteamos en el estado local
-    if (itemToFetch && Object.keys(itemToFetch).length > 0) {
-      setLocalSelectedItems(itemToFetch);
-    }
-  }, [subItemToFetch, itemToFetch]);
-
-  // use efffect para actualizar la store de items seleccionados
-  useEffect(() => {
-    setItemsStore(localSelectedItems);
-  }, [localSelectedItems]); // Sincronizar store cuando cambie el estado local
-
-  useEffect(() => {
-    setSubItemsStore(localSelectedSubItems);
-  }, [localSelectedSubItems]); // Sincronizar store cuando cambie el estado local
-
-  const elementosCoincidentes = localSelectedSubItems.filter((item) =>
-    subItemToFetch.includes(String(item))
-  );
 
   return (
     <div
