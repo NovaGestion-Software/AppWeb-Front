@@ -12,8 +12,6 @@ export default function BusquedaStock({ data }: any) {
   const [textoBusqueda, setTextoBusqueda] = useState<string>('');
   const tablaRef = useRef<HTMLTableElement | null>(null);
 
-  // console.log(codigoBusqueda);
-  // console.log(textoBusqueda);
   const {
     buscado,
     setBuscado,
@@ -74,8 +72,6 @@ export default function BusquedaStock({ data }: any) {
       setIndiceSeleccionado(nuevoIndice);
     }
   };
-
-  // console.log(buscado);
 
   const handleSearch = () => {
     // console.log(buscado);
@@ -178,7 +174,7 @@ export default function BusquedaStock({ data }: any) {
   return (
     <div className="flex gap-1 items-center border py-1.5 px-2 rounded-lg bg-slate-50">
       <FlexibleInputField
-        placeholder="Codigo"
+        placeholder="Código"
         label="Buscar"
         labelWidth="3rem"
         labelClassName="text-start w-12 text-xs "
@@ -196,7 +192,7 @@ export default function BusquedaStock({ data }: any) {
       />
 
       <FlexibleInputField
-        placeholder="Descripcion o Marca"
+        placeholder="Descripción o Marca"
         inputClassName="w-52 text-xs"
         disabled={false}
         containerWidth="w-56 "

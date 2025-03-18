@@ -1,8 +1,8 @@
+import { useEffect } from 'react';
+import { useStockPorSeccion } from '@/views/app/stockSeccion/store/useStockPorSeccion';
+import { TableNode } from '@table-library/react-table-library/types/table';
 import { TablaStocks, TableColumn } from '@/types';
 import TablaInforme from '../../informes/_components/TablaInforme';
-import { useStockPorSeccion } from '@/views/app/stockSeccion/store/useStockPorSeccion';
-import { useEffect } from 'react';
-import { TableNode } from '@table-library/react-table-library/types/table';
 
 interface ProductoAgrupado {
   id: string;
@@ -34,9 +34,6 @@ export default function TablaStock({ datosParaTabla }: TableProps<TableNode>) {
   } = useStockPorSeccion();
 
   useEffect(() => {}, [datosParaTabla]);
-
-  // const depositos = obtenerDepositos(stockRenderizado);
-  // console.log(depositos);
 
   let idCounter = 0;
 
@@ -80,7 +77,7 @@ export default function TablaStock({ datosParaTabla }: TableProps<TableNode>) {
 
   const COLUMNS: TableColumn<TablaStocks>[] = [
     {
-      label: 'Codigo',
+      label: 'Código',
       renderCell: (item: TablaStocks) => item.codigo, // Renderiza los rubros como una lista de elementos JSX
     },
     {
@@ -88,7 +85,7 @@ export default function TablaStock({ datosParaTabla }: TableProps<TableNode>) {
       renderCell: (item: TablaStocks) => item.talle,
     },
     {
-      label: 'Descripcion',
+      label: 'Descripción',
       renderCell: (item: TablaStocks) => item.descripcion,
     },
     {

@@ -1,6 +1,6 @@
-import CheckboxInput from '@/Components/ui/Inputs/Checkbox';
-import { useStockPorSeccion } from '@/views/app/stockSeccion/store/useStockPorSeccion';
 import { useState } from 'react';
+import { useStockPorSeccion } from '@/views/app/stockSeccion/store/useStockPorSeccion';
+import CheckboxInput from '@/Components/ui/Inputs/Checkbox';
 
 export default function FiltrarSegunLista() {
   const [disabled, setDisabled] = useState(false);
