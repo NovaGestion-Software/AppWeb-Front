@@ -85,7 +85,6 @@ export default function TablaSeccionRubro({
     `,
 
     Row: `
-      height: 14px;
       &:nth-of-type(odd) { background-color: #fff; }
       &:nth-of-type(even) { background-color: #eaf5fd; }
       

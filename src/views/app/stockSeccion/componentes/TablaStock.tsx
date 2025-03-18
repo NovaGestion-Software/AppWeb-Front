@@ -329,7 +329,7 @@ export default function TablaStock({ datosParaTabla }: TableProps<TableNode>) {
         });
       }
     });
-    console.log(depositos);
+    // console.log(depositos);
 
     return Array.from(depositos.values()); // Retorna un array de objetos únicos
   }

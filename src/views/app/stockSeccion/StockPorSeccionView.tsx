@@ -28,7 +28,6 @@ export default function StockPorSeccionView() {
   // state para rubros
   const [datos, setDatos] = useState<TablaSecciones[]>([]);
 
-  //STORE
   const {
     stockRenderizado,
     marcasDisponibles,
@@ -45,14 +44,12 @@ export default function StockPorSeccionView() {
     setTemporadasSeleccionadas,
   } = useStockPorSeccion();
 
-  // console.log(depositosDisponibles);
-
   // TABLA PARA RUBROS
   const { data: rubrosDis } = useQuery({
     queryKey: ['rubros-seccion'],
     queryFn: obtenerRubrosDisponibles,
     refetchOnWindowFocus: false,
-    staleTime: 1000 * 60 * 5, // Datos frescos por 5 minutos
+    // staleTime: 1000 * 60 * 5, // Datos frescos por 5 minutos
   });
 
   useEffect(() => {
@@ -61,7 +58,22 @@ export default function StockPorSeccionView() {
     }
   }, [rubrosDis]);
 
-  console.log(depositosDisponibles);
+  useEffect(() => {
+    console.log(stockRenderizado);
+    if (stockRenderizado && stockRenderizado.length > 0) {
+      const marcasUnicas = [...new Set(stockRenderizado.map((item) => item.marca))];
+      // console.log(marcasUnicas);
+      setMarcasDisponibles(marcasUnicas); // Actualiza el estado con las marcas únicas
+    }
+  }, [stockRenderizado]);
+
+  // Agrega un log para verificar el valor de marcasDisponibles después de actualizar
+  useEffect(() => {
+    console.log(marcasDisponibles); // Verifica las marcas después de que el estado cambia
+  }, [marcasDisponibles]);
+
+  // console.log(stockRenderizado);
+  // console.log(marcasDisponibles);
 
   return (
     <div className="w-full h-full px-4 pt-0 overflow-hidden">

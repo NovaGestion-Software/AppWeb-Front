@@ -25,6 +25,8 @@ export default function FiltroModal({
 }: FiltroModalProps) {
   const [itemsSeleccionadasModal, setItemsSeleccionadasModal] = useState<string[]>([]);
 
+  // console.log(itemsDisponibles);
+
   useEffect(() => {
     const datoUnico = Array.from(new Set(datos));
 
@@ -126,7 +128,7 @@ export default function FiltroModal({
                           className="w-3 h-3 cursor-pointer"
                           checked={itemsSeleccionadasModal.includes(item)}
                           onChange={() => handleCheckboxChange(item)}
-                          id={`checkbox-${index}`} // ID único para el checkbox
+                          id={`checkbox-${index}`}
                         />
                       </label>
                     </td>
