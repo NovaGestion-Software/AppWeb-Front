@@ -22,7 +22,7 @@ export default function HerramientasInforme<T>({
   }, [data]);
 
   return (
-    <div className="flex items-center justify-center gap-6 h-10 py-2 px-4 bg-white rounded-lg 2xl:h-14">
+    <div className="flex items-center justify-center gap-6 py-2 h-14  px-4 bg-white w-fit rounded-lg border">
       {children}
       <ActionButton
         onClick={handleExportExcel}

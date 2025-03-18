@@ -1,9 +1,16 @@
-import { TablaStocks } from '@/types';
-import { create } from 'zustand';
-import { createJSONStorage, persist } from 'zustand/middleware';
+import { TablaStocks } from "@/types";
+import { create } from "zustand";
+import { createJSONStorage, persist } from "zustand/middleware";
+
+interface CheckboxState {
+  grupo1: string | null; // Talles o Artículos
+  grupo2: string | null; // Stock (Con Stock, Todos, Negativos)
+  grupo3: string | null; // Listas (CONTADO, LISTA 2, LISTA 3)
+  grupo4: string | null; // Ordenar (Código, Marca, Descripción)
+}
 
 type StockPorSeccionProps = {
-  status: 'error' | 'idle' | 'pending' | 'success' | null;
+  status: "error" | "idle" | "pending" | "success" | null;
   // MODAL PARA SELECCION DE SECCION Y RUBRO
   seccionesSeleccionadas: { [key: string]: boolean } | null;
   rubrosSeleccionados: string[];
@@ -19,14 +26,23 @@ type StockPorSeccionProps = {
   clearRubrosFetch: () => void;
 
   // TABLA STOCK
+  // tabla stock como la informacion despues de la peticion, y tabla renderizada como la informacion ordenada
+  // el tema es que despues de data renderizada sea vacia como va a volver a llenarse?
   tablaStock: TablaStocks[];
   setTablaStock: (data: TablaStocks[]) => void;
+
+  stockRenderizado: TablaStocks[];
+  setStockRenderizado: (data: TablaStocks[]) => void;
 
   //BUSQUEDA TABLA STOCK
   indiceSeleccionado: number;
   idsCoincidentes: (string | number)[];
   setIndiceSeleccionado: (indice: number) => void;
   setIdsCoincidentes: (ids: (string | number)[]) => void;
+
+  // RE ORDENAMIENTO DE STOCK
+  checkboxSeleccionados: CheckboxState;
+  setCheckboxSeleccionados: (grupo: keyof CheckboxState, value: string | null) => void;
 
   // MARCAS MODAL
   marcasDisponibles: string[];
@@ -52,19 +68,22 @@ type StockPorSeccionProps = {
   buscado: boolean;
   setBuscado: (valor: boolean) => void;
 
-  setStatus: (status: 'error' | 'idle' | 'pending' | 'success' | null) => void;
+  setStatus: (status: "error" | "idle" | "pending" | "success" | null) => void;
 };
+
+
 
 export const useStockPorSeccion = create<StockPorSeccionProps>()(
   persist(
     (set) => ({
-      status: 'idle',
+      status: "idle",
 
       seccionesSeleccionadas: null,
       rubrosSeleccionados: [],
       seccionesToFetch: null,
       rubrosToFetch: [],
-      setSeccionesSeleccionadas: (data) => set({ seccionesSeleccionadas: data }),
+      setSeccionesSeleccionadas: (data) =>
+        set({ seccionesSeleccionadas: data }),
       setRubrosSeleccionados: (data) => set({ rubrosSeleccionados: data }),
       setSeccionesToFetch: (data) => set({ seccionesToFetch: data }),
       setRubrosToFetch: (data) => set({ rubrosToFetch: data }),
@@ -76,42 +95,60 @@ export const useStockPorSeccion = create<StockPorSeccionProps>()(
       // TABLA STOCK
       tablaStock: [] as TablaStocks[],
       setTablaStock: (data: TablaStocks[]) => set({ tablaStock: data }),
-
+      stockRenderizado: [] as TablaStocks[],
+      setStockRenderizado: (data: TablaStocks[]) => set({ stockRenderizado: data }),
       // BUSQUEDA TABLA STOCK
       indiceSeleccionado: 0,
       idsCoincidentes: [],
-
+    
       // Funciones para actualizar los estados
       setIndiceSeleccionado: (indice) => set({ indiceSeleccionado: indice }),
       setIdsCoincidentes: (ids) => set({ idsCoincidentes: ids }),
+
+      // RE ORDENAMIENTO STOCK
+      checkboxSeleccionados: {
+        grupo1: null,
+        grupo2: "Todos",
+        grupo3: null,
+        grupo4: null,
+      },
+      setCheckboxSeleccionados: (grupo, value) =>
+        set((state) => ({
+          checkboxSeleccionados: {
+            ...state.checkboxSeleccionados,
+            [grupo]: value,
+          },
+        })),
 
       // Marcas Modal
       marcasDisponibles: [],
       setMarcasDisponibles: (marca) => set({ marcasDisponibles: marca }),
       marcasSeleccionadas: [],
-      setMarcasSeleccionadas: (data: string[]) => set({ marcasSeleccionadas: data }),
+      setMarcasSeleccionadas: (data: string[]) =>
+        set({ marcasSeleccionadas: data }),
       clearMarcasSeleccionadas: () => set({ marcasSeleccionadas: [] }),
 
       // Temporadas Modal
       temporadasDisponibles: [],
-      setTemporadasDisponibles: (temporada) => set({ temporadasDisponibles: temporada }),
+      setTemporadasDisponibles: (temporada) =>set({ temporadasDisponibles: temporada }),
       temporadasSeleccionadas: [],
-      setTemporadasSeleccionadas: (data: string[]) => set({ temporadasSeleccionadas: data }),
+      setTemporadasSeleccionadas: (data: string[]) =>set({ temporadasSeleccionadas: data }),
       clearTemporadasSeleccionadas: () => set({ temporadasSeleccionadas: [] }),
 
       //Depositos Modal
       depositosDisponibles: [],
-      setDepositosDisponibles: (deposito) => set({ depositosDisponibles: deposito }),
+      setDepositosDisponibles: (deposito) =>  set({depositosDisponibles: deposito }),
       depositosSeleccionadas: [],
-      setDepositosSeleccionadas: (data: string[]) => set({ depositosSeleccionadas: data }),
+      setDepositosSeleccionadas: (data: string[]) =>set({ depositosSeleccionadas: data }),
       clearDepositosSeleccionadas: () => set({ depositosSeleccionadas: [] }),
 
       //busqueda
-      buscado: false, // Valor inicial
-      setBuscado: (valor) => set({ buscado: valor }),
+      buscado: false,  // Valor inicial
+      setBuscado: (valor) => set({ buscado: valor }), 
+    
     }),
     {
-      name: 'stock-xseccion-storage',
+      name: "stock-xseccion-storage",
       storage: createJSONStorage(() => sessionStorage),
     }
   )

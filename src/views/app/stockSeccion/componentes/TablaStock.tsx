@@ -1,9 +1,8 @@
-import { TablaStocks, TableColumn } from '@/types';
-import TablaInforme from '../../informes/_components/TablaInforme';
-// import TablaInforme1 from '../../informes/_components/TablaInforme1';
-// import { useEffect } from 'react';
-import { TableNode } from '@table-library/react-table-library/types/table';
-// import { useStockPorSeccion } from '@/store/useStockPorSeccion';
+import { TablaStocks, TableColumn } from "@/types";
+import TablaInforme from "../../informes/_components/TablaInforme";
+import { useStockPorSeccion } from "@/store/useStockPorSeccion";
+import { useEffect } from "react";
+import { TableNode } from "@table-library/react-table-library/types/table";
 
 interface ProductoAgrupado {
   id: string;
@@ -16,40 +15,30 @@ interface ProductoAgrupado {
   total: string;
 }
 
+
 interface TableProps<T extends TableNode> {
-  dataParaTabla: T[];
+  datosParaTabla: T[];
   idsCoincidentes?: (string | number)[]; // Prop opcional
   indiceSeleccionado?: number; // Prop opcional
 }
-
-export default function TablaStock({ dataParaTabla }: TableProps<TableNode>) {
+export default function TablaStock({datosParaTabla}: TableProps<TableNode>) {
   let idCounter = 0;
-  const depositos = obtenerDepositos(dataParaTabla);
-  // const columnasFijas = 6;
-  // const columnasDinamicas = depositos.size;
-  // const columnasTotales = columnasFijas + columnasDinamicas;
-  const datosAgrupados = agruparPorProducto(dataParaTabla);
+  const depositos = obtenerDepositos(datosParaTabla);
+  const columnasFijas = 6;
+  const columnasDinamicas = depositos.size;
+  const columnasTotales = columnasFijas + columnasDinamicas;
+  const datosAgrupados = agruparPorProducto(datosParaTabla);
   let cantidadItems = datosAgrupados.length;
-  let totalGeneral = 0;
-  const totalesPorDeposito: { [deposito: string]: number } = {};
-
-  datosAgrupados.forEach((producto) => {
-    // Sumar cada depósito dentro del producto
-    for (const deposito in producto.stockPorDeposito) {
-      if (producto.stockPorDeposito.hasOwnProperty(deposito)) {
-        const stock = parseFloat(producto.stockPorDeposito[deposito]) || 0;
-
-        // Acumular en el total por depósito
-        totalesPorDeposito[deposito] = (totalesPorDeposito[deposito] || 0) + stock;
-
-        // Sumar al total general
-        totalGeneral += stock;
-      }
+  const { indiceSeleccionado, idsCoincidentes,setTablaStock, setStockRenderizado, stockRenderizado} = useStockPorSeccion()
+  let setData = true
+  // console.log('tabla', tablaStock)
+  useEffect(() => {
+    if(setData){
+      setTablaStock(datosAgrupados)
+      setStockRenderizado(datosAgrupados)
     }
-  });
-
-  // console.log('Total por depósito:', totalesPorDeposito);
-  // console.log('Total general:', totalGeneral);
+  },[setData])
+  
 
   const COLUMNS: TableColumn<TablaStocks>[] = [
     {
@@ -73,7 +62,7 @@ export default function TablaStock({ dataParaTabla }: TableProps<TableNode>) {
       renderCell: (item: TablaStocks) => item.precio,
     },
     // Insertar columnas de depósitos dinamicamente
-    ...Array.from(obtenerDepositos(dataParaTabla)).map((depositoId) => ({
+    ...Array.from(obtenerDepositos(datosParaTabla)).map((depositoId) => ({
       label: `${depositoId}`,
       renderCell: (item: TablaStocks) => {
         // Buscar el stock correspondiente a este depósito
@@ -90,153 +79,113 @@ export default function TablaStock({ dataParaTabla }: TableProps<TableNode>) {
 
   const customTheme = {
     Table: `
-      grid-template-columns: 
-          minmax(80px, 100px)       /* CODIGO */
-          minmax(50px, 70px)       /* TALLE */
-          minmax(200px, 300px)     /* DESCRIPCION */
-          minmax(100px, 150px)     /* MARCA */
-          minmax(90px, 150px)      /* PRECIO */
-          ${'minmax(70px, 90px)'.repeat(depositos.size)} /* DEPOSITOS */
-          minmax(80px, 100px);      /* TOTAL */
-      width: 70rem;
-      max-height: 550px; /* Reducir la altura máxima para dejar espacio al footer */
-      overflow-y: auto; /* Habilitar scroll vertical */
-      scrollbar-width: thin;
-      font-variant-numeric: tabular-nums;
-      font-size: 14px; /* Tamaño de fuente por defecto */
-      margin-bottom: 40px; /* Espacio para el footer */
-      
-    
-      @media (min-width: 1280px) and (max-width: 1380px) {
-        width: 55rem; /* Ancho reducido */
-        max-height: 350px; /* Altura máxima reducida */
-        font-size: 12px; /* Tamaño de fuente más pequeño */
-        height: 360px; /* Altura reducida para pantallas medianas */
-        margin-bottom: 10px; /* Espacio reducido para el footer */
-      }
-    `,
-
-    HeaderCell: `
-      background: #2973B2;
-      color: white;
-      height: 30px; /* Altura por defecto */
-      font-size: 14px; /* Tamaño de fuente por defecto */
-      padding: 14px; /* Padding por defecto */
-      border-top: 1px solid black; /* Borde superior */
-      border-bottom: 1px solid black; /* Borde superior */
-      
-      &:first-child {
-        border-top-left-radius: 12px; /* Solo el borde superior izquierdo tendrá el radio */
-        border-left: 1px solid black; /* Borde izquierdo */
-      }
-
-      &:last-child {
-        border-top-right-radius: 12px; /* Solo el borde superior izquierdo tendrá el radio */
-        border-right: 1px solid black; /* Borde derecho */
-      }
-
-      &:nth-of-type(n+3) {
-        text-align: center;
-      }
-
-      @media (min-width: 1280px) and (max-width: 1380px) {
-        height: 20px; /* Altura reducida */
-        font-size: 12px; /* Tamaño de fuente más pequeño */
-        padding: 8px; /* Padding reducido */
-      }
-    `,
-
-    Cell: `
-      padding: 6px; /* Padding por defecto */
-      border-right: 1px solid #ccc; /* Borde derecho */
-      
-      font-size: 14px; /* Tamaño de fuente por defecto */
-
-      &:first-child {
-        border-left: 1px solid black; /* Borde izquierdo negro */
-        /* border-top-left-radius: 12px; */
-      }
-
-      &:last-child {
-        border-right: 1px solid black; /* Borde derecho */
-        /*border-top-right-radius: 12px; */
-      }
-
-
-      &:nth-of-type(n+3) {
-        text-align: right;
-      }
-
-      @media (min-width: 1280px) and (max-width: 1380px) {
-        padding: 4px; /* Padding reducido */
-        font-size: 12px; /* Tamaño de fuente más pequeño */
-      }
-    `,
+    grid-template-columns: 
+        minmax(80px, 100px)       /* CODIGO */
+        minmax(50px, 70px)       /* TALLE */
+        minmax(200px, 300px)     /* DESCRIPCION */
+        minmax(100px, 150px)     /* MARCA */
+        minmax(90px, 150px)      /* PRECIO */
+        ${'minmax(70px, 90px)'.repeat(depositos.size)} /* DEPOSITOS */
+        minmax(80px, 100px);      /* TOTAL */
+    border-radius: 12px;
+    width: 70rem;
+    max-height: 550px; /* Reducir la altura máxima para dejar espacio al footer */
+    overflow-y: auto; /* Habilitar scroll vertical */
+    scrollbar-width: thin;
+    border: 1px solid black;
+    font-variant-numeric: tabular-nums;
+    font-size: 14px; /* Tamaño de fuente por defecto */
+    margin-bottom: 40px; /* Espacio para el footer */
+    z-index: 0; /* Asegurarse de que la tabla está debajo del footer */
+  
+    @media (min-width: 1280px) and (max-width: 1380px) {
+      width: 50rem; /* Ancho reducido */
+      max-height: 350px; /* Altura máxima reducida */
+      font-size: 12px; /* Tamaño de fuente más pequeño */
+      height: 360px; /* Altura reducida para pantallas medianas */
+      margin-bottom: 10px; /* Espacio reducido para el footer */
+    }
+  `,
 
     Row: `
-      height: 10px; /* Altura de fila por defecto */
-      font-size: 14px; /* Tamaño de fuente por defecto */
-      border: 1px solid #ccc; /* Borde superior para cada fila */ 
-      border-left: 1px solid black; /* Borde izquierdo */
-      border-right: 1px solid black; /* Borde derecho */  
-      margin-top: 10px; /* Margen superior de 10px */
- 
+    height: 10px; /* Altura de fila por defecto */
+    font-size: 14px; /* Tamaño de fuente por defecto */
+    &:nth-of-type(odd) { background-color: #fff; }
+    &:nth-of-type(even) { background-color: #eaf5fd; }
+    
+    &.row-select-single-selected { background-color: #CAE0BC !important; }
+    border-bottom: 1px solid #ccc;
 
-      &:nth-of-type(odd) { background-color: #fff; }
-      &:nth-of-type(even) { background-color: #eaf5fd; }
-      
-      &.row-select-single-selected { background-color: #CAE0BC !important; }
-      border-bottom: 1px solid #ccc;
+    @media (min-width: 1280px) and (max-width: 1380px) {
+      height: 8px; /* Altura de fila reducida */
+      font-size: 12px; /* Tamaño de fuente más pequeño */
+    }
+  `,
 
-      @media (min-width: 1280px) and (max-width: 1380px) {
-        height: 8px; /* Altura de fila reducida */
-        font-size: 12px; /* Tamaño de fuente más pequeño */
-      }
-    `,
+    HeaderCell: `
+    background: #2973B2;
+    color: white;
+    height: 30px; /* Altura por defecto */
+    font-size: 14px; /* Tamaño de fuente por defecto */
+    padding: 14px; /* Padding por defecto */
+    &:nth-of-type(n+3) {
+      text-align: center;
+    }
+
+    @media (min-width: 1280px) and (max-width: 1380px) {
+      height: 20px; /* Altura reducida */
+      font-size: 12px; /* Tamaño de fuente más pequeño */
+      padding: 8px; /* Padding reducido */
+    }
+  `,
+
+    Cell: `
+    padding: 6px; /* Padding por defecto */
+    border-right: 1px solid #ccc;
+    font-size: 14px; /* Tamaño de fuente por defecto */
+
+    &:last-child {
+      border-right: none;
+    }
+
+    &:nth-of-type(n+3) {
+      text-align: right;
+    }
+
+    @media (min-width: 1280px) and (max-width: 1380px) {
+      padding: 4px; /* Padding reducido */
+      font-size: 12px; /* Tamaño de fuente más pequeño */
+    }
+  `,
 
     FooterCell: `
-      position: sticky;
-      bottom: 0;
-      padding: 8px;
-      border-top: 1px solid black;
-      background-color: #fff; /* Fondo sólido para ocultar el contenido de la tabla */
-      text-align: right;
-      font-size: 14px;
-      z-index: 1; /* Asegurar que el footer esté por encima del contenido */
+    position: sticky;
+    bottom: 0;
+    padding: 8px;
+    border-top: 1px solid #ccc;
+    background-color: #fff; /* Fondo sólido para ocultar el contenido de la tabla */
+    text-align: right;
+    font-size: 14px;
+    z-index: 1; /* Asegurar que el footer esté por encima del contenido */
 
-      &:last-child {
-        border-left: 1px solid black;
-        border-bottom-right-radius: 12px;
-        color: red;
-      }
+    &:last-child {
+      border-right: none;
+    }
 
-      &:nth-of-type(1) {
-        border: 1px solid black;
-        background-color: #A5C9FF;
-        font-weight: bold;
-        border-bottom-left-radius: 8px; /* Redondeo en la esquina inferior izquierda */
-      }
+    &:nth-of-type(1) {
+      border: 1px solid black;
+      background-color: #A5C9FF;
+      font-weight: bold;
+      border-bottom-left-radius: 8px; /* Redondeo en la esquina inferior izquierda */
+    }
 
-      
-      &:nth-of-type(6) {
-        background-color: #A5C9FF; 
-        border-left: 1px solid black; 
-      }
-
-      /* Aplica color desde la columna 6 en adelante */
-      &:nth-of-type(n+6) {
-        background-color: #A5C9FF; 
-        border-bottom: 1px solid black; 
-        border-right: 1px solid black; 
-      }
-
-      @media (min-width: 1280px) and (max-width: 1380px) {
-        padding: 4px; /* Padding reducido */
-        font-size: 12px;
-        height: 30px;
-        bottom: 0px; /* Ajuste fino para alinear el footer */
-      }
-    `,
+    @media (min-width: 1280px) and (max-width: 1380px) {
+      padding: 4px; /* Padding reducido */
+      font-size: 12px;
+      height: 30px;
+      bottom: 0px; /* Ajuste fino para alinear el footer */
+    }
+  `,
   };
 
   function agruparPorProducto(data: any): ProductoAgrupado[] {
@@ -315,32 +264,35 @@ export default function TablaStock({ dataParaTabla }: TableProps<TableNode>) {
   const datosFooter: { [key: string]: string } = {
     id: cantidadItems.toString(),
   };
-  // Llenamos las primeras 5 columnas fijas con valores vacíos
-  for (let i = 1; i <= 5; i++) {
+
+  // Generamos columnas dinamicas segun deposito
+  for (let i = 1; i <= columnasTotales - 1; i++) {
     datosFooter[`columna${i}`] = '';
   }
 
-  // Insertamos los totales de los depósitos a partir de la columna 6
-  let columnaIndex = 5;
-  Object.keys(totalesPorDeposito).forEach((deposito) => {
-    datosFooter[`columna${columnaIndex}`] = totalesPorDeposito[deposito].toString();
-    columnaIndex++;
-  });
+  // console.log(datosAgrupados);
+  // funcion por si el codigo viene con letras
+  // const dataSinLetras = data.map((item) => ({
+  //   ...item,
+  //   codigo: item.codigo.replace(/\D/g, ""), // Elimina todas las letras del código
+  // }));
+  
 
-  // Insertamos el total general en la última columna
-  datosFooter[`columna${columnaIndex}`] = totalGeneral.toString();
 
-  // console.log(datosFooter);
+
   return (
-    <div className="flex justify-center w-full h-fit my-20">
-      <TablaInforme<TablaStocks>
+    <>
+      <TablaInforme
         columnas={COLUMNS}
-        dataParaTabla={datosAgrupados}
+        datosParaTabla={stockRenderizado}
         procesado={false}
         estilos={customTheme}
         footer={true}
         datosFooter={datosFooter}
+        idsCoincidentes={idsCoincidentes}
+        indiceSeleccionado={indiceSeleccionado}
+   
       />
-    </div>
+    </>
   );
 }

@@ -24,6 +24,7 @@ export async function obtenerVentasHora(fechas: FechasRango) {
   }
 }
 
+
 export async function obtenerProductos() {
   try {
     const url = `/apinovades/generico/obtenerProducto.php`;

@@ -129,3 +129,9 @@ export interface TableColumn<T> {
 export interface TableNode {
   id: string | number; // ID único para cada fila
 }
+
+export interface TablaSecciones extends TableNode {
+  seccion: string;
+  nseccion: string;
+  rubros: { rubro: string; nrubro: string }[];
+}

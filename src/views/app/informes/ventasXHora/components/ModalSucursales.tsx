@@ -125,6 +125,7 @@ export default function ModalSucursales({ isProcessing }: ModalSucursalesProps) 
             onClose={handleCloseModal}
             onConfirm={handleConfirm}
             disabled={isProcessing}
+            disabled2={isProcessing}
             buttons={true}
           >
             {/* Contenido del Modal */}
