@@ -33,21 +33,21 @@ interface TablaFooterProps {
   };
 }
 
-// const TablaFooter: React.FC<TablaFooterProps> = ({ datos = {} }) => {
-//   if (!Object.keys(datos).length) return null;
+const TablaFooter: React.FC<TablaFooterProps> = ({ datos = {} }) => {
+  if (!Object.keys(datos).length) return null;
 
-//   return (
-//     <Footer layout={{ fixedHeader: true }}>
-//       <FooterRow>
-//         {Object.entries(datos).map(([_, value], index) => (
-//           <FooterCell key={index}>
-//             {typeof value === "number" ? value.toLocaleString("es-AR") : value}
-//           </FooterCell>
-//         ))}
-//       </FooterRow>
-//     </Footer>
-//   );
-// };
+  return (
+    <Footer layout={{ fixedHeader: true }}>
+      <FooterRow>
+        {Object.entries(datos).map(([_, value], index) => (
+          <FooterCell key={index}>
+            {typeof value === "number" ? value.toLocaleString("es-AR") : value}
+          </FooterCell>
+        ))}
+      </FooterRow>
+    </Footer>
+  );
+};
 
 interface TableProps<T extends TableNode> {
   columnas: TableColumn<T>[];
@@ -143,9 +143,9 @@ export default function TablaExpandible<T extends TableNode>({
     }
   }, [isActive]);
 
-//   const handleTableClick = () => {
-//     setIsActive(true);
-//   };
+  const handleTableClick = () => {
+    setIsActive(true);
+  };
 
   const handleBlur = () => {
     setIsActive(false);

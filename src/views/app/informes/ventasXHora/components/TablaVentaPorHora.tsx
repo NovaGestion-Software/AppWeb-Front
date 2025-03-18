@@ -231,7 +231,7 @@ export default function TablaVentaPorHora({
     <div>
       <TablaInforme
         columnas={COLUMNS}
-        dataParaTabla={dataParaTabla}
+        datosParaTabla={dataParaTabla}
         estilos={customTheme}
         footer={footer}
         datosFooter={datosFooter}

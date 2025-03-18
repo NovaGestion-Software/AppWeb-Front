@@ -71,7 +71,7 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
     },
     {
       title: 'Stock por Seccion',
-      href: '/stock-seccion1',
+      href: '/stock-seccion',
       icon: <FaBoxesPacking />,
     },
     {

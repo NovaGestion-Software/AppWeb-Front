@@ -62,7 +62,7 @@ export default function StockPorSeccion() {
     temporadasSeleccionadas,
     setTemporadasDisponibles,
     setTemporadasSeleccionadas
-    , tablaStock
+ 
   } = useStockPorSeccion();
  
   // console.log('stock renderizado', stockRenderizado)
@@ -90,6 +90,8 @@ export default function StockPorSeccion() {
     refetchOnWindowFocus: false,
     staleTime: 1000 * 60 * 5, // Datos frescos por 5 minutos
   });
+
+  console.log('stock',stockDis)
 
   return (
     <div className="w-full h-full px-4 pt-0 overflow-hidden">
@@ -176,7 +178,7 @@ export default function StockPorSeccion() {
       {/**TABLA STOCK */}
       <div className="grid grid-cols-12 px-4 py-2">
         <div className="flex items-center justify-center col-span-full ">
-          <TablaStock datosParaTabla={stockDis.data} />
+          <TablaStock datosParaTabla={stockDis?.data} />
         </div>
       </div>
 
