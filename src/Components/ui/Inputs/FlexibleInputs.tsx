@@ -161,7 +161,7 @@ export default function FlexibleInputField({
               className={`focus:border-amber-900 ${inputWidth}`}
               value={value ? dayjs(value, 'DD/MM/YYYY') : null}
               onChange={(date, dateString) => {
-                console.log('Nuevo valor seleccionado:', dateString);
+                console.log('Nuevo valor seleccionado:', dateString, date);
                 onChange?.(Array.isArray(dateString) ? dateString[0] : dateString);
               }}              
               format={'DD/MM/YYYY'}

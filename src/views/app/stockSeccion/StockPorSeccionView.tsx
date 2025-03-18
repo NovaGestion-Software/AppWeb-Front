@@ -29,7 +29,7 @@ export default function StockPorSeccionView() {
     <>
       <ViewTitle title={'Stock por Sección'} />
       <div>
-        <TablaStock dataParaTabla={rubrosDis.data} />
+        <TablaStock datosParaTabla={rubrosDis.data} />
       </div>
     </>
   );

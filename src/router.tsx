@@ -9,7 +9,6 @@ import VentasXVendedorView from './views/app/informes/ventasXVendedor/VentasXVen
 import VentasHoraView from './views/app/informes/ventasXHora/VentasHoraView';
 import ConfigView from './views/app/config/ConfigView';
 import Layout from './Components/ui/layouts/Layout';
-import StockPorSeccionView from './views/app/stockSeccion/StockPorSeccionView';
 import StockPorSeccion from './views/app/stockSeccion/StockPorSeccion';
 // import StockPorSeccion from './views/app/stockSeccion/StockPorSeccion';
 
