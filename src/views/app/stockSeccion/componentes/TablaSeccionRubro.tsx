@@ -150,7 +150,7 @@ export default function TablaSeccionRubro({
     // Si rubrosToFetch no tiene contenido, deshabilitar el botón de cancelar
     if (rubrosToFetch.length <= 0) {
       setIsCancelEnabled(false);
-      console.log('Deshabilitar cancelar:', rubrosToFetch);
+      // console.log('Deshabilitar cancelar:', rubrosToFetch);
     } else {
       setIsCancelEnabled(true);
     }

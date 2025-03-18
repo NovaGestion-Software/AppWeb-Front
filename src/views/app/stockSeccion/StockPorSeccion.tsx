@@ -45,9 +45,6 @@ export default function StockPorSeccion() {
     setTemporadasSeleccionadas,
   } = useStockPorSeccion();
 
-  // console.log('stock renderizado', stockRenderizado)
-  // console.log('stock ', tablaStock )
-
   // TABLA PARA RUBROS
   const { data: rubrosDis } = useQuery({
     queryKey: ['rubros-seccion'],
@@ -62,21 +59,12 @@ export default function StockPorSeccion() {
     }
   }, [rubrosDis]);
 
-  // const { data: stockDis } = useQuery({
-  //   queryKey: ['rubros-stock'],
-  //   queryFn: obtenerProductos,
-  //   refetchOnWindowFocus: false,
-  //   staleTime: 1000 * 60 * 5, // Datos frescos por 5 minutos
-  // });
-
-  // console.log('stock', stockDis)
-
   return (
     <div className="w-full h-full px-4 pt-0 overflow-hidden">
       <ViewTitle title={'Stock por Seccion'} />
       <div className="grid grid-cols-11 grid-rows-1 rounded py-2 px-8 h-11 items-center mt-1">
         {/**BOTONES SHOW MODAL DEPOSITOS Y RUBROS - ORDENAR POR CHECKBOXS( CODIGO , MARCA Y DESCRIPCION )*/}
-        <div className="flex gap-6 items-center w-fit bg-white py-1 px-3 rounded-lg col-start-4 col-span-5 2xl:col-span-3 2xl:col-start-4 ">
+        <div className="flex gap-6 items-center w-fit bg-white py-1 px-3 rounded-lg col-start-3 col-span-5 2xl:col-span-3 2xl:col-start-4 ">
           <ActionButton
             onClick={() => setShowDepositosModal(true)}
             text="Depositos"
@@ -96,7 +84,7 @@ export default function StockPorSeccion() {
         </div>
 
         {/** EXPORTORTAR A EXCEEL E IMPRIMIR. */}
-        <div className="p-1 rounded-lg  col-span-2 col-start-9 2xl:col-span-2 2xl:col-start-7 2xl:left-10 2xl:relative 2xl:px-4">
+        <div className="p-1 rounded-lg col-span-2 col-start-8 2xl:col-span-2 2xl:col-start-7 2xl:left-10 2xl:relative 2xl:px-4">
           <HerramientasComponent
             data={stockRenderizado}
             isProcessing={!isProcessing}

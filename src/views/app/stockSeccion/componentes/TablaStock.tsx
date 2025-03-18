@@ -31,17 +31,11 @@ export default function TablaStock({ datosParaTabla }: TableProps<TableNode>) {
     setStockRenderizado,
   } = useStockPorSeccion();
 
-  // console.log(stockRenderizado);
   useEffect(() => {}, [datosParaTabla]);
 
   let idCounter = 0;
   const depositos = obtenerDepositos(stockRenderizado);
 
-  // console.log(depositos);
-
-  // const columnasFijas = 6;
-  // const columnasDinamicas = depositos.size;
-  // const columnasTotales = columnasFijas + columnasDinamicas;
   const datosAgrupados = agruparPorProducto(stockRenderizado);
   let cantidadItems = datosAgrupados.length;
   let totalGeneral = 0;
@@ -69,8 +63,6 @@ export default function TablaStock({ datosParaTabla }: TableProps<TableNode>) {
       setStockRenderizado(datosAgrupados);
     }
   }, [setData]);
-
-  // console.log('renderizado', stockRenderizado);
 
   const COLUMNS: TableColumn<TablaStocks>[] = [
     {
@@ -326,7 +318,6 @@ export default function TablaStock({ datosParaTabla }: TableProps<TableNode>) {
     return depositos; // Retornamos el Set con los depósitos únicos
   }
 
-  // console.log(datosAgrupados);
   // funcion por si el codigo viene con letras
   // const dataSinLetras = data.map((item) => ({
   //   ...item,
@@ -336,6 +327,7 @@ export default function TablaStock({ datosParaTabla }: TableProps<TableNode>) {
   const datosFooter: { [key: string]: string } = {
     id: cantidadItems.toString(),
   };
+
   // Llenamos las primeras 5 columnas fijas con valores vacíos
   for (let i = 1; i <= 5; i++) {
     datosFooter[`columna${i}`] = '';
@@ -351,7 +343,7 @@ export default function TablaStock({ datosParaTabla }: TableProps<TableNode>) {
   // Insertamos el total general en la última columna
   datosFooter[`columna${columnaIndex}`] = totalGeneral.toString();
 
-  // console.log(footer);
+  // console.log(idsCoincidentes);
   return (
     <>
       <TablaInforme

@@ -1,10 +1,10 @@
-import ActionButton from '@/Components/ui/Buttons/ActionButton';
-import FlexibleInputField from '@/Components/ui/Inputs/FlexibleInputs';
-import { useStockPorSeccion } from '@/views/app/stockSeccion/store/useStockPorSeccion';
 import { useEffect, useRef, useState } from 'react';
-import { BiSearch } from 'react-icons/bi';
+import { useStockPorSeccion } from '@/views/app/stockSeccion/store/useStockPorSeccion';
 import { TbArrowBigRightLinesFilled } from 'react-icons/tb';
+import { BiSearch } from 'react-icons/bi';
 import { IoTrash } from 'react-icons/io5';
+import FlexibleInputField from '@/Components/ui/Inputs/FlexibleInputs';
+import ActionButton from '@/Components/ui/Buttons/ActionButton';
 import showAlert from '@/utils/showAlert';
 
 export default function BusquedaStock({ data }: any) {
@@ -12,6 +12,8 @@ export default function BusquedaStock({ data }: any) {
   const [textoBusqueda, setTextoBusqueda] = useState<string>('');
   const tablaRef = useRef<HTMLTableElement | null>(null);
 
+  // console.log(codigoBusqueda);
+  // console.log(textoBusqueda);
   const {
     buscado,
     setBuscado,
@@ -45,20 +47,22 @@ export default function BusquedaStock({ data }: any) {
   }, [idsCoincidentes]);
 
   useEffect(() => {
-    // if (!Array.isArray(stockRenderizado)) return;
+    // console.log(stockRenderizado);
 
+    // Filtramos solo los productos que contienen código, marca y descripción
     const filtered = stockRenderizado
-      .filter((item: any) => item && item.codigo && item.descripcion && item.marca)
-      .filter((item: any) => {
-        const matchesCodigo = item.codigo.includes(codigoBusqueda);
+      .flatMap((rubro: any) => rubro.productos) // Aplanamos los productos de cada rubro
+      .filter((producto: any) => producto && producto.codigo && producto.nombre && producto.marca) // Filtramos productos válidos
+      .filter((producto: any) => {
+        const matchesCodigo = producto.codigo.includes(codigoBusqueda); // Filtro por código
         const matchesTexto =
-          item.descripcion.toLowerCase().includes(textoBusqueda.toLowerCase()) ||
-          item.marca.toLowerCase().includes(textoBusqueda.toLowerCase());
+          producto.nombre.toLowerCase().includes(textoBusqueda.toLowerCase()) || // Filtro por nombre
+          producto.marca.toLowerCase().includes(textoBusqueda.toLowerCase()); // Filtro por marca
         return matchesCodigo && matchesTexto;
       });
 
-    const ids = filtered.map((item: any) => item.id);
-    //console.log("IDs Coincidentes:", ids);
+    const ids = filtered.map((producto: any) => producto.codigo); // Aquí se toma el `codigo` del producto como el ID
+    // console.log(ids);
 
     setIdsCoincidentes(ids);
     setIndiceSeleccionado(0); // Resetear la selección al primer ítem de la lista filtrada
@@ -71,7 +75,10 @@ export default function BusquedaStock({ data }: any) {
     }
   };
 
+  // console.log(buscado);
+
   const handleSearch = () => {
+    // console.log(buscado);
     if (idsCoincidentes.length > 0) {
       setBuscado(true);
     } else {
@@ -152,6 +159,8 @@ export default function BusquedaStock({ data }: any) {
       setRubrosToFetch([]);
       setStatus('idle');
       setFooter(false);
+      setCodigoBusqueda('');
+      setTextoBusqueda('');
 
       setCheckboxSeleccionados('grupo1', null);
       setCheckboxSeleccionados('grupo2', null);

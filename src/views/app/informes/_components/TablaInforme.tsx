@@ -152,6 +152,10 @@ export default function TablaInforme<T extends TableNode>({
 
   // SELECCION POR BUSQUEDA
   useEffect(() => {
+    // console.log('Buscado:', buscado);
+    // console.log('IDs Coincidentes:', idsCoincidentes);
+    // console.log('Índice Seleccionado:', indiceSeleccionado);
+    // console.log('Datos para Tabla:', datosParaTabla);
     // Solo ejecutar si se está buscando y los valores son válidos
     if (
       buscado && // Solo si se está buscando
