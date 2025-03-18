@@ -137,7 +137,7 @@ export const useStockPorSeccion = create<StockPorSeccionProps>()(
 
       //Depositos Modal
       depositosDisponibles: [],
-      setDepositosDisponibles: (deposito) => set({ depositosDisponibles: deposito }),
+      setDepositosDisponibles: (deposito: string[]) => set({ depositosDisponibles: deposito }),
       depositosSeleccionadas: [],
       setDepositosSeleccionadas: (data: string[]) => set({ depositosSeleccionadas: data }),
       clearDepositosSeleccionadas: () => set({ depositosSeleccionadas: [] }),

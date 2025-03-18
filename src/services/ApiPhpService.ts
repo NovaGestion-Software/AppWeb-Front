@@ -41,6 +41,31 @@ export async function obtenerRubrosDisponibles() {
   }
 }
 
+export async function obtenerStock(rubros: string[]) {
+  try {
+    const url = `/apinovades/generico/obtenerStock.php`;
+
+    const datos = {
+      _e: '000012',
+      _m: 'prod',
+      _r: 'JSON',
+      _j: rubros,
+    };
+
+    // console.log(datos);
+
+    const { data } = await apiPhp(url, {
+      method: 'POST',
+      data: datos,
+    });
+
+    return data;
+  } catch (error) {
+    if (isAxiosError(error) && error.response) throw new Error(error.response.data.error);
+    console.log(error);
+  }
+}
+
 export async function obtenerProductos(secciones: string[], rubros: string[]) {
   try {
     const url = `/apinovades/generico/obtenerProducto.php?_i={"_e":"12","_s":"08","_m":"prod"}`;

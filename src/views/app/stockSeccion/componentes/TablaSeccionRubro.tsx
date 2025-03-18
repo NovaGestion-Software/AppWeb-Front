@@ -104,6 +104,7 @@ export default function TablaSeccionRubro({
       // Llamar a obtenerProductos con las claves filtradas
       return obtenerProductos(seccionesSeleccionadasKeys, rubrosSeleccionados);
     },
+    // mutationFn: () => obtenerStock(rubrosSeleccionados),
     onError: (error) => {
       console.error('Error al obtener los productos:', error);
     },

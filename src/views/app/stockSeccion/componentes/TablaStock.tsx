@@ -27,14 +27,28 @@ export default function TablaStock({ datosParaTabla }: TableProps<TableNode>) {
     indiceSeleccionado,
     idsCoincidentes,
     stockRenderizado,
+    depositosDisponibles,
     setTablaStock,
     setStockRenderizado,
+    setDepositosDisponibles,
   } = useStockPorSeccion();
 
   useEffect(() => {}, [datosParaTabla]);
 
+  // const depositos = obtenerDepositos(stockRenderizado);
+  // console.log(depositos);
+
   let idCounter = 0;
-  const depositos = obtenerDepositos(stockRenderizado);
+
+  useEffect(() => {
+    if (stockRenderizado) {
+      const depositosUnicos = obtenerDepositos(stockRenderizado);
+      const depositosArray = depositosUnicos.map(
+        (deposito) => `${deposito.deposito} - ${deposito.ndeposito}` // Combinas deposito y ndeposito
+      );
+      setDepositosDisponibles(depositosArray);
+    }
+  }, [stockRenderizado]);
 
   const datosAgrupados = agruparPorProducto(stockRenderizado);
   let cantidadItems = datosAgrupados.length;
@@ -85,13 +99,13 @@ export default function TablaStock({ datosParaTabla }: TableProps<TableNode>) {
       label: 'Precio',
       renderCell: (item: TablaStocks) => item.precio,
     },
-    // Insertar columnas de depósitos dinamicamente
-    ...Array.from(obtenerDepositos(stockRenderizado)).map((depositoId) => ({
-      label: `${depositoId}`,
+    // Insertar columnas de depósitos dinámicamente
+    ...Array.from(obtenerDepositos(stockRenderizado)).map((deposito) => ({
+      label: `${deposito.deposito}`, // Muestra el nombre del depósito en la columna
       renderCell: (item: TablaStocks) => {
         // Buscar el stock correspondiente a este depósito
         const stockPorDeposito = item.stockPorDeposito;
-        return stockPorDeposito[depositoId] || '0'; // Si no hay stock para el depósito, mostramos 0
+        return stockPorDeposito[deposito.deposito] || '0'; // Si no hay stock, mostramos 0
       },
     })),
 
@@ -101,6 +115,8 @@ export default function TablaStock({ datosParaTabla }: TableProps<TableNode>) {
     },
   ];
 
+  // console.log(depositosDisponibles);
+
   const customTheme = {
     Table: `
       grid-template-columns: 
@@ -109,7 +125,7 @@ export default function TablaStock({ datosParaTabla }: TableProps<TableNode>) {
           minmax(200px, 300px)     /* DESCRIPCION */
           minmax(100px, 150px)     /* MARCA */
           minmax(90px, 150px)      /* PRECIO */
-          ${'minmax(70px, 90px)'.repeat(depositos.size || 0)} /* DEPOSITOS */
+          ${'minmax(70px, 90px)'.repeat(depositosDisponibles.length || 0)} /* DEPOSITOS */
           minmax(80px, 100px);      /* TOTAL */
       max-width: 70rem;
       height: 650px; /* Altura máxima reducida */
@@ -295,27 +311,30 @@ export default function TablaStock({ datosParaTabla }: TableProps<TableNode>) {
     return productosAgrupados;
   }
 
-  function obtenerDepositos(data: any): Set<string> {
-    const depositos = new Set<string>();
+  function obtenerDepositos(data: any): { deposito: string; ndeposito: string }[] {
+    const depositos = new Map<string, { deposito: string; ndeposito: string }>();
 
-    if (!data) return depositos;
+    if (!data) return [];
 
-    // Iteramos directamente sobre el array de rubros
     data.forEach((rubro: any) => {
       if (rubro.productos) {
         rubro.productos.forEach((producto: any) => {
           if (producto.depositos) {
             producto.depositos.forEach((deposito: any) => {
-              if (deposito.deposito) {
-                depositos.add(deposito.deposito); // Usamos .add para asegurar que el valor sea único
+              if (deposito.deposito && deposito.ndeposito) {
+                depositos.set(deposito.deposito, {
+                  deposito: deposito.deposito,
+                  ndeposito: deposito.ndeposito,
+                });
               }
             });
           }
         });
       }
     });
+    console.log(depositos);
 
-    return depositos; // Retornamos el Set con los depósitos únicos
+    return Array.from(depositos.values()); // Retorna un array de objetos únicos
   }
 
   // funcion por si el codigo viene con letras

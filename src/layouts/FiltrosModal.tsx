@@ -1,17 +1,18 @@
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import ActionButton from "@/Components/ui/Buttons/ActionButton";
-import ModalInforme from "@/views/app/informes/_components/ModalInforme";
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import ActionButton from '@/Components/ui/Buttons/ActionButton';
+import ModalInforme from '@/views/app/informes/_components/ModalInforme';
 
 interface FiltroModalProps {
-    showModal: boolean;
-    setShowModal: Dispatch<SetStateAction<boolean>>;
-    datos: string[]; // Datos originales para obtener los ítems disponibles
-    itemsDisponibles: string[]; // Lista de ítems disponibles
-    itemsSeleccionados: string[]; // Lista de ítems seleccionados (debe ser un array)
-    setItemsDisponibles: (items: string[]) => void; // Función para actualizar los ítems disponibles
-    setItemsSeleccionados: (items: string[]) => void; // Función para actualizar los ítems seleccionados
-    title: string; // Título del modal
-  }
+  showModal: boolean;
+  setShowModal: Dispatch<SetStateAction<boolean>>;
+  datos: string[]; // Datos originales para obtener los ítems disponibles
+  itemsDisponibles: string[]; // Lista de ítems disponibles
+  itemsSeleccionados: string[]; // Lista de ítems seleccionados (debe ser un array)
+  setItemsDisponibles: (items: string[]) => void; // Función para actualizar los ítems disponibles
+  setItemsSeleccionados: (items: string[]) => void; // Función para actualizar los ítems seleccionados
+  title: string; // Título del modal
+}
+
 export default function FiltroModal({
   showModal,
   setShowModal,
@@ -22,15 +23,11 @@ export default function FiltroModal({
   setItemsSeleccionados,
   title,
 }: FiltroModalProps) {
-  
-
-  const [itemsSeleccionadasModal, setItemsSeleccionadasModal] = useState<
-    string[]
-  >([]);
+  const [itemsSeleccionadasModal, setItemsSeleccionadasModal] = useState<string[]>([]);
 
   useEffect(() => {
     const datoUnico = Array.from(new Set(datos));
-  
+
     // Verificar si los datos han cambiado antes de actualizar el estado
     if (JSON.stringify(datoUnico) !== JSON.stringify(itemsDisponibles)) {
       setItemsDisponibles(datoUnico);
@@ -38,21 +35,19 @@ export default function FiltroModal({
     }
   }, [datos]);
 
-
-
   useEffect(() => {
     if (showModal) {
-        setItemsSeleccionadasModal([...itemsSeleccionados]);
+      setItemsSeleccionadasModal([...itemsSeleccionados]);
       // Bloquea el scroll del body cuando el modal esté visible
-      document.body.style.overflow = "hidden";
+      document.body.style.overflow = 'hidden';
     } else {
       // Restaura el scroll del body cuando el modal se cierra
-      document.body.style.overflow = "auto";
+      document.body.style.overflow = 'auto';
     }
 
     // Limpieza para restaurar el estado cuando el componente se desmonte o el modal se cierre
     return () => {
-      document.body.style.overflow = "auto";
+      document.body.style.overflow = 'auto';
     };
   }, [showModal, itemsSeleccionados]);
 
@@ -80,6 +75,8 @@ export default function FiltroModal({
     setItemsSeleccionados([...itemsSeleccionados]); // Revertir los cambios y restaurar las sucursales originales
     //  clearMarcasSeleccionadas()
   };
+
+  // console.log(itemsDisponibles);
   return (
     <>
       <ModalInforme
@@ -133,10 +130,7 @@ export default function FiltroModal({
                         />
                       </label>
                     </td>
-                    <td
-                      className="p-2 cursor-pointer"
-                      onClick={() => handleCheckboxChange(item)}
-                    >
+                    <td className="p-2 cursor-pointer" onClick={() => handleCheckboxChange(item)}>
                       {item}
                     </td>
                   </tr>

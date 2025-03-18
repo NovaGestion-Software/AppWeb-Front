@@ -25,9 +25,9 @@ export default function OrdenarPorCheckbox() {
     <>
       <div className="flex gap-1 border p-1 rounded-lg bg-white">
         <CheckboxInput
-          onChange={() => handleCheckboxChange('grupo4', 'Codigo')}
-          checked={checkboxSeleccionados.grupo4 === 'Codigo'}
-          label="Codigo"
+          onChange={() => handleCheckboxChange('grupo4', 'Código')}
+          checked={checkboxSeleccionados.grupo4 === 'Código'}
+          label="Código"
           disabled={disabled}
           setDisabled={setDisabled}
         />
@@ -39,9 +39,9 @@ export default function OrdenarPorCheckbox() {
           setDisabled={setDisabled}
         />
         <CheckboxInput
-          onChange={() => handleCheckboxChange('grupo4', 'Descripcion')}
-          checked={checkboxSeleccionados.grupo4 === 'Descripcion'}
-          label="Descripcion"
+          onChange={() => handleCheckboxChange('grupo4', 'Descripción')}
+          checked={checkboxSeleccionados.grupo4 === 'Descripción'}
+          label="Descripción"
           disabled={disabled}
           setDisabled={setDisabled}
         />

@@ -31,11 +31,11 @@ export default function FiltrarPorTipo() {
         label="Talles"
       />
       <CheckboxInput
-        onChange={() => handleCheckboxChange('grupo1', 'Articulos')}
-        checked={checkboxSeleccionados.grupo1 === 'Articulos'}
+        onChange={() => handleCheckboxChange('grupo1', 'Artículos')}
+        checked={checkboxSeleccionados.grupo1 === 'Artículos'}
         disabled={disabled}
         setDisabled={setDisabled}
-        label="Articulos"
+        label="Artículos"
       />{' '}
     </div>
   );
