@@ -22,13 +22,13 @@ export default function HerramientasInforme<T>({
   }, [data]);
 
   return (
-    <div className="flex items-center justify-center gap-6 py-2 h-14  px-4 bg-white w-fit rounded-lg border">
+    <div className="flex items-center justify-center gap-6 py-1 h-10 px-4 bg-white w-fit rounded-lg ">
       {children}
       <ActionButton
         onClick={handleExportExcel}
         disabled={!isProcessing}
         size="xs"
-        className="2xl:h-11 rounded-md"
+        className="rounded-md"
         color={isProcessing ? 'green' : 'grayDeshab'}
         icon={<RiFileExcel2Fill size={20} />}
       />
@@ -36,7 +36,7 @@ export default function HerramientasInforme<T>({
         onClick={handlePrint}
         disabled={!isProcessing}
         size="xs"
-        className="2xl:h-11 rounded-md"
+        className="rounded-md"
         color={isProcessing ? 'blue' : 'grayDeshab'}
         icon={<RiPrinterFill size={20} />}
       />

@@ -71,7 +71,7 @@ export default function ModalInforme({
         >
           <div className="relative grid grid-cols-3 grid-rows-[3rem_auto_auto_auto_auto] gap-1 p-4 bg-white rounded-lg shadow-lg outline-none focus:outline-none ">
             <div className="col-span-3 flex items-center justify-between px-5">
-              <h3 className="w-full text-3xl font-semibold underline underline-offset-4 decoration-4 decoration-gray-600">
+              <h3 className="w-full text-2xl font-semibold underline underline-offset-4 decoration-4 decoration-gray-600">
                 {title}
               </h3>
 

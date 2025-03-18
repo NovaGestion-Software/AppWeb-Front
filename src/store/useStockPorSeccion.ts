@@ -1,6 +1,6 @@
-import { TablaStocks } from "@/types";
-import { create } from "zustand";
-import { createJSONStorage, persist } from "zustand/middleware";
+import { TablaStocks } from '@/types';
+import { create } from 'zustand';
+import { createJSONStorage, persist } from 'zustand/middleware';
 
 interface CheckboxState {
   grupo1: string | null; // Talles o Artículos
@@ -10,7 +10,7 @@ interface CheckboxState {
 }
 
 type StockPorSeccionProps = {
-  status: "error" | "idle" | "pending" | "success" | null;
+  status: 'error' | 'idle' | 'pending' | 'success' | null;
   // MODAL PARA SELECCION DE SECCION Y RUBRO
   seccionesSeleccionadas: { [key: string]: boolean } | null;
   rubrosSeleccionados: string[];
@@ -68,22 +68,19 @@ type StockPorSeccionProps = {
   buscado: boolean;
   setBuscado: (valor: boolean) => void;
 
-  setStatus: (status: "error" | "idle" | "pending" | "success" | null) => void;
+  setStatus: (status: 'error' | 'idle' | 'pending' | 'success' | null) => void;
 };
-
-
 
 export const useStockPorSeccion = create<StockPorSeccionProps>()(
   persist(
     (set) => ({
-      status: "idle",
+      status: 'idle',
 
       seccionesSeleccionadas: null,
       rubrosSeleccionados: [],
       seccionesToFetch: null,
       rubrosToFetch: [],
-      setSeccionesSeleccionadas: (data) =>
-        set({ seccionesSeleccionadas: data }),
+      setSeccionesSeleccionadas: (data) => set({ seccionesSeleccionadas: data }),
       setRubrosSeleccionados: (data) => set({ rubrosSeleccionados: data }),
       setSeccionesToFetch: (data) => set({ seccionesToFetch: data }),
       setRubrosToFetch: (data) => set({ rubrosToFetch: data }),
@@ -100,7 +97,7 @@ export const useStockPorSeccion = create<StockPorSeccionProps>()(
       // BUSQUEDA TABLA STOCK
       indiceSeleccionado: 0,
       idsCoincidentes: [],
-    
+
       // Funciones para actualizar los estados
       setIndiceSeleccionado: (indice) => set({ indiceSeleccionado: indice }),
       setIdsCoincidentes: (ids) => set({ idsCoincidentes: ids }),
@@ -108,7 +105,7 @@ export const useStockPorSeccion = create<StockPorSeccionProps>()(
       // RE ORDENAMIENTO STOCK
       checkboxSeleccionados: {
         grupo1: null,
-        grupo2: "Todos",
+        grupo2: 'Todos',
         grupo3: null,
         grupo4: null,
       },
@@ -124,31 +121,29 @@ export const useStockPorSeccion = create<StockPorSeccionProps>()(
       marcasDisponibles: [],
       setMarcasDisponibles: (marca) => set({ marcasDisponibles: marca }),
       marcasSeleccionadas: [],
-      setMarcasSeleccionadas: (data: string[]) =>
-        set({ marcasSeleccionadas: data }),
+      setMarcasSeleccionadas: (data: string[]) => set({ marcasSeleccionadas: data }),
       clearMarcasSeleccionadas: () => set({ marcasSeleccionadas: [] }),
 
       // Temporadas Modal
       temporadasDisponibles: [],
-      setTemporadasDisponibles: (temporada) =>set({ temporadasDisponibles: temporada }),
+      setTemporadasDisponibles: (temporada) => set({ temporadasDisponibles: temporada }),
       temporadasSeleccionadas: [],
-      setTemporadasSeleccionadas: (data: string[]) =>set({ temporadasSeleccionadas: data }),
+      setTemporadasSeleccionadas: (data: string[]) => set({ temporadasSeleccionadas: data }),
       clearTemporadasSeleccionadas: () => set({ temporadasSeleccionadas: [] }),
 
       //Depositos Modal
       depositosDisponibles: [],
-      setDepositosDisponibles: (deposito) =>  set({depositosDisponibles: deposito }),
+      setDepositosDisponibles: (deposito) => set({ depositosDisponibles: deposito }),
       depositosSeleccionadas: [],
-      setDepositosSeleccionadas: (data: string[]) =>set({ depositosSeleccionadas: data }),
+      setDepositosSeleccionadas: (data: string[]) => set({ depositosSeleccionadas: data }),
       clearDepositosSeleccionadas: () => set({ depositosSeleccionadas: [] }),
 
       //busqueda
-      buscado: false,  // Valor inicial
-      setBuscado: (valor) => set({ buscado: valor }), 
-    
+      buscado: false, // Valor inicial
+      setBuscado: (valor) => set({ buscado: valor }),
     }),
     {
-      name: "stock-xseccion-storage",
+      name: 'stock-xseccion-storage',
       storage: createJSONStorage(() => sessionStorage),
     }
   )

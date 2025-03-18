@@ -60,15 +60,15 @@ export default function TablaInforme<T extends TableNode>({
   estilos,
   footer,
   datosFooter,
-  procesado, 
+  procesado,
   idsCoincidentes = [], // Valor por defecto: array vacío
-  indiceSeleccionado = -1, 
+  indiceSeleccionado = -1,
 }: TableProps<T>) {
   const [isActive, setIsActive] = useState(false);
   const [currentHorario, setCurrentHorario] = useState<TableNode | null>(null);
   const [scrollPosition, setScrollPosition] = useState(0);
   const { status } = useVentasHoraStore();
-  const { buscado} = useStockPorSeccion();
+  const { buscado } = useStockPorSeccion();
 
   const tableRef = useRef<HTMLDivElement | null>(null);
   const materialTheme = getTheme(DEFAULT_OPTIONS);
@@ -150,6 +150,33 @@ export default function TablaInforme<T extends TableNode>({
     }
   }, [scrollPosition]);
 
+  // SELECCION POR BUSQUEDA
+  useEffect(() => {
+    // Solo ejecutar si se está buscando y los valores son válidos
+    if (
+      buscado && // Solo si se está buscando
+      idsCoincidentes.length > 0 && // `idsCoincidentes` no está vacío
+      indiceSeleccionado >= 0 && // `indiceSeleccionado` es un número válido
+      indiceSeleccionado < idsCoincidentes.length // `indiceSeleccionado` está dentro del rango
+    ) {
+      const idSeleccionado = idsCoincidentes[indiceSeleccionado];
+      const itemSeleccionado = datosParaTabla.find((item) => item.id === idSeleccionado);
+
+      if (itemSeleccionado && itemSeleccionado.id !== currentHorario?.id) {
+        // Solo actualizar si el ítem seleccionado es diferente al actual
+        setCurrentHorario(itemSeleccionado);
+        select.fns.onToggleByIdExclusively(itemSeleccionado.id);
+
+        // Calcular la posición del scroll para el ítem seleccionado
+        const itemIndex = datosParaTabla.findIndex((item) => item.id === idSeleccionado);
+        if (itemIndex !== -1) {
+          const newScrollPosition = itemIndex * rowHeight + headerHeight;
+          setScrollPosition(newScrollPosition);
+        }
+      }
+    }
+  }, [idsCoincidentes, indiceSeleccionado, datosParaTabla, select, buscado, currentHorario]);
+
   function onSelectChange(action: any, state: any) {
     console.log(action);
     const selectedItem = datosParaTabla.find((node) => node.id === state.id);
@@ -169,83 +196,58 @@ export default function TablaInforme<T extends TableNode>({
   const handleBlur = () => {
     setIsActive(false);
   };
-  // SELECCION POR BUSQUEDA
-  useEffect(() => {
-    // Solo ejecutar si se está buscando y los valores son válidos
-    if (
-      buscado && // Solo si se está buscando
-      idsCoincidentes.length > 0 && // `idsCoincidentes` no está vacío
-      indiceSeleccionado >= 0 && // `indiceSeleccionado` es un número válido
-      indiceSeleccionado < idsCoincidentes.length // `indiceSeleccionado` está dentro del rango
-    ) {
-      const idSeleccionado = idsCoincidentes[indiceSeleccionado];
-      const itemSeleccionado = datosParaTabla.find((item) => item.id === idSeleccionado);
-  
-      if (itemSeleccionado && itemSeleccionado.id !== currentHorario?.id) {
-        // Solo actualizar si el ítem seleccionado es diferente al actual
-        setCurrentHorario(itemSeleccionado);
-        select.fns.onToggleByIdExclusively(itemSeleccionado.id);
-  
-        // Calcular la posición del scroll para el ítem seleccionado
-        const itemIndex = datosParaTabla.findIndex((item) => item.id === idSeleccionado);
-        if (itemIndex !== -1) {
-          const newScrollPosition = itemIndex * rowHeight + headerHeight;
-          setScrollPosition(newScrollPosition);
-        }
-      }
-    }
-  }, [idsCoincidentes, indiceSeleccionado, datosParaTabla, select, buscado, currentHorario])
+
   return (
     <div
-    className="p-2 w-fit  rounded-xl bg-white"
-    id="table-to-print"
-    ref={tableRef}
-    tabIndex={0}
-    onClick={handleTableClick}
-    onBlur={handleBlur}
-  > 
-    <Table
-      data={{ nodes: datosParaTabla }}
-      theme={theme}
-      layout={{ fixedHeader: true }}
-      select={select}
+      className="p-2 w-fit  rounded-xl bg-white"
+      id="table-to-print"
+      ref={tableRef}
+      tabIndex={0}
+      onClick={handleTableClick}
+      onBlur={handleBlur}
     >
-      {(tableList: T[]) => (
-        <>
-          <Header>
-            <HeaderRow>
-              {columnas.map((column, index) => (
-                <HeaderCell key={index}>{column.label}</HeaderCell>
-              ))}
-            </HeaderRow>
-          </Header>
-          <Body>
-            {status === 'pending' && (
-              <div className="absolute inset-0 flex justify-center items-center z-10">
-                <div className="flex flex-col items-center">
-                  <ClipLoader color="#36d7b7" size={50} speedMultiplier={0.5} />
-                  <p className="mt-2 text-gray-600">Cargando...</p>
+      <Table
+        data={{ nodes: datosParaTabla }}
+        theme={theme}
+        layout={{ fixedHeader: true }}
+        select={select}
+      >
+        {(tableList: T[]) => (
+          <>
+            <Header>
+              <HeaderRow>
+                {columnas.map((column, index) => (
+                  <HeaderCell key={index}>{column.label}</HeaderCell>
+                ))}
+              </HeaderRow>
+            </Header>
+            <Body>
+              {status === 'pending' && (
+                <div className="absolute inset-0 flex justify-center items-center z-10">
+                  <div className="flex flex-col items-center">
+                    <ClipLoader color="#36d7b7" size={50} speedMultiplier={0.5} />
+                    <p className="mt-2 text-gray-600">Cargando...</p>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
 
-            {tableList.map((item, rowIndex) => (
-              <Row key={rowIndex} item={item}>
-                {columnas.map((column, columnIndex) => {
-                  return (
-                    <Cell key={columnIndex} {...column.cellProps?.(item)}>
-                      {column.renderCell(item)}
-                    </Cell>
-                  );
-                })}
-              </Row>
-            ))}
-          </Body>
+              {tableList.map((item, rowIndex) => (
+                <Row key={rowIndex} item={item}>
+                  {columnas.map((column, columnIndex) => {
+                    return (
+                      <Cell key={columnIndex} {...column.cellProps?.(item)}>
+                        {column.renderCell(item)}
+                      </Cell>
+                    );
+                  })}
+                </Row>
+              ))}
+            </Body>
 
-          {footer && datosParaTabla && <TablaFooter datos={datosFooter} />}
-        </>
-      )}
-    </Table>
-  </div>
+            {footer && datosParaTabla && <TablaFooter datos={datosFooter} />}
+          </>
+        )}
+      </Table>
+    </div>
   );
 }

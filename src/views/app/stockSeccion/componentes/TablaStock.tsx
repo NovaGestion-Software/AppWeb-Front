@@ -1,8 +1,8 @@
-import { TablaStocks, TableColumn } from "@/types";
-import TablaInforme from "../../informes/_components/TablaInforme";
-import { useStockPorSeccion } from "@/store/useStockPorSeccion";
-import { useEffect } from "react";
-import { TableNode } from "@table-library/react-table-library/types/table";
+import { TablaStocks, TableColumn } from '@/types';
+import TablaInforme from '../../informes/_components/TablaInforme';
+import { useStockPorSeccion } from '@/store/useStockPorSeccion';
+import { useEffect } from 'react';
+import { TableNode } from '@table-library/react-table-library/types/table';
 
 interface ProductoAgrupado {
   id: string;
@@ -15,21 +15,32 @@ interface ProductoAgrupado {
   total: string;
 }
 
-
 interface TableProps<T extends TableNode> {
-  datosParaTabla: T[];
+  datosParaTabla?: T[];
   idsCoincidentes?: (string | number)[]; // Prop opcional
   indiceSeleccionado?: number; // Prop opcional
 }
-export default function TablaStock({datosParaTabla}: TableProps<TableNode>) {
-  const { indiceSeleccionado, idsCoincidentes,setTablaStock, setStockRenderizado, stockRenderizado} = useStockPorSeccion()
+
+export default function TablaStock({ datosParaTabla }: TableProps<TableNode>) {
+  const {
+    indiceSeleccionado,
+    idsCoincidentes,
+    stockRenderizado,
+    setTablaStock,
+    setStockRenderizado,
+  } = useStockPorSeccion();
+
+  // console.log(stockRenderizado);
 
   let idCounter = 0;
-  const depositos = obtenerDepositos(datosParaTabla);
+  const depositos = obtenerDepositos(stockRenderizado);
+
+  // console.log(depositos);
+
   // const columnasFijas = 6;
   // const columnasDinamicas = depositos.size;
   // const columnasTotales = columnasFijas + columnasDinamicas;
-  const datosAgrupados = agruparPorProducto(datosParaTabla);
+  const datosAgrupados = agruparPorProducto(stockRenderizado);
   let cantidadItems = datosAgrupados.length;
   let totalGeneral = 0;
   const totalesPorDeposito: { [deposito: string]: number } = {};
@@ -49,16 +60,15 @@ export default function TablaStock({datosParaTabla}: TableProps<TableNode>) {
     }
   });
 
-
-  let setData = true
+  let setData = true;
   useEffect(() => {
-    if(setData){
-      setTablaStock(datosAgrupados)
-      setStockRenderizado(datosAgrupados)
+    if (setData) {
+      setTablaStock(datosAgrupados);
+      setStockRenderizado(datosAgrupados);
     }
-  },[setData])
-  
-  console.log('renderizado', stockRenderizado)
+  }, [setData]);
+
+  // console.log('renderizado', stockRenderizado);
 
   const COLUMNS: TableColumn<TablaStocks>[] = [
     {
@@ -82,7 +92,7 @@ export default function TablaStock({datosParaTabla}: TableProps<TableNode>) {
       renderCell: (item: TablaStocks) => item.precio,
     },
     // Insertar columnas de depósitos dinamicamente
-    ...Array.from(obtenerDepositos(datosParaTabla)).map((depositoId) => ({
+    ...Array.from(obtenerDepositos(stockRenderizado)).map((depositoId) => ({
       label: `${depositoId}`,
       renderCell: (item: TablaStocks) => {
         // Buscar el stock correspondiente a este depósito
@@ -96,6 +106,7 @@ export default function TablaStock({datosParaTabla}: TableProps<TableNode>) {
       renderCell: (item: TablaStocks) => item.total,
     },
   ];
+
   const customTheme = {
     Table: `
       grid-template-columns: 
@@ -104,23 +115,19 @@ export default function TablaStock({datosParaTabla}: TableProps<TableNode>) {
           minmax(200px, 300px)     /* DESCRIPCION */
           minmax(100px, 150px)     /* MARCA */
           minmax(90px, 150px)      /* PRECIO */
-          ${'minmax(70px, 90px)'.repeat(depositos.size)} /* DEPOSITOS */
+          ${'minmax(70px, 90px)'.repeat(depositos.size || 0)} /* DEPOSITOS */
           minmax(80px, 100px);      /* TOTAL */
       width: 70rem;
-      max-height: 550px; /* Reducir la altura máxima para dejar espacio al footer */
+      height: 650px; /* Altura máxima reducida */
       overflow-y: auto; /* Habilitar scroll vertical */
       scrollbar-width: thin;
       font-variant-numeric: tabular-nums;
       font-size: 14px; /* Tamaño de fuente por defecto */
-      margin-bottom: 40px; /* Espacio para el footer */
-      
     
       @media (min-width: 1280px) and (max-width: 1380px) {
         width: 55rem; /* Ancho reducido */
-        max-height: 350px; /* Altura máxima reducida */
+        height: 400px; /* Altura máxima reducida */
         font-size: 12px; /* Tamaño de fuente más pequeño */
-        height: 360px; /* Altura reducida para pantallas medianas */
-        margin-bottom: 10px; /* Espacio reducido para el footer */
       }
     `,
 
@@ -134,12 +141,12 @@ export default function TablaStock({datosParaTabla}: TableProps<TableNode>) {
       border-bottom: 1px solid black; /* Borde superior */
       
       &:first-child {
-        border-top-left-radius: 12px; /* Solo el borde superior izquierdo tendrá el radio */
+        /* border-top-left-radius: 12px; Solo el borde superior izquierdo tendrá el radio */
         border-left: 1px solid black; /* Borde izquierdo */
       }
 
       &:last-child {
-        border-top-right-radius: 12px; /* Solo el borde superior izquierdo tendrá el radio */
+        /*border-top-right-radius: 12px;  Solo el borde superior izquierdo tendrá el radio */
         border-right: 1px solid black; /* Borde derecho */
       }
 
@@ -160,8 +167,6 @@ export default function TablaStock({datosParaTabla}: TableProps<TableNode>) {
       border: 1px solid #ccc; /* Borde superior para cada fila */ 
       border-left: 1px solid black; /* Borde izquierdo */
       border-right: 1px solid black; /* Borde derecho */  
-      margin-top: 10px; /* Margen superior de 10px */
- 
 
       &:nth-of-type(odd) { background-color: #fff; }
       &:nth-of-type(even) { background-color: #eaf5fd; }
@@ -197,7 +202,7 @@ export default function TablaStock({datosParaTabla}: TableProps<TableNode>) {
       }
 
       @media (min-width: 1280px) and (max-width: 1380px) {
-        padding: 4px; /* Padding reducido */
+        padding: 2px; /* Padding reducido */
         font-size: 12px; /* Tamaño de fuente más pequeño */
       }
     `,
@@ -210,19 +215,20 @@ export default function TablaStock({datosParaTabla}: TableProps<TableNode>) {
       background-color: #fff; /* Fondo sólido para ocultar el contenido de la tabla */
       text-align: right;
       font-size: 14px;
+      color: red;
       z-index: 1; /* Asegurar que el footer esté por encima del contenido */
 
       &:last-child {
         border-left: 1px solid black;
-        border-bottom-right-radius: 12px;
-        color: red;
+        /*border-bottom-right-radius: 12px;*/
+        
       }
 
       &:nth-of-type(1) {
         border: 1px solid black;
         background-color: #A5C9FF;
         font-weight: bold;
-        border-bottom-left-radius: 8px; /* Redondeo en la esquina inferior izquierda */
+        /*border-bottom-left-radius: 8px;  Redondeo en la esquina inferior izquierda */
       }
 
       
@@ -246,6 +252,7 @@ export default function TablaStock({datosParaTabla}: TableProps<TableNode>) {
       }
     `,
   };
+
   function agruparPorProducto(data: any): ProductoAgrupado[] {
     const productosAgrupados: ProductoAgrupado[] = [];
 
@@ -298,29 +305,23 @@ export default function TablaStock({datosParaTabla}: TableProps<TableNode>) {
 
     if (!data) return depositos;
 
-    for (const rubroKey in data) {
-      if (data.hasOwnProperty(rubroKey)) {
-        const rubro = data[rubroKey];
-
-        if (rubro.productos) {
-          rubro.productos.forEach((producto: any) => {
-            if (producto.depositos) {
-              producto.depositos.forEach((deposito: any) => {
-                if (deposito.deposito) {
-                  depositos.add(deposito.deposito); // Usamos .add para asegurar que el valor sea único
-                }
-              });
-            }
-          });
-        }
+    // Iteramos directamente sobre el array de rubros
+    data.forEach((rubro: any) => {
+      if (rubro.productos) {
+        rubro.productos.forEach((producto: any) => {
+          if (producto.depositos) {
+            producto.depositos.forEach((deposito: any) => {
+              if (deposito.deposito) {
+                depositos.add(deposito.deposito); // Usamos .add para asegurar que el valor sea único
+              }
+            });
+          }
+        });
       }
-    }
+    });
 
     return depositos; // Retornamos el Set con los depósitos únicos
   }
-
- 
-
 
   // console.log(datosAgrupados);
   // funcion por si el codigo viene con letras
@@ -328,7 +329,6 @@ export default function TablaStock({datosParaTabla}: TableProps<TableNode>) {
   //   ...item,
   //   codigo: item.codigo.replace(/\D/g, ""), // Elimina todas las letras del código
   // }));
-  
 
   const datosFooter: { [key: string]: string } = {
     id: cantidadItems.toString(),
@@ -348,18 +348,18 @@ export default function TablaStock({datosParaTabla}: TableProps<TableNode>) {
   // Insertamos el total general en la última columna
   datosFooter[`columna${columnaIndex}`] = totalGeneral.toString();
 
+  // console.log(stockRenderizado);
   return (
     <>
       <TablaInforme
         columnas={COLUMNS}
-        datosParaTabla={stockRenderizado}
+        datosParaTabla={datosAgrupados}
         procesado={false}
         estilos={customTheme}
         footer={true}
         datosFooter={datosFooter}
         idsCoincidentes={idsCoincidentes}
         indiceSeleccionado={indiceSeleccionado}
-   
       />
     </>
   );

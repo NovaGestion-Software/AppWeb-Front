@@ -24,12 +24,29 @@ export async function obtenerVentasHora(fechas: FechasRango) {
   }
 }
 
+export async function obtenerRubrosDisponibles() {
+  try {
+    const url = `/apinovades/generico/obtenerSeccionesRubros.php?_i={"_e":"12","_s":"08","_m":"prod","_o":"1"}`;
+    const { data } = await apiPhp(url);
+
+    // console.log(result);
+    return data;
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.error);
+    } else {
+      console.log(error);
+      throw new Error('Error desconocido al obtener  secciones de cajas');
+    }
+  }
+}
 
 export async function obtenerProductos() {
   try {
     const url = `/apinovades/generico/obtenerProducto.php`;
 
     const { data } = await apiPhp(url);
+
     return data;
   } catch (error) {
     if (isAxiosError(error) && error.response) throw new Error(error.response.data.error);
