@@ -24,7 +24,7 @@ export default function TablaSeccionRubro({
 
   // console.log(datos);
   const {
-    footer,
+    // footer,
     setFooter,
     seccionesSeleccionadas,
     rubrosSeleccionados,
