@@ -96,7 +96,7 @@ export default function StockPorSeccion() {
         </div>
 
         {/** EXPORTORTAR A EXCEEL E IMPRIMIR. */}
-        <div className="p-1 rounded-lg  col-span-2 col-start-9 2xl:col-span-2 2xl:col-start-7 2xl:left-10 2xl:relative 2xl:px-4 ">
+        <div className="p-1 rounded-lg  col-span-2 col-start-9 2xl:col-span-2 2xl:col-start-7 2xl:left-10 2xl:relative 2xl:px-4">
           <HerramientasComponent
             data={stockRenderizado}
             isProcessing={!isProcessing}
@@ -109,7 +109,7 @@ export default function StockPorSeccion() {
       {/** HERRAMIENTAS DE LA VISTA */}
       <div className="grid grid-cols-10 grid-rows-2 space-x-4 px-2">
         {/**FOTO Y BOTONES */}
-        <div className="col-start-1 row-start-1 col-span-2 row-span-2 2xl:left-0 2xl:col-start-2 ">
+        <div className="col-start-1 row-start-1 col-span-2 row-span-2 2xl:left-0 2xl:col-start-2 2xl:pl-10 ">
           <VerFoto />
         </div>
 
@@ -161,7 +161,7 @@ export default function StockPorSeccion() {
 
       {/**TABLA STOCK */}
       <div className="grid grid-cols-12 px-4 py-2">
-        <div className="flex items-center justify-center col-span-full ">
+        <div className="flex items-center justify-center col-span-full">
           <TablaStock />
         </div>
       </div>

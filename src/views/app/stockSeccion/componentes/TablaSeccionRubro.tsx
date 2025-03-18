@@ -17,20 +17,15 @@ export default function TablaSeccionRubro({
   showRubrosModal,
   setShowRubrosModal,
 }: TablaSeccionRubroProps) {
-  const [isConfirmEnabled, setIsConfirmEnabled] = useState(false); // Estado para habilitar el botón de confirmar
-  const [isCancelEnabled, setIsCancelEnabled] = useState(false); // Estado para habilitar el botón de cancelar
+  const [isConfirmEnabled, setIsConfirmEnabled] = useState(false); // habilitar botón confirmar
+  const [isCancelEnabled, setIsCancelEnabled] = useState(false); // habilitar botón cancelar
 
-  // const [datos, setDatos] = useState([]);
-
-  // console.log(datos);
   const {
-    // footer,
     setFooter,
     seccionesSeleccionadas,
     rubrosSeleccionados,
     rubrosToFetch,
     seccionesToFetch,
-    // stockRenderizado,
     setSeccionesToFetch,
     setRubrosToFetch,
     setRubrosSeleccionados,
@@ -39,8 +34,6 @@ export default function TablaSeccionRubro({
     clearRubrosSeleccionados,
     clearSeccionesSeleccionadas,
   } = useStockPorSeccion();
-
-  // console.log(stockRenderizado);
 
   const COLUMNS: TableColumn<TablaSecciones>[] = [
     {
@@ -140,12 +133,8 @@ export default function TablaSeccionRubro({
     onSuccess: (data) => {
       // console.log(data.data);
       const arrayDeRubros: TablaStocks[] = Object.values(data.data);
-      // console.log(arrayDeRubros);
-      setStockRenderizado(arrayDeRubros);
       setFooter(true);
-      // console.log(datos);
-      // setDatos(data.data);
-      // console.log(datos);
+      setStockRenderizado(arrayDeRubros);
     },
   });
 
@@ -166,11 +155,6 @@ export default function TablaSeccionRubro({
       setIsCancelEnabled(true);
     }
   }, [rubrosSeleccionados, rubrosToFetch]);
-
-  // Usar useEffect para escuchar cambios en el estado de `footer`
-  // useEffect(() => {
-  //   console.log('footer actualizado:', footer);
-  // }, [footer]);
 
   const handleCloseModal = () => {
     // console.log("handle close");
@@ -216,9 +200,9 @@ export default function TablaSeccionRubro({
           estilos={customTheme}
           procesado={false}
           onSubmit={handleConfirm}
-          subItemsProperty="rubros" // Nombre de la propiedad que contiene los subítems
-          subItemKeyProperty="rubro" // Nombre de la propiedad que identifica la clave única de los subítems
-          subItemLabelProperty="nrubro" // Nombre de la propiedad que identifica la etiqueta de los subítems
+          subItemsProperty="rubros" // Nombre que contiene los subítems
+          subItemKeyProperty="rubro" // Nombre que identifica la clave única de los subítems
+          subItemLabelProperty="nrubro" // Nombre que identifica la etiqueta de los subítems
           subItemToFetch={rubrosToFetch}
           itemToFetch={seccionesToFetch}
           setItemsStore={setSeccionesSeleccionadas}

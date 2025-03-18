@@ -119,7 +119,7 @@ export default function TablaStock({ datosParaTabla }: TableProps<TableNode>) {
           minmax(90px, 150px)      /* PRECIO */
           ${'minmax(70px, 90px)'.repeat(depositos.size || 0)} /* DEPOSITOS */
           minmax(80px, 100px);      /* TOTAL */
-      width: 70rem;
+      max-width: 70rem;
       height: 650px; /* Altura máxima reducida */
       overflow-y: auto; /* Habilitar scroll vertical */
       scrollbar-width: thin;
@@ -217,6 +217,7 @@ export default function TablaStock({ datosParaTabla }: TableProps<TableNode>) {
       background-color: #fff; /* Fondo sólido para ocultar el contenido de la tabla */
       text-align: right;
       font-size: 14px;
+      height: 40px;
       color: red;
       z-index: 1; /* Asegurar que el footer esté por encima del contenido */
 
@@ -350,7 +351,7 @@ export default function TablaStock({ datosParaTabla }: TableProps<TableNode>) {
   // Insertamos el total general en la última columna
   datosFooter[`columna${columnaIndex}`] = totalGeneral.toString();
 
-  console.log(footer);
+  // console.log(footer);
   return (
     <>
       <TablaInforme
