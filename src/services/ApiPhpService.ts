@@ -41,11 +41,17 @@ export async function obtenerRubrosDisponibles() {
   }
 }
 
-export async function obtenerProductos() {
+export async function obtenerProductos(secciones: string[], rubros: string[]) {
   try {
-    const url = `/apinovades/generico/obtenerProducto.php`;
+    const url = `/apinovades/generico/obtenerProducto.php?_i={"_e":"12","_s":"08","_m":"prod"}`;
 
-    const { data } = await apiPhp(url);
+    const datos = { secciones, rubros };
+    console.log(datos);
+    // Enviar las secciones y rubros en el cuerpo de la solicitud
+    const { data } = await apiPhp(url, {
+      method: 'POST',
+      data: datos,
+    });
 
     return data;
   } catch (error) {

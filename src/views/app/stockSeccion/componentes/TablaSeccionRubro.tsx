@@ -95,7 +95,15 @@ export default function TablaSeccionRubro({
   };
 
   const { mutate } = useMutation({
-    mutationFn: obtenerProductos,
+    mutationFn: () => {
+      // Filtrar solo las claves que tienen valor true en seccionesSeleccionadas
+      const seccionesSeleccionadasKeys = Object.keys(seccionesSeleccionadas ?? {}).filter(
+        (key) => seccionesSeleccionadas?.[key] === true
+      );
+
+      // Llamar a obtenerProductos con las claves filtradas
+      return obtenerProductos(seccionesSeleccionadasKeys, rubrosSeleccionados);
+    },
     onError: (error) => {
       console.error('Error al obtener los productos:', error);
     },
@@ -142,6 +150,7 @@ export default function TablaSeccionRubro({
   const handleModalConfirm = () => {
     // setFooter(true);
     mutate();
+
     handleConfirm(seccionesSeleccionadas ?? {}, rubrosSeleccionados ?? []);
     setShowRubrosModal(false);
   };
@@ -152,11 +161,13 @@ export default function TablaSeccionRubro({
     return array1.every((item) => array2.includes(item));
   };
 
+  // console.log(seccionesSeleccionadas, rubrosSeleccionados);
+
   return (
     <>
       <ModalInforme
         show={showRubrosModal}
-        title="Seccion y Rubro"
+        title="Secciones y Rubros"
         onClose={handleCloseModal}
         onConfirm={handleModalConfirm}
         buttons={true}

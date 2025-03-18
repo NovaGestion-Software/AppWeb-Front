@@ -57,6 +57,10 @@ export default function TablaExpandible<T extends TableNode>({
   const [localSelectedItems, setLocalSelectedItems] = useState<{ [key: string]: boolean }>({});
   const [localSelectedSubItems, setLocalSelectedSubItems] = useState<string[]>([]);
 
+  // console.log(localSelectedItems, localSelectedSubItems);
+  // console.log(itemsStore, localSelectedSubItems);
+  // console.log(localSelectedSubItems);
+
   const data: Data<TableNode> = { nodes: datosParaTabla };
   // FUNC ROWSELECT
   const select = useRowSelect(data, {
@@ -115,6 +119,7 @@ export default function TablaExpandible<T extends TableNode>({
       setCurrentHorario(selectedItem);
     }
   }
+
   // FUNCION PARA EXANDIR LA TABLA
   const handleExpand = (item: T) => {
     if (expandedIds.includes(item.seccion)) {

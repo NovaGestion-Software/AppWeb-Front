@@ -75,14 +75,14 @@ export default function ModalInforme({
                 {title}
               </h3>
 
-              <ActionButton
+              {/* <ActionButton
                 text="X"
                 onClick={onClose}
                 color="redSoft"
                 className="h-8 w-10 rounded border border-slate-900/50"
                 textClassName="text-slate-600"
                 size="md"
-              />
+              /> */}
             </div>
 
             {/* Contenido dinámico */}
