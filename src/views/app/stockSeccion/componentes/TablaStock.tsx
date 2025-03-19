@@ -41,7 +41,7 @@ export default function TablaStock({ datosParaTabla }: TableProps<TableNode>) {
     if (stockRenderizado) {
       const depositosUnicos = obtenerDepositos(stockRenderizado);
       const depositosArray = depositosUnicos.map(
-        (deposito) => `${deposito.deposito} - ${deposito.ndeposito}` // Combinas deposito y ndeposito
+        (deposito) => `${deposito.deposito} - ${deposito.ndeposito}`
       );
       setDepositosDisponibles(depositosArray);
     }
@@ -111,8 +111,6 @@ export default function TablaStock({ datosParaTabla }: TableProps<TableNode>) {
       renderCell: (item: TablaStocks) => item.total,
     },
   ];
-
-  // console.log(depositosDisponibles);
 
   const customTheme = {
     Table: `

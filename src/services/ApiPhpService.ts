@@ -71,7 +71,7 @@ export async function obtenerProductos(secciones: string[], rubros: string[]) {
     const url = `/apinovades/generico/obtenerProducto.php?_i={"_e":"12","_s":"08","_m":"prod"}`;
 
     const datos = { secciones, rubros };
-    console.log(datos);
+    // console.log(datos);
     // Enviar las secciones y rubros en el cuerpo de la solicitud
     const { data } = await apiPhp(url, {
       method: 'POST',

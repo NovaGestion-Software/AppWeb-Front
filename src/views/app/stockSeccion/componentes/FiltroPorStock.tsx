@@ -4,22 +4,27 @@ import { useFiltros } from '../hooks/useFiltros';
 import CheckboxInput from '@/Components/ui/Inputs/Checkbox';
 
 export default function FiltroPorStock() {
+  const [disabled, setDisabled] = useState(false);
   const { checkboxSeleccionados, setCheckboxSeleccionados, setStockRenderizado } =
     useStockPorSeccion();
-  const [disabled, setDisabled] = useState(false);
   const { aplicarFiltros } = useFiltros();
+
+  // Aplicar filtros cada vez que cambie checkboxSeleccionados
+  useEffect(() => {
+    const datosFiltrados = aplicarFiltros();
+    // console.log(datosFiltrados);
+    if (datosFiltrados.length > 0) {
+      setStockRenderizado(datosFiltrados);
+    }
+  }, [checkboxSeleccionados]);
+
   const handleCheckboxChange = (grupo: keyof typeof checkboxSeleccionados, value: string) => {
-    const nuevoValor = checkboxSeleccionados[grupo] === value ? null : value;
+    const nuevoValor = checkboxSeleccionados[grupo] === value ? '' : value;
 
     // Llamar a setCheckboxSeleccionados con los dos argumentos
     setCheckboxSeleccionados(grupo, nuevoValor);
   };
 
-  // Aplicar filtros cada vez que cambie checkboxSeleccionados
-  useEffect(() => {
-    const datosFiltrados = aplicarFiltros();
-    setStockRenderizado(datosFiltrados);
-  }, [checkboxSeleccionados]);
   return (
     <div className="flex gap-1 border p-1 rounded-lg ">
       <CheckboxInput

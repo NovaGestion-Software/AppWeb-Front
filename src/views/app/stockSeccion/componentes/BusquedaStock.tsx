@@ -20,6 +20,7 @@ export default function BusquedaStock({ data }: any) {
     idsCoincidentes,
     setIdsCoincidentes,
     stockRenderizado,
+    setTablaStock,
     setStockRenderizado,
     setSeccionesSeleccionadas,
     setRubrosSeleccionados,
@@ -148,6 +149,7 @@ export default function BusquedaStock({ data }: any) {
       setBuscado(false);
       setIndiceSeleccionado(0);
       setIdsCoincidentes([]);
+      setTablaStock([]);
       setStockRenderizado([]);
       setSeccionesSeleccionadas({});
       setSeccionesToFetch({});

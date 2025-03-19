@@ -9,17 +9,17 @@ export default function OrdenarPorCheckbox() {
   const [disabled, setDisabled] = useState(false);
   const { aplicarFiltros } = useFiltros();
 
-  const handleCheckboxChange = (grupo: keyof typeof checkboxSeleccionados, value: string) => {
-    const nuevoValor = checkboxSeleccionados[grupo] === value ? null : value;
-
-    setCheckboxSeleccionados(grupo, nuevoValor);
-  };
-
   // Aplicar filtros cada vez que cambie checkboxSeleccionados
   useEffect(() => {
     const datosFiltrados = aplicarFiltros();
     setStockRenderizado(datosFiltrados);
   }, [checkboxSeleccionados]);
+
+  const handleCheckboxChange = (grupo: keyof typeof checkboxSeleccionados, value: string) => {
+    const nuevoValor = checkboxSeleccionados[grupo] === value ? null : value;
+
+    setCheckboxSeleccionados(grupo, nuevoValor);
+  };
 
   return (
     <>

@@ -135,3 +135,34 @@ export interface TablaSecciones extends TableNode {
   nseccion: string;
   rubros: { rubro: string; nrubro: string }[];
 }
+
+export interface Talle {
+  talle: string;
+  stock: string;
+}
+
+export interface Deposito {
+  deposito: string;
+  ndeposito: string;
+  talles: Talle[];
+}
+
+export interface Producto {
+  codigo: string;
+  nombre: string;
+  marca: string;
+  nmarca: string;
+  tipotalle: string;
+  prec1: string;
+  prec2: string;
+  prec3: string;
+  depositos: Deposito[];
+}
+
+export interface Rubro {
+  rubro: string;
+  nrubro: string;
+  productos: Producto[];
+}
+
+export type TablaStock1 = Rubro[];

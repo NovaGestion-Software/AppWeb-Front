@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { useStockPorSeccion } from '@/views/app/stockSeccion/store/useStockPorSeccion';
 import { obtenerProductos } from '@/services/ApiPhpService';
-import { TablaSecciones, TablaStocks, TableColumn } from '@/types';
+import { TablaSecciones, TablaStock1, TableColumn } from '@/types';
 import TablaExpandible from './TablaExpandible';
 import ModalInforme from '../../informes/_components/ModalInforme';
 
@@ -21,12 +21,14 @@ export default function TablaSeccionRubro({
   const [isCancelEnabled, setIsCancelEnabled] = useState(false); // habilitar botón cancelar
 
   const {
+    // stockRenderizado,
     setFooter,
     seccionesSeleccionadas,
     rubrosSeleccionados,
     rubrosToFetch,
     seccionesToFetch,
     setSeccionesToFetch,
+    setTablaStock,
     setRubrosToFetch,
     setRubrosSeleccionados,
     setStockRenderizado,
@@ -110,11 +112,15 @@ export default function TablaSeccionRubro({
     },
     onSuccess: (data) => {
       // console.log(data.data);
-      const arrayDeRubros: TablaStocks[] = Object.values(data.data);
+      const arrayDeRubros: TablaStock1[] = Object.values(data.data);
       setFooter(true);
       setStockRenderizado(arrayDeRubros);
+      setTablaStock(arrayDeRubros);
     },
   });
+
+  // console.log(parseFloat(stockRenderizado[0].productos[0].depositos[0].talles[2].stock));
+  // console.log(stockRenderizado);
 
   useEffect(() => {
     // Si rubrosSeleccionados tiene contenido, habilitar el botón de confirmar
@@ -161,8 +167,6 @@ export default function TablaSeccionRubro({
     if (array1.length !== array2.length) return false;
     return array1.every((item) => array2.includes(item));
   };
-
-  // console.log(seccionesSeleccionadas, rubrosSeleccionados);
 
   return (
     <>

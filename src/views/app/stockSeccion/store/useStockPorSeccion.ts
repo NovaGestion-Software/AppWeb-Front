@@ -1,4 +1,4 @@
-import { TablaStocks } from '@/types';
+// import { TablaStock1, TablaStocks } from '@/types';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
@@ -31,11 +31,11 @@ type StockPorSeccionProps = {
   // TABLA STOCK
   // tabla stock como la informacion despues de la peticion, y tabla renderizada como la informacion ordenada
   // el tema es que despues de data renderizada sea vacia como va a volver a llenarse?
-  tablaStock: TablaStocks[];
-  setTablaStock: (data: TablaStocks[]) => void;
+  tablaStock: any[];
+  setTablaStock: (data: any[]) => void;
 
-  stockRenderizado: TablaStocks[];
-  setStockRenderizado: (data: TablaStocks[]) => void;
+  stockRenderizado: any[];
+  setStockRenderizado: (data: any[]) => void;
 
   //BUSQUEDA TABLA STOCK
   indiceSeleccionado: number;
@@ -94,10 +94,10 @@ export const useStockPorSeccion = create<StockPorSeccionProps>()(
       clearSeccionesFetch: () => set({ seccionesToFetch: null }),
       clearRubrosFetch: () => set({ rubrosToFetch: [] }),
       // TABLA STOCK
-      tablaStock: [] as TablaStocks[],
-      setTablaStock: (data: TablaStocks[]) => set({ tablaStock: data }),
-      stockRenderizado: [] as TablaStocks[],
-      setStockRenderizado: (data: TablaStocks[]) => set({ stockRenderizado: data }),
+      tablaStock: [] as any[],
+      setTablaStock: (data: any[]) => set({ tablaStock: data }),
+      stockRenderizado: [] as any[],
+      setStockRenderizado: (data: any[]) => set({ stockRenderizado: data }),
       // BUSQUEDA TABLA STOCK
       indiceSeleccionado: 0,
       idsCoincidentes: [],

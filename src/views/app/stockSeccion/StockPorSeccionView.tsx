@@ -30,6 +30,7 @@ export default function StockPorSeccionView() {
 
   const {
     stockRenderizado,
+    // tablaStock,
     marcasDisponibles,
     marcasSeleccionadas,
     setMarcasDisponibles,
@@ -58,21 +59,22 @@ export default function StockPorSeccionView() {
     }
   }, [rubrosDis]);
 
-  useEffect(() => {
-    console.log(stockRenderizado);
-    if (stockRenderizado && stockRenderizado.length > 0) {
-      const marcasUnicas = [...new Set(stockRenderizado.map((item) => item.marca))];
-      // console.log(marcasUnicas);
-      setMarcasDisponibles(marcasUnicas); // Actualiza el estado con las marcas únicas
-    }
-  }, [stockRenderizado]);
+  // useEffect(() => {
+  //   // console.log(stockRenderizado);
+  //   if (stockRenderizado && stockRenderizado.length > 0) {
+  //     const marcasUnicas = [...new Set(stockRenderizado.map((item) => item.marca))];
+  //     // console.log(marcasUnicas);
+  //     setMarcasDisponibles(marcasUnicas); // Actualiza el estado con las marcas únicas
+  //   }
+  // }, [stockRenderizado]);
 
-  // Agrega un log para verificar el valor de marcasDisponibles después de actualizar
-  useEffect(() => {
-    console.log(marcasDisponibles); // Verifica las marcas después de que el estado cambia
-  }, [marcasDisponibles]);
+  // // Agrega un log para verificar el valor de marcasDisponibles después de actualizar
+  // useEffect(() => {
+  //   console.log(marcasDisponibles); // Verifica las marcas después de que el estado cambia
+  // }, [marcasDisponibles]);
 
   // console.log(stockRenderizado);
+  // console.log(tablaStock);
   // console.log(marcasDisponibles);
 
   return (
@@ -203,7 +205,7 @@ export default function StockPorSeccionView() {
         title="Marcas"
         showModal={showMarcasModal}
         setShowModal={setShowMarcasModal}
-        datos={stockRenderizado.map((item) => item.marca)} // Datos originales
+        datos={stockRenderizado.map((item) => item)} // Datos originales
         itemsDisponibles={marcasDisponibles}
         itemsSeleccionados={marcasSeleccionadas}
         setItemsDisponibles={setMarcasDisponibles}
