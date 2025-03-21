@@ -130,7 +130,7 @@ export interface TableColumn<T> {
 
 export interface TableNode {
   id: string | number; // ID único para cada fila
-  codigo: string;
+  codigo?: string;
 }
 
 export interface TablaSecciones extends TableNode {

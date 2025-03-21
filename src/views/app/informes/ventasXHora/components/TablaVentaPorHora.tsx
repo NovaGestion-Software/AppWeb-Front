@@ -231,7 +231,7 @@ export default function TablaVentaPorHora({
 
   return (
     <div>
-      <TablaInforme
+      <TablaInforme<VentaPorHora>
         columnas={COLUMNS}
         datosParaTabla={dataParaTabla}
         estilos={customTheme}

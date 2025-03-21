@@ -34,7 +34,7 @@ export default function BusquedaStock({ data }: any) {
     setTemporadasDisponibles,
     setTemporadasSeleccionadas,
     setDepositosDisponibles,
-    setDepositosSeleccionadas,
+    setDepositosSeleccionados,
     setFooter,
   } = useStockPorSeccion();
 
@@ -176,7 +176,7 @@ export default function BusquedaStock({ data }: any) {
       setTemporadasDisponibles([]);
       setTemporadasSeleccionadas([]);
       setDepositosDisponibles([]);
-      setDepositosSeleccionadas([]);
+      setDepositosSeleccionados([]);
     }
   };
 
