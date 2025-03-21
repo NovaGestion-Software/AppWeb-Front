@@ -15,10 +15,10 @@ import {
 } from '@table-library/react-table-library/table';
 import { getTheme, DEFAULT_OPTIONS } from '@table-library/react-table-library/material-ui';
 import { useTheme } from '@table-library/react-table-library/theme';
-import { useVentasHoraStore } from '@/store/useVentasHoraStore';
+// import { useVentasHoraStore } from '@/store/useVentasHoraStore';
 import { ClipLoader } from 'react-spinners';
 import { useStockPorSeccion } from '@/views/app/stockSeccion/store/useStockPorSeccion';
-import { TableColumn, TableNode } from '@/types';
+import { Status, TableColumn, TableNode } from '@/types';
 
 interface TablaFooterProps {
   datos?: {
@@ -50,6 +50,7 @@ interface TableProps<T extends TableNode> {
   footer?: boolean;
   datosFooter?: {};
   procesado: boolean;
+  status?: Status;
   idsCoincidentes?: (string | number)[]; // Prop opcional
   indiceSeleccionado?: number; // Prop opcional
 }
@@ -61,13 +62,14 @@ export default function TablaInforme<T extends TableNode>({
   footer,
   datosFooter,
   procesado,
+  status,
   idsCoincidentes = [], // Valor por defecto: array vacío
   indiceSeleccionado = -1,
 }: TableProps<T>) {
   const [isActive, setIsActive] = useState(false);
   const [currentHorario, setCurrentHorario] = useState<TableNode | null>(null);
   const [scrollPosition, setScrollPosition] = useState(0);
-  const { status } = useVentasHoraStore();
+  // const { status } = useVentasHoraStore();
   const { buscado } = useStockPorSeccion();
 
   const tableRef = useRef<HTMLDivElement | null>(null);
@@ -81,17 +83,19 @@ export default function TablaInforme<T extends TableNode>({
   const select = useRowSelect(data, {
     onChange: onSelectChange,
   });
-
+  // console.log(datosParaTabla[0]);
   //  Establece la primera fila seleccionada si no hay ninguna y los datos ya están procesados
   useEffect(() => {
     if (procesado && datosParaTabla.length > 0 && !currentHorario) {
       const firstItem = datosParaTabla[0];
+      console.log(firstItem);
       setCurrentHorario(firstItem);
       select.fns.onToggleByIdExclusively(firstItem.id);
       setIsActive(true);
     }
   }, [procesado, datosParaTabla, select, currentHorario]);
 
+  // console.log(currentHorario);
   //  Si la tabla está activa, poner foco en ella automáticamente
   useEffect(() => {
     if (isActive && tableRef.current) {
@@ -150,6 +154,7 @@ export default function TablaInforme<T extends TableNode>({
     }
   }, [scrollPosition]);
 
+  // console.log(datosParaTabla);
   // SELECCION POR BUSQUEDA
   useEffect(() => {
     // console.log('Buscado:', buscado);
@@ -163,8 +168,15 @@ export default function TablaInforme<T extends TableNode>({
       indiceSeleccionado >= 0 && // `indiceSeleccionado` es un número válido
       indiceSeleccionado < idsCoincidentes.length // `indiceSeleccionado` está dentro del rango
     ) {
+      // console.log(idsCoincidentes);
+      // console.log(indiceSeleccionado);
       const idSeleccionado = idsCoincidentes[indiceSeleccionado];
-      const itemSeleccionado = datosParaTabla.find((item) => item.id === idSeleccionado);
+      const itemSeleccionado = datosParaTabla.find((item) => item.codigo === idSeleccionado);
+
+      // console.log(indiceSeleccionado);
+      // console.log(idSeleccionado);
+      // console.log(itemSeleccionado);
+      // console.log(currentHorario);
 
       if (itemSeleccionado && itemSeleccionado.id !== currentHorario?.id) {
         // Solo actualizar si el ítem seleccionado es diferente al actual
@@ -173,13 +185,17 @@ export default function TablaInforme<T extends TableNode>({
 
         // Calcular la posición del scroll para el ítem seleccionado
         const itemIndex = datosParaTabla.findIndex((item) => item.id === idSeleccionado);
-        if (itemIndex !== -1) {
+        console.log(itemIndex);
+        if (itemIndex === -1) {
           const newScrollPosition = itemIndex * rowHeight + headerHeight;
           setScrollPosition(newScrollPosition);
         }
       }
     }
   }, [idsCoincidentes, indiceSeleccionado, datosParaTabla, select, buscado, currentHorario]);
+
+  // console.log(idsCoincidentes);
+  // console.log(indiceSeleccionado);
 
   function onSelectChange(action: any, state: any) {
     console.log(action);

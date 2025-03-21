@@ -24,56 +24,116 @@ interface TableProps<T extends TableNode> {
 export default function TablaStock({ datosParaTabla }: TableProps<TableNode>) {
   const {
     footer,
+    tablaStock,
+    status,
     indiceSeleccionado,
     idsCoincidentes,
     stockRenderizado,
     depositosDisponibles,
+    depositosSeleccionados,
+    setDepositosSeleccionados,
     setTablaStock,
     setStockRenderizado,
     setDepositosDisponibles,
   } = useStockPorSeccion();
 
+  let idCounter = 0;
+
+  const datosAgrupados = agruparPorProducto(stockRenderizado);
+  const depositos = obtenerDepositos(stockRenderizado);
+  let cantidadItems = datosAgrupados.length;
+  let totalGeneral = 0;
+  let columnaIndex = 5;
+  const totalesPorDeposito: { [deposito: string]: number } = {};
+  const datosFooter: { [key: string]: string } = {
+    id: cantidadItems.toString(),
+  };
+
+  // Filtramos los totales solo para depósitos seleccionados
+  datosAgrupados.forEach((producto) => {
+    depositosSeleccionados.forEach((depositoSeleccionado) => {
+      const depositoId = depositoSeleccionado.deposito;
+
+      if (producto.stockPorDeposito?.hasOwnProperty(depositoId)) {
+        const stock = parseFloat(producto.stockPorDeposito[depositoId]) || 0;
+
+        // Acumular en el total por depósito
+        totalesPorDeposito[depositoId] = (totalesPorDeposito[depositoId] || 0) + stock;
+
+        // Sumar al total general solo si el depósito está seleccionado
+        totalGeneral += stock;
+      }
+    });
+  });
+
+  // Llenamos las primeras 5 columnas fijas con valores vacíos
+  for (let i = 1; i <= 5; i++) {
+    datosFooter[`columna${i}`] = '';
+  }
+
+  depositos.forEach((deposito) => {
+    const depositoId = deposito.deposito;
+    const total = totalesPorDeposito[depositoId];
+
+    // Solo mostramos el total si el depósito está seleccionado
+    datosFooter[`columna${columnaIndex}`] = depositosSeleccionados.some(
+      (d) => d.deposito === depositoId
+    )
+      ? total !== undefined
+        ? total.toString()
+        : ''
+      : '';
+
+    columnaIndex++;
+  });
+
+  // Insertamos el total general en la última columna
+  datosFooter[`columna${columnaIndex}`] = totalGeneral.toString();
+
   useEffect(() => {}, [datosParaTabla]);
 
-  let idCounter = 0;
+  useEffect(() => {
+    if (tablaStock.length < 0) {
+      setTablaStock(datosAgrupados);
+      setStockRenderizado(datosAgrupados);
+    }
+  }, [tablaStock]);
 
   useEffect(() => {
     if (stockRenderizado) {
       const depositosUnicos = obtenerDepositos(stockRenderizado);
-      const depositosArray = depositosUnicos.map(
-        (deposito) => `${deposito.deposito} - ${deposito.ndeposito}`
-      );
-      setDepositosDisponibles(depositosArray);
+      // console.log(depositosUnicos);
+      // const depositosArray = depositosUnicos.map(
+      //   (deposito) => `${deposito.deposito} - ${deposito.ndeposito}`
+      // );
+      // console.log(depositosArray);
+      setDepositosDisponibles(depositosUnicos);
+      setDepositosSeleccionados(depositosUnicos);
     }
   }, [stockRenderizado]);
 
-  const datosAgrupados = agruparPorProducto(stockRenderizado);
-  let cantidadItems = datosAgrupados.length;
-  let totalGeneral = 0;
-  const totalesPorDeposito: { [deposito: string]: number } = {};
+  // useEffect(() => {
+  //   if (depositosSeleccionados.length > 0) {
+  //     // Filtrar los productos según los depósitos seleccionados
+  //     const productosFiltrados = datosAgrupados.filter((producto) => {
+  //       if (producto && producto.stockPorDeposito) {
+  //         return depositosSeleccionados.some((depositoSeleccionado) =>
+  //           producto.stockPorDeposito.hasOwnProperty(depositoSeleccionado.deposito) &&
+  //           parseFloat(producto.stockPorDeposito[depositoSeleccionado.deposito]) > 0
+  //         );
+  //       }
+  //       return false;
+  //     });
 
-  datosAgrupados.forEach((producto) => {
-    // Sumar cada depósito dentro del producto
-    for (const deposito in producto.stockPorDeposito) {
-      if (producto.stockPorDeposito.hasOwnProperty(deposito)) {
-        const stock = parseFloat(producto.stockPorDeposito[deposito]) || 0;
-
-        // Acumular en el total por depósito
-        totalesPorDeposito[deposito] = (totalesPorDeposito[deposito] || 0) + stock;
-
-        // Sumar al total general
-        totalGeneral += stock;
-      }
-    }
-  });
-
-  let setData = true;
-  useEffect(() => {
-    if (setData) {
-      setTablaStock(datosAgrupados);
-      setStockRenderizado(datosAgrupados);
-    }
-  }, [setData]);
+  //     // Actualizar el estado con los productos filtrados
+  //     setTablaStock(productosFiltrados);
+  //     setStockRenderizado(productosFiltrados);
+  //   } else {
+  //     // Si no hay depósitos seleccionados, mostrar todos los productos
+  //     setTablaStock(datosAgrupados);
+  //     setStockRenderizado(datosAgrupados);
+  //   }
+  // }, [depositosSeleccionados, datosAgrupados]);
 
   const COLUMNS: TableColumn<TablaStocks>[] = [
     {
@@ -96,21 +156,31 @@ export default function TablaStock({ datosParaTabla }: TableProps<TableNode>) {
       label: 'Precio',
       renderCell: (item: TablaStocks) => item.precio,
     },
-    // Insertar columnas de depósitos dinámicamente
-    ...Array.from(obtenerDepositos(stockRenderizado)).map((deposito) => ({
-      label: `${deposito.deposito}`, // Muestra el nombre del depósito en la columna
-      renderCell: (item: TablaStocks) => {
-        // Buscar el stock correspondiente a este depósito
-        const stockPorDeposito = item.stockPorDeposito;
-        return stockPorDeposito[deposito.deposito] || '0'; // Si no hay stock, mostramos 0
-      },
-    })),
+    // Insertar columnas de depósitos dinámicamente según los seleccionados
+    ...Array.from(obtenerDepositos(stockRenderizado)) // Obtiene todos los depósitos
+      .map((deposito) => ({
+        label: `${deposito.deposito}`, // Muestra el número del depósito en la columna
+        renderCell: (item: TablaStocks) => {
+          const stockPorDeposito = item.stockPorDeposito;
+
+          // Verificamos si el depósito está en los seleccionados
+          if (depositosSeleccionados.some((d) => d.deposito === deposito.deposito)) {
+            // Si el depósito está seleccionado, mostramos el valor correspondiente
+            return stockPorDeposito[deposito.deposito] || ''; // Si no hay stock, mostramos ''
+          } else {
+            // Si el depósito no está seleccionado, mostramos un valor vacío en la celda
+            return '';
+          }
+        },
+      })),
 
     {
       label: 'Total',
       renderCell: (item: TablaStocks) => item.total,
     },
   ];
+
+  // console.log(depositosSeleccionados);
 
   const customTheme = {
     Table: `
@@ -123,7 +193,6 @@ export default function TablaStock({ datosParaTabla }: TableProps<TableNode>) {
           ${'minmax(70px, 90px)'.repeat(depositosDisponibles.length || 0)} /* DEPOSITOS */
           minmax(80px, 100px);      /* TOTAL */
       max-width: 70rem;
-      height: 650px; /* Altura máxima reducida */
       overflow-y: auto; /* Habilitar scroll vertical */
       scrollbar-width: thin;
       font-variant-numeric: tabular-nums;
@@ -131,7 +200,13 @@ export default function TablaStock({ datosParaTabla }: TableProps<TableNode>) {
     
       @media (min-width: 1280px) and (max-width: 1380px) {
         width: 55rem; /* Ancho reducido */
-        height: 400px; /* Altura máxima reducida */
+        height: 420px; /* Altura máxima reducida */
+        font-size: 12px; /* Tamaño de fuente más pequeño */
+      }
+
+      @media (min-width: 1500px) {
+        width: 55rem; /* Ancho reducido */
+        height: 700px; /* Altura máxima reducida */
         font-size: 12px; /* Tamaño de fuente más pequeño */
       }
     `,
@@ -215,12 +290,12 @@ export default function TablaStock({ datosParaTabla }: TableProps<TableNode>) {
     FooterCell: `
       position: sticky;
       bottom: 0;
+      height: 30px;
       padding: 8px;
       border-top: 1px solid black;
       background-color: #fff; /* Fondo sólido para ocultar el contenido de la tabla */
       text-align: right;
       font-size: 14px;
-      height: 40px;
       color: red;
       z-index: 1; /* Asegurar que el footer esté por encima del contenido */
 
@@ -251,9 +326,8 @@ export default function TablaStock({ datosParaTabla }: TableProps<TableNode>) {
       }
 
       @media (min-width: 1280px) and (max-width: 1380px) {
-        padding: 4px; /* Padding reducido */
+        padding: 4px;
         font-size: 12px;
-        height: 30px;
         bottom: 0px; /* Ajuste fino para alinear el footer */
       }
     `,
@@ -327,9 +401,13 @@ export default function TablaStock({ datosParaTabla }: TableProps<TableNode>) {
         });
       }
     });
-    // console.log(depositos);
 
-    return Array.from(depositos.values()); // Retorna un array de objetos únicos
+    // Convertir Map a Array y ordenar por 'deposito'
+    const depositosUnicos = Array.from(depositos.values()).sort((a, b) =>
+      a.deposito.localeCompare(b.deposito)
+    );
+
+    return depositosUnicos; // Retorna el array ordenado
   }
 
   // funcion por si el codigo viene con letras
@@ -338,26 +416,7 @@ export default function TablaStock({ datosParaTabla }: TableProps<TableNode>) {
   //   codigo: item.codigo.replace(/\D/g, ""), // Elimina todas las letras del código
   // }));
 
-  const datosFooter: { [key: string]: string } = {
-    id: cantidadItems.toString(),
-  };
-
-  // Llenamos las primeras 5 columnas fijas con valores vacíos
-  for (let i = 1; i <= 5; i++) {
-    datosFooter[`columna${i}`] = '';
-  }
-
-  // Insertamos los totales de los depósitos a partir de la columna 6
-  let columnaIndex = 5;
-  Object.keys(totalesPorDeposito).forEach((deposito) => {
-    datosFooter[`columna${columnaIndex}`] = totalesPorDeposito[deposito].toString();
-    columnaIndex++;
-  });
-
-  // Insertamos el total general en la última columna
-  datosFooter[`columna${columnaIndex}`] = totalGeneral.toString();
-
-  // console.log(idsCoincidentes);
+  // console.log(datosAgrupados);
   return (
     <>
       <TablaInforme
@@ -367,6 +426,7 @@ export default function TablaStock({ datosParaTabla }: TableProps<TableNode>) {
         estilos={customTheme}
         footer={footer}
         datosFooter={datosFooter}
+        status={status}
         idsCoincidentes={idsCoincidentes}
         indiceSeleccionado={indiceSeleccionado}
       />

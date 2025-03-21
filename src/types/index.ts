@@ -108,6 +108,8 @@ export interface VentaPorHora {
   //   totalPares: number | string;
 }
 
+export type Status = 'error' | 'idle' | 'pending' | 'success' | null;
+
 export interface TablaStocks extends TableNode {
   codigo: string;
   talle: string;
@@ -128,6 +130,7 @@ export interface TableColumn<T> {
 
 export interface TableNode {
   id: string | number; // ID único para cada fila
+  codigo: string;
 }
 
 export interface TablaSecciones extends TableNode {
@@ -145,6 +148,12 @@ export interface Deposito {
   deposito: string;
   ndeposito: string;
   talles: Talle[];
+}
+
+// DEPOSITO MODAL
+export interface DepositoModal {
+  deposito: string;
+  ndeposito: string;
 }
 
 export interface Producto {

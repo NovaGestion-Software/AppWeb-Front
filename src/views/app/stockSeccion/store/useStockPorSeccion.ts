@@ -1,4 +1,5 @@
 // import { TablaStock1, TablaStocks } from '@/types';
+import { DepositoModal, Status } from '@/types';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
@@ -10,7 +11,7 @@ interface CheckboxState {
 }
 
 type StockPorSeccionProps = {
-  status: 'error' | 'idle' | 'pending' | 'success' | null;
+  status: Status;
   // MODAL PARA SELECCION DE SECCION Y RUBRO
   footer: boolean;
   setFooter: (footer: boolean) => void; // El setter para cambiar el estado de `footer`
@@ -61,10 +62,10 @@ type StockPorSeccionProps = {
   clearTemporadasSeleccionadas: () => void;
 
   // DEPOSITO MODAL
-  depositosDisponibles: string[];
-  depositosSeleccionadas: string[];
-  setDepositosDisponibles: (data: string[]) => void;
-  setDepositosSeleccionadas: (data: string[]) => void;
+  depositosDisponibles: DepositoModal[];
+  depositosSeleccionados: DepositoModal[];
+  setDepositosDisponibles: (data: DepositoModal[]) => void;
+  setDepositosSeleccionados: (data: DepositoModal[]) => void;
   clearDepositosSeleccionadas: () => void;
 
   // busqueda
@@ -108,10 +109,10 @@ export const useStockPorSeccion = create<StockPorSeccionProps>()(
 
       // RE ORDENAMIENTO STOCK
       checkboxSeleccionados: {
-        grupo1: null,
+        grupo1: 'Talles',
         grupo2: 'Todos',
-        grupo3: null,
-        grupo4: null,
+        grupo3: 'CONTADO',
+        grupo4: 'Descripción',
       },
       setCheckboxSeleccionados: (grupo, value) =>
         set((state) => ({
@@ -135,12 +136,13 @@ export const useStockPorSeccion = create<StockPorSeccionProps>()(
       setTemporadasSeleccionadas: (data: string[]) => set({ temporadasSeleccionadas: data }),
       clearTemporadasSeleccionadas: () => set({ temporadasSeleccionadas: [] }),
 
-      //Depositos Modal
+      // Depositos Modal
       depositosDisponibles: [],
-      setDepositosDisponibles: (deposito: string[]) => set({ depositosDisponibles: deposito }),
-      depositosSeleccionadas: [],
-      setDepositosSeleccionadas: (data: string[]) => set({ depositosSeleccionadas: data }),
-      clearDepositosSeleccionadas: () => set({ depositosSeleccionadas: [] }),
+      setDepositosDisponibles: (depositos: DepositoModal[]) =>
+        set({ depositosDisponibles: depositos }),
+      depositosSeleccionados: [],
+      setDepositosSeleccionados: (data: DepositoModal[]) => set({ depositosSeleccionados: data }),
+      clearDepositosSeleccionadas: () => set({ depositosSeleccionados: [] }),
 
       //busqueda
       buscado: false, // Valor inicial

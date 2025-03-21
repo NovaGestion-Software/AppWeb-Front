@@ -10,6 +10,7 @@ import showAlert from '@/utils/showAlert';
 export default function BusquedaStock({ data }: any) {
   const [codigoBusqueda, setCodigoBusqueda] = useState<string>('');
   const [textoBusqueda, setTextoBusqueda] = useState<string>('');
+  const [isDisabled, setIsDisabled] = useState(true);
   const tablaRef = useRef<HTMLTableElement | null>(null);
 
   const {
@@ -40,14 +41,16 @@ export default function BusquedaStock({ data }: any) {
   useEffect(() => {}, [data]);
 
   useEffect(() => {
+    setIsDisabled(codigoBusqueda.length === 0 && textoBusqueda.length === 0);
+  }, [codigoBusqueda, textoBusqueda]);
+
+  useEffect(() => {
     if (codigoBusqueda.length <= 0 && textoBusqueda.length <= 0) {
       setBuscado(false);
     }
   }, [idsCoincidentes]);
 
   useEffect(() => {
-    // console.log(stockRenderizado);
-
     // Filtramos solo los productos que contienen código, marca y descripción
     const filtered = stockRenderizado
       .flatMap((rubro: any) => rubro.productos) // Aplanamos los productos de cada rubro
@@ -61,6 +64,7 @@ export default function BusquedaStock({ data }: any) {
       });
 
     const ids = filtered.map((producto: any) => producto.codigo); // Aquí se toma el `codigo` del producto como el ID
+
     // console.log(ids);
 
     setIdsCoincidentes(ids);
@@ -69,7 +73,10 @@ export default function BusquedaStock({ data }: any) {
 
   const handleSiguienteClick = () => {
     if (idsCoincidentes.length > 0) {
+      console.log(indiceSeleccionado);
       const nuevoIndice = (indiceSeleccionado + 1) % idsCoincidentes.length;
+      // console.log(idsCoincidentes);
+      // console.log(nuevoIndice);
       setIndiceSeleccionado(nuevoIndice);
     }
   };
@@ -176,15 +183,15 @@ export default function BusquedaStock({ data }: any) {
   return (
     <div className="flex gap-1 items-center border py-1.5 px-2 rounded-lg bg-slate-50">
       <FlexibleInputField
+        key={'codigo'}
+        label="Buscar:"
+        value={codigoBusqueda || ''}
         placeholder="Código"
-        label="Buscar"
         labelWidth="3rem"
-        labelClassName="text-start w-12 text-xs "
+        labelClassName="text-start w-12 text-sm "
         inputClassName="w-24 text-xs"
         containerWidth="w-[12rem]"
         disabled={false}
-        key={'codigo'}
-        value={codigoBusqueda || ''}
         onChange={(value) => {
           if (typeof value === 'string') {
             setCodigoBusqueda(value);
@@ -194,11 +201,11 @@ export default function BusquedaStock({ data }: any) {
       />
 
       <FlexibleInputField
+        value={textoBusqueda || ''}
         placeholder="Descripción o Marca"
         inputClassName="w-52 text-xs"
         disabled={false}
         containerWidth="w-56 "
-        value={textoBusqueda || ''}
         onChange={(value) => {
           if (typeof value === 'string') {
             setTextoBusqueda(value);
@@ -212,14 +219,15 @@ export default function BusquedaStock({ data }: any) {
         color="blue"
         size="xs"
         onClick={handleButton}
+        disabled={isDisabled}
       />
 
       <ActionButton
-        // text="Limpiar"
         icon={<IoTrash size={15} />}
         color="red"
         size="xs"
         onClick={handleClean}
+        disabled={isDisabled}
       />
     </div>
   );

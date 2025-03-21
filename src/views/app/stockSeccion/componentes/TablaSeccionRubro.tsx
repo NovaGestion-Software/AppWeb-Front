@@ -22,6 +22,7 @@ export default function TablaSeccionRubro({
 
   const {
     // stockRenderizado,
+    setStatus,
     setFooter,
     seccionesSeleccionadas,
     rubrosSeleccionados,
@@ -106,9 +107,13 @@ export default function TablaSeccionRubro({
       // Llamar a obtenerProductos con las claves filtradas
       return obtenerProductos(seccionesSeleccionadasKeys, rubrosSeleccionados);
     },
+    onMutate: () => {
+      setStatus('pending');
+    },
     // mutationFn: () => obtenerStock(rubrosSeleccionados),
     onError: (error) => {
       console.error('Error al obtener los productos:', error);
+      setStatus('error');
     },
     onSuccess: (data) => {
       // console.log(data.data);
@@ -116,6 +121,10 @@ export default function TablaSeccionRubro({
       setFooter(true);
       setStockRenderizado(arrayDeRubros);
       setTablaStock(arrayDeRubros);
+      setStatus('success');
+    },
+    onSettled: () => {
+      setStatus('idle');
     },
   });
 

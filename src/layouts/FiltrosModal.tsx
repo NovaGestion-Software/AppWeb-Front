@@ -2,18 +2,21 @@ import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import ActionButton from '@/Components/ui/Buttons/ActionButton';
 import ModalInforme from '@/views/app/informes/_components/ModalInforme';
 
-interface FiltroModalProps {
+// Definir un tipo genérico que permitirá usar cualquier tipo de dato.
+interface FiltroModalProps<T> {
   showModal: boolean;
   setShowModal: Dispatch<SetStateAction<boolean>>;
-  datos: string[]; // Datos originales para obtener los ítems disponibles
-  itemsDisponibles: string[]; // Lista de ítems disponibles
-  itemsSeleccionados: string[]; // Lista de ítems seleccionados (debe ser un array)
-  setItemsDisponibles: (items: string[]) => void; // Función para actualizar los ítems disponibles
-  setItemsSeleccionados: (items: string[]) => void; // Función para actualizar los ítems seleccionados
+  datos: T[]; // Datos originales, ahora de tipo genérico
+  itemsDisponibles: T[]; // Lista de ítems disponibles, de tipo genérico
+  itemsSeleccionados: T[]; // Lista de ítems seleccionados, de tipo genérico
+  setItemsDisponibles: (items: T[]) => void; // Función para actualizar los ítems disponibles
+  setItemsSeleccionados: (items: T[]) => void; // Función para actualizar los ítems seleccionados
   title: string; // Título del modal
+  renderItem: (item: T) => React.ReactNode; // Función de renderizado de cada ítem
+  setStockRenderizado?: (data: any[]) => void;
 }
 
-export default function FiltroModal({
+export default function FiltroModal<T>({
   showModal,
   setShowModal,
   datos,
@@ -22,15 +25,17 @@ export default function FiltroModal({
   setItemsDisponibles,
   setItemsSeleccionados,
   title,
-}: FiltroModalProps) {
-  const [itemsSeleccionadasModal, setItemsSeleccionadasModal] = useState<string[]>([]);
+  renderItem,
+}: // setStockRenderizado,
+FiltroModalProps<T>) {
+  const [itemsSeleccionadosModal, setItemsSeleccionadosModal] = useState<T[]>([]);
 
   // console.log(itemsDisponibles);
+  // console.log(itemsSeleccionados);
 
   useEffect(() => {
     const datoUnico = Array.from(new Set(datos));
 
-    // Verificar si los datos han cambiado antes de actualizar el estado
     if (JSON.stringify(datoUnico) !== JSON.stringify(itemsDisponibles)) {
       setItemsDisponibles(datoUnico);
       setItemsSeleccionados(datoUnico);
@@ -39,109 +44,107 @@ export default function FiltroModal({
 
   useEffect(() => {
     if (showModal) {
-      setItemsSeleccionadasModal([...itemsSeleccionados]);
-      // Bloquea el scroll del body cuando el modal esté visible
+      setItemsSeleccionadosModal(
+        itemsSeleccionados.length > 0 ? [...itemsSeleccionados] : [...itemsDisponibles]
+      );
       document.body.style.overflow = 'hidden';
     } else {
-      // Restaura el scroll del body cuando el modal se cierra
       document.body.style.overflow = 'auto';
     }
 
-    // Limpieza para restaurar el estado cuando el componente se desmonte o el modal se cierre
     return () => {
       document.body.style.overflow = 'auto';
     };
   }, [showModal, itemsSeleccionados]);
 
   const handleSelectAll = () => {
-    setItemsSeleccionadasModal(itemsDisponibles);
+    setItemsSeleccionadosModal(itemsDisponibles);
   };
 
   const handleDeselectAll = () => {
-    setItemsSeleccionadasModal([]);
+    setItemsSeleccionadosModal([]);
   };
 
-  const handleCheckboxChange = (id: string) => {
-    setItemsSeleccionadasModal((prev) =>
+  const handleCheckboxChange = (id: T) => {
+    setItemsSeleccionadosModal((prev) =>
       prev.includes(id) ? prev.filter((suc) => suc !== id) : [...prev, id]
     );
   };
 
+  // console.log(itemsSeleccionadosModal);
+
   const handleConfirm = () => {
-    setItemsSeleccionados(itemsSeleccionadasModal);
+    setItemsSeleccionados(itemsSeleccionadosModal);
+    // setStockRenderizado(itemsSeleccionadosModal)
     setShowModal(false);
   };
 
   const handleCloseModal = () => {
-    setShowModal(false); // Cerrar el modal
-    setItemsSeleccionados([...itemsSeleccionados]); // Revertir los cambios y restaurar las sucursales originales
-    //  clearMarcasSeleccionadas()
+    setShowModal(false);
+    setItemsSeleccionados([...itemsSeleccionados]);
   };
 
-  // console.log(itemsDisponibles);
   return (
-    <>
-      <ModalInforme
-        buttons={true}
-        show={showModal}
-        title={title}
-        onClose={handleCloseModal}
-        onConfirm={handleConfirm}
-        disabled={true}
-        disabled2={true}
-      >
-        <div className="flex flex-col w-full h-[30rem] mx-auto  gap-1 ">
-          <div className="flex flex-row  items-center justify-end h-10 gap-2  ">
-            <ActionButton
-              text="Todos"
-              onClick={handleSelectAll}
-              color="blueSoft"
-              className="h-6 w-24 text-xs rounded-lg"
-              size="md"
-            />
-            <ActionButton
-              text="Ninguno"
-              onClick={handleDeselectAll}
-              color="blueSoft"
-              className="h-6 w-24 text-xs rounded-lg"
-              size="md"
-            />
-          </div>
-          <div className="w-[27rem] h-[25rem] overflow-auto border border-gray-300 rounded-lg">
-            <table className="w-full border-collapse">
-              <thead className="bg-gray-200 sticky top-0">
-                <tr>
-                  <th className="p-1 w-10"></th>
-                  <th className="p-1 text-left">Detalle</th>
-                </tr>
-              </thead>
-              <tbody>
-                {itemsDisponibles.map((item, index) => (
-                  <tr
-                    key={index}
-                    className="hover:bg-blue-600 hover:bg-opacity-50 text-black font-semibold border-b border-gray-200"
-                  >
-                    <td className="p-2 text-center">
-                      <label className="cursor-pointer w-full h-fit flex items-center justify-center">
-                        <input
-                          type="checkbox"
-                          className="w-3 h-3 cursor-pointer"
-                          checked={itemsSeleccionadasModal.includes(item)}
-                          onChange={() => handleCheckboxChange(item)}
-                          id={`checkbox-${index}`}
-                        />
-                      </label>
-                    </td>
-                    <td className="p-1 cursor-pointer" onClick={() => handleCheckboxChange(item)}>
-                      {item}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+    <ModalInforme
+      buttons={true}
+      show={showModal}
+      title={title}
+      onClose={handleCloseModal}
+      onConfirm={handleConfirm}
+      disabled={true}
+      disabled2={true}
+    >
+      <div className="flex flex-col w-full h-[30rem] mx-auto gap-1 ">
+        <div className="flex flex-row items-center justify-end h-10 gap-2 ">
+          <ActionButton
+            text="Todos"
+            onClick={handleSelectAll}
+            color="blueSoft"
+            className="h-6 w-24 text-xs rounded-lg"
+            size="md"
+          />
+          <ActionButton
+            text="Ninguno"
+            onClick={handleDeselectAll}
+            color="blueSoft"
+            className="h-6 w-24 text-xs rounded-lg"
+            size="md"
+          />
         </div>
-      </ModalInforme>
-    </>
+        <div className="w-[27rem] h-[25rem] overflow-auto border border-gray-300 rounded-lg">
+          <table className="w-full border-collapse">
+            <thead className="bg-gray-200 sticky top-0">
+              <tr>
+                <th className="p-1 w-10"></th>
+                <th className="p-1 text-left">Detalle</th>
+              </tr>
+            </thead>
+            <tbody>
+              {itemsDisponibles.map((item, index) => (
+                <tr
+                  key={index}
+                  className="hover:bg-blue-600 hover:bg-opacity-50 text-black font-semibold border-b border-gray-200"
+                >
+                  <td className="p-2 text-center">
+                    <label className="cursor-pointer w-full h-fit flex items-center justify-center">
+                      <input
+                        type="checkbox"
+                        className="w-3 h-3 cursor-pointer"
+                        checked={itemsSeleccionadosModal.includes(item)}
+                        onChange={() => handleCheckboxChange(item)}
+                        id={`checkbox-${index}`}
+                      />
+                    </label>
+                  </td>
+                  <td className="p-1 cursor-pointer" onClick={() => handleCheckboxChange(item)}>
+                    {renderItem(item)}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </ModalInforme>
   );
 }

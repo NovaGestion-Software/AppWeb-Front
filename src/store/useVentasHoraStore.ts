@@ -1,4 +1,4 @@
-import { FechasRango, Sucursal } from '@/types';
+import { FechasRango, Status, Sucursal } from '@/types';
 import dayjs from 'dayjs';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
@@ -13,12 +13,12 @@ type VentasHoraProps = {
   ventasPorHora: Sucursal[] | null;
   sucursalesSeleccionadas: string[];
   sucursalesDisponibles: string[];
-  status: 'error' | 'idle' | 'pending' | 'success' | null;
+  status: Status;
   setVentasPorHora: (data: Sucursal[]) => void;
   setFechas: (data: FechasRango) => void;
   setSucursalesSeleccionadas: (sucursales: string[]) => void;
   setSucursalesDisponibles: (sucursales: string[]) => void;
-  setStatus: (status: 'error' | 'idle' | 'pending' | 'success' | null) => void;
+  setStatus: (status: Status) => void;
   clearVentasPorHora: () => void;
   clearSucursalesSeleccionadas: () => void;
   clearSucursalesDisponibles: () => void;

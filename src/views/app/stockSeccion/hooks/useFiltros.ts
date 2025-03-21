@@ -4,10 +4,15 @@ export const useFiltros = () => {
   const { checkboxSeleccionados, tablaStock } = useStockPorSeccion();
 
   const aplicarFiltros = () => {
-    if (!tablaStock || tablaStock.length === 0) return []; // Asegura que tablaStock tenga datos
+    if (!tablaStock || !Array.isArray(tablaStock) || tablaStock.length === 0) return [];
 
     // console.log(tablaStock);
     let data = [...tablaStock]; // Siempre parte de los datos originales
+
+    if (!checkboxSeleccionados || !checkboxSeleccionados.grupo2) return data;
+
+    // console.log('tablaStock:', tablaStock);
+    // console.log('checkboxSeleccionados:', checkboxSeleccionados);
 
     // Filtro por stock
     if (checkboxSeleccionados.grupo2 === 'Con Stock') {

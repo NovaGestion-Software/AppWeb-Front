@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useStockPorSeccion } from '@/views/app/stockSeccion/store/useStockPorSeccion';
 import { useFiltros } from '../hooks/useFiltros';
-import CheckboxInput from '@/Components/ui/Inputs/Checkbox';
+// import CheckboxInput from '@/Components/ui/Inputs/Checkbox';
+import RadioInput from '@/Components/ui/Inputs/RadioInput';
 
 export default function FiltrarPorTipo() {
   const [disabled, setDisabled] = useState(false);
@@ -25,14 +26,14 @@ export default function FiltrarPorTipo() {
 
   return (
     <div className="flex gap-1 border p-1 rounded-lg bg-white">
-      <CheckboxInput
+      <RadioInput
         onChange={() => handleCheckboxChange('grupo1', 'Talles')}
         checked={checkboxSeleccionados.grupo1 === 'Talles'}
         disabled={disabled}
         setDisabled={setDisabled}
         label="Talles"
       />
-      <CheckboxInput
+      <RadioInput
         onChange={() => handleCheckboxChange('grupo1', 'Artículos')}
         checked={checkboxSeleccionados.grupo1 === 'Artículos'}
         disabled={disabled}

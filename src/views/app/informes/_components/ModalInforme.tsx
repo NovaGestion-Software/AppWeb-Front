@@ -63,7 +63,7 @@ export default function ModalInforme({
 
   return (
     <>
-      <div className="fixed inset-0 z-50 flex justify-center items-center overflow-x-hidden outline-none focus:outline-none">
+      <div className="absolute inset-0 z-50 flex justify-center items-center overflow-x-hidden outline-none focus:outline-none">
         <div
           className="relative"
           ref={modalRef}
@@ -118,7 +118,7 @@ export default function ModalInforme({
           </div>
         </div>
       </div>
-      <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
+      <div className="absolute inset-0 z-40 bg-black opacity-25 "></div>
     </>
   );
 }

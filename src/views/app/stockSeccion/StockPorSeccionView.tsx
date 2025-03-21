@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { TablaSecciones } from '@/types';
+import { DepositoModal, TablaSecciones } from '@/types';
 import { useStockPorSeccion } from '@/views/app/stockSeccion/store/useStockPorSeccion';
 import { obtenerRubrosDisponibles } from '@/services/ApiPhpService';
 import ViewTitle from '@/Components/ui/Labels/ViewTitle';
@@ -17,13 +17,13 @@ import TablaStock from './componentes/TablaStock';
 import ActionButton from '@/Components/ui/Buttons/ActionButton';
 
 export default function StockPorSeccionView() {
-  const [showMarcasModal, setShowMarcasModal] = useState(false);
-  const [showTemporadasModal, setShowTemporadasModal] = useState(false);
+  // const [showMarcasModal, setShowMarcasModal] = useState(false);
+  // const [showTemporadasModal, setShowTemporadasModal] = useState(false);
   const [showDepositosModal, setShowDepositosModal] = useState(false);
   const [showRubrosModal, setShowRubrosModal] = useState(true);
   const isProcessing = false;
   // let depositos = ['Chacabuco', 'San Juan', 'Almagro', 'La Boca'];
-  let temporadas = ['Clasico', 'Anual', 'Verano', 'Invierno'];
+  // let temporadas = ['Clasico', 'Anual', 'Verano', 'Invierno'];
 
   // state para rubros
   const [datos, setDatos] = useState<TablaSecciones[]>([]);
@@ -31,33 +31,51 @@ export default function StockPorSeccionView() {
   const {
     stockRenderizado,
     // tablaStock,
-    marcasDisponibles,
-    marcasSeleccionadas,
-    setMarcasDisponibles,
-    setMarcasSeleccionadas,
+    // idsCoincidentes,
+    // marcasDisponibles,
+    // marcasSeleccionadas,
+    // setMarcasDisponibles,
+    // setMarcasSeleccionadas,
     depositosDisponibles,
-    depositosSeleccionadas,
+    depositosSeleccionados,
     setDepositosDisponibles,
-    setDepositosSeleccionadas,
-    temporadasDisponibles,
-    temporadasSeleccionadas,
-    setTemporadasDisponibles,
-    setTemporadasSeleccionadas,
+    setDepositosSeleccionados,
+    // temporadasDisponibles,
+    // temporadasSeleccionadas,
+    // setTemporadasDisponibles,
+    // setTemporadasSeleccionadas,
   } = useStockPorSeccion();
 
+  console.log(stockRenderizado);
   // TABLA PARA RUBROS
   const { data: rubrosDis } = useQuery({
     queryKey: ['rubros-seccion'],
     queryFn: obtenerRubrosDisponibles,
     refetchOnWindowFocus: false,
-    // staleTime: 1000 * 60 * 5, // Datos frescos por 5 minutos
+    staleTime: 1000 * 60 * 5, // Datos frescos por 5 minutos
   });
 
+  // console.log(depositosDisponibles);
   useEffect(() => {
     if (rubrosDis) {
       setDatos(rubrosDis.data);
     }
   }, [rubrosDis]);
+
+  const renderDepositoItem = (item: DepositoModal) => {
+    return (
+      <>
+        {item.deposito} - {item.ndeposito}
+      </>
+    ); // Aquí decides cómo renderizar el item
+  };
+
+  //  // Ordenar los datos por 'deposito' o 'ndeposito'
+  //  const ordenarDatosDeposito = (datos) => {
+  //   return datos.sort((a, b) => a.deposito.localeCompare(b.deposito)); // Si es por deposito
+  //   // O si es por nombre:
+  //   // return datos.sort((a, b) => a.ndeposito.localeCompare(b.ndeposito));
+  // };
 
   // useEffect(() => {
   //   // console.log(stockRenderizado);
@@ -77,22 +95,23 @@ export default function StockPorSeccionView() {
   // console.log(tablaStock);
   // console.log(marcasDisponibles);
 
+  // console.log(depositosSeleccionados);
   return (
     <div className="w-full h-full px-4 pt-0 overflow-hidden">
       <ViewTitle title={'Stock por Sección'} />
+      {/**BOTONES SHOW MODAL DEPOSITOS Y RUBROS - ORDENAR POR CHECKBOXS( CODIGO , MARCA Y DESCRIPCION )*/}
       <div className="grid grid-cols-11 grid-rows-1 rounded py-2 px-8 h-11 items-center mt-1">
-        {/**BOTONES SHOW MODAL DEPOSITOS Y RUBROS - ORDENAR POR CHECKBOXS( CODIGO , MARCA Y DESCRIPCION )*/}
         <div className="flex gap-6 items-center w-fit bg-white py-1 px-3 rounded-lg col-start-3 col-span-5 2xl:col-span-3 2xl:col-start-4 ">
           <ActionButton
-            onClick={() => setShowDepositosModal(true)}
             text="Depósitos"
+            onClick={() => setShowDepositosModal(true)}
             disabled={false}
             color="blue"
             size="xs"
           />
           <ActionButton
-            onClick={() => setShowRubrosModal(true)}
             text="Rubros"
+            onClick={() => setShowRubrosModal(true)}
             disabled={false}
             color="blue"
             size="xs"
@@ -139,7 +158,7 @@ export default function StockPorSeccionView() {
         <div className="flex gap-3 items-center w-fit row-start-2 border px-1 rounded-lg bg-white col-start-3 col-span-7 2xl:col-span-5 2xl:px-4 2xl:col-start-4">
           <BusquedaStock data={stockRenderizado} />
 
-          <ActionButton
+          {/* <ActionButton
             text="Temporadas"
             color="blue"
             onClick={() => setShowTemporadasModal(true)}
@@ -150,7 +169,7 @@ export default function StockPorSeccionView() {
             color="blue"
             onClick={() => setShowMarcasModal(true)}
             size="xs"
-          />
+          /> */}
         </div>
 
         {/**VER MOVIMIENTOS EN INVETARIO */}
@@ -173,15 +192,16 @@ export default function StockPorSeccionView() {
       </div>
 
       {/** MODAL DE TABLA */}
-      <FiltroModal
+      <FiltroModal<DepositoModal>
         title="Depósitos"
         showModal={showDepositosModal}
         setShowModal={setShowDepositosModal}
-        datos={depositosDisponibles.map((item) => item)}
+        datos={depositosDisponibles} // Ya no necesitas mapear los datos a un array de strings
         itemsDisponibles={depositosDisponibles}
-        itemsSeleccionados={depositosSeleccionadas}
+        itemsSeleccionados={depositosSeleccionados}
         setItemsDisponibles={setDepositosDisponibles}
-        setItemsSeleccionados={setDepositosSeleccionadas}
+        setItemsSeleccionados={setDepositosSeleccionados}
+        renderItem={renderDepositoItem}
       />
 
       <TablaSeccionRubro
@@ -189,7 +209,7 @@ export default function StockPorSeccionView() {
         showRubrosModal={showRubrosModal}
         setShowRubrosModal={setShowRubrosModal}
       />
-
+      {/* 
       <FiltroModal
         title="Temporadas"
         showModal={showTemporadasModal}
@@ -210,7 +230,7 @@ export default function StockPorSeccionView() {
         itemsSeleccionados={marcasSeleccionadas}
         setItemsDisponibles={setMarcasDisponibles}
         setItemsSeleccionados={setMarcasSeleccionadas}
-      />
+      /> */}
     </div>
   );
 }

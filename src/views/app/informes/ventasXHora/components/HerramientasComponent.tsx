@@ -1,7 +1,7 @@
-import { useCallback } from "react";
-import * as XLSX from "xlsx";
-import ModalSucursales from "./ModalSucursales";
-import HerramientasInforme from "../../_components/HerramientasInforme";
+import { useCallback } from 'react';
+import * as XLSX from 'xlsx';
+import ModalSucursales from './ModalSucursales';
+import HerramientasInforme from '../../_components/HerramientasInforme';
 
 interface HerramientasComponentProps {
   data: Record<string, any>[]; // Ahora acepta cualquier estructura de datos
@@ -18,7 +18,7 @@ export default function HerramientasComponent({
 }: HerramientasComponentProps) {
   // Aseguramos que datosTotales tenga un ID
   const datosTotales = datosParaFooter
-    ? { id: 1, hora: "Totales", ...datosParaFooter } // Se añade un identificador único
+    ? { id: 1, hora: 'Totales', ...datosParaFooter } // Se añade un identificador único
     : null;
 
   const handleExportExcel = useCallback(() => {
@@ -38,17 +38,17 @@ export default function HerramientasComponent({
     // Creamos el libro de Excel
     const wb = XLSX.utils.book_new();
     const ws = XLSX.utils.json_to_sheet(datosTransformados);
-    XLSX.utils.book_append_sheet(wb, ws, "Informe");
+    XLSX.utils.book_append_sheet(wb, ws, 'Informe');
 
     // Guardamos el archivo
-    XLSX.writeFile(wb, "Informe.xlsx");
+    XLSX.writeFile(wb, 'Informe.xlsx');
   }, [data, datosTotales]);
 
   const handlePrint = useCallback(() => {
-    const tableElement = document.getElementById("table-to-print");
+    const tableElement = document.getElementById('table-to-print');
     if (!tableElement) return;
 
-    const printWindow = window.open("", "_blank", "width=600,height=800");
+    const printWindow = window.open('', '_blank', 'width=600,height=800');
     if (!printWindow) return;
 
     printWindow.document.write(`
@@ -81,9 +81,7 @@ export default function HerramientasComponent({
         handleExportExcel={handleExportExcel}
         handlePrint={handlePrint}
       >
-       { modalSucursales &&
-       ( <ModalSucursales isProcessing={isProcessing} />)
-       }
+        {modalSucursales && <ModalSucursales isProcessing={isProcessing} />}
       </HerramientasInforme>
     </>
   );

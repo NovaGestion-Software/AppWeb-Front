@@ -70,7 +70,7 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
       icon: <MdOutlineAttachMoney />,
     },
     {
-      title: 'Stock por Seccion',
+      title: 'Stock por Sección',
       href: '/stock-seccion',
       icon: <FaBoxesPacking />,
     },
@@ -79,7 +79,7 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
       icon: <BiBarChartSquare />,
       submenus: [
         {
-          title: 'Informes de Analisis', // Submenú desplegable
+          title: 'Informes de Análisis', // Submenú desplegable
           submenus: [
             {
               title: 'Ventas por Hora',
