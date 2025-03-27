@@ -115,6 +115,7 @@ export interface TablaStocks extends TableNode {
   talle: string;
   descripcion: string;
   marca: string;
+  nmarca: string;
   precio: string;
   total: string;
   stockPorDeposito: {
@@ -155,6 +156,11 @@ export interface DepositoModal {
   deposito: string;
   ndeposito: string;
 }
+// DEPOSITO MODAL
+export interface MarcaModal {
+  marca: string;
+  nmarca: string;
+}
 
 export interface Producto {
   codigo: string;
@@ -175,3 +181,15 @@ export interface Rubro {
 }
 
 export type TablaStock1 = Rubro[];
+
+export interface ProductoAgrupado {
+  id: string;
+  codigo: string;
+  talle: string;
+  descripcion: string;
+  marca: string;
+  nmarca: string;
+  precio: string;
+  stockPorDeposito: { [depositoId: string]: string };
+  total: string;
+}

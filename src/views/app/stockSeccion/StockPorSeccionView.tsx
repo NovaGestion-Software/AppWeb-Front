@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { DepositoModal, TablaSecciones } from '@/types';
+import { DepositoModal, MarcaModal, TablaSecciones } from '@/types';
 import { useStockPorSeccion } from '@/views/app/stockSeccion/store/useStockPorSeccion';
 import { obtenerRubrosDisponibles } from '@/services/ApiPhpService';
 import ViewTitle from '@/Components/ui/Labels/ViewTitle';
@@ -15,9 +15,10 @@ import BusquedaStock from './componentes/BusquedaStock';
 import TablaSeccionRubro from './componentes/TablaSeccionRubro';
 import TablaStock from './componentes/TablaStock';
 import ActionButton from '@/Components/ui/Buttons/ActionButton';
+import FiltroMarcaModal from './componentes/modals/FiltroMarcaModal';
 
 export default function StockPorSeccionView() {
-  // const [showMarcasModal, setShowMarcasModal] = useState(false);
+  const [showMarcasModal, setShowMarcasModal] = useState(false);
   // const [showTemporadasModal, setShowTemporadasModal] = useState(false);
   const [showDepositosModal, setShowDepositosModal] = useState(false);
   const [showRubrosModal, setShowRubrosModal] = useState(true);
@@ -46,7 +47,7 @@ export default function StockPorSeccionView() {
     // setTemporadasSeleccionadas,
   } = useStockPorSeccion();
 
-  console.log(stockRenderizado);
+  // console.log(stockRenderizado);
   // TABLA PARA RUBROS
   const { data: rubrosDis } = useQuery({
     queryKey: ['rubros-seccion'],
@@ -69,6 +70,10 @@ export default function StockPorSeccionView() {
       </>
     ); // Aquí decides cómo renderizar el item
   };
+
+  // const renderMarcaItem = (item: MarcaModal) => {
+  //   return <>{item.nmarca}</>; // Aquí decides cómo renderizar el item
+  // };
 
   //  // Ordenar los datos por 'deposito' o 'ndeposito'
   //  const ordenarDatosDeposito = (datos) => {
@@ -95,7 +100,7 @@ export default function StockPorSeccionView() {
   // console.log(tablaStock);
   // console.log(marcasDisponibles);
 
-  // console.log(depositosSeleccionados);
+  // console.log(marcasSeleccionadas);
   return (
     <div className="w-full h-full px-4 pt-0 overflow-hidden">
       <ViewTitle title={'Stock por Sección'} />
@@ -163,13 +168,13 @@ export default function StockPorSeccionView() {
             color="blue"
             onClick={() => setShowTemporadasModal(true)}
             size="xs"
-          />
+          /> */}
           <ActionButton
             text="Marcas"
             color="blue"
             onClick={() => setShowMarcasModal(true)}
             size="xs"
-          /> */}
+          />
         </div>
 
         {/**VER MOVIMIENTOS EN INVETARIO */}
@@ -209,8 +214,8 @@ export default function StockPorSeccionView() {
         showRubrosModal={showRubrosModal}
         setShowRubrosModal={setShowRubrosModal}
       />
-      {/* 
-      <FiltroModal
+
+      {/* <FiltroModal
         title="Temporadas"
         showModal={showTemporadasModal}
         setShowModal={setShowTemporadasModal}
@@ -219,17 +224,19 @@ export default function StockPorSeccionView() {
         itemsSeleccionados={temporadasSeleccionadas}
         setItemsDisponibles={setTemporadasDisponibles}
         setItemsSeleccionados={setTemporadasSeleccionadas}
-      />
+      /> */}
 
-      <FiltroModal
+      <FiltroMarcaModal showModal={showMarcasModal} setShowModal={setShowMarcasModal} />
+      {/* <FiltroModal<MarcaModal>
         title="Marcas"
         showModal={showMarcasModal}
         setShowModal={setShowMarcasModal}
-        datos={stockRenderizado.map((item) => item)} // Datos originales
+        datos={marcasDisponibles}
         itemsDisponibles={marcasDisponibles}
         itemsSeleccionados={marcasSeleccionadas}
         setItemsDisponibles={setMarcasDisponibles}
         setItemsSeleccionados={setMarcasSeleccionadas}
+        renderItem={renderMarcaItem}
       /> */}
     </div>
   );

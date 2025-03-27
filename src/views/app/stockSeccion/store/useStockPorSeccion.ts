@@ -1,5 +1,5 @@
 // import { TablaStock1, TablaStocks } from '@/types';
-import { DepositoModal, Status } from '@/types';
+import { DepositoModal, MarcaModal, ProductoAgrupado, Status } from '@/types';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
@@ -38,6 +38,9 @@ type StockPorSeccionProps = {
   stockRenderizado: any[];
   setStockRenderizado: (data: any[]) => void;
 
+  productos: ProductoAgrupado[];
+  setProductos: (data: ProductoAgrupado[]) => void;
+
   //BUSQUEDA TABLA STOCK
   indiceSeleccionado: number;
   idsCoincidentes: (string | number)[];
@@ -49,10 +52,10 @@ type StockPorSeccionProps = {
   setCheckboxSeleccionados: (grupo: keyof CheckboxState, value: string | null) => void;
 
   // MARCAS MODAL
-  marcasDisponibles: string[];
-  marcasSeleccionadas: string[];
-  setMarcasDisponibles: (data: string[]) => void;
-  setMarcasSeleccionadas: (data: string[]) => void;
+  marcasDisponibles: MarcaModal[];
+  marcasSeleccionadas: MarcaModal[];
+  setMarcasDisponibles: (data: MarcaModal[]) => void;
+  setMarcasSeleccionadas: (data: MarcaModal[]) => void;
   clearMarcasSeleccionadas: () => void;
   // TEMPORADAS MODAL
   temporadasDisponibles: string[];
@@ -99,7 +102,11 @@ export const useStockPorSeccion = create<StockPorSeccionProps>()(
       setTablaStock: (data: any[]) => set({ tablaStock: data }),
       stockRenderizado: [] as any[],
       setStockRenderizado: (data: any[]) => set({ stockRenderizado: data }),
-      // BUSQUEDA TABLA STOCK
+
+      productos: [] as ProductoAgrupado[],
+      setProductos: (data: ProductoAgrupado[]) => set({ productos: data }),
+
+      // // BUSQUEDA TABLA STOCK
       indiceSeleccionado: 0,
       idsCoincidentes: [],
 
@@ -126,7 +133,7 @@ export const useStockPorSeccion = create<StockPorSeccionProps>()(
       marcasDisponibles: [],
       setMarcasDisponibles: (marca) => set({ marcasDisponibles: marca }),
       marcasSeleccionadas: [],
-      setMarcasSeleccionadas: (data: string[]) => set({ marcasSeleccionadas: data }),
+      setMarcasSeleccionadas: (data: MarcaModal[]) => set({ marcasSeleccionadas: data }),
       clearMarcasSeleccionadas: () => set({ marcasSeleccionadas: [] }),
 
       // Temporadas Modal

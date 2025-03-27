@@ -40,7 +40,7 @@ FiltroModalProps<T>) {
       setItemsDisponibles(datoUnico);
       setItemsSeleccionados(datoUnico);
     }
-  }, [datos]);
+  }, [datos, setItemsDisponibles, setItemsSeleccionados, itemsDisponibles]);
 
   useEffect(() => {
     if (showModal) {
@@ -83,6 +83,8 @@ FiltroModalProps<T>) {
     setShowModal(false);
     setItemsSeleccionados([...itemsSeleccionados]);
   };
+
+  // console.log(itemsSeleccionadosModal);
 
   return (
     <ModalInforme

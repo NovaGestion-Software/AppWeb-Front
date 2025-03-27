@@ -1,7 +1,36 @@
+import { ProductoAgrupado } from '@/types';
 import { useStockPorSeccion } from '@/views/app/stockSeccion/store/useStockPorSeccion';
+import { useEffect } from 'react';
 
 export const useFiltros = () => {
-  const { checkboxSeleccionados, tablaStock } = useStockPorSeccion();
+  const {
+    checkboxSeleccionados,
+    productos,
+    setProductos,
+    stockRenderizado,
+    marcasSeleccionadas,
+    marcasDisponibles,
+    depositosDisponibles,
+    tablaStock,
+    setStockRenderizado,
+    setMarcasDisponibles,
+    setDepositosDisponibles,
+  } = useStockPorSeccion();
+
+  const filtrarPorMarcas = (data: any[]) => {
+    if (!marcasSeleccionadas || marcasSeleccionadas.length === 0) return data;
+
+    const nMarcaSeleccionada = marcasSeleccionadas.map((marcaObj) => marcaObj.nmarca);
+
+    return data
+      .map((rubro) => ({
+        ...rubro,
+        productos: rubro.productos.filter((producto: any) =>
+          nMarcaSeleccionada.includes(producto.nmarca)
+        ),
+      }))
+      .filter((rubro) => rubro.productos.length > 0); // Eliminamos rubros sin productos filtrados
+  };
 
   const aplicarFiltros = () => {
     if (!tablaStock || !Array.isArray(tablaStock) || tablaStock.length === 0) return [];
@@ -75,16 +104,27 @@ export const useFiltros = () => {
       data = data.filter((item) => !item.talle || item.talle === '');
     }
 
+    data = filtrarPorMarcas(data);
+
     // Filtro por ordenación
     const criterioOrden = checkboxSeleccionados.grupo4;
+    // console.log('Criterio de orden:', criterioOrden); // Verifica el valor de criterioOrden
+
     if (criterioOrden) {
       switch (criterioOrden) {
         case 'Código':
-          data.forEach((rubro) => {
-            rubro.productos.sort(
-              (a: any, b: any) => (parseInt(a.codigo) || 0) - (parseInt(b.codigo) || 0)
-            );
+          console.log(productos);
+
+          productos.sort((a: any, b: any) => {
+            const codigoA = parseInt(a.codigo, 10);
+            const codigoB = parseInt(b.codigo, 10);
+
+            return codigoA - codigoB;
           });
+
+          setProductos([...productos]);
+          console.log('Productos ordenados:', productos);
+
           break;
         case 'Marca':
           data.forEach((rubro) => {

@@ -1,19 +1,9 @@
 import { useEffect } from 'react';
 import { useStockPorSeccion } from '@/views/app/stockSeccion/store/useStockPorSeccion';
 import { TableNode } from '@table-library/react-table-library/types/table';
-import { TablaStocks, TableColumn } from '@/types';
+import { MarcaModal, ProductoAgrupado, TablaStocks, TableColumn } from '@/types';
 import TablaInforme from '../../informes/_components/TablaInforme';
-
-interface ProductoAgrupado {
-  id: string;
-  codigo: string;
-  talle: string;
-  descripcion: string;
-  marca: string;
-  precio: string;
-  stockPorDeposito: { [depositoId: string]: string };
-  total: string;
-}
+// import { useFiltros } from '../hooks/useFiltros';
 
 interface TableProps<T extends TableNode> {
   datosParaTabla?: T[];
@@ -26,114 +16,21 @@ export default function TablaStock({ datosParaTabla }: TableProps<TableNode>) {
     footer,
     tablaStock,
     status,
+    productos,
+    setProductos,
     indiceSeleccionado,
     idsCoincidentes,
     stockRenderizado,
     depositosDisponibles,
     depositosSeleccionados,
+    marcasSeleccionadas,
+    setMarcasDisponibles,
+    setMarcasSeleccionadas,
     setDepositosSeleccionados,
     setTablaStock,
     setStockRenderizado,
     setDepositosDisponibles,
   } = useStockPorSeccion();
-
-  let idCounter = 0;
-
-  const datosAgrupados = agruparPorProducto(stockRenderizado);
-  const depositos = obtenerDepositos(stockRenderizado);
-  let cantidadItems = datosAgrupados.length;
-  let totalGeneral = 0;
-  let columnaIndex = 5;
-  const totalesPorDeposito: { [deposito: string]: number } = {};
-  const datosFooter: { [key: string]: string } = {
-    id: cantidadItems.toString(),
-  };
-
-  // Filtramos los totales solo para depósitos seleccionados
-  datosAgrupados.forEach((producto) => {
-    depositosSeleccionados.forEach((depositoSeleccionado) => {
-      const depositoId = depositoSeleccionado.deposito;
-
-      if (producto.stockPorDeposito?.hasOwnProperty(depositoId)) {
-        const stock = parseFloat(producto.stockPorDeposito[depositoId]) || 0;
-
-        // Acumular en el total por depósito
-        totalesPorDeposito[depositoId] = (totalesPorDeposito[depositoId] || 0) + stock;
-
-        // Sumar al total general solo si el depósito está seleccionado
-        totalGeneral += stock;
-      }
-    });
-  });
-
-  // Llenamos las primeras 5 columnas fijas con valores vacíos
-  for (let i = 1; i <= 5; i++) {
-    datosFooter[`columna${i}`] = '';
-  }
-
-  depositos.forEach((deposito) => {
-    const depositoId = deposito.deposito;
-    const total = totalesPorDeposito[depositoId];
-
-    // Solo mostramos el total si el depósito está seleccionado
-    datosFooter[`columna${columnaIndex}`] = depositosSeleccionados.some(
-      (d) => d.deposito === depositoId
-    )
-      ? total !== undefined
-        ? total.toString()
-        : ''
-      : '';
-
-    columnaIndex++;
-  });
-
-  // Insertamos el total general en la última columna
-  datosFooter[`columna${columnaIndex}`] = totalGeneral.toString();
-
-  useEffect(() => {}, [datosParaTabla]);
-
-  useEffect(() => {
-    if (tablaStock.length < 0) {
-      setTablaStock(datosAgrupados);
-      setStockRenderizado(datosAgrupados);
-    }
-  }, [tablaStock]);
-
-  useEffect(() => {
-    if (stockRenderizado) {
-      const depositosUnicos = obtenerDepositos(stockRenderizado);
-      // console.log(depositosUnicos);
-      // const depositosArray = depositosUnicos.map(
-      //   (deposito) => `${deposito.deposito} - ${deposito.ndeposito}`
-      // );
-      // console.log(depositosArray);
-      setDepositosDisponibles(depositosUnicos);
-      setDepositosSeleccionados(depositosUnicos);
-    }
-  }, [stockRenderizado]);
-
-  // useEffect(() => {
-  //   if (depositosSeleccionados.length > 0) {
-  //     // Filtrar los productos según los depósitos seleccionados
-  //     const productosFiltrados = datosAgrupados.filter((producto) => {
-  //       if (producto && producto.stockPorDeposito) {
-  //         return depositosSeleccionados.some((depositoSeleccionado) =>
-  //           producto.stockPorDeposito.hasOwnProperty(depositoSeleccionado.deposito) &&
-  //           parseFloat(producto.stockPorDeposito[depositoSeleccionado.deposito]) > 0
-  //         );
-  //       }
-  //       return false;
-  //     });
-
-  //     // Actualizar el estado con los productos filtrados
-  //     setTablaStock(productosFiltrados);
-  //     setStockRenderizado(productosFiltrados);
-  //   } else {
-  //     // Si no hay depósitos seleccionados, mostrar todos los productos
-  //     setTablaStock(datosAgrupados);
-  //     setStockRenderizado(datosAgrupados);
-  //   }
-  // }, [depositosSeleccionados, datosAgrupados]);
 
   const COLUMNS: TableColumn<TablaStocks>[] = [
     {
@@ -150,14 +47,14 @@ export default function TablaStock({ datosParaTabla }: TableProps<TableNode>) {
     },
     {
       label: 'Marca',
-      renderCell: (item: TablaStocks) => item.marca,
+      renderCell: (item: TablaStocks) => item.nmarca,
     },
     {
       label: 'Precio',
       renderCell: (item: TablaStocks) => item.precio,
     },
     // Insertar columnas de depósitos dinámicamente según los seleccionados
-    ...Array.from(obtenerDepositos(stockRenderizado)) // Obtiene todos los depósitos
+    ...Array.from(obtenerDepositos(tablaStock)) // Obtiene todos los depósitos
       .map((deposito) => ({
         label: `${deposito.deposito}`, // Muestra el número del depósito en la columna
         renderCell: (item: TablaStocks) => {
@@ -179,8 +76,6 @@ export default function TablaStock({ datosParaTabla }: TableProps<TableNode>) {
       renderCell: (item: TablaStocks) => item.total,
     },
   ];
-
-  // console.log(depositosSeleccionados);
 
   const customTheme = {
     Table: `
@@ -333,6 +228,102 @@ export default function TablaStock({ datosParaTabla }: TableProps<TableNode>) {
     `,
   };
 
+  let idCounter = 0;
+
+  useEffect(() => {
+    // Agrupar los productos solo cuando stockRenderizado cambie
+    const datosAgrupados = agruparPorProducto(stockRenderizado);
+    setProductos(datosAgrupados);
+  }, [stockRenderizado, setProductos]);
+
+  const depositos = obtenerDepositos(stockRenderizado);
+  let cantidadItems = productos.length;
+  let totalGeneral = 0;
+  let columnaIndex = 5;
+  const totalesPorDeposito: { [deposito: string]: number } = {};
+  const datosFooter: { [key: string]: string } = {
+    id: cantidadItems.toString(),
+  };
+
+  // Filtramos los totales solo para depósitos y marcas seleccionadas
+  productos.forEach((producto) => {
+    // Verificamos si la marca del producto está en la lista de marcas seleccionadas
+    if (!marcasSeleccionadas.some((marca) => marca.nmarca === producto.nmarca)) return;
+
+    depositosSeleccionados.forEach((depositoSeleccionado) => {
+      const depositoId = depositoSeleccionado.deposito;
+
+      if (producto.stockPorDeposito?.hasOwnProperty(depositoId)) {
+        const stock = parseFloat(producto.stockPorDeposito[depositoId]) || 0;
+
+        // Acumular en el total por depósito
+        totalesPorDeposito[depositoId] = (totalesPorDeposito[depositoId] || 0) + stock;
+
+        // Sumar al total general solo si el depósito está seleccionado
+        totalGeneral += stock;
+      }
+    });
+  });
+
+  // Llenamos las primeras 5 columnas fijas con valores vacíos
+  for (let i = 1; i <= 5; i++) {
+    datosFooter[`columna${i}`] = '';
+  }
+
+  depositos.forEach((deposito) => {
+    const depositoId = deposito.deposito;
+    const total = totalesPorDeposito[depositoId];
+
+    // Solo mostramos el total si el depósito está seleccionado
+    datosFooter[`columna${columnaIndex}`] = depositosSeleccionados.some(
+      (d) => d.deposito === depositoId
+    )
+      ? total !== undefined
+        ? total.toString()
+        : ''
+      : '';
+
+    columnaIndex++;
+  });
+
+  // Insertamos el total general en la última columna
+  datosFooter[`columna${columnaIndex}`] = totalGeneral.toString();
+
+  useEffect(() => {}, [datosParaTabla]);
+
+  // console.log(datosAgrupados);
+  useEffect(() => {
+    if (tablaStock.length < 0) {
+      const depositosUnicos = obtenerDepositos(tablaStock);
+      const marcasTotal = obtenerMarcas(tablaStock);
+
+      setTablaStock(productos);
+      setStockRenderizado(productos);
+
+      setMarcasDisponibles(marcasTotal);
+      setDepositosDisponibles(depositosUnicos);
+    }
+  }, [tablaStock]);
+
+  useEffect(() => {
+    if (stockRenderizado) {
+      if (marcasSeleccionadas.length === 0) {
+        const marcasDisponibles = obtenerMarcas(stockRenderizado);
+        setMarcasDisponibles(marcasDisponibles);
+        setMarcasSeleccionadas(marcasDisponibles);
+      }
+
+      if (depositosSeleccionados.length === 0) {
+        const depositosUnicos = obtenerDepositos(stockRenderizado);
+        setDepositosDisponibles(depositosUnicos);
+        setDepositosSeleccionados(depositosUnicos);
+      }
+      // // Aplicar filtros cada vez que cambien marcasSeleccionadas
+      // const stockFiltrado = aplicarFiltros();
+      // setStockRenderizado(stockFiltrado);
+    }
+  }, [stockRenderizado]);
+
   function agruparPorProducto(data: any): ProductoAgrupado[] {
     const productosAgrupados: ProductoAgrupado[] = [];
 
@@ -363,7 +354,8 @@ export default function TablaStock({ datosParaTabla }: TableProps<TableNode>) {
                       codigo: producto.codigo,
                       talle: talle.talle,
                       descripcion: producto.nombre,
-                      marca: producto.nmarca,
+                      marca: producto.marca,
+                      nmarca: producto.nmarca,
                       precio: producto.prec1,
                       stockPorDeposito,
                       total: totalStock.toString(),
@@ -376,7 +368,7 @@ export default function TablaStock({ datosParaTabla }: TableProps<TableNode>) {
         }
       }
     }
-
+    // setProductos(productosAgrupados);
     return productosAgrupados;
   }
 
@@ -410,18 +402,30 @@ export default function TablaStock({ datosParaTabla }: TableProps<TableNode>) {
     return depositosUnicos; // Retorna el array ordenado
   }
 
-  // funcion por si el codigo viene con letras
-  // const dataSinLetras = data.map((item) => ({
-  //   ...item,
-  //   codigo: item.codigo.replace(/\D/g, ""), // Elimina todas las letras del código
-  // }));
+  function obtenerMarcas(data: any[]): MarcaModal[] {
+    const marcasMap = new Map<string, string>();
 
-  // console.log(datosAgrupados);
+    data.forEach((rubro) => {
+      rubro.productos.forEach((producto: any) => {
+        const nmarcaKey = producto.nmarca.trim().toLowerCase();
+        if (!marcasMap.has(nmarcaKey)) {
+          marcasMap.set(nmarcaKey, producto.marca);
+        }
+      });
+    });
+
+    return Array.from(marcasMap, ([nmarcaKey, marca]) => ({
+      marca,
+      nmarca: nmarcaKey.toUpperCase(),
+    })).sort((a, b) => a.nmarca.localeCompare(b.nmarca));
+  }
+
+  // console.log(productos);
   return (
     <>
       <TablaInforme
         columnas={COLUMNS}
-        datosParaTabla={datosAgrupados}
+        datosParaTabla={productos}
         procesado={false}
         estilos={customTheme}
         footer={footer}

@@ -66,6 +66,8 @@ export default function TablaInforme<T extends TableNode>({
   idsCoincidentes = [], // Valor por defecto: array vacío
   indiceSeleccionado = -1,
 }: TableProps<T>) {
+  console.log('Datos recibidos en TablaInforme:', datosParaTabla);
+
   const [isActive, setIsActive] = useState(false);
   const [currentHorario, setCurrentHorario] = useState<TableNode | null>(null);
   const [scrollPosition, setScrollPosition] = useState(0);
@@ -88,7 +90,7 @@ export default function TablaInforme<T extends TableNode>({
   useEffect(() => {
     if (procesado && datosParaTabla.length > 0 && !currentHorario) {
       const firstItem = datosParaTabla[0];
-      console.log(firstItem);
+      // console.log(firstItem);
       setCurrentHorario(firstItem);
       select.fns.onToggleByIdExclusively(firstItem.id);
       setIsActive(true);
