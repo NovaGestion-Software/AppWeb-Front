@@ -1,7 +1,7 @@
 import ActionButton from "@/Components/ui/Buttons/ActionButton";
 import FlexibleInputField from "@/Components/ui/Inputs/FlexibleInputs";
 import { useStockPorSeccion } from "@/store/useStockPorSeccion";
-import { useEffect, useRef, useState } from "react";
+import { useEffect,  useState } from "react";
 import { BiSearch } from "react-icons/bi";
 import { TbArrowBigRightLinesFilled } from "react-icons/tb";
 
@@ -65,7 +65,6 @@ export default function BusquedaStock({ data }: any) {
       setBuscado(false);
     }
   }, [idsCoincidentes]);
-  const tablaRef = useRef<HTMLTableElement | null>(null);
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
       // Verificar si alguno de los inputs tiene contenido
@@ -79,33 +78,8 @@ export default function BusquedaStock({ data }: any) {
         event.preventDefault(); // Evitar el comportamiento por defecto de Enter
         setCodigoBusqueda("");
         setTextoBusqueda("");
-        console.log(tablaRef)
-        setTimeout(() => {
-          tablaRef.current?.focus();
-        }, 0);
+     
       }
-    } else if (event.key === "ArrowDown" || event.key === "ArrowUp") {
-      event.preventDefault(); // Evitar el comportamiento por defecto de las flechas
-  
-      // Determinar la dirección de la navegación
-      const direction = event.key === "ArrowDown" ? 1 : -1;
-  
-      // Calcular el nuevo índice
-      let newIndex;
-      if (buscado && idsCoincidentes.length > 0) {
-        // Navegar dentro de los ítems coincidentes
-        newIndex = indiceSeleccionado + direction;
-        if (newIndex < 0) newIndex = idsCoincidentes.length - 1; // Ir al último si es menor que 0
-        if (newIndex >= idsCoincidentes.length) newIndex = 0; // Ir al primero si es mayor que el límite
-      } else {
-        // Navegar por la tabla completa
-        newIndex = indiceSeleccionado + direction;
-        if (newIndex < 0) newIndex = stockRenderizado.length - 1; // Ir al último si es menor que 0
-        if (newIndex >= stockRenderizado.length) newIndex = 0; // Ir al primero si es mayor que el límite
-      }
-  
-      // Actualizar el índice seleccionado
-      setIndiceSeleccionado(newIndex);
     }
   };
 

@@ -50,6 +50,8 @@ export default function StockPorSeccion() {
   //STORE
   const {
     stockRenderizado,
+    setStockRenderizado,
+    tablaStock,
     marcasDisponibles,
     marcasSeleccionadas,
     setMarcasDisponibles,
@@ -65,8 +67,8 @@ export default function StockPorSeccion() {
  
   } = useStockPorSeccion();
  
-  // console.log('stock renderizado', stockRenderizado)
-  // console.log('stock ', tablaStock )
+  console.log('stock renderizado', stockRenderizado)
+  console.log('stock ', tablaStock )
 
   // TABLA PARA RUBROS
   const { data: rubrosDis } = useQuery({
@@ -91,7 +93,15 @@ export default function StockPorSeccion() {
     staleTime: 1000 * 60 * 5, // Datos frescos por 5 minutos
   });
 
-  console.log('stock',stockDis)
+
+  useEffect(() => {
+    if (stockDis?.data && Array.isArray(stockDis.data)) {
+      setStockRenderizado(stockDis.data);
+    } else {
+      setStockRenderizado([]); // Asegurar que sea un array vacío en caso de error
+    }
+  }, [stockDis]);
+  let datos1 = (stockRenderizado || []).map((item) => item.marca);
 
   return (
     <div className="w-full h-full px-4 pt-0 overflow-hidden">
@@ -194,7 +204,7 @@ export default function StockPorSeccion() {
         title="Marcas"
         showModal={showMarcasModal}
         setShowModal={setShowMarcasModal}
-        datos={stockRenderizado.map((item) => item.marca)} // Datos originales
+        datos={datos1.map((item) => item.marca)} // Datos originales
         itemsDisponibles={marcasDisponibles}
         itemsSeleccionados={marcasSeleccionadas}
         setItemsDisponibles={setMarcasDisponibles}

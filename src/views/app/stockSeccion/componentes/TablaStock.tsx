@@ -58,6 +58,7 @@ export default function TablaStock({datosParaTabla}: TableProps<TableNode>) {
     }
   },[setData])
   
+  
   console.log('renderizado', stockRenderizado)
 
   const COLUMNS: TableColumn<TablaStocks>[] = [
