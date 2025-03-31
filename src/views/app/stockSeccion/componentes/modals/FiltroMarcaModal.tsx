@@ -3,6 +3,8 @@ import { useStockPorSeccion } from '../../store/useStockPorSeccion';
 import { MarcaModal } from '@/types';
 import ActionButton from '@/Components/ui/Buttons/ActionButton';
 import ModalInforme from '@/views/app/informes/_components/ModalInforme';
+import { useFiltros } from '../../hooks/useFiltros';
+
 
 interface FiltroMarcaModalProps {
   showModal: boolean;
@@ -10,7 +12,7 @@ interface FiltroMarcaModalProps {
 }
 
 export default function FiltroMarcaModal({ showModal, setShowModal }: FiltroMarcaModalProps) {
-  const { marcasDisponibles, marcasSeleccionadas, setMarcasSeleccionadas } = useStockPorSeccion();
+  const { marcasDisponibles, marcasSeleccionadas, setMarcasSeleccionadas,setStockRenderizado } = useStockPorSeccion();
   const [marcasSeleccionadasModal, setMarcasSeleccionadasModal] = useState<MarcaModal[]>([]);
 
   //   console.log(marcasSeleccionadas);
@@ -57,12 +59,21 @@ export default function FiltroMarcaModal({ showModal, setShowModal }: FiltroMarc
           : [...prev, marca] // Si no está, lo agrega
     );
   };
+  const { aplicarFiltros } = useFiltros();
+  const [marcasActualizadas, setMarcasActualizadas] = useState(false);
 
   const handleConfirm = () => {
     setMarcasSeleccionadas(marcasSeleccionadasModal);
+    setMarcasActualizadas(true);
     setShowModal(false);
   };
-
+  
+  useEffect(() => {
+    if (marcasActualizadas) {
+      setStockRenderizado(aplicarFiltros());
+      setMarcasActualizadas(false);
+    }
+  }, [marcasActualizadas]);
   const handleCloseModal = () => {
     setShowModal(false);
     setMarcasSeleccionadas([...marcasSeleccionadas]);

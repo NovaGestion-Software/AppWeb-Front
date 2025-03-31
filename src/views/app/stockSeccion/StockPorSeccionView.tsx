@@ -161,7 +161,7 @@ export default function StockPorSeccionView() {
 
         {/**INPUTS BUSCAR - BOTONES SHOW MODAL TEMPORADAS Y MARCAS */}
         <div className="flex gap-3 items-center w-fit row-start-2 border px-1 rounded-lg bg-white col-start-3 col-span-7 2xl:col-span-5 2xl:px-4 2xl:col-start-4">
-          <BusquedaStock data={stockRenderizado} />
+          <BusquedaStock  />
 
           {/* <ActionButton
             text="Temporadas"

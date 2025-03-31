@@ -1,7 +1,7 @@
 // import { TablaStock1, TablaStocks } from '@/types';
-import { DepositoModal, MarcaModal, ProductoAgrupado, Status } from '@/types';
-import { create } from 'zustand';
-import { createJSONStorage, persist } from 'zustand/middleware';
+import { DepositoModal, MarcaModal, ProductoAgrupado, Status } from "@/types";
+import { create } from "zustand";
+import { createJSONStorage, persist } from "zustand/middleware";
 
 interface CheckboxState {
   grupo1: string | null; // Talles o Artículos
@@ -49,7 +49,10 @@ type StockPorSeccionProps = {
 
   // RE ORDENAMIENTO DE STOCK
   checkboxSeleccionados: CheckboxState;
-  setCheckboxSeleccionados: (grupo: keyof CheckboxState, value: string | null) => void;
+  setCheckboxSeleccionados: (
+    grupo: keyof CheckboxState,
+    value: string | null
+  ) => void;
 
   // MARCAS MODAL
   marcasDisponibles: MarcaModal[];
@@ -74,21 +77,33 @@ type StockPorSeccionProps = {
   // busqueda
   buscado: boolean;
   setBuscado: (valor: boolean) => void;
+  navegandoCoincidentes: boolean;
+  setNavegandoCoincidentes: (valor: boolean) => void;
+  modoNavegacion: 'normal' | 'busqueda';
+  ultimoIndiceBusqueda: number;
+  setModoNavegacion: (modo: 'normal' | 'busqueda') => void;
+  setUltimoIndiceBusqueda: (index: number) => void;
 
-  setStatus: (status: 'error' | 'idle' | 'pending' | 'success' | null) => void;
+  indiceBusqueda: number;      // Índice para navegación en resultados (0 a idsCoincidentes.length - 1)
+  indiceGlobal: number;        // Índice para navegación global (0 a productos.length - 1)
+  setIndiceBusqueda: (index: number) => void;
+  setIndiceGlobal: (index: number) => void;
+
+  setStatus: (status: "error" | "idle" | "pending" | "success" | null) => void;
 };
 
 export const useStockPorSeccion = create<StockPorSeccionProps>()(
   persist(
     (set) => ({
-      status: 'idle',
+      status: "idle",
       footer: true,
       setFooter: (footer: boolean) => set({ footer }),
       seccionesSeleccionadas: null,
       rubrosSeleccionados: [],
       seccionesToFetch: null,
       rubrosToFetch: [],
-      setSeccionesSeleccionadas: (data) => set({ seccionesSeleccionadas: data }),
+      setSeccionesSeleccionadas: (data) =>
+        set({ seccionesSeleccionadas: data }),
       setRubrosSeleccionados: (data) => set({ rubrosSeleccionados: data }),
       setSeccionesToFetch: (data) => set({ seccionesToFetch: data }),
       setRubrosToFetch: (data) => set({ rubrosToFetch: data }),
@@ -116,10 +131,10 @@ export const useStockPorSeccion = create<StockPorSeccionProps>()(
 
       // RE ORDENAMIENTO STOCK
       checkboxSeleccionados: {
-        grupo1: 'Talles',
-        grupo2: 'Todos',
-        grupo3: 'CONTADO',
-        grupo4: 'Descripción',
+        grupo1: "Talles",
+        grupo2: "Todos",
+        grupo3: "CONTADO",
+        grupo4: "Descripción",
       },
       setCheckboxSeleccionados: (grupo, value) =>
         set((state) => ({
@@ -133,14 +148,17 @@ export const useStockPorSeccion = create<StockPorSeccionProps>()(
       marcasDisponibles: [],
       setMarcasDisponibles: (marca) => set({ marcasDisponibles: marca }),
       marcasSeleccionadas: [],
-      setMarcasSeleccionadas: (data: MarcaModal[]) => set({ marcasSeleccionadas: data }),
+      setMarcasSeleccionadas: (data: MarcaModal[]) =>
+        set({ marcasSeleccionadas: data }),
       clearMarcasSeleccionadas: () => set({ marcasSeleccionadas: [] }),
 
       // Temporadas Modal
       temporadasDisponibles: [],
-      setTemporadasDisponibles: (temporada) => set({ temporadasDisponibles: temporada }),
+      setTemporadasDisponibles: (temporada) =>
+        set({ temporadasDisponibles: temporada }),
       temporadasSeleccionadas: [],
-      setTemporadasSeleccionadas: (data: string[]) => set({ temporadasSeleccionadas: data }),
+      setTemporadasSeleccionadas: (data: string[]) =>
+        set({ temporadasSeleccionadas: data }),
       clearTemporadasSeleccionadas: () => set({ temporadasSeleccionadas: [] }),
 
       // Depositos Modal
@@ -148,15 +166,32 @@ export const useStockPorSeccion = create<StockPorSeccionProps>()(
       setDepositosDisponibles: (depositos: DepositoModal[]) =>
         set({ depositosDisponibles: depositos }),
       depositosSeleccionados: [],
-      setDepositosSeleccionados: (data: DepositoModal[]) => set({ depositosSeleccionados: data }),
+      setDepositosSeleccionados: (data: DepositoModal[]) =>
+        set({ depositosSeleccionados: data }),
       clearDepositosSeleccionadas: () => set({ depositosSeleccionados: [] }),
 
       //busqueda
       buscado: false, // Valor inicial
       setBuscado: (valor) => set({ buscado: valor }),
+      navegandoCoincidentes: false, // Valor inicial
+      setNavegandoCoincidentes: (valor) => set({ 
+        navegandoCoincidentes: valor,
+        modoNavegacion: valor ? 'busqueda' : 'normal'
+      }),
+      indiceBusqueda: 0,
+      indiceGlobal: 0,
+      
+      // Funciones para actualizar los estados - REEMPLAZO
+      // setIndiceSeleccionado: (indice) => set({ indiceSeleccionado: indice }), // <-- Eliminar
+      setIndiceBusqueda: (index) => set({ indiceBusqueda: index }),
+      setIndiceGlobal: (index) => set({ indiceGlobal: index }),
+      modoNavegacion: "normal",
+      ultimoIndiceBusqueda: 0, // Para recordar la posición en resultados de búsqueda
+      setModoNavegacion: (modo) => set({ modoNavegacion: modo }),
+setUltimoIndiceBusqueda: (index) => set({ ultimoIndiceBusqueda: index }),
     }),
     {
-      name: 'stock-xseccion-storage',
+      name: "stock-xseccion-storage",
       storage: createJSONStorage(() => sessionStorage),
     }
   )

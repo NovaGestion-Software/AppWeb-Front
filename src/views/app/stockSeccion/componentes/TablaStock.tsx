@@ -79,151 +79,146 @@ export default function TablaStock({ datosParaTabla }: TableProps<TableNode>) {
 
   const customTheme = {
     Table: `
-      grid-template-columns: 
-          minmax(80px, 100px)       /* CODIGO */
-          minmax(50px, 70px)       /* TALLE */
-          minmax(200px, 300px)     /* DESCRIPCION */
-          minmax(100px, 150px)     /* MARCA */
-          minmax(90px, 150px)      /* PRECIO */
-          ${'minmax(70px, 90px)'.repeat(depositosDisponibles.length || 0)} /* DEPOSITOS */
-          minmax(80px, 100px);      /* TOTAL */
-      max-width: 70rem;
-      overflow-y: auto; /* Habilitar scroll vertical */
-      scrollbar-width: thin;
-      font-variant-numeric: tabular-nums;
-      font-size: 14px; /* Tamaño de fuente por defecto */
+    grid-template-columns: 
+        minmax(80px, 100px)
+        minmax(50px, 70px)
+        minmax(200px, 300px)
+        minmax(100px, 150px)
+        minmax(90px, 150px)
+        ${'minmax(70px, 90px)'.repeat(depositosDisponibles.length || 0)}
+        minmax(80px, 100px);
+    max-width: 70rem;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    font-variant-numeric: tabular-nums;
+    font-size: 14px;
     
-      @media (min-width: 1280px) and (max-width: 1380px) {
-        width: 55rem; /* Ancho reducido */
-        height: 420px; /* Altura máxima reducida */
-        font-size: 12px; /* Tamaño de fuente más pequeño */
-      }
+    /* Solución clave: */
+    height: auto;
+    min-height: 200px;
+    max-height: 700px;
+    
+    @media (min-width: 1280px) and (max-width: 1380px) {
+      width: 55rem;
+      max-height: 420px;
+      font-size: 12px;
+    }
 
-      @media (min-width: 1500px) {
-        width: 55rem; /* Ancho reducido */
-        height: 700px; /* Altura máxima reducida */
-        font-size: 12px; /* Tamaño de fuente más pequeño */
-      }
+    @media (min-width: 1500px) {
+      width: 55rem;
+      max-height: 700px;
+      font-size: 12px;
+    }
     `,
-
+  
+    /* Mantenemos exactamente los mismos estilos para HeaderCell, Row, Cell y FooterCell */
     HeaderCell: `
       background: #2973B2;
       color: white;
-      height: 30px; /* Altura por defecto */
-      font-size: 14px; /* Tamaño de fuente por defecto */
-      padding: 14px; /* Padding por defecto */
-      border-top: 1px solid black; /* Borde superior */
-      border-bottom: 1px solid black; /* Borde superior */
+      height: 30px;
+      font-size: 14px;
+      padding: 14px;
+      border-top: 1px solid black;
+      border-bottom: 1px solid black;
       
       &:first-child {
-        /* border-top-left-radius: 12px; Solo el borde superior izquierdo tendrá el radio */
-        border-left: 1px solid black; /* Borde izquierdo */
+        border-left: 1px solid black;
       }
-
+  
       &:last-child {
-        /*border-top-right-radius: 12px;  Solo el borde superior izquierdo tendrá el radio */
-        border-right: 1px solid black; /* Borde derecho */
+        border-right: 1px solid black;
       }
-
+  
       &:nth-of-type(n+3) {
         text-align: center;
       }
-
+  
       @media (min-width: 1280px) and (max-width: 1380px) {
-        height: 20px; /* Altura reducida */
-        font-size: 12px; /* Tamaño de fuente más pequeño */
-        padding: 8px; /* Padding reducido */
+        height: 20px;
+        font-size: 12px;
+        padding: 8px;
       }
     `,
-
+  
     Row: `
-      height: 10px; /* Altura de fila por defecto */
-      font-size: 14px; /* Tamaño de fuente por defecto */
-      border: 1px solid #ccc; /* Borde superior para cada fila */ 
-      border-left: 1px solid black; /* Borde izquierdo */
-      border-right: 1px solid black; /* Borde derecho */  
-
+      height: 10px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-left: 1px solid black;
+      border-right: 1px solid black;
+  
       &:nth-of-type(odd) { background-color: #fff; }
       &:nth-of-type(even) { background-color: #eaf5fd; }
       
       &.row-select-single-selected { background-color: #CAE0BC !important; }
       border-bottom: 1px solid #ccc;
-
+  
       @media (min-width: 1280px) and (max-width: 1380px) {
-        height: 8px; /* Altura de fila reducida */
-        font-size: 12px; /* Tamaño de fuente más pequeño */
+        height: 8px;
+        font-size: 12px;
       }
     `,
-
+  
     Cell: `
-      padding: 6px; /* Padding por defecto */
-      border-right: 1px solid #ccc; /* Borde derecho */
-      
-      font-size: 14px; /* Tamaño de fuente por defecto */
-
+      padding: 6px;
+      border-right: 1px solid #ccc;
+      font-size: 14px;
+  
       &:first-child {
-        border-left: 1px solid black; /* Borde izquierdo negro */
-        /* border-top-left-radius: 12px; */
+        border-left: 1px solid black;
       }
-
+  
       &:last-child {
-        border-right: 1px solid black; /* Borde derecho */
-        /*border-top-right-radius: 12px; */
+        border-right: 1px solid black;
       }
-
-
+  
       &:nth-of-type(n+3) {
         text-align: right;
       }
-
+  
       @media (min-width: 1280px) and (max-width: 1380px) {
-        padding: 2px; /* Padding reducido */
-        font-size: 12px; /* Tamaño de fuente más pequeño */
+        padding: 2px;
+        font-size: 12px;
       }
     `,
-
+  
     FooterCell: `
       position: sticky;
       bottom: 0;
       height: 30px;
       padding: 8px;
       border-top: 1px solid black;
-      background-color: #fff; /* Fondo sólido para ocultar el contenido de la tabla */
+      background-color: #fff;
       text-align: right;
       font-size: 14px;
       color: red;
-      z-index: 1; /* Asegurar que el footer esté por encima del contenido */
-
+      z-index: 1;
+  
       &:last-child {
         border-left: 1px solid black;
-        /*border-bottom-right-radius: 12px;*/
-        
       }
-
+  
       &:nth-of-type(1) {
         border: 1px solid black;
         background-color: #A5C9FF;
         font-weight: bold;
-        /*border-bottom-left-radius: 8px;  Redondeo en la esquina inferior izquierda */
       }
-
-      
+  
       &:nth-of-type(6) {
         background-color: #A5C9FF; 
         border-left: 1px solid black; 
       }
-
-      /* Aplica color desde la columna 6 en adelante */
+  
       &:nth-of-type(n+6) {
         background-color: #A5C9FF; 
         border-bottom: 1px solid black; 
         border-right: 1px solid black; 
       }
-
+  
       @media (min-width: 1280px) and (max-width: 1380px) {
         padding: 4px;
         font-size: 12px;
-        bottom: 0px; /* Ajuste fino para alinear el footer */
+        bottom: 0px;
       }
     `,
   };
@@ -420,7 +415,7 @@ export default function TablaStock({ datosParaTabla }: TableProps<TableNode>) {
     })).sort((a, b) => a.nmarca.localeCompare(b.nmarca));
   }
 
-  // console.log(productos);
+  //console.log('prductos',productos);
   return (
     <>
       <TablaInforme
