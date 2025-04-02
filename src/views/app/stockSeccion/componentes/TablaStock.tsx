@@ -1,78 +1,80 @@
-import { useEffect } from 'react';
-import { useStockPorSeccion } from '@/views/app/stockSeccion/store/useStockPorSeccion';
-import { TableNode } from '@table-library/react-table-library/types/table';
-import { MarcaModal, ProductoAgrupado, TablaStocks, TableColumn } from '@/types';
-import TablaInforme from '../../informes/_components/TablaInforme';
+import { useEffect } from "react";
+import { useStockPorSeccion } from "@/views/app/stockSeccion/store/useStockPorSeccion";
+import {
+  MarcaModal,
+  ProductoAgrupado,
+  TablaStocks,
+  TableColumn,
+} from "@/types";
+import TablaInforme from "../../informes/_components/TablaInforme";
+import { FooterRow } from "@table-library/react-table-library/table/Footer";
 // import { useFiltros } from '../hooks/useFiltros';
 
-interface TableProps<T extends TableNode> {
-  datosParaTabla?: T[];
-  idsCoincidentes?: (string | number)[]; // Prop opcional
-  indiceSeleccionado?: number; // Prop opcional
-}
+// interface TableProps<T extends TableNode> {
+//   datosParaTabla?: T[];
+//   idsCoincidentes?: (string | number)[]; // Prop opcional
+//   indiceSeleccionado?: number; // Prop opcional
+// }
+//{ datosParaTabla }: TableProps<TableNode>
 
-export default function TablaStock({ datosParaTabla }: TableProps<TableNode>) {
+export default function TablaStock() {
   const {
     footer,
     tablaStock,
     status,
     productos,
-    setProductos,
+    setStockRenderizado,
     indiceSeleccionado,
     idsCoincidentes,
-    stockRenderizado,
     depositosDisponibles,
     depositosSeleccionados,
     marcasSeleccionadas,
     setMarcasDisponibles,
     setMarcasSeleccionadas,
     setDepositosSeleccionados,
-    setTablaStock,
-    setStockRenderizado,
     setDepositosDisponibles,
   } = useStockPorSeccion();
 
   const COLUMNS: TableColumn<TablaStocks>[] = [
     {
-      label: 'Código',
+      label: "Código",
       renderCell: (item: TablaStocks) => item.codigo, // Renderiza los rubros como una lista de elementos JSX
     },
     {
-      label: 'Talle',
+      label: "Talle",
       renderCell: (item: TablaStocks) => item.talle,
     },
     {
-      label: 'Descripción',
+      label: "Descripción",
       renderCell: (item: TablaStocks) => item.descripcion,
     },
     {
-      label: 'Marca',
+      label: "Marca",
       renderCell: (item: TablaStocks) => item.nmarca,
     },
     {
-      label: 'Precio',
+      label: "Precio",
       renderCell: (item: TablaStocks) => item.precio,
     },
     // Insertar columnas de depósitos dinámicamente según los seleccionados
-    ...Array.from(obtenerDepositos(tablaStock)) // Obtiene todos los depósitos
+    ...Array.from(obtenerDepositos(tablaStock)) // Siempre usa tablaStock para obtener los depósitos
       .map((deposito) => ({
-        label: `${deposito.deposito}`, // Muestra el número del depósito en la columna
+        label: `${deposito.deposito}`,
         renderCell: (item: TablaStocks) => {
           const stockPorDeposito = item.stockPorDeposito;
 
-          // Verificamos si el depósito está en los seleccionados
-          if (depositosSeleccionados.some((d) => d.deposito === deposito.deposito)) {
-            // Si el depósito está seleccionado, mostramos el valor correspondiente
-            return stockPorDeposito[deposito.deposito] || ''; // Si no hay stock, mostramos ''
+          if (
+            depositosSeleccionados.some((d) => d.deposito === deposito.deposito)
+          ) {
+            return stockPorDeposito[deposito.deposito] || "";
           } else {
-            // Si el depósito no está seleccionado, mostramos un valor vacío en la celda
-            return '';
+            return "";
           }
         },
       })),
 
     {
-      label: 'Total',
+      label: "Total",
       renderCell: (item: TablaStocks) => item.total,
     },
   ];
@@ -85,18 +87,29 @@ export default function TablaStock({ datosParaTabla }: TableProps<TableNode>) {
         minmax(200px, 300px)
         minmax(100px, 150px)
         minmax(90px, 150px)
-        ${'minmax(70px, 90px)'.repeat(depositosDisponibles.length || 0)}
+        ${"minmax(70px, 90px)".repeat(depositosDisponibles.length || 0)}
         minmax(80px, 100px);
     max-width: 70rem;
     overflow-y: auto;
     scrollbar-width: thin;
     font-variant-numeric: tabular-nums;
     font-size: 14px;
-    
+border-radius: 10px 36px 36px 12px;
+        grid-template-rows: 30px auto ;
+
+    /* Asegura que la tabla use grid layout */
+    display: grid;
+    grid-auto-rows: auto; /* Para filas dinámicas adicionales */
+
     /* Solución clave: */
     height: auto;
     min-height: 200px;
-    max-height: 700px;
+    max-height: 600px;
+    
+
+     .tr {
+      min-height: 10px;
+    }
     
     @media (min-width: 1280px) and (max-width: 1380px) {
       width: 55rem;
@@ -106,42 +119,43 @@ export default function TablaStock({ datosParaTabla }: TableProps<TableNode>) {
 
     @media (min-width: 1500px) {
       width: 55rem;
-      max-height: 700px;
+      max-height: 500;
       font-size: 12px;
     }
+      
     `,
-  
+
     /* Mantenemos exactamente los mismos estilos para HeaderCell, Row, Cell y FooterCell */
     HeaderCell: `
       background: #2973B2;
       color: white;
       height: 30px;
       font-size: 14px;
-      padding: 14px;
+      padding: 8px;
       border-top: 1px solid black;
       border-bottom: 1px solid black;
-      
       &:first-child {
         border-left: 1px solid black;
       }
   
       &:last-child {
         border-right: 1px solid black;
-      }
+        border-radius: 0px 12px 0px 0px;
+        }
   
       &:nth-of-type(n+3) {
         text-align: center;
       }
   
       @media (min-width: 1280px) and (max-width: 1380px) {
-        height: 20px;
         font-size: 12px;
         padding: 8px;
       }
     `,
-  
+
     Row: `
-      height: 10px;
+     height: auto !important;
+       min-height: 35px; /* Altura mínima para contenido */
       font-size: 14px;
       border: 1px solid #ccc;
       border-left: 1px solid black;
@@ -154,15 +168,15 @@ export default function TablaStock({ datosParaTabla }: TableProps<TableNode>) {
       border-bottom: 1px solid #ccc;
   
       @media (min-width: 1280px) and (max-width: 1380px) {
-        height: 8px;
         font-size: 12px;
       }
     `,
-  
+
     Cell: `
       padding: 6px;
       border-right: 1px solid #ccc;
       font-size: 14px;
+      
   
       &:first-child {
         border-left: 1px solid black;
@@ -179,9 +193,19 @@ export default function TablaStock({ datosParaTabla }: TableProps<TableNode>) {
       @media (min-width: 1280px) and (max-width: 1380px) {
         padding: 2px;
         font-size: 12px;
+
       }
     `,
-  
+    FooterRow: `
+    border-radius: 12px 24px 32px 12px;
+    background-color: white;
+    border-top: 1px solid black;
+`,
+Body: `
+max-height: 500px;
+overflow-y: hidden;
+`,
+
     FooterCell: `
       position: sticky;
       bottom: 0;
@@ -195,12 +219,15 @@ export default function TablaStock({ datosParaTabla }: TableProps<TableNode>) {
       z-index: 1;
   
       &:last-child {
-        border-left: 1px solid black;
+      border-bottom-right-radius: 22px;
+        border: 1px solid black;
+
       }
   
       &:nth-of-type(1) {
         border: 1px solid black;
         background-color: #A5C9FF;
+      border-bottom-left-radius: 14px;
         font-weight: bold;
       }
   
@@ -213,6 +240,7 @@ export default function TablaStock({ datosParaTabla }: TableProps<TableNode>) {
         background-color: #A5C9FF; 
         border-bottom: 1px solid black; 
         border-right: 1px solid black; 
+
       }
   
       @media (min-width: 1280px) and (max-width: 1380px) {
@@ -225,13 +253,17 @@ export default function TablaStock({ datosParaTabla }: TableProps<TableNode>) {
 
   let idCounter = 0;
 
+  // setea productos en la store con stock renderizado que sigue el mismo esquema que tablastock
+  // Este use Effect funciona cuando los datos de tablaStock cambian
+  // Lo toma y crea datosAgrupados con lo que setea el StockRenderizado
   useEffect(() => {
     // Agrupar los productos solo cuando stockRenderizado cambie
-    const datosAgrupados = agruparPorProducto(stockRenderizado);
-    setProductos(datosAgrupados);
-  }, [stockRenderizado, setProductos]);
+    const datosAgrupados = agruparPorProducto(tablaStock);
+    setStockRenderizado(datosAgrupados);
+  }, [tablaStock]);
 
-  const depositos = obtenerDepositos(stockRenderizado);
+  //depositos utiliza stock renderizado
+  const depositos = obtenerDepositos(tablaStock);
   let cantidadItems = productos.length;
   let totalGeneral = 0;
   let columnaIndex = 5;
@@ -243,7 +275,8 @@ export default function TablaStock({ datosParaTabla }: TableProps<TableNode>) {
   // Filtramos los totales solo para depósitos y marcas seleccionadas
   productos.forEach((producto) => {
     // Verificamos si la marca del producto está en la lista de marcas seleccionadas
-    if (!marcasSeleccionadas.some((marca) => marca.nmarca === producto.nmarca)) return;
+    if (!marcasSeleccionadas.some((marca) => marca.nmarca === producto.nmarca))
+      return;
 
     depositosSeleccionados.forEach((depositoSeleccionado) => {
       const depositoId = depositoSeleccionado.deposito;
@@ -252,7 +285,8 @@ export default function TablaStock({ datosParaTabla }: TableProps<TableNode>) {
         const stock = parseFloat(producto.stockPorDeposito[depositoId]) || 0;
 
         // Acumular en el total por depósito
-        totalesPorDeposito[depositoId] = (totalesPorDeposito[depositoId] || 0) + stock;
+        totalesPorDeposito[depositoId] =
+          (totalesPorDeposito[depositoId] || 0) + stock;
 
         // Sumar al total general solo si el depósito está seleccionado
         totalGeneral += stock;
@@ -262,7 +296,7 @@ export default function TablaStock({ datosParaTabla }: TableProps<TableNode>) {
 
   // Llenamos las primeras 5 columnas fijas con valores vacíos
   for (let i = 1; i <= 5; i++) {
-    datosFooter[`columna${i}`] = '';
+    datosFooter[`columna${i}`] = "";
   }
 
   depositos.forEach((deposito) => {
@@ -275,8 +309,8 @@ export default function TablaStock({ datosParaTabla }: TableProps<TableNode>) {
     )
       ? total !== undefined
         ? total.toString()
-        : ''
-      : '';
+        : ""
+      : "";
 
     columnaIndex++;
   });
@@ -284,40 +318,34 @@ export default function TablaStock({ datosParaTabla }: TableProps<TableNode>) {
   // Insertamos el total general en la última columna
   datosFooter[`columna${columnaIndex}`] = totalGeneral.toString();
 
-  useEffect(() => {}, [datosParaTabla]);
-
-  // console.log(datosAgrupados);
+  //obtener depositos utiliza tablla stock que tiene una estructura vieja.
   useEffect(() => {
     if (tablaStock.length < 0) {
       const depositosUnicos = obtenerDepositos(tablaStock);
       const marcasTotal = obtenerMarcas(tablaStock);
-
-      setTablaStock(productos);
-      setStockRenderizado(productos);
-
+      console.log("depositosUnicos", depositosUnicos);
       setMarcasDisponibles(marcasTotal);
       setDepositosDisponibles(depositosUnicos);
     }
   }, [tablaStock]);
 
+  // Setea los depositos y las marcas disponibles
   useEffect(() => {
-    if (stockRenderizado) {
-      if (marcasSeleccionadas.length === 0) {
-        const marcasDisponibles = obtenerMarcas(stockRenderizado);
+    if (tablaStock) {
+    
+        const marcasDisponibles = obtenerMarcas(tablaStock);
         setMarcasDisponibles(marcasDisponibles);
         setMarcasSeleccionadas(marcasDisponibles);
-      }
 
-      if (depositosSeleccionados.length === 0) {
-        const depositosUnicos = obtenerDepositos(stockRenderizado);
+
+    
+        const depositosUnicos = obtenerDepositos(tablaStock);
         setDepositosDisponibles(depositosUnicos);
         setDepositosSeleccionados(depositosUnicos);
-      }
-      // // Aplicar filtros cada vez que cambien marcasSeleccionadas
-      // const stockFiltrado = aplicarFiltros();
-      // setStockRenderizado(stockFiltrado);
+
+
     }
-  }, [stockRenderizado]);
+  }, [tablaStock]);
 
   function agruparPorProducto(data: any): ProductoAgrupado[] {
     const productosAgrupados: ProductoAgrupado[] = [];
@@ -337,8 +365,8 @@ export default function TablaStock({ datosParaTabla }: TableProps<TableNode>) {
                     let stockPorDeposito: { [deposito: string]: string } = {};
                     let totalStock = 0;
 
-                    const depositoId = deposito.deposito || 'default';
-                    const stock = parseFloat(talle.stock || '0.0000');
+                    const depositoId = deposito.deposito || "default";
+                    const stock = parseFloat(talle.stock || "0.0000");
 
                     stockPorDeposito[depositoId] = stock.toString();
 
@@ -367,8 +395,13 @@ export default function TablaStock({ datosParaTabla }: TableProps<TableNode>) {
     return productosAgrupados;
   }
 
-  function obtenerDepositos(data: any): { deposito: string; ndeposito: string }[] {
-    const depositos = new Map<string, { deposito: string; ndeposito: string }>();
+  function obtenerDepositos(
+    data: any
+  ): { deposito: string; ndeposito: string }[] {
+    const depositos = new Map<
+      string,
+      { deposito: string; ndeposito: string }
+    >();
 
     if (!data) return [];
 

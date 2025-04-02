@@ -21,7 +21,6 @@ export default function TablaSeccionRubro({
   const [isCancelEnabled, setIsCancelEnabled] = useState(false); // habilitar botón cancelar
 
   const {
-    // stockRenderizado,
     setStatus,
     setFooter,
     seccionesSeleccionadas,
@@ -32,7 +31,6 @@ export default function TablaSeccionRubro({
     setTablaStock,
     setRubrosToFetch,
     setRubrosSeleccionados,
-    setStockRenderizado,
     setSeccionesSeleccionadas,
     clearRubrosSeleccionados,
     clearSeccionesSeleccionadas,
@@ -118,8 +116,8 @@ export default function TablaSeccionRubro({
     onSuccess: (data) => {
       // console.log(data.data);
       const arrayDeRubros: TablaStock1[] = Object.values(data.data);
+      console.log('array de rubros',arrayDeRubros)
       setFooter(true);
-      setStockRenderizado(arrayDeRubros);
       setTablaStock(arrayDeRubros);
       setStatus('success');
     },
@@ -178,7 +176,7 @@ export default function TablaSeccionRubro({
   };
 
   return (
-    <>
+
       <ModalInforme
         show={showRubrosModal}
         title="Secciones y Rubros"
@@ -203,6 +201,6 @@ export default function TablaSeccionRubro({
           setSubItemsStore={setRubrosSeleccionados}
         />
       </ModalInforme>
-    </>
+   
   );
 }

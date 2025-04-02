@@ -63,7 +63,8 @@ export default function ModalInforme({
 
   return (
     <>
-      <div className="absolute inset-0 z-50 flex justify-center items-center overflow-x-hidden outline-none focus:outline-none">
+      <div className="absolute inset-0 z-50 flex justify-center  w-full
+      items-center overflow-x-hidden outline-none focus:outline-none">
         <div
           className="relative"
           ref={modalRef}
@@ -96,17 +97,17 @@ export default function ModalInforme({
                   {buttons && (
                     <div className="flex flex-col gap-3">
                       <ActionButton
-                        icon={<img src="/icons/done.png" alt="Confirmar" className="w-6 h-6" />}
+                        icon={<img src="/icons/done.png" alt="Confirmar" className="w-5 h-5  " />}
                         size="md"
-                        color="grayDefault"
-                        // className="border-2 border-slate-500 bg-gray-100 rounded-md"
+                        className='bg-[#F5F5F5] hover:bg-[#E8F5E9] rounded-md hover:rounded-sm hover:scale-105'
+                       
                         onClick={onConfirm || (() => {})}
                         disabled={!disabled}
                       />
                       <ActionButton
-                        icon={<img src="/icons/close.png" alt="Confirmar" className="w-6 h-6" />}
+                        icon={<img src="/icons/close.png" alt="Cancelar" className="w-5 h-5 "  /> }
                         size="md"
-                        className="rounded-md"
+                        className="rounded-md hover:rounded-sm hover:scale-105 transition-all duration-100  bg-transparent hover:bg-slate-100"
                         onClick={onClose}
                         disabled={!disabled2}
                       />

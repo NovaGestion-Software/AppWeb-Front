@@ -131,10 +131,10 @@ export const useStockPorSeccion = create<StockPorSeccionProps>()(
 
       // RE ORDENAMIENTO STOCK
       checkboxSeleccionados: {
-        grupo1: "Talles",
+        grupo1: "Todos",
         grupo2: "Todos",
         grupo3: "CONTADO",
-        grupo4: "Descripción",
+        grupo4: "Codigo",
       },
       setCheckboxSeleccionados: (grupo, value) =>
         set((state) => ({

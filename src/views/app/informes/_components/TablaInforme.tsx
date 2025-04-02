@@ -30,8 +30,8 @@ const TablaFooter: React.FC<TablaFooterProps> = ({ datos = {} }) => {
   if (!Object.keys(datos).length) return null; // No renderiza si `datos` está vacío
 
   return (
-    <Footer layout={{ fixedHeader: true }}>
-      <FooterRow>
+    <Footer  layout={{ fixedHeader: true }}>
+      <FooterRow className='mt-4'>
         {Object.entries(datos).map(([_, value], index) => (
           <FooterCell key={index}>
             {typeof value === 'number' ? value.toLocaleString('es-AR') : value}
@@ -77,8 +77,8 @@ export default function TablaInforme<T extends TableNode>({
   const tableRef = useRef<HTMLDivElement | null>(null);
   const materialTheme = getTheme(DEFAULT_OPTIONS);
   const theme = useTheme([materialTheme, estilos]);
-  const rowHeight = 30;
-  const headerHeight = 5;
+  const rowHeight = 20;
+  const headerHeight = 3;
   const data: Data<TableNode> = {
     nodes: datosParaTabla,
   };
@@ -192,6 +192,8 @@ useEffect(() => {
       }
     }
   }
+
+
 }, [indiceSeleccionado, buscado, modoNavegacion, idsCoincidentes, datosParaTabla]);
 
   // Efecto adicional para sincronización cuando cambian los datos
@@ -203,9 +205,8 @@ useEffect(() => {
       }
     }
   }, [datosParaTabla]);
-  // console.log(idsCoincidentes);
-  // console.log(indiceSeleccionado);
-  // Añadir este nuevo efecto para manejar selección manual (click)
+
+  // nuevo efecto para manejar selección manual (click)
 useEffect(() => {
   if (!procesado || !currentHorario) return;
 

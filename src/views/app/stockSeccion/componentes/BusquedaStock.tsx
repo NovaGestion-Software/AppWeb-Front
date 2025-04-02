@@ -29,6 +29,7 @@ export default function BusquedaStock() {
     idsCoincidentes,
     setIdsCoincidentes,
     stockRenderizado,
+    tablaStock,
     setTablaStock,
     setStockRenderizado,
     setSeccionesSeleccionadas,
@@ -44,6 +45,7 @@ export default function BusquedaStock() {
     setDepositosDisponibles,
     setDepositosSeleccionados,
     setFooter,
+    setProductos
   } = useStockPorSeccion();
 
   // useEffect(() => {}, [data]);
@@ -58,29 +60,70 @@ export default function BusquedaStock() {
     }
   }, [idsCoincidentes]);
 
+
+  // filtra sobre el esquema de tabla stock, antes de agrupar y organizar
+  // useEffect(() => {
+  //   console.log('productos', productos);
+  //   if (!productos) return;
+  
+  //   // Filtramos los productos válidos (con código, descripción y nmarca)
+  //   const filtered = productos
+  //     .filter((producto: any) => producto && producto.codigo && producto.descripcion && producto.nmarca) // Filtramos productos válidos
+  //     .filter((producto: any) => {
+  //       console.log('producto', producto);
+  //       console.log('codigoBusqueda', codigoBusqueda, producto.codigo);
+        
+  //       const matchesCodigo = producto.codigo.includes(codigoBusqueda);
+  //       console.log('matchesCodigo', matchesCodigo);
+        
+  //       const matchesTexto =
+  //         producto.descripcion.toLowerCase().includes(textoBusqueda.toLowerCase()) || // Filtro por descripción
+  //         producto.nmarca.toLowerCase().includes(textoBusqueda.toLowerCase()); // Filtro por nombre de marca
+        
+  //       return matchesCodigo && matchesTexto;
+  //     });
+  
+  //   const ids = filtered.map((producto: any) => producto.codigo);
+  
+  //   setIdsCoincidentes(ids);
+  //   if (navegandoCoincidentes && idsCoincidentes.length > 0) {
+  //     setIndiceSeleccionado(0);
+  //   }
+  // }, [codigoBusqueda, textoBusqueda, productos, navegandoCoincidentes]);
   useEffect(() => {
-    // Filtramos solo los productos que contienen código, marca y descripción
-    const filtered = stockRenderizado
-      .flatMap((rubro: any) => rubro.productos) // Aplanamos los productos de cada rubro
-      .filter((producto: any) => producto && producto.codigo && producto.nombre && producto.marca) // Filtramos productos válidos
+   if (!productos) return;
+  
+    // 1. Filtramos productos válidos y que coincidan con la búsqueda
+    const productosFiltrados = productos
+      .filter((producto: any) => producto && producto.codigo && producto.descripcion && producto.nmarca)
       .filter((producto: any) => {
-        const matchesCodigo = producto.codigo.includes(codigoBusqueda); // Filtro por código
+        const matchesCodigo = producto.codigo.includes(codigoBusqueda);
         const matchesTexto =
-          producto.nombre.toLowerCase().includes(textoBusqueda.toLowerCase()) || // Filtro por nombre
-          producto.marca.toLowerCase().includes(textoBusqueda.toLowerCase()); // Filtro por marca
+          producto.descripcion.toLowerCase().includes(textoBusqueda.toLowerCase()) ||
+          producto.nmarca.toLowerCase().includes(textoBusqueda.toLowerCase());
         return matchesCodigo && matchesTexto;
       });
-
-    const ids = filtered.map((producto: any) => producto.codigo); // Aquí se toma el `codigo` del producto como el ID
-
-    // console.log(ids);
-
+  
+    // 2. Agrupamos por código y seleccionamos solo el PRIMER ítem de cada grupo
+    const gruposPorCodigo: Record<string, any[]> = {};
+    productosFiltrados.forEach((producto) => {
+      if (!gruposPorCodigo[producto.codigo]) {
+        gruposPorCodigo[producto.codigo] = [];
+      }
+      gruposPorCodigo[producto.codigo].push(producto);
+    });
+  
+    // 3. Obtenemos el primer ítem de cada grupo (código único)
+    const productosUnicos = Object.values(gruposPorCodigo).map((grupo) => grupo[0]);
+  
+    // 4. Extraemos los códigos para la selección
+    const ids = productosUnicos.map((producto) => producto.codigo);
+  
     setIdsCoincidentes(ids);
     if (navegandoCoincidentes && idsCoincidentes.length > 0) {
-      setIndiceSeleccionado(0); // Solo resetea cuando estamos navegando con Enter
+      setIndiceSeleccionado(0);
     }
-  }, [codigoBusqueda, textoBusqueda, stockRenderizado,navegandoCoincidentes]);
-
+  }, [codigoBusqueda, textoBusqueda, productos, navegandoCoincidentes]);
   const handleSiguienteClick = () => {
     if (idsCoincidentes.length > 0) {
       console.log('indce seleccionado',indiceSeleccionado);
@@ -133,12 +176,14 @@ export default function BusquedaStock() {
           const nuevoIndice = (indiceSeleccionado + 1) % idsCoincidentes.length;
           setIndiceSeleccionado(nuevoIndice);
           setUltimoIndiceBusqueda(nuevoIndice);
+        console.log('indiceSeleccionado', indiceSeleccionado);
+        
         }
       }
     }
 
     if (!buscado) {
-      setIndiceGlobal(0);  // <-- Nueva línea
+      setIndiceGlobal(0); 
     }
     else if (event.key === 'Escape') {
       event.preventDefault();
@@ -199,6 +244,7 @@ export default function BusquedaStock() {
       setIndiceSeleccionado(0);
       setIdsCoincidentes([]);
       setTablaStock([]);
+      setProductos([]);
       setStockRenderizado([]);
       setSeccionesSeleccionadas({});
       setSeccionesToFetch({});
