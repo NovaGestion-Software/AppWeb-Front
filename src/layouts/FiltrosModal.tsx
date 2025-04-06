@@ -16,6 +16,8 @@ interface FiltroModalProps<T> {
   title: string; // Título del modal
   renderItem: (item: T) => React.ReactNode; // Función de renderizado de cada ítem
   setStockRenderizado?: (data: any[]) => void;
+  disabled?: boolean; // Propiedad opcional para deshabilitar el modal
+  disabled2?: boolean; // Propiedad opcional para deshabilitar el modal
 }
 
 export default function FiltroModal<T>({
@@ -28,6 +30,8 @@ export default function FiltroModal<T>({
   setItemsSeleccionados,
   title,
   renderItem,
+  disabled,
+  disabled2,
 }: // setStockRenderizado,
 FiltroModalProps<T>) {
   const [itemsSeleccionadosModal, setItemsSeleccionadosModal] = useState<T[]>([]);
@@ -116,8 +120,8 @@ FiltroModalProps<T>) {
       title={title}
       onClose={handleCloseModal}
       onConfirm={handleConfirm}
-      disabled={true}
-      disabled2={true}
+      disabled={disabled}
+      disabled2={disabled2}
     >
       <div className="flex flex-col w-fit p-2 h-[30rem] mx-auto gap-1 ">
         <div className="flex flex-row items-center justify-end h-10 gap-2 ">

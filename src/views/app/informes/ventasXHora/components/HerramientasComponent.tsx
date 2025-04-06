@@ -8,6 +8,8 @@ interface HerramientasComponentProps {
   datosParaFooter?: Record<string, any>; // Opcional
   isProcessing: boolean;
   modalSucursales?: boolean;
+  disabled?: boolean;
+
 }
 
 export default function HerramientasComponent({
@@ -15,6 +17,7 @@ export default function HerramientasComponent({
   datosParaFooter,
   isProcessing,
   modalSucursales = true,
+  disabled,
 }: HerramientasComponentProps) {
   // Aseguramos que datosTotales tenga un ID
   const datosTotales = datosParaFooter
@@ -80,6 +83,9 @@ export default function HerramientasComponent({
         isProcessing={isProcessing}
         handleExportExcel={handleExportExcel}
         handlePrint={handlePrint}
+        disabled1={disabled}
+        disabled2={disabled}
+        
       >
         {modalSucursales && <ModalSucursales isProcessing={isProcessing} />}
       </HerramientasInforme>

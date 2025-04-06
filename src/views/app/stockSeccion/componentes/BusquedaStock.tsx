@@ -14,6 +14,7 @@ export default function BusquedaStock() {
   const [isDisabled, setIsDisabled] = useState(true);
 
   const {
+    status,
     productos
     ,buscado,
     setBuscado,
@@ -28,8 +29,6 @@ export default function BusquedaStock() {
     setIndiceSeleccionado,
     idsCoincidentes,
     setIdsCoincidentes,
-    stockRenderizado,
-    tablaStock,
     setTablaStock,
     setStockRenderizado,
     setSeccionesSeleccionadas,
@@ -48,7 +47,6 @@ export default function BusquedaStock() {
     setProductos
   } = useStockPorSeccion();
 
-  // useEffect(() => {}, [data]);
 
   useEffect(() => {
     setIsDisabled(codigoBusqueda.length === 0 && textoBusqueda.length === 0);
@@ -279,7 +277,7 @@ export default function BusquedaStock() {
         labelClassName="text-start w-12 text-sm "
         inputClassName="w-24 text-xs"
         containerWidth="w-[12rem]"
-        disabled={false}
+        disabled={status === 'idle'}
         onChange={(value) => {
           if (typeof value === 'string') {
             setCodigoBusqueda(value);
@@ -292,7 +290,7 @@ export default function BusquedaStock() {
         value={textoBusqueda || ''}
         placeholder="Descripción o Marca"
         inputClassName="w-52 text-xs"
-        disabled={false}
+        disabled={status === 'idle'}
         containerWidth="w-56 "
         onChange={(value) => {
           if (typeof value === 'string') {

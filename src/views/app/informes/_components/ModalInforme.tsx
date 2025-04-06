@@ -99,17 +99,16 @@ export default function ModalInforme({
                       <ActionButton
                         icon={<img src="/icons/done.png" alt="Confirmar" className="w-5 h-5  " />}
                         size="md"
-                        className='bg-[#F5F5F5] hover:bg-[#E8F5E9] rounded-md hover:rounded-sm hover:scale-105'
-                       
+                        className={`${disabled ? ' bg-slate-200 ' : ' bg-[#F5F5F5] hover:bg-[#daf5dc] hover:scale-105  hover:rounded-sm'} rounded-md  transition-all duration-100`}
                         onClick={onConfirm || (() => {})}
-                        disabled={!disabled}
+                        disabled={disabled}
                       />
                       <ActionButton
                         icon={<img src="/icons/close.png" alt="Cancelar" className="w-5 h-5 "  /> }
                         size="md"
-                        className="rounded-md hover:rounded-sm hover:scale-105 transition-all duration-100  bg-transparent hover:bg-slate-100"
+                        className={`${disabled2 ? ' bg-slate-200 ' : ' bg-[#F5F5F5] hover:bg-[#FFEBEE] hover:scale-105  hover:rounded-sm'} rounded-md  transition-all duration-100`}
                         onClick={onClose}
-                        disabled={!disabled2}
+                        disabled={disabled2}
                       />
                     </div>
                   )}

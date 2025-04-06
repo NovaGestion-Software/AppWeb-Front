@@ -5,6 +5,7 @@ import { obtenerProductos } from '@/services/ApiPhpService';
 import { TablaSecciones, TablaStock1, TableColumn } from '@/types';
 import TablaExpandible from './TablaExpandible';
 import ModalInforme from '../../informes/_components/ModalInforme';
+import BusquedaRubros from './BusquedaRubros';
 
 interface TablaSeccionRubroProps {
   data: TablaSecciones[];
@@ -132,18 +133,18 @@ export default function TablaSeccionRubro({
   useEffect(() => {
     // Si rubrosSeleccionados tiene contenido, habilitar el botón de confirmar
     if (rubrosSeleccionados.length > 0 && !areArraysEqual(rubrosSeleccionados, rubrosToFetch)) {
-      setIsConfirmEnabled(true);
+      setIsConfirmEnabled(false);
       //   console.log('Habilitar confirmar:', isConfirmEnabled, rubrosSeleccionados, rubrosToFetch, seccionesSeleccionadas, seccionesToFetch);
     } else {
-      setIsConfirmEnabled(false);
+      setIsConfirmEnabled(true);
     }
 
     // Si rubrosToFetch no tiene contenido, deshabilitar el botón de cancelar
     if (rubrosToFetch.length <= 0) {
-      setIsCancelEnabled(false);
+      setIsCancelEnabled(true);
       // console.log('Deshabilitar cancelar:', rubrosToFetch);
     } else {
-      setIsCancelEnabled(true);
+      setIsCancelEnabled(false);
     }
   }, [rubrosSeleccionados, rubrosToFetch]);
 
@@ -186,6 +187,8 @@ export default function TablaSeccionRubro({
         disabled={isConfirmEnabled}
         disabled2={isCancelEnabled}
       >
+       <div className='flex flex-col gap-3 w-fit p-2 h-[30rem] mx-auto'>
+       <BusquedaRubros />
         <TablaExpandible
           columnas={COLUMNS}
           datosParaTabla={data}
@@ -200,6 +203,7 @@ export default function TablaSeccionRubro({
           setItemsStore={setSeccionesSeleccionadas}
           setSubItemsStore={setRubrosSeleccionados}
         />
+       </div>
       </ModalInforme>
    
   );

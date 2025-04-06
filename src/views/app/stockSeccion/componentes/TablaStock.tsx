@@ -7,7 +7,6 @@ import {
   TableColumn,
 } from "@/types";
 import TablaInforme from "../../informes/_components/TablaInforme";
-import { FooterRow } from "@table-library/react-table-library/table/Footer";
 // import { useFiltros } from '../hooks/useFiltros';
 
 // interface TableProps<T extends TableNode> {

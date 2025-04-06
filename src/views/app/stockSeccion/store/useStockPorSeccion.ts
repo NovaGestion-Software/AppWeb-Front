@@ -1,5 +1,5 @@
 // import { TablaStock1, TablaStocks } from '@/types';
-import { DepositoModal, MarcaModal, ProductoAgrupado, Status } from "@/types";
+import { DepositoModal, MarcaModal, ProductoAgrupado, Status, TablaSecciones } from "@/types";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
@@ -15,7 +15,8 @@ type StockPorSeccionProps = {
   // MODAL PARA SELECCION DE SECCION Y RUBRO
   footer: boolean;
   setFooter: (footer: boolean) => void; // El setter para cambiar el estado de `footer`
-
+  datosRubros: TablaSecciones[];
+  setDatosRubros: (data: TablaSecciones[]) => void;
   seccionesSeleccionadas: { [key: string]: boolean } | null;
   rubrosSeleccionados: string[];
   seccionesToFetch: { [key: string]: boolean } | null;
@@ -98,6 +99,8 @@ export const useStockPorSeccion = create<StockPorSeccionProps>()(
       status: "idle",
       footer: true,
       setFooter: (footer: boolean) => set({ footer }),
+      datosRubros: [],
+      setDatosRubros: (data: TablaSecciones[]) => set({ datosRubros: data }),
       seccionesSeleccionadas: null,
       rubrosSeleccionados: [],
       seccionesToFetch: null,

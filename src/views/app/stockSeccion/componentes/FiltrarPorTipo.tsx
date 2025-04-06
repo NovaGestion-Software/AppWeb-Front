@@ -1,10 +1,8 @@
-import { useState } from "react";
 import { useStockPorSeccion } from "@/views/app/stockSeccion/store/useStockPorSeccion";
 import RadioInput from "@/Components/ui/Inputs/RadioInput";
 
 export default function FiltrarPorTipo() {
-  const [disabled, setDisabled] = useState(false);
-  const { checkboxSeleccionados, setCheckboxSeleccionados } =
+  const { checkboxSeleccionados, setCheckboxSeleccionados, status } =
     useStockPorSeccion();
 
   const handleCheckboxChange = (
@@ -21,22 +19,19 @@ export default function FiltrarPorTipo() {
       <RadioInput
         onChange={() => handleCheckboxChange("grupo1", "Todos")}
         checked={checkboxSeleccionados.grupo1 === "Todos"}
-        disabled={disabled}
-        setDisabled={setDisabled}
+        disabled={status === "idle"}
         label="Todos"
       />{" "}
       <RadioInput
         onChange={() => handleCheckboxChange("grupo1", "Talles")}
         checked={checkboxSeleccionados.grupo1 === "Talles"}
-        disabled={disabled}
-        setDisabled={setDisabled}
+        disabled={status === "idle"}
         label="Talles"
       />
       <RadioInput
         onChange={() => handleCheckboxChange("grupo1", "Articulos")}
         checked={checkboxSeleccionados.grupo1 === "Articulos"}
-        disabled={disabled}
-        setDisabled={setDisabled}
+        disabled={status === "idle"}
         label="Artículos"
       />{" "}
     </div>

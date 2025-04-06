@@ -1,5 +1,5 @@
-import React, { CSSProperties, useEffect, useRef, useState } from 'react';
-import { useRowSelect } from '@table-library/react-table-library/select';
+import React, { CSSProperties, useEffect, useRef, useState } from "react";
+import { useRowSelect } from "@table-library/react-table-library/select";
 import {
   Table,
   Header,
@@ -10,18 +10,25 @@ import {
   Cell,
   Data,
   TableNode,
-} from '@table-library/react-table-library/table';
-import { getTheme, DEFAULT_OPTIONS } from '@table-library/react-table-library/material-ui';
-import { useTheme } from '@table-library/react-table-library/theme';
-import { FaChevronDown, FaChevronUp } from 'react-icons/fa'; // Importar íconos de flecha
-import { TableColumn } from '@/types';
-import CheckboxInput from '@/Components/ui/Inputs/Checkbox';
+} from "@table-library/react-table-library/table";
+import {
+  getTheme,
+  DEFAULT_OPTIONS,
+} from "@table-library/react-table-library/material-ui";
+import { useTheme } from "@table-library/react-table-library/theme";
+import { FaChevronDown, FaChevronUp } from "react-icons/fa"; // Importar íconos de flecha
+import { TableColumn } from "@/types";
+import CheckboxInput from "@/Components/ui/Inputs/Checkbox";
+import { useStockPorSeccion } from "../store/useStockPorSeccion";
 
 interface TableProps<T extends TableNode> {
   columnas: TableColumn<T>[];
   datosParaTabla: T[];
   estilos: object;
-  getCellProps?: (item: T, column: keyof T | string) => { style: CSSProperties };
+  getCellProps?: (
+    item: T,
+    column: keyof T | string
+  ) => { style: CSSProperties };
   procesado: boolean;
   subItemsProperty: string;
   subItemKeyProperty: string;
@@ -32,7 +39,10 @@ interface TableProps<T extends TableNode> {
   setSubItemsStore: (data: string[]) => void;
 
   subItemToFetch: string[];
-  onSubmit: (selectedItems: { [key: string]: boolean }, selectedSubItems: string[]) => void;
+  onSubmit: (
+    selectedItems: { [key: string]: boolean },
+    selectedSubItems: string[]
+  ) => void;
 }
 
 export default function TablaExpandible<T extends TableNode>({
@@ -54,15 +64,19 @@ export default function TablaExpandible<T extends TableNode>({
   const materialTheme = getTheme(DEFAULT_OPTIONS);
   const theme = useTheme([materialTheme, estilos]);
   const [expandedIds, setExpandedIds] = useState<string[]>([]);
-  const [localSelectedItems, setLocalSelectedItems] = useState<{ [key: string]: boolean }>({});
-  const [localSelectedSubItems, setLocalSelectedSubItems] = useState<string[]>([]);
+  const [localSelectedItems, setLocalSelectedItems] = useState<{
+    [key: string]: boolean;
+  }>({});
+  const [localSelectedSubItems, setLocalSelectedSubItems] = useState<string[]>(
+    []
+  );
+  const { buscado, modoNavegacion, idsCoincidentes, indiceSeleccionado } =
+    useStockPorSeccion();
 
-  // console.log(localSelectedItems, localSelectedSubItems);
-  // console.log(itemsStore, localSelectedSubItems);
-  // console.log(localSelectedSubItems);
+  const lastNavigatedId = useRef<string | number | null>(null);
 
   const data: Data<TableNode> = { nodes: datosParaTabla };
-  // FUNC ROWSELECT
+
   const select = useRowSelect(data, {
     onChange: onSelectChange,
   });
@@ -71,7 +85,72 @@ export default function TablaExpandible<T extends TableNode>({
     subItemToFetch.includes(String(item))
   );
 
-  // FUNC SELECCIONAR LA PRIMERA FILA AL RENDERIZAR DATOS.
+  // Efecto para manejar el scroll y resaltado durante la navegación
+  useEffect(() => {
+    if (
+      !buscado ||
+      modoNavegacion !== "busqueda" ||
+      !idsCoincidentes.length ||
+      indiceSeleccionado < 0
+    )
+      return;
+
+    const targetRubroId = idsCoincidentes[indiceSeleccionado];
+    if (lastNavigatedId.current === targetRubroId) return;
+
+    const seccionContenedora = datosParaTabla.find((seccion) =>
+      seccion[subItemsProperty]?.some(
+        (rubro: any) => rubro[subItemKeyProperty] === targetRubroId
+      )
+    );
+
+    if (seccionContenedora) {
+      setExpandedIds([seccionContenedora.seccion]);
+
+      // Intentar el scroll hasta 3 veces con retry
+      let intentos = 0;
+      const maxIntentos = 3;
+      const intervalId = setInterval(() => {
+        const element = document.querySelector(
+          `[data-rubro-id="${targetRubroId}"]`
+        );
+        intentos++;
+
+        // Dentro del efecto de navegación:
+        if (element) {
+          clearInterval(intervalId);
+
+          // Scroll al elemento
+          element.scrollIntoView({ behavior: "smooth", block: "center" });
+
+          // Resaltado temporal
+          element.classList.add("bg-green-500");
+          setTimeout(() => {
+            element.classList.remove("bg-green-500");
+          }, 1000);
+
+          lastNavigatedId.current = targetRubroId;
+        }
+        if (element) {
+          clearInterval(intervalId);
+          element.scrollIntoView({
+            behavior: "smooth",
+            block: "center", // Más confiable que 'center'
+          });
+          lastNavigatedId.current = targetRubroId;
+        } else if (intentos >= maxIntentos) {
+          clearInterval(intervalId);
+        }
+      }, 350); // Chequea cada 350ms (ajustable)
+    }
+  }, [
+    indiceSeleccionado,
+    buscado,
+    modoNavegacion,
+    idsCoincidentes,
+    datosParaTabla,
+  ]);
+  // Resto de efectos y funciones existentes
   useEffect(() => {
     if (procesado && datosParaTabla.length > 0 && !currentHorario) {
       const firstItem = datosParaTabla[0];
@@ -81,7 +160,6 @@ export default function TablaExpandible<T extends TableNode>({
     }
   }, [procesado, datosParaTabla, select, currentHorario]);
 
-  // FOCUS EN TABLA
   useEffect(() => {
     if (isActive && tableRef.current) {
       tableRef.current.focus();
@@ -89,30 +167,27 @@ export default function TablaExpandible<T extends TableNode>({
   }, [isActive]);
 
   useEffect(() => {
-    // Si hay rubros (subitems) guardados en la store, los seteamos en el estado local
     if (subItemToFetch.length > 0) {
       setLocalSelectedSubItems(subItemToFetch);
     }
 
-    // Si hay secciones (items) guardadas en la store, los seteamos en el estado local
     if (itemToFetch && Object.keys(itemToFetch).length > 0) {
       setLocalSelectedItems(itemToFetch);
     }
   }, [subItemToFetch, itemToFetch]);
 
-  // use efffect para actualizar la store de items seleccionados
   useEffect(() => {
     setItemsStore(localSelectedItems);
-  }, [localSelectedItems]); // Sincronizar store cuando cambie el estado local
+  }, [localSelectedItems]);
 
   useEffect(() => {
     setSubItemsStore(localSelectedSubItems);
-  }, [localSelectedSubItems]); // Sincronizar store cuando cambie el estado local
+  }, [localSelectedSubItems]);
 
-  // FUNC SELECCIONAR
   function onSelectChange(action: any, state: any) {
-    console.log(action);
-    const selectedItem = datosParaTabla.find((node) => node.seccion === state.id);
+    const selectedItem = datosParaTabla.find(
+      (node) => node.seccion === state.id
+    );
     if (!selectedItem) {
       setCurrentHorario(null);
     } else {
@@ -120,7 +195,6 @@ export default function TablaExpandible<T extends TableNode>({
     }
   }
 
-  // FUNCION PARA EXANDIR LA TABLA
   const handleExpand = (item: T) => {
     if (expandedIds.includes(item.seccion)) {
       setExpandedIds(expandedIds.filter((id) => id !== item.seccion));
@@ -138,93 +212,35 @@ export default function TablaExpandible<T extends TableNode>({
   };
 
   const handleCheckboxItems = (item: T) => {
-    const isSelected = !localSelectedItems[item.seccion]; // Verificar si se está marcando o desmarcando
-
-    // Actualizar el estado del ítem principal
+    const isSelected = !localSelectedItems[item.seccion];
     setLocalSelectedItems((prev) => {
       const updatedItems = {
         ...prev,
         [item.seccion]: isSelected,
       };
-
-      setItemsStore(updatedItems); // Guardar en la store
+      setItemsStore(updatedItems);
       return updatedItems;
     });
-
-    // // Seleccionar los sub items al seleccionar el ITEM
-    // const subItemsDeLaSeccion =
-    //   item[subItemsProperty]?.map(
-    //     (subItem: any) => subItem[subItemKeyProperty]
-    //   ) || [];
-
-    // // Actualizar el estado de los subítems
-    // setLocalSelectedSubItems((prev) => {
-    //   let newSelectedSubItems;
-
-    //   if (isSelected) {
-    //     // Si el ítem principal está seleccionado, agregar todos los subítems
-    //     newSelectedSubItems = [...prev, ...subItemsDeLaSeccion];
-    //   } else {
-    //     // Si el ítem principal está deseleccionado, eliminar todos los subítems
-    //     newSelectedSubItems = prev.filter(
-    //       (subItemKey) => !subItemsDeLaSeccion.includes(subItemKey)
-    //     );
-    //   }
-
-    //   newSelectedSubItems = [...new Set(newSelectedSubItems)]; // Eliminar duplicados
-
-    //   setSubItemsStore(newSelectedSubItems); // Guardar en la store
-    //   return newSelectedSubItems; // Actualizar el estado local
-    // });
   };
 
   const handleCheckboxSubItems = (subItemKey: string, item: T) => {
     setLocalSelectedSubItems((prev) => {
       const newSelectedSubItems = prev.includes(subItemKey)
-        ? prev.filter((item) => item !== subItemKey) // Si ya está, lo quitamos
-        : [...prev, subItemKey]; // Si no está, lo agregamos
+        ? prev.filter((item) => item !== subItemKey)
+        : [...prev, subItemKey];
 
-      // Verificar si al menos un subítem está seleccionado
-      const isAnySubItemSelected = newSelectedSubItems.length > 0;
-
-      // Si al menos un subítem está seleccionado, seleccionamos el ítem principal
-      setLocalSelectedItems((prev) => ({
-        ...prev,
-        [item.seccion]: isAnySubItemSelected,
+      setLocalSelectedItems((prevItems) => ({
+        ...prevItems,
+        [item.seccion]: newSelectedSubItems.some((id) =>
+          item[subItemsProperty]?.some(
+            (subItem: any) => subItem[subItemKeyProperty] === id
+          )
+        ),
       }));
-      // Una buena idea es aca pasarle como prop el seteador de store generico que usemos asi al llamar la tabla vamos a tener que poner solamente el seteador correspondiente.-
-      //  setSeccionesSeleccionadas(localSelectedItems);
-      //setRubrosSeleccionados(localSelectedSubItems);
-      // console.log("Subítem seleccionado:", subItemKey);
-      // console.log("Nuevo estado de subítems:", rubrosSeleccionados);
 
       return newSelectedSubItems;
     });
   };
-
-  // habilitar o deshabilitar boton de confirmacion
-  // useEffect(() => {
-  //   const hasSelectedItems = Object.values(localSelectedItems).some(
-  //     (value) => value === true
-  //   );
-  //   const hasSelectedSubItems = localSelectedSubItems.length > 0;
-
-  //   if (hasSelectedItems || hasSelectedSubItems) {
-  //     //   console.log('items seleccionados', localSelectedItems, localSelectedSubItems);
-  //     setConfirm(false);
-  //   } else {
-  //     console.log("no hay");
-  //     setConfirm(true);
-  //   }
-  // }, [localSelectedItems, localSelectedSubItems]);
-
-  // ${
-  //   (rubrosSeleccionados ?? []).includes(
-  //     String(subItem[subItemKeyProperty])
-  //   )
-  //     ? "called"
-  //     : ""
-  // }
 
   return (
     <div
@@ -287,29 +303,60 @@ export default function TablaExpandible<T extends TableNode>({
                     ))}
                   </Row>
 
-                  {/* Fila expandible con transición */}
-                  <tr className="grid col-span-full w-full ">
+                  <tr className="grid col-span-full w-full">
                     <td colSpan={columnas.length} className="">
                       <div
                         className={`overflow-hidden transition-all duration-300 ease-in-out ${
-                          expandedIds.includes(item.seccion) ? 'max-h-full' : 'max-h-0'
+                          expandedIds.includes(item.seccion)
+                            ? "max-h-full"
+                            : "max-h-0"
                         }`}
                       >
                         <ul>
                           {item[subItemsProperty]?.map((subItem: any) => {
+                            const isCoincidente =
+                              buscado &&
+                              idsCoincidentes.includes(
+                                subItem[subItemKeyProperty]
+                              );
+                            const isMatch =
+                              buscado &&
+                              idsCoincidentes.includes(
+                                subItem[subItemKeyProperty]
+                              );
+                            const matchIndex = isMatch
+                              ? idsCoincidentes.indexOf(
+                                  subItem[subItemKeyProperty]
+                                ) + 1
+                              : null;
                             return (
                               <li
-                                onClick={() =>
-                                  handleCheckboxSubItems(subItem[subItemKeyProperty], item)
-                                }
-                                className={`flex gap-2 py-1 items-center justify-start text-sm  border-t-2 pl-8
-                               ${
-                                 elementosCoincidentes.includes(subItem[subItemKeyProperty])
-                                   ? 'line-through text-gray-500 bg-indigo-50 hover:cursor-default '
-                                   : ' bg-slate-200  hover:bg-blue-200   cursor-pointer'
-                               }
-                              border-slate-400`}
+                                data-rubro-id={subItem[subItemKeyProperty]}
+                                className={`
+                                  ${
+                                    isCoincidente
+                                      ? "bg-green-400 hover:bg-green-500"
+                                      : "bg-blue-200 hover:bg-blue-300"
+                                  }
+                                  flex gap-2 py-1 items-center justify-start text-sm border-t-2 pl-8
+                                   cursor-pointer relative
+                                  ${
+                                    elementosCoincidentes.includes(
+                                      subItem[subItemKeyProperty]
+                                    )
+                                      ? "line-through text-gray-500"
+                                      : ""
+                                  }
+
+                               
+                                `}
                                 key={subItem[subItemKeyProperty]}
+                                onClick={() =>
+                                  handleCheckboxSubItems(
+                                    subItem[subItemKeyProperty],
+                                    item
+                                  )
+                                }
                               >
                                 <div className="ml-2">
                                   <CheckboxInput
@@ -317,14 +364,22 @@ export default function TablaExpandible<T extends TableNode>({
                                     checked={localSelectedSubItems.includes(
                                       subItem[subItemKeyProperty]
                                     )}
-                                    disabled={
-                                      elementosCoincidentes.includes(subItem[subItemKeyProperty])
-                                        ? true
-                                        : false
-                                    }
+                                    disabled={elementosCoincidentes.includes(
+                                      subItem[subItemKeyProperty]
+                                    )}
                                   />
                                 </div>
                                 <strong>{subItem[subItemLabelProperty]}</strong>
+                                {isMatch && (
+                                  <span className="absolute left-0 w-6 text-center text-xs font-bold text-black">
+                                    {matchIndex}
+                                  </span>
+                                )}
+                                {isCoincidente && (
+                                  <span className="absolute right-4 text-red-500">
+                                    🔍
+                                  </span>
+                                )}
                               </li>
                             );
                           })}
@@ -335,8 +390,6 @@ export default function TablaExpandible<T extends TableNode>({
                 </React.Fragment>
               ))}
             </Body>
-
-            {/* {footer && datosParaTabla && <TablaFooter datos={datosFooter} />} */}
           </>
         )}
       </Table>

@@ -15,7 +15,6 @@ import BusquedaStock from "./componentes/BusquedaStock";
 import TablaSeccionRubro from "./componentes/TablaSeccionRubro";
 import TablaStock from "./componentes/TablaStock";
 import ActionButton from "@/Components/ui/Buttons/ActionButton";
-import FiltroMarcaModal from "./componentes/modals/FiltroMarcaModal";
 import { useFiltros } from "./hooks/useFiltros";
 
 export default function StockPorSeccionView() {
@@ -24,11 +23,15 @@ export default function StockPorSeccionView() {
   const [showRubrosModal, setShowRubrosModal] = useState(true);
   const isProcessing = false;
   // state para rubros
-  const [datos, setDatos] = useState<TablaSecciones[]>([]);
+  //const [datos, setDatos] = useState<TablaSecciones[]>([]);
+  const { aplicarFiltros, aplicarOrdenamiento } = useFiltros();
 
   // store
   const {
+    tablaStock,
     stockRenderizado,
+    datosRubros,
+    setDatosRubros,
     setProductos,
     checkboxSeleccionados,
     marcasSeleccionadas,
@@ -40,6 +43,8 @@ export default function StockPorSeccionView() {
     setDepositosDisponibles,
     setDepositosSeleccionados,
     setCheckboxSeleccionados,
+    setStatus,
+    status
   } = useStockPorSeccion();
 
   // TABLA PARA RUBROS
@@ -53,17 +58,13 @@ export default function StockPorSeccionView() {
   // Setea los rubros
   useEffect(() => {
     if (rubrosDis) {
-      setDatos(rubrosDis.data);
+      setDatosRubros(rubrosDis.data);
+      console.log("rubrosDis", rubrosDis.data);
     }
   }, [rubrosDis]);
 
-  const renderDepositoItem = (item: DepositoModal) => {
-    return (
-      <>
-        {item.deposito} - {item.ndeposito}
-      </>
-    ); // Aquí decides cómo renderizar el item
-  };
+ 
+  // SETEA FILTROS DE CHECKBOXS
   useEffect(() => {
     if (stockRenderizado.length > 0) {
       setCheckboxSeleccionados("grupo1", "Todos");
@@ -73,24 +74,24 @@ export default function StockPorSeccionView() {
     }
   }, [stockRenderizado, setCheckboxSeleccionados]);
 
-  const { aplicarFiltros, aplicarOrdenamiento } = useFiltros();
-
+// APLICACION DE FILTROS Y RE ORDENAMIENTO
   useEffect(() => {
     if (stockRenderizado.length === 0) return;
-
     const filtrados = aplicarFiltros();
-
     const ordenados = aplicarOrdenamiento(filtrados);
-
     setProductos(ordenados); // Actualiza la tabla con nuevo orden
-  }, [
-    stockRenderizado,
-    checkboxSeleccionados.grupo1,
-    checkboxSeleccionados.grupo2,
-    checkboxSeleccionados.grupo4,
-    depositosSeleccionados,
-    marcasSeleccionadas,
-  ]);
+  }, [stockRenderizado,checkboxSeleccionados.grupo1,checkboxSeleccionados.grupo2, checkboxSeleccionados.grupo4,depositosSeleccionados,marcasSeleccionadas,]);
+
+  // RENDERIZADO DE ITEMS DE LOS MODALES
+  const renderMarcaItem = (item: MarcaModal) => { return <>{item.nmarca}</>; };
+  const renderDepositoItem = (item: DepositoModal) => { return (   <>{item.deposito} - {item.ndeposito} </>);   };
+
+  // CAMBIO DE ESTADO 
+  useEffect(() => {
+    if(tablaStock?.length === 0) { setStatus("idle") }
+    else { setStatus("success")} 
+  }, [status, setStatus, tablaStock]);
+
   // Tabla stock serian los datos originales del endpoint
   // Stock Renderizado es el resultado de la funcion agrupar por stock
   // Productos es una copia de stock renderizado
@@ -107,14 +108,6 @@ export default function StockPorSeccionView() {
 
   // La busqueda se esta activando porque esta encontrando coincidencias en una tabla que no tiene valores.
   // La busqueda tiene que ser sobre los elementos de la tabla, es decir Productos.
-
-  const renderMarcaItem = (item: MarcaModal) => {
-    return <>{item.nmarca}</>; // Aquí decides cómo renderizar el item
-  };
-
-
-
-  //
   return (
     <div className="w-full h-screen px-4 pt-0 overflow-hidden">
       <ViewTitle title={"Stock por Sección"} />
@@ -124,7 +117,7 @@ export default function StockPorSeccionView() {
           <ActionButton
             text="Depósitos"
             onClick={() => setShowDepositosModal(true)}
-            disabled={false}
+            disabled={status === "idle"}
             color="blue"
             size="xs"
           />
@@ -138,18 +131,18 @@ export default function StockPorSeccionView() {
           {/** GRUPO 4 - FUNCION PARA RE ORDENAR*/}
           <OrdenarPorCheckbox />
         </div>
-
         {/** EXPORTORTAR A EXCEEL E IMPRIMIR. */}
         <div className="p-1 rounded-lg col-span-2 col-start-8 2xl:col-span-2 2xl:col-start-7 2xl:left-10 2xl:relative 2xl:px-4">
           <HerramientasComponent
             data={stockRenderizado}
             isProcessing={!isProcessing}
-            datosParaFooter={datos}
+            datosParaFooter={datosRubros}
             modalSucursales={false}
+            disabled={status === "idle"}
+
           />
         </div>
       </div>
-
       {/** HERRAMIENTAS DE LA VISTA */}
       <div className="grid grid-cols-10 grid-rows-2 space-x-4 px-2">
         {/**FOTO Y BOTONES */}
@@ -176,74 +169,43 @@ export default function StockPorSeccionView() {
         {/**INPUTS BUSCAR - BOTONES SHOW MODAL TEMPORADAS Y MARCAS */}
         <div className="flex gap-3 items-center w-fit row-start-2 border px-1 rounded-lg bg-white col-start-3 col-span-7 2xl:col-span-5 2xl:px-4 2xl:col-start-4">
           <BusquedaStock />
-
-          {/* <ActionButton
-            text="Temporadas"
-            color="blue"
-            onClick={() => setShowTemporadasModal(true)}
-            size="xs"
-          /> */}
           <ActionButton
             text="Marcas"
             color="blue"
+            disabled={status === "idle"}
             onClick={() => setShowMarcasModal(true)}
             size="xs"
           />
         </div>
-
-        {/**VER MOVIMIENTOS EN INVETARIO */}
-        {/* <div className="flex items-end justify-center col-start-11 col-span-1  row-span-2   ">
-          <div className="flex items-center justify-center bg-slate-200 p-2 cursor-pointer rounded-lg w-[4.2rem] h-[4.1rem]">
-            <img
-              src="/img/icons/inspection.png"
-              alt="Ver Movimientos"
-              className="w-12 h-12"
-            />
-          </div>
-        </div> */}
       </div>
-
       {/**TABLA STOCK */}
       <div className="grid grid-cols-12 px-4 py-2">
         <div className="flex items-center justify-center col-span-full">
           <TablaStock />
         </div>
       </div>
-
-      {/** MODAL DE TABLA */}
+      {/** TABLA RUBROS */}
+      <TablaSeccionRubro
+        data={datosRubros}
+        showRubrosModal={showRubrosModal}
+        setShowRubrosModal={setShowRubrosModal}
+      />
+      {/** MODAL DE FILTRO  DEPOSITOS */}
       <FiltroModal<DepositoModal>
         title="Depósitos"
         showModal={showDepositosModal}
         setShowModal={setShowDepositosModal}
-        datos={depositosDisponibles} // Ya no necesitas mapear los datos a un array de strings
+        datos={depositosDisponibles} 
         itemsDisponibles={depositosDisponibles}
         itemsSeleccionados={depositosSeleccionados}
         setItemsDisponibles={setDepositosDisponibles}
         setItemsSeleccionados={setDepositosSeleccionados}
         renderItem={renderDepositoItem}
+        disabled={status === "idle"}
+        disabled2={status === "idle"}
+        
       />
-
-      <TablaSeccionRubro
-        data={datos}
-        showRubrosModal={showRubrosModal}
-        setShowRubrosModal={setShowRubrosModal}
-      />
-
-      {/* <FiltroModal
-        title="Temporadas"
-        showModal={showTemporadasModal}
-        setShowModal={setShowTemporadasModal}
-        datos={temporadas.map((item) => item)} // Datos originales
-        itemsDisponibles={temporadasDisponibles}
-        itemsSeleccionados={temporadasSeleccionadas}
-        setItemsDisponibles={setTemporadasDisponibles}
-        setItemsSeleccionados={setTemporadasSeleccionadas}
-      /> */}
-
-      {/* <FiltroMarcaModal
-        showModal={showMarcasModal}
-        setShowModal={setShowMarcasModal}
-      /> */}
+      {/** MODAL DE FILTRO MARCAS */}
       <FiltroModal<MarcaModal>
         title="Marcas"
         showModal={showMarcasModal}
@@ -254,6 +216,8 @@ export default function StockPorSeccionView() {
         setItemsDisponibles={setMarcasDisponibles}
         setItemsSeleccionados={setMarcasSeleccionadas}
         renderItem={renderMarcaItem}
+        disabled={status === "idle"}
+        disabled2={status === "idle"}
       />
     </div>
   );
