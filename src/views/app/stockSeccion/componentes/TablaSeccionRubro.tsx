@@ -35,6 +35,9 @@ export default function TablaSeccionRubro({
     setSeccionesSeleccionadas,
     clearRubrosSeleccionados,
     clearSeccionesSeleccionadas,
+     buscado, modoNavegacion, idsCoincidentes, indiceSeleccionado 
+    
+
   } = useStockPorSeccion();
 
   const COLUMNS: TableColumn<TablaSecciones>[] = [
@@ -100,16 +103,13 @@ export default function TablaSeccionRubro({
     mutationFn: () => {
       // Filtrar solo las claves que tienen valor true en seccionesSeleccionadas
       const seccionesSeleccionadasKeys = Object.keys(seccionesSeleccionadas ?? {}).filter(
-        (key) => seccionesSeleccionadas?.[key] === true
-      );
-
+        (key) => seccionesSeleccionadas?.[key] === true);
       // Llamar a obtenerProductos con las claves filtradas
       return obtenerProductos(seccionesSeleccionadasKeys, rubrosSeleccionados);
     },
     onMutate: () => {
       setStatus('pending');
     },
-    // mutationFn: () => obtenerStock(rubrosSeleccionados),
     onError: (error) => {
       console.error('Error al obtener los productos:', error);
       setStatus('error');
@@ -134,7 +134,6 @@ export default function TablaSeccionRubro({
     // Si rubrosSeleccionados tiene contenido, habilitar el botón de confirmar
     if (rubrosSeleccionados.length > 0 && !areArraysEqual(rubrosSeleccionados, rubrosToFetch)) {
       setIsConfirmEnabled(false);
-      //   console.log('Habilitar confirmar:', isConfirmEnabled, rubrosSeleccionados, rubrosToFetch, seccionesSeleccionadas, seccionesToFetch);
     } else {
       setIsConfirmEnabled(true);
     }
@@ -149,12 +148,9 @@ export default function TablaSeccionRubro({
   }, [rubrosSeleccionados, rubrosToFetch]);
 
   const handleCloseModal = () => {
-    // console.log("handle close");
     clearRubrosSeleccionados();
     clearSeccionesSeleccionadas();
-
     setShowRubrosModal(false);
-    //     console.log("2", seccionesToFetch, rubrosToFetch);
   };
 
   function handleConfirm(selectedItems: { [key: string]: boolean }, selectedSubItems: string[]) {
@@ -165,7 +161,6 @@ export default function TablaSeccionRubro({
   const handleModalConfirm = () => {
     // setFooter(true);
     mutate();
-
     handleConfirm(seccionesSeleccionadas ?? {}, rubrosSeleccionados ?? []);
     setShowRubrosModal(false);
   };
@@ -202,6 +197,10 @@ export default function TablaSeccionRubro({
           itemToFetch={seccionesToFetch}
           setItemsStore={setSeccionesSeleccionadas}
           setSubItemsStore={setRubrosSeleccionados}
+          buscado={buscado}
+          modoNavegacion={modoNavegacion}
+          idsCoincidentes={idsCoincidentes}
+          indiceSeleccionado={indiceSeleccionado}
         />
        </div>
       </ModalInforme>

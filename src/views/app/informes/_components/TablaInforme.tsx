@@ -66,8 +66,9 @@ export default function TablaInforme<T extends TableNode>({
   idsCoincidentes = [], // Valor por defecto: array vacío
   indiceSeleccionado = -1,
 }: TableProps<T>) {
-  //console.log('Datos recibidos en TablaInforme:', datosParaTabla);
 
+  // aca tengo que agregarle las dependencias de la store como props 
+  // pero tambien hacer condicional todo el tema de la busqueda para que solo se active si se pide.
   const [isActive, setIsActive] = useState(false);
   const [currentHorario, setCurrentHorario] = useState<TableNode | null>(null);
   const [scrollPosition, setScrollPosition] = useState(0);

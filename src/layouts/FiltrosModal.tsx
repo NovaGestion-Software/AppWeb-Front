@@ -100,6 +100,7 @@ FiltroModalProps<T>) {
         // Opcional: Ocultar el botón de cancelar si no es relevante
         showCancelButton: false,
       });
+       console.log(result);
       return; // Detiene la ejecución si no hay ítems seleccionados
     }
   

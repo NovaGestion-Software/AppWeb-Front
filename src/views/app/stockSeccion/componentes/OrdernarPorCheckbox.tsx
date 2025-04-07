@@ -1,31 +1,15 @@
 import { useStockPorSeccion } from "@/views/app/stockSeccion/store/useStockPorSeccion";
-
-// import CheckboxInput from '@/Components/ui/Inputs/Checkbox';
 import RadioInput from "@/Components/ui/Inputs/RadioInput";
 
 export default function OrdenarPorCheckbox() {
-  const {
-    checkboxSeleccionados,
-    setCheckboxSeleccionados,
-    status
-  } = useStockPorSeccion();
-  // const { aplicarFiltros } = useFiltros();
-
-  // // Aplicar filtros cada vez que cambie checkboxSeleccionados
-  // useEffect(() => {
-  //   const datosFiltrados = aplicarFiltros();
-  //   //setStockRenderizado(datosFiltrados);
-  //   setProductos(datosFiltrados)
-  // //  setStockRenderizado(datosFiltrados)
-  // }, [checkboxSeleccionados.grupo4]);
+  const { checkboxSeleccionados, setCheckboxSeleccionados, status } = useStockPorSeccion();
 
   const handleCheckboxChange = (
     grupo: keyof typeof checkboxSeleccionados,
     value: string
   ) => {
     const nuevoValor = checkboxSeleccionados[grupo] === value ? null : value;
-    setCheckboxSeleccionados(grupo, nuevoValor);
-  };
+    setCheckboxSeleccionados(grupo, nuevoValor); };
 
   return (
     <>

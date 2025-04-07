@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { DepositoModal, MarcaModal, TablaSecciones } from "@/types";
+import { DepositoModal, MarcaModal } from "@/types";
 import { useStockPorSeccion } from "@/views/app/stockSeccion/store/useStockPorSeccion";
 import { obtenerRubrosDisponibles } from "@/services/ApiPhpService";
 import ViewTitle from "@/Components/ui/Labels/ViewTitle";
 import HerramientasComponent from "../informes/ventasXHora/components/HerramientasComponent";
-import VerFoto from "./componentes/VerFoto";
 import OrdenarPorCheckbox from "./componentes/OrdernarPorCheckbox";
 import FiltroPorStock from "./componentes/FiltroPorStock";
 import FiltrarPorTipo from "./componentes/FiltrarPorTipo";
@@ -22,8 +21,6 @@ export default function StockPorSeccionView() {
   const [showDepositosModal, setShowDepositosModal] = useState(false);
   const [showRubrosModal, setShowRubrosModal] = useState(true);
   const isProcessing = false;
-  // state para rubros
-  //const [datos, setDatos] = useState<TablaSecciones[]>([]);
   const { aplicarFiltros, aplicarOrdenamiento } = useFiltros();
 
   // store
@@ -145,10 +142,10 @@ export default function StockPorSeccionView() {
       </div>
       {/** HERRAMIENTAS DE LA VISTA */}
       <div className="grid grid-cols-10 grid-rows-2 space-x-4 px-2">
-        {/**FOTO Y BOTONES */}
+        {/* *FOTO Y BOTONES
         <div className="col-start-1 row-start-1 col-span-2 row-span-2 2xl:left-0 2xl:col-start-2 2xl:pl-10 ">
           <VerFoto />
-        </div>
+        </div> */}
 
         {/**CON STOCK, TODOS, NEGATIVOS - CONTADO, LISTA 2, LISTA 3 */}
         <div className="flex gap-2 items-center rounded-lg col-start-3 col-span-8 row-span-1  2xl:col-span- 2xl:col-start-4">

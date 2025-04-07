@@ -7,16 +7,10 @@ import {
   TableColumn,
 } from "@/types";
 import TablaInforme from "../../informes/_components/TablaInforme";
-// import { useFiltros } from '../hooks/useFiltros';
 
-// interface TableProps<T extends TableNode> {
-//   datosParaTabla?: T[];
-//   idsCoincidentes?: (string | number)[]; // Prop opcional
-//   indiceSeleccionado?: number; // Prop opcional
-// }
-//{ datosParaTabla }: TableProps<TableNode>
 
 export default function TablaStock() {
+// store
   const {
     footer,
     tablaStock,
@@ -33,6 +27,16 @@ export default function TablaStock() {
     setDepositosSeleccionados,
     setDepositosDisponibles,
   } = useStockPorSeccion();
+  //depositos utiliza stock renderizado
+  const depositos = obtenerDepositos(tablaStock);
+  let cantidadItems = productos.length;
+  let totalGeneral = 0;
+  let columnaIndex = 5;
+  const totalesPorDeposito: { [deposito: string]: number } = {};
+  const datosFooter: { [key: string]: string } = {
+    id: cantidadItems.toString(),
+  };
+  let idCounter = 0;
 
   const COLUMNS: TableColumn<TablaStocks>[] = [
     {
@@ -78,6 +82,7 @@ export default function TablaStock() {
     },
   ];
 
+// Un before con css en header  y footer con un color solido blanco que funcione de fondo para que las partes de la tabla que pasan por ahi no se vean.
   const customTheme = {
     Table: `
     grid-template-columns: 
@@ -93,7 +98,7 @@ export default function TablaStock() {
     scrollbar-width: thin;
     font-variant-numeric: tabular-nums;
     font-size: 14px;
-border-radius: 10px 36px 36px 12px;
+border-radius: 10px 6px 5px 5px;
         grid-template-rows: 30px auto ;
 
     /* Asegura que la tabla use grid layout */
@@ -249,10 +254,6 @@ overflow-y: hidden;
       }
     `,
   };
-
-  let idCounter = 0;
-
-  // setea productos en la store con stock renderizado que sigue el mismo esquema que tablastock
   // Este use Effect funciona cuando los datos de tablaStock cambian
   // Lo toma y crea datosAgrupados con lo que setea el StockRenderizado
   useEffect(() => {
@@ -261,15 +262,6 @@ overflow-y: hidden;
     setStockRenderizado(datosAgrupados);
   }, [tablaStock]);
 
-  //depositos utiliza stock renderizado
-  const depositos = obtenerDepositos(tablaStock);
-  let cantidadItems = productos.length;
-  let totalGeneral = 0;
-  let columnaIndex = 5;
-  const totalesPorDeposito: { [deposito: string]: number } = {};
-  const datosFooter: { [key: string]: string } = {
-    id: cantidadItems.toString(),
-  };
 
   // Filtramos los totales solo para depósitos y marcas seleccionadas
   productos.forEach((producto) => {
@@ -317,32 +309,16 @@ overflow-y: hidden;
   // Insertamos el total general en la última columna
   datosFooter[`columna${columnaIndex}`] = totalGeneral.toString();
 
-  //obtener depositos utiliza tablla stock que tiene una estructura vieja.
-  useEffect(() => {
-    if (tablaStock.length < 0) {
-      const depositosUnicos = obtenerDepositos(tablaStock);
-      const marcasTotal = obtenerMarcas(tablaStock);
-      console.log("depositosUnicos", depositosUnicos);
-      setMarcasDisponibles(marcasTotal);
-      setDepositosDisponibles(depositosUnicos);
-    }
-  }, [tablaStock]);
-
   // Setea los depositos y las marcas disponibles
   useEffect(() => {
     if (tablaStock) {
-    
         const marcasDisponibles = obtenerMarcas(tablaStock);
         setMarcasDisponibles(marcasDisponibles);
         setMarcasSeleccionadas(marcasDisponibles);
-
-
     
         const depositosUnicos = obtenerDepositos(tablaStock);
         setDepositosDisponibles(depositosUnicos);
         setDepositosSeleccionados(depositosUnicos);
-
-
     }
   }, [tablaStock]);
 
@@ -447,7 +423,6 @@ overflow-y: hidden;
     })).sort((a, b) => a.nmarca.localeCompare(b.nmarca));
   }
 
-  //console.log('prductos',productos);
   return (
     <>
       <TablaInforme

@@ -2,11 +2,9 @@ import { useStockPorSeccion } from '@/views/app/stockSeccion/store/useStockPorSe
 import RadioInput from '@/Components/ui/Inputs/RadioInput';
 
 export default function FiltrarSegunLista() {
-
   const { checkboxSeleccionados, setCheckboxSeleccionados , status} = useStockPorSeccion();
   const handleCheckboxChange = (grupo: keyof typeof checkboxSeleccionados, value: string) => {
     const nuevoValor = checkboxSeleccionados[grupo] === value ? null : value;
-
     setCheckboxSeleccionados(grupo, nuevoValor);
   };
 

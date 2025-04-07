@@ -10,8 +10,6 @@ export default function FiltroPorStock() {
     value: string
   ) => {
     const nuevoValor = checkboxSeleccionados[grupo] === value ? "" : value;
-
-    // Llamar a setCheckboxSeleccionados con los dos argumentos
     setCheckboxSeleccionados(grupo, nuevoValor);
   };
 

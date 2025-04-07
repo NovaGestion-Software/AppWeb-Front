@@ -1,7 +1,7 @@
 import { isAxiosError } from 'axios';
 import { FechasRango } from '@/types';
 import apiPhp from '../lib/axiosPhp';
-
+//FALTA FUNCION QUE TOMA LA EMPRESA, YA ESTABA HECHA.
 export async function obtenerVentasHora(fechas: FechasRango) {
   try {
     // console.log('fechas seteadas en funcion', fechas);

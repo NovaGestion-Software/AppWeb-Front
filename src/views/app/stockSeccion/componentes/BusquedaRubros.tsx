@@ -11,7 +11,11 @@ import { IoTrash } from "react-icons/io5";
 export default function BusquedaRubros() {
   const [textoBusqueda, setTextoBusqueda] = useState<string>("");
   const [isDisabled, setIsDisabled] = useState(true);
+// el scroll sucede antes de que se habra el item en el la tabla por lo tanto queda fuera de lugar.
+// cuando borro la busqueda deja el primer item abierto y seleccionado el primer sub item.
 
+// en los estilos de la tabla puedo hacer que eliminamos el border derecho de la tabla pero a los ultimos elementos de las row le sumamos un borde black a la derecha.
+// a la tabla le falta paginacion.
   const {
     idsCoincidentes,
     setBuscado,

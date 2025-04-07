@@ -11,24 +11,17 @@ import {
   Data,
   TableNode,
 } from "@table-library/react-table-library/table";
-import {
-  getTheme,
-  DEFAULT_OPTIONS,
-} from "@table-library/react-table-library/material-ui";
+import { getTheme, DEFAULT_OPTIONS } from "@table-library/react-table-library/material-ui";
 import { useTheme } from "@table-library/react-table-library/theme";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa"; // Importar íconos de flecha
 import { TableColumn } from "@/types";
 import CheckboxInput from "@/Components/ui/Inputs/Checkbox";
-import { useStockPorSeccion } from "../store/useStockPorSeccion";
 
 interface TableProps<T extends TableNode> {
   columnas: TableColumn<T>[];
   datosParaTabla: T[];
   estilos: object;
-  getCellProps?: (
-    item: T,
-    column: keyof T | string
-  ) => { style: CSSProperties };
+  getCellProps?: (item: T, column: keyof T | string) => { style: CSSProperties };
   procesado: boolean;
   subItemsProperty: string;
   subItemKeyProperty: string;
@@ -39,10 +32,11 @@ interface TableProps<T extends TableNode> {
   setSubItemsStore: (data: string[]) => void;
 
   subItemToFetch: string[];
-  onSubmit: (
-    selectedItems: { [key: string]: boolean },
-    selectedSubItems: string[]
-  ) => void;
+  onSubmit: (selectedItems: { [key: string]: boolean }, selectedSubItems: string[]) => void;
+  buscado: boolean;
+  modoNavegacion: string;
+  indiceSeleccionado: number;
+  idsCoincidentes: (string | number)[];
 }
 
 export default function TablaExpandible<T extends TableNode>({
@@ -57,6 +51,10 @@ export default function TablaExpandible<T extends TableNode>({
   itemToFetch,
   setItemsStore,
   setSubItemsStore,
+  buscado,
+  modoNavegacion,
+  idsCoincidentes,
+  indiceSeleccionado,
 }: TableProps<T>) {
   const [isActive, setIsActive] = useState(false);
   const [currentHorario, setCurrentHorario] = useState<TableNode | null>(null);
@@ -67,41 +65,20 @@ export default function TablaExpandible<T extends TableNode>({
   const [localSelectedItems, setLocalSelectedItems] = useState<{
     [key: string]: boolean;
   }>({});
-  const [localSelectedSubItems, setLocalSelectedSubItems] = useState<string[]>(
-    []
-  );
-  const { buscado, modoNavegacion, idsCoincidentes, indiceSeleccionado } =
-    useStockPorSeccion();
+  const [localSelectedSubItems, setLocalSelectedSubItems] = useState<string[]>([]);
 
   const lastNavigatedId = useRef<string | number | null>(null);
-
   const data: Data<TableNode> = { nodes: datosParaTabla };
-
-  const select = useRowSelect(data, {
-    onChange: onSelectChange,
-  });
-
-  const elementosCoincidentes = localSelectedSubItems.filter((item) =>
-    subItemToFetch.includes(String(item))
-  );
+  const select = useRowSelect(data, { onChange: onSelectChange });
+  const elementosCoincidentes = localSelectedSubItems.filter((item) => subItemToFetch.includes(String(item)));
 
   // Efecto para manejar el scroll y resaltado durante la navegación
   useEffect(() => {
-    if (
-      !buscado ||
-      modoNavegacion !== "busqueda" ||
-      !idsCoincidentes.length ||
-      indiceSeleccionado < 0
-    )
-      return;
-
+    if (!buscado || modoNavegacion !== "busqueda" || !idsCoincidentes.length || indiceSeleccionado < 0) return;
     const targetRubroId = idsCoincidentes[indiceSeleccionado];
     if (lastNavigatedId.current === targetRubroId) return;
-
     const seccionContenedora = datosParaTabla.find((seccion) =>
-      seccion[subItemsProperty]?.some(
-        (rubro: any) => rubro[subItemKeyProperty] === targetRubroId
-      )
+      seccion[subItemsProperty]?.some((rubro: any) => rubro[subItemKeyProperty] === targetRubroId)
     );
 
     if (seccionContenedora) {
@@ -111,9 +88,7 @@ export default function TablaExpandible<T extends TableNode>({
       let intentos = 0;
       const maxIntentos = 3;
       const intervalId = setInterval(() => {
-        const element = document.querySelector(
-          `[data-rubro-id="${targetRubroId}"]`
-        );
+        const element = document.querySelector(`[data-rubro-id="${targetRubroId}"]`);
         intentos++;
 
         // Dentro del efecto de navegación:
@@ -143,13 +118,7 @@ export default function TablaExpandible<T extends TableNode>({
         }
       }, 350); // Chequea cada 350ms (ajustable)
     }
-  }, [
-    indiceSeleccionado,
-    buscado,
-    modoNavegacion,
-    idsCoincidentes,
-    datosParaTabla,
-  ]);
+  }, [indiceSeleccionado, buscado, modoNavegacion, idsCoincidentes, datosParaTabla]);
   // Resto de efectos y funciones existentes
   useEffect(() => {
     if (procesado && datosParaTabla.length > 0 && !currentHorario) {
@@ -170,7 +139,6 @@ export default function TablaExpandible<T extends TableNode>({
     if (subItemToFetch.length > 0) {
       setLocalSelectedSubItems(subItemToFetch);
     }
-
     if (itemToFetch && Object.keys(itemToFetch).length > 0) {
       setLocalSelectedItems(itemToFetch);
     }
@@ -185,9 +153,8 @@ export default function TablaExpandible<T extends TableNode>({
   }, [localSelectedSubItems]);
 
   function onSelectChange(action: any, state: any) {
-    const selectedItem = datosParaTabla.find(
-      (node) => node.seccion === state.id
-    );
+    console.log("action", action);
+    const selectedItem = datosParaTabla.find((node) => node.seccion === state.id);
     if (!selectedItem) {
       setCurrentHorario(null);
     } else {
@@ -232,12 +199,9 @@ export default function TablaExpandible<T extends TableNode>({
       setLocalSelectedItems((prevItems) => ({
         ...prevItems,
         [item.seccion]: newSelectedSubItems.some((id) =>
-          item[subItemsProperty]?.some(
-            (subItem: any) => subItem[subItemKeyProperty] === id
-          )
+          item[subItemsProperty]?.some((subItem: any) => subItem[subItemKeyProperty] === id)
         ),
       }));
-
       return newSelectedSubItems;
     });
   };
@@ -251,12 +215,7 @@ export default function TablaExpandible<T extends TableNode>({
       onClick={handleTableClick}
       onBlur={handleBlur}
     >
-      <Table
-        data={{ nodes: datosParaTabla }}
-        theme={theme}
-        layout={{ fixedHeader: true }}
-        select={select}
-      >
+      <Table data={{ nodes: datosParaTabla }} theme={theme} layout={{ fixedHeader: true }} select={select}>
         {(tableList: T[]) => (
           <>
             <Header>
@@ -282,20 +241,10 @@ export default function TablaExpandible<T extends TableNode>({
                             {column.renderCell(item)}
                           </div>
                         ) : (
-                          <div
-                            className="flex items-center justify-between"
-                            onClick={() => handleExpand(item)}
-                          >
+                          <div className="flex items-center justify-between" onClick={() => handleExpand(item)}>
                             {column.renderCell(item)}
-                            <span
-                              onClick={() => handleExpand(item)}
-                              className="cursor-pointer right-4 relative"
-                            >
-                              {expandedIds.includes(item.seccion) ? (
-                                <FaChevronUp />
-                              ) : (
-                                <FaChevronDown />
-                              )}
+                            <span onClick={() => handleExpand(item)} className="cursor-pointer right-4 relative">
+                              {expandedIds.includes(item.seccion) ? <FaChevronUp /> : <FaChevronDown />}
                             </span>
                           </div>
                         )}
@@ -307,43 +256,25 @@ export default function TablaExpandible<T extends TableNode>({
                     <td colSpan={columnas.length} className="">
                       <div
                         className={`overflow-hidden transition-all duration-300 ease-in-out ${
-                          expandedIds.includes(item.seccion)
-                            ? "max-h-full"
-                            : "max-h-0"
+                          expandedIds.includes(item.seccion) ? "max-h-full" : "max-h-0"
                         }`}
                       >
                         <ul>
                           {item[subItemsProperty]?.map((subItem: any) => {
-                            const isCoincidente =
-                              buscado &&
-                              idsCoincidentes.includes(
-                                subItem[subItemKeyProperty]
-                              );
-                            const isMatch =
-                              buscado &&
-                              idsCoincidentes.includes(
-                                subItem[subItemKeyProperty]
-                              );
+                            const isCoincidente = buscado && idsCoincidentes.includes(subItem[subItemKeyProperty]);
+                            const isMatch = buscado && idsCoincidentes.includes(subItem[subItemKeyProperty]);
                             const matchIndex = isMatch
-                              ? idsCoincidentes.indexOf(
-                                  subItem[subItemKeyProperty]
-                                ) + 1
+                              ? idsCoincidentes.indexOf(subItem[subItemKeyProperty]) + 1
                               : null;
                             return (
                               <li
                                 data-rubro-id={subItem[subItemKeyProperty]}
                                 className={`
-                                  ${
-                                    isCoincidente
-                                      ? "bg-green-400 hover:bg-green-500"
-                                      : "bg-blue-200 hover:bg-blue-300"
-                                  }
+                                  ${isCoincidente ? "bg-green-400 hover:bg-green-500" : "bg-blue-200 hover:bg-blue-300"}
                                   flex gap-2 py-1 items-center justify-start text-sm border-t-2 pl-8
                                    cursor-pointer relative
                                   ${
-                                    elementosCoincidentes.includes(
-                                      subItem[subItemKeyProperty]
-                                    )
+                                    elementosCoincidentes.includes(subItem[subItemKeyProperty])
                                       ? "line-through text-gray-500"
                                       : ""
                                   }
@@ -351,22 +282,13 @@ export default function TablaExpandible<T extends TableNode>({
                                
                                 `}
                                 key={subItem[subItemKeyProperty]}
-                                onClick={() =>
-                                  handleCheckboxSubItems(
-                                    subItem[subItemKeyProperty],
-                                    item
-                                  )
-                                }
+                                onClick={() => handleCheckboxSubItems(subItem[subItemKeyProperty], item)}
                               >
                                 <div className="ml-2">
                                   <CheckboxInput
                                     onChange={() => {}}
-                                    checked={localSelectedSubItems.includes(
-                                      subItem[subItemKeyProperty]
-                                    )}
-                                    disabled={elementosCoincidentes.includes(
-                                      subItem[subItemKeyProperty]
-                                    )}
+                                    checked={localSelectedSubItems.includes(subItem[subItemKeyProperty])}
+                                    disabled={elementosCoincidentes.includes(subItem[subItemKeyProperty])}
                                   />
                                 </div>
                                 <strong>{subItem[subItemLabelProperty]}</strong>
@@ -375,11 +297,7 @@ export default function TablaExpandible<T extends TableNode>({
                                     {matchIndex}
                                   </span>
                                 )}
-                                {isCoincidente && (
-                                  <span className="absolute right-4 text-red-500">
-                                    🔍
-                                  </span>
-                                )}
+                                {isCoincidente && <span className="absolute right-4 text-red-500">🔍</span>}
                               </li>
                             );
                           })}
