@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useStockPorSeccion } from '@/views/app/stockSeccion/store/useStockPorSeccion';
 import { TbArrowBigRightLinesFilled } from 'react-icons/tb';
 import { BiSearch } from 'react-icons/bi';
@@ -6,21 +6,29 @@ import { IoTrash } from 'react-icons/io5';
 import FlexibleInputField from '@/Components/ui/Inputs/FlexibleInputs';
 import ActionButton from '@/Components/ui/Buttons/ActionButton';
 import showAlert from '@/utils/showAlert';
+import { FiAlertTriangle } from 'react-icons/fi';
 
-export default function BusquedaStock({ data }: any) {
+export default function BusquedaStock() {
   const [codigoBusqueda, setCodigoBusqueda] = useState<string>('');
   const [textoBusqueda, setTextoBusqueda] = useState<string>('');
   const [isDisabled, setIsDisabled] = useState(true);
-  const tablaRef = useRef<HTMLTableElement | null>(null);
 
   const {
-    buscado,
+    status,
+    productos
+    ,buscado,
     setBuscado,
+    navegandoCoincidentes,
+    setNavegandoCoincidentes,
+    setIndiceGlobal,
+    modoNavegacion,
+    indiceGlobal,
+    setModoNavegacion,
+    setUltimoIndiceBusqueda,
     indiceSeleccionado,
     setIndiceSeleccionado,
     idsCoincidentes,
     setIdsCoincidentes,
-    stockRenderizado,
     setTablaStock,
     setStockRenderizado,
     setSeccionesSeleccionadas,
@@ -36,9 +44,9 @@ export default function BusquedaStock({ data }: any) {
     setDepositosDisponibles,
     setDepositosSeleccionados,
     setFooter,
+    setProductos
   } = useStockPorSeccion();
 
-  useEffect(() => {}, [data]);
 
   useEffect(() => {
     setIsDisabled(codigoBusqueda.length === 0 && textoBusqueda.length === 0);
@@ -50,34 +58,76 @@ export default function BusquedaStock({ data }: any) {
     }
   }, [idsCoincidentes]);
 
+
+  // filtra sobre el esquema de tabla stock, antes de agrupar y organizar
+  // useEffect(() => {
+  //   console.log('productos', productos);
+  //   if (!productos) return;
+  
+  //   // Filtramos los productos válidos (con código, descripción y nmarca)
+  //   const filtered = productos
+  //     .filter((producto: any) => producto && producto.codigo && producto.descripcion && producto.nmarca) // Filtramos productos válidos
+  //     .filter((producto: any) => {
+  //       console.log('producto', producto);
+  //       console.log('codigoBusqueda', codigoBusqueda, producto.codigo);
+        
+  //       const matchesCodigo = producto.codigo.includes(codigoBusqueda);
+  //       console.log('matchesCodigo', matchesCodigo);
+        
+  //       const matchesTexto =
+  //         producto.descripcion.toLowerCase().includes(textoBusqueda.toLowerCase()) || // Filtro por descripción
+  //         producto.nmarca.toLowerCase().includes(textoBusqueda.toLowerCase()); // Filtro por nombre de marca
+        
+  //       return matchesCodigo && matchesTexto;
+  //     });
+  
+  //   const ids = filtered.map((producto: any) => producto.codigo);
+  
+  //   setIdsCoincidentes(ids);
+  //   if (navegandoCoincidentes && idsCoincidentes.length > 0) {
+  //     setIndiceSeleccionado(0);
+  //   }
+  // }, [codigoBusqueda, textoBusqueda, productos, navegandoCoincidentes]);
   useEffect(() => {
-    // Filtramos solo los productos que contienen código, marca y descripción
-    const filtered = stockRenderizado
-    .flatMap((rubro: any) => rubro.productos)
-    .filter((producto: any) => producto && producto.codigo && producto.nombre && producto.marca)
-    .filter((producto: any) => {
-      const matchesCodigo = producto.codigo.includes(codigoBusqueda);
-      const matchesTexto =
-        producto.nombre.toLowerCase().includes(textoBusqueda.toLowerCase()) ||
-        producto.marca.toLowerCase().includes(textoBusqueda.toLowerCase());
-      return matchesCodigo && matchesTexto;
+   if (!productos) return;
+  
+    // 1. Filtramos productos válidos y que coincidan con la búsqueda
+    const productosFiltrados = productos
+      .filter((producto: any) => producto && producto.codigo && producto.descripcion && producto.nmarca)
+      .filter((producto: any) => {
+        const matchesCodigo = producto.codigo.includes(codigoBusqueda);
+        const matchesTexto =
+          producto.descripcion.toLowerCase().includes(textoBusqueda.toLowerCase()) ||
+          producto.nmarca.toLowerCase().includes(textoBusqueda.toLowerCase());
+        return matchesCodigo && matchesTexto;
+      });
+  
+    // 2. Agrupamos por código y seleccionamos solo el PRIMER ítem de cada grupo
+    const gruposPorCodigo: Record<string, any[]> = {};
+    productosFiltrados.forEach((producto) => {
+      if (!gruposPorCodigo[producto.codigo]) {
+        gruposPorCodigo[producto.codigo] = [];
+      }
+      gruposPorCodigo[producto.codigo].push(producto);
     });
   
-
-    const ids = filtered.map((producto: any) => producto.codigo); // Aquí se toma el `codigo` del producto como el ID
-
-    // console.log(ids);
-
+    // 3. Obtenemos el primer ítem de cada grupo (código único)
+    const productosUnicos = Object.values(gruposPorCodigo).map((grupo) => grupo[0]);
+  
+    // 4. Extraemos los códigos para la selección
+    const ids = productosUnicos.map((producto) => producto.codigo);
+  
     setIdsCoincidentes(ids);
-    setIndiceSeleccionado(0); // Resetear la selección al primer ítem de la lista filtrada
-  }, [codigoBusqueda, textoBusqueda, stockRenderizado]);
-
+    if (navegandoCoincidentes && idsCoincidentes.length > 0) {
+      setIndiceSeleccionado(0);
+    }
+  }, [codigoBusqueda, textoBusqueda, productos, navegandoCoincidentes]);
   const handleSiguienteClick = () => {
     if (idsCoincidentes.length > 0) {
-      console.log(indiceSeleccionado);
+      console.log('indce seleccionado',indiceSeleccionado);
       const nuevoIndice = (indiceSeleccionado + 1) % idsCoincidentes.length;
-      // console.log(idsCoincidentes);
-      // console.log(nuevoIndice);
+      console.log(idsCoincidentes);
+      console.log(nuevoIndice);
       setIndiceSeleccionado(nuevoIndice);
     }
   };
@@ -93,54 +143,88 @@ export default function BusquedaStock({ data }: any) {
 
   const handleButton = () => {
     if (buscado) {
+      setNavegandoCoincidentes(true); // Habilitar la navegación entre idsCoincidentes
       handleSiguienteClick();
     } else {
       handleSearch();
     }
   };
-
+  
+  // FUNCION PAR MANEJAR LA NAVEGACION DE LA TABLA POR LA BUSQUEDA, FLECHAS, ENTER Y ESCAPE.
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+  
     if (event.key === 'Enter') {
-      // Verificar si alguno de los inputs tiene contenido
-      if (codigoBusqueda || textoBusqueda) {
-        event.preventDefault(); // Evitar el comportamiento por defecto de Enter
-        handleButton(); // Ejecutar la función handleButton
-      }
-    } else if (event.key === 'Escape') {
-      // Verificar si alguno de los inputs tiene contenido
-      if (codigoBusqueda || textoBusqueda) {
-        event.preventDefault(); // Evitar el comportamiento por defecto de Enter
-        setCodigoBusqueda('');
-        setTextoBusqueda('');
-        console.log(tablaRef);
-        setTimeout(() => {
-          tablaRef.current?.focus();
-        }, 0);
-      }
-    } else if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
-      event.preventDefault(); // Evitar el comportamiento por defecto de las flechas
-
-      // Determinar la dirección de la navegación
-      const direction = event.key === 'ArrowDown' ? 1 : -1;
-
-      // Calcular el nuevo índice
-      let newIndex;
-      if (buscado && idsCoincidentes.length > 0) {
-        // Navegar dentro de los ítems coincidentes
-        newIndex = indiceSeleccionado + direction;
-        if (newIndex < 0) newIndex = idsCoincidentes.length - 1; // Ir al último si es menor que 0
-        if (newIndex >= idsCoincidentes.length) newIndex = 0; // Ir al primero si es mayor que el límite
+      event.preventDefault();
+      if (!codigoBusqueda && !textoBusqueda) return;
+    
+      // Siempre activar modo búsqueda al presionar Enter
+      setModoNavegacion('busqueda');
+      setNavegandoCoincidentes(true);
+    
+      if (!buscado) {
+        // Primera búsqueda
+        setBuscado(true);
+        if (idsCoincidentes.length > 0) {
+          setIndiceSeleccionado(0);
+          setUltimoIndiceBusqueda(0);
+        }
       } else {
-        // Navegar por la tabla completa
-        newIndex = indiceSeleccionado + direction;
-        if (newIndex < 0) newIndex = stockRenderizado.length - 1; // Ir al último si es menor que 0
-        if (newIndex >= stockRenderizado.length) newIndex = 0; // Ir al primero si es mayor que el límite
+        // Navegación entre resultados
+        if (idsCoincidentes.length > 0) {
+          const nuevoIndice = (indiceSeleccionado + 1) % idsCoincidentes.length;
+          setIndiceSeleccionado(nuevoIndice);
+          setUltimoIndiceBusqueda(nuevoIndice);
+        console.log('indiceSeleccionado', indiceSeleccionado);
+        
+        }
       }
+    }
 
-      // Actualizar el índice seleccionado
-      setIndiceSeleccionado(newIndex);
+    if (!buscado) {
+      setIndiceGlobal(0); 
+    }
+    else if (event.key === 'Escape') {
+      event.preventDefault();
+      setCodigoBusqueda('');
+      setTextoBusqueda('');
+      setBuscado(false);
+      setModoNavegacion('normal');
+      setNavegandoCoincidentes(false);
+    }
+    else if (['ArrowDown', 'ArrowUp'].includes(event.key)) {
+      event.preventDefault();
+      const direction = event.key === 'ArrowDown' ? 1 : -1;
+    
+      // Obtener el índice actual en el array completo
+      let currentIndex = 0;
+      if (buscado && modoNavegacion === 'busqueda' && idsCoincidentes.length > 0) {
+        // Si estamos en modo búsqueda, usar el ID actual para encontrar la posición global
+        const currentId = idsCoincidentes[indiceSeleccionado];
+        currentIndex = productos.findIndex(p => p.codigo === currentId);
+      } else {
+        // Si estamos en modo normal, usar el índice global directamente
+        currentIndex = indiceGlobal;
+      }
+      
+      // Calcular nuevo índice
+      let newIndex = currentIndex + direction;
+      if (newIndex < 0) newIndex = productos.length - 1;
+      if (newIndex >= productos.length) newIndex = 0;
+    
+      setIndiceGlobal(newIndex);
+      setModoNavegacion('normal');
+    
+      // Si el nuevo elemento está en los resultados de búsqueda, actualizar último índice
+      if (buscado) {
+        const newId = productos[newIndex]?.codigo;
+        const matchIndex = idsCoincidentes.findIndex(id => id === newId);
+        if (matchIndex >= 0) {
+          setUltimoIndiceBusqueda(matchIndex);
+        }
+      }
     }
   };
+
 
   const handleClean = async () => {
     const result = await showAlert({
@@ -158,6 +242,7 @@ export default function BusquedaStock({ data }: any) {
       setIndiceSeleccionado(0);
       setIdsCoincidentes([]);
       setTablaStock([]);
+      setProductos([]);
       setStockRenderizado([]);
       setSeccionesSeleccionadas({});
       setSeccionesToFetch({});
@@ -192,7 +277,7 @@ export default function BusquedaStock({ data }: any) {
         labelClassName="text-start w-12 text-sm "
         inputClassName="w-24 text-xs"
         containerWidth="w-[12rem]"
-        disabled={false}
+        disabled={status === 'idle'}
         onChange={(value) => {
           if (typeof value === 'string') {
             setCodigoBusqueda(value);
@@ -205,7 +290,7 @@ export default function BusquedaStock({ data }: any) {
         value={textoBusqueda || ''}
         placeholder="Descripción o Marca"
         inputClassName="w-52 text-xs"
-        disabled={false}
+        disabled={status === 'idle'}
         containerWidth="w-56 "
         onChange={(value) => {
           if (typeof value === 'string') {
@@ -215,13 +300,29 @@ export default function BusquedaStock({ data }: any) {
         onKeyDown={handleKeyDown}
       />
 
-      <ActionButton
-        icon={buscado ? <TbArrowBigRightLinesFilled size={15} /> : <BiSearch size={15} />}
-        color="blue"
-        size="xs"
-        onClick={handleButton}
-        disabled={isDisabled}
-      />
+<ActionButton
+  icon={
+    // Si hay texto de búsqueda (código o texto)
+    codigoBusqueda.trim().length > 0 || textoBusqueda.trim().length > 0 ? (
+      // Verificamos si hay coincidencias
+      idsCoincidentes.length > 0 ? (
+        buscado ? (
+          <TbArrowBigRightLinesFilled size={15} /> // Icono cuando ya se ejecutó la búsqueda con resultados
+        ) : (
+          <BiSearch size={15} /> // Icono normal mientras se escribe (pero hay coincidencias)
+        )
+      ) : (
+        <FiAlertTriangle size={15} color="white" /> // Icono de error cuando no hay coincidencias
+      )
+    ) : (
+      <BiSearch size={15} /> // Icono normal cuando no hay texto de búsqueda
+    )
+  }
+  color="blue"
+  size="xs"
+  onClick={handleButton}
+  disabled={isDisabled}
+/>
 
       <ActionButton
         icon={<IoTrash size={15} />}

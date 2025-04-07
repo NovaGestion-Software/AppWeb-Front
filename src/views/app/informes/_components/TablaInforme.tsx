@@ -30,8 +30,8 @@ const TablaFooter: React.FC<TablaFooterProps> = ({ datos = {} }) => {
   if (!Object.keys(datos).length) return null; // No renderiza si `datos` está vacío
 
   return (
-    <Footer layout={{ fixedHeader: true }}>
-      <FooterRow>
+    <Footer  layout={{ fixedHeader: true }}>
+      <FooterRow className='mt-4'>
         {Object.entries(datos).map(([_, value], index) => (
           <FooterCell key={index}>
             {typeof value === 'number' ? value.toLocaleString('es-AR') : value}
@@ -66,19 +66,19 @@ export default function TablaInforme<T extends TableNode>({
   idsCoincidentes = [], // Valor por defecto: array vacío
   indiceSeleccionado = -1,
 }: TableProps<T>) {
-  console.log('Datos recibidos en TablaInforme:', datosParaTabla);
+  //console.log('Datos recibidos en TablaInforme:', datosParaTabla);
 
   const [isActive, setIsActive] = useState(false);
   const [currentHorario, setCurrentHorario] = useState<TableNode | null>(null);
   const [scrollPosition, setScrollPosition] = useState(0);
   // const { status } = useVentasHoraStore();
-  const { buscado } = useStockPorSeccion();
+  const { buscado, modoNavegacion, setUltimoIndiceBusqueda, indiceGlobal} = useStockPorSeccion();
 
   const tableRef = useRef<HTMLDivElement | null>(null);
   const materialTheme = getTheme(DEFAULT_OPTIONS);
   const theme = useTheme([materialTheme, estilos]);
-  const rowHeight = 30;
-  const headerHeight = 5;
+  const rowHeight = 20;
+  const headerHeight = 3;
   const data: Data<TableNode> = {
     nodes: datosParaTabla,
   };
@@ -158,46 +158,66 @@ export default function TablaInforme<T extends TableNode>({
 
   // console.log(datosParaTabla);
   // SELECCION POR BUSQUEDA
-  useEffect(() => {
-    // console.log('Buscado:', buscado);
-    // console.log('IDs Coincidentes:', idsCoincidentes);
-    // console.log('Índice Seleccionado:', indiceSeleccionado);
-    // console.log('Datos para Tabla:', datosParaTabla);
-    // Solo ejecutar si se está buscando y los valores son válidos
-    if (
-      buscado && // Solo si se está buscando
-      idsCoincidentes.length > 0 && // `idsCoincidentes` no está vacío
-      indiceSeleccionado >= 0 && // `indiceSeleccionado` es un número válido
-      indiceSeleccionado < idsCoincidentes.length // `indiceSeleccionado` está dentro del rango
-    ) {
-      // console.log(idsCoincidentes);
-      // console.log(indiceSeleccionado);
-      const idSeleccionado = idsCoincidentes[indiceSeleccionado];
-      const itemSeleccionado = datosParaTabla.find((item) => item.codigo === idSeleccionado);
+// Nuevo useEffect para manejar navegación global
+useEffect(() => {
+  if (modoNavegacion === 'normal' && indiceGlobal >= 0) {
+    const itemSeleccionado = datosParaTabla[indiceGlobal];
+    if (itemSeleccionado && itemSeleccionado.id !== currentHorario?.id) {
+      setCurrentHorario(itemSeleccionado);
+      select.fns.onToggleByIdExclusively(itemSeleccionado.id);
+      
+      // Scroll
+      const newScrollPosition = indiceGlobal * rowHeight + headerHeight;
+      setScrollPosition(newScrollPosition);
+    }
+  }
+}, [indiceGlobal, modoNavegacion, datosParaTabla]);
 
-      // console.log(indiceSeleccionado);
-      // console.log(idSeleccionado);
-      // console.log(itemSeleccionado);
-      // console.log(currentHorario);
 
-      if (itemSeleccionado && itemSeleccionado.id !== currentHorario?.id) {
-        // Solo actualizar si el ítem seleccionado es diferente al actual
-        setCurrentHorario(itemSeleccionado);
-        select.fns.onToggleByIdExclusively(itemSeleccionado.id);
-
-        // Calcular la posición del scroll para el ítem seleccionado
-        const itemIndex = datosParaTabla.findIndex((item) => item.id === idSeleccionado);
-        console.log(itemIndex);
-        if (itemIndex === -1) {
-          const newScrollPosition = itemIndex * rowHeight + headerHeight;
-          setScrollPosition(newScrollPosition);
-        }
+// Mantén el efecto existente para búsqueda
+useEffect(() => {
+  if (buscado && modoNavegacion === 'busqueda' && idsCoincidentes.length > 0) {
+    const idSeleccionado = idsCoincidentes[indiceSeleccionado];
+    const itemSeleccionado = datosParaTabla.find(item => item.codigo === idSeleccionado);
+    
+    if (itemSeleccionado && itemSeleccionado.id !== currentHorario?.id) {
+      setCurrentHorario(itemSeleccionado);
+      select.fns.onToggleByIdExclusively(itemSeleccionado.id);
+      
+      // Scroll
+      const itemIndex = datosParaTabla.findIndex(item => item.codigo === idSeleccionado);
+      if (itemIndex >= 0) {
+        const newScrollPosition = itemIndex * rowHeight + headerHeight;
+        setScrollPosition(newScrollPosition);
       }
     }
-  }, [idsCoincidentes, indiceSeleccionado, datosParaTabla, select, buscado, currentHorario]);
+  }
 
-  // console.log(idsCoincidentes);
-  // console.log(indiceSeleccionado);
+
+}, [indiceSeleccionado, buscado, modoNavegacion, idsCoincidentes, datosParaTabla]);
+
+  // Efecto adicional para sincronización cuando cambian los datos
+  useEffect(() => {
+    if (buscado && modoNavegacion === 'busqueda' && idsCoincidentes.length > 0) {
+      const idActual = currentHorario?.codigo;
+      if (idActual && idsCoincidentes.includes(idActual)) {
+        setUltimoIndiceBusqueda(idsCoincidentes.indexOf(idActual));
+      }
+    }
+  }, [datosParaTabla]);
+
+  // nuevo efecto para manejar selección manual (click)
+useEffect(() => {
+  if (!procesado || !currentHorario) return;
+
+  const { setIndiceGlobal } = useStockPorSeccion();
+  
+  // Cuando se selecciona manualmente, actualizar indiceGlobal
+  const newIndex = datosParaTabla.findIndex(item => item.id === currentHorario.id);
+  if (newIndex >= 0) {
+    setIndiceGlobal(newIndex);
+  }
+}, [currentHorario, datosParaTabla, procesado]);
 
   function onSelectChange(action: any, state: any) {
     console.log(action);

@@ -1,116 +1,123 @@
-import { useEffect, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { DepositoModal, MarcaModal, TablaSecciones } from '@/types';
-import { useStockPorSeccion } from '@/views/app/stockSeccion/store/useStockPorSeccion';
-import { obtenerRubrosDisponibles } from '@/services/ApiPhpService';
-import ViewTitle from '@/Components/ui/Labels/ViewTitle';
-import HerramientasComponent from '../informes/ventasXHora/components/HerramientasComponent';
-import VerFoto from './componentes/VerFoto';
-import OrdenarPorCheckbox from './componentes/OrdernarPorCheckbox';
-import FiltroPorStock from './componentes/FiltroPorStock';
-import FiltrarPorTipo from './componentes/FiltrarPorTipo';
-import FiltrarSegunLista from './componentes/FiltrarSegunLista';
-import FiltroModal from '@/layouts/FiltrosModal';
-import BusquedaStock from './componentes/BusquedaStock';
-import TablaSeccionRubro from './componentes/TablaSeccionRubro';
-import TablaStock from './componentes/TablaStock';
-import ActionButton from '@/Components/ui/Buttons/ActionButton';
-import FiltroMarcaModal from './componentes/modals/FiltroMarcaModal';
+import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { DepositoModal, MarcaModal, TablaSecciones } from "@/types";
+import { useStockPorSeccion } from "@/views/app/stockSeccion/store/useStockPorSeccion";
+import { obtenerRubrosDisponibles } from "@/services/ApiPhpService";
+import ViewTitle from "@/Components/ui/Labels/ViewTitle";
+import HerramientasComponent from "../informes/ventasXHora/components/HerramientasComponent";
+import VerFoto from "./componentes/VerFoto";
+import OrdenarPorCheckbox from "./componentes/OrdernarPorCheckbox";
+import FiltroPorStock from "./componentes/FiltroPorStock";
+import FiltrarPorTipo from "./componentes/FiltrarPorTipo";
+import FiltrarSegunLista from "./componentes/FiltrarSegunLista";
+import FiltroModal from "@/layouts/FiltrosModal";
+import BusquedaStock from "./componentes/BusquedaStock";
+import TablaSeccionRubro from "./componentes/TablaSeccionRubro";
+import TablaStock from "./componentes/TablaStock";
+import ActionButton from "@/Components/ui/Buttons/ActionButton";
+import { useFiltros } from "./hooks/useFiltros";
 
 export default function StockPorSeccionView() {
   const [showMarcasModal, setShowMarcasModal] = useState(false);
-  // const [showTemporadasModal, setShowTemporadasModal] = useState(false);
   const [showDepositosModal, setShowDepositosModal] = useState(false);
   const [showRubrosModal, setShowRubrosModal] = useState(true);
   const isProcessing = false;
-  // let depositos = ['Chacabuco', 'San Juan', 'Almagro', 'La Boca'];
-  // let temporadas = ['Clasico', 'Anual', 'Verano', 'Invierno'];
-
   // state para rubros
-  const [datos, setDatos] = useState<TablaSecciones[]>([]);
+  //const [datos, setDatos] = useState<TablaSecciones[]>([]);
+  const { aplicarFiltros, aplicarOrdenamiento } = useFiltros();
 
+  // store
   const {
+    tablaStock,
     stockRenderizado,
-    // tablaStock,
-    // idsCoincidentes,
-    // marcasDisponibles,
-    // marcasSeleccionadas,
-    // setMarcasDisponibles,
-    // setMarcasSeleccionadas,
+    datosRubros,
+    setDatosRubros,
+    setProductos,
+    checkboxSeleccionados,
+    marcasSeleccionadas,
+    marcasDisponibles,
+    setMarcasDisponibles,
+    setMarcasSeleccionadas,
     depositosDisponibles,
     depositosSeleccionados,
     setDepositosDisponibles,
     setDepositosSeleccionados,
-    // temporadasDisponibles,
-    // temporadasSeleccionadas,
-    // setTemporadasDisponibles,
-    // setTemporadasSeleccionadas,
+    setCheckboxSeleccionados,
+    setStatus,
+    status
   } = useStockPorSeccion();
 
-  // console.log(stockRenderizado);
   // TABLA PARA RUBROS
   const { data: rubrosDis } = useQuery({
-    queryKey: ['rubros-seccion'],
+    queryKey: ["rubros-seccion"],
     queryFn: obtenerRubrosDisponibles,
     refetchOnWindowFocus: false,
     staleTime: 1000 * 60 * 5, // Datos frescos por 5 minutos
   });
 
-  // console.log(depositosDisponibles);
+  // Setea los rubros
   useEffect(() => {
     if (rubrosDis) {
-      setDatos(rubrosDis.data);
+      setDatosRubros(rubrosDis.data);
+      console.log("rubrosDis", rubrosDis.data);
     }
   }, [rubrosDis]);
 
-  const renderDepositoItem = (item: DepositoModal) => {
-    return (
-      <>
-        {item.deposito} - {item.ndeposito}
-      </>
-    ); // Aquí decides cómo renderizar el item
-  };
+ 
+  // SETEA FILTROS DE CHECKBOXS
+  useEffect(() => {
+    if (stockRenderizado.length > 0) {
+      setCheckboxSeleccionados("grupo1", "Todos");
+      setCheckboxSeleccionados("grupo2", "Todos");
+      setCheckboxSeleccionados("grupo3", "CONTADO");
+      setCheckboxSeleccionados("grupo4", "Descripcion"); // Asegúrate de que este valor sea válido
+    }
+  }, [stockRenderizado, setCheckboxSeleccionados]);
 
-  // const renderMarcaItem = (item: MarcaModal) => {
-  //   return <>{item.nmarca}</>; // Aquí decides cómo renderizar el item
-  // };
+// APLICACION DE FILTROS Y RE ORDENAMIENTO
+  useEffect(() => {
+    if (stockRenderizado.length === 0) return;
+    const filtrados = aplicarFiltros();
+    const ordenados = aplicarOrdenamiento(filtrados);
+    setProductos(ordenados); // Actualiza la tabla con nuevo orden
+  }, [stockRenderizado,checkboxSeleccionados.grupo1,checkboxSeleccionados.grupo2, checkboxSeleccionados.grupo4,depositosSeleccionados,marcasSeleccionadas,]);
 
-  //  // Ordenar los datos por 'deposito' o 'ndeposito'
-  //  const ordenarDatosDeposito = (datos) => {
-  //   return datos.sort((a, b) => a.deposito.localeCompare(b.deposito)); // Si es por deposito
-  //   // O si es por nombre:
-  //   // return datos.sort((a, b) => a.ndeposito.localeCompare(b.ndeposito));
-  // };
+  // RENDERIZADO DE ITEMS DE LOS MODALES
+  const renderMarcaItem = (item: MarcaModal) => { return <>{item.nmarca}</>; };
+  const renderDepositoItem = (item: DepositoModal) => { return (   <>{item.deposito} - {item.ndeposito} </>);   };
 
-  // useEffect(() => {
-  //   // console.log(stockRenderizado);
-  //   if (stockRenderizado && stockRenderizado.length > 0) {
-  //     const marcasUnicas = [...new Set(stockRenderizado.map((item) => item.marca))];
-  //     // console.log(marcasUnicas);
-  //     setMarcasDisponibles(marcasUnicas); // Actualiza el estado con las marcas únicas
-  //   }
-  // }, [stockRenderizado]);
+  // CAMBIO DE ESTADO 
+  useEffect(() => {
+    if(tablaStock?.length === 0) { setStatus("idle") }
+    else { setStatus("success")} 
+  }, [status, setStatus, tablaStock]);
 
-  // // Agrega un log para verificar el valor de marcasDisponibles después de actualizar
-  // useEffect(() => {
-  //   console.log(marcasDisponibles); // Verifica las marcas después de que el estado cambia
-  // }, [marcasDisponibles]);
+  // Tabla stock serian los datos originales del endpoint
+  // Stock Renderizado es el resultado de la funcion agrupar por stock
+  // Productos es una copia de stock renderizado
+  // Productos es lo que se muestra en la tabla
+  // En los filtros tengo que usar una copia de productos, porque siempre tiene que ser sobre lo que se ve actualmente en la tabla.
+  // Escuchando las alteraciones en el estado de itemsSeleccionados correspondiente de cada filtro
+  // Modificarla segun el filtro
+  // Terminar seteando productos con el nuevo estado.
 
-  // console.log(stockRenderizado);
-  // console.log(tablaStock);
-  // console.log(marcasDisponibles);
+  // La copia para los filtros no se hace sobre productos porque en negativos por ejemplo no hay productos con stock, y viceversa.
+  // Si es filtro por negativo se hace sobre stock renderizado, si es con stock se hace sobre stock renderizado.
+  // Si el filtro es de ordenamiento se hace sobre productos.
+  // Si el filtro es talles o articulos se hace sobre Stock renderizado.
 
-  // console.log(marcasSeleccionadas);
+  // La busqueda se esta activando porque esta encontrando coincidencias en una tabla que no tiene valores.
+  // La busqueda tiene que ser sobre los elementos de la tabla, es decir Productos.
   return (
-    <div className="w-full h-full px-4 pt-0 overflow-hidden">
-      <ViewTitle title={'Stock por Sección'} />
+    <div className="w-full h-screen px-4 pt-0 overflow-hidden">
+      <ViewTitle title={"Stock por Sección"} />
       {/**BOTONES SHOW MODAL DEPOSITOS Y RUBROS - ORDENAR POR CHECKBOXS( CODIGO , MARCA Y DESCRIPCION )*/}
       <div className="grid grid-cols-11 grid-rows-1 rounded py-2 px-8 h-11 items-center mt-1">
         <div className="flex gap-6 items-center w-fit bg-white py-1 px-3 rounded-lg col-start-3 col-span-5 2xl:col-span-3 2xl:col-start-4 ">
           <ActionButton
             text="Depósitos"
             onClick={() => setShowDepositosModal(true)}
-            disabled={false}
+            disabled={status === "idle"}
             color="blue"
             size="xs"
           />
@@ -124,18 +131,18 @@ export default function StockPorSeccionView() {
           {/** GRUPO 4 - FUNCION PARA RE ORDENAR*/}
           <OrdenarPorCheckbox />
         </div>
-
         {/** EXPORTORTAR A EXCEEL E IMPRIMIR. */}
         <div className="p-1 rounded-lg col-span-2 col-start-8 2xl:col-span-2 2xl:col-start-7 2xl:left-10 2xl:relative 2xl:px-4">
           <HerramientasComponent
             data={stockRenderizado}
             isProcessing={!isProcessing}
-            datosParaFooter={datos}
+            datosParaFooter={datosRubros}
             modalSucursales={false}
+            disabled={status === "idle"}
+
           />
         </div>
       </div>
-
       {/** HERRAMIENTAS DE LA VISTA */}
       <div className="grid grid-cols-10 grid-rows-2 space-x-4 px-2">
         {/**FOTO Y BOTONES */}
@@ -161,73 +168,45 @@ export default function StockPorSeccionView() {
 
         {/**INPUTS BUSCAR - BOTONES SHOW MODAL TEMPORADAS Y MARCAS */}
         <div className="flex gap-3 items-center w-fit row-start-2 border px-1 rounded-lg bg-white col-start-3 col-span-7 2xl:col-span-5 2xl:px-4 2xl:col-start-4">
-          <BusquedaStock data={stockRenderizado} />
-
-          {/* <ActionButton
-            text="Temporadas"
-            color="blue"
-            onClick={() => setShowTemporadasModal(true)}
-            size="xs"
-          /> */}
+          <BusquedaStock />
           <ActionButton
             text="Marcas"
             color="blue"
+            disabled={status === "idle"}
             onClick={() => setShowMarcasModal(true)}
             size="xs"
           />
         </div>
-
-        {/**VER MOVIMIENTOS EN INVETARIO */}
-        {/* <div className="flex items-end justify-center col-start-11 col-span-1  row-span-2   ">
-          <div className="flex items-center justify-center bg-slate-200 p-2 cursor-pointer rounded-lg w-[4.2rem] h-[4.1rem]">
-            <img
-              src="/img/icons/inspection.png"
-              alt="Ver Movimientos"
-              className="w-12 h-12"
-            />
-          </div>
-        </div> */}
       </div>
-
       {/**TABLA STOCK */}
       <div className="grid grid-cols-12 px-4 py-2">
         <div className="flex items-center justify-center col-span-full">
           <TablaStock />
         </div>
       </div>
-
-      {/** MODAL DE TABLA */}
+      {/** TABLA RUBROS */}
+      <TablaSeccionRubro
+        data={datosRubros}
+        showRubrosModal={showRubrosModal}
+        setShowRubrosModal={setShowRubrosModal}
+      />
+      {/** MODAL DE FILTRO  DEPOSITOS */}
       <FiltroModal<DepositoModal>
         title="Depósitos"
         showModal={showDepositosModal}
         setShowModal={setShowDepositosModal}
-        datos={depositosDisponibles} // Ya no necesitas mapear los datos a un array de strings
+        datos={depositosDisponibles} 
         itemsDisponibles={depositosDisponibles}
         itemsSeleccionados={depositosSeleccionados}
         setItemsDisponibles={setDepositosDisponibles}
         setItemsSeleccionados={setDepositosSeleccionados}
         renderItem={renderDepositoItem}
+        disabled={status === "idle"}
+        disabled2={status === "idle"}
+        
       />
-
-      <TablaSeccionRubro
-        data={datos}
-        showRubrosModal={showRubrosModal}
-        setShowRubrosModal={setShowRubrosModal}
-      />
-
-      {/* <FiltroModal
-        title="Temporadas"
-        showModal={showTemporadasModal}
-        setShowModal={setShowTemporadasModal}
-        datos={temporadas.map((item) => item)} // Datos originales
-        itemsDisponibles={temporadasDisponibles}
-        itemsSeleccionados={temporadasSeleccionadas}
-        setItemsDisponibles={setTemporadasDisponibles}
-        setItemsSeleccionados={setTemporadasSeleccionadas}
-      /> */}
-
-      <FiltroMarcaModal showModal={showMarcasModal} setShowModal={setShowMarcasModal} />
-      {/* <FiltroModal<MarcaModal>
+      {/** MODAL DE FILTRO MARCAS */}
+      <FiltroModal<MarcaModal>
         title="Marcas"
         showModal={showMarcasModal}
         setShowModal={setShowMarcasModal}
@@ -237,7 +216,9 @@ export default function StockPorSeccionView() {
         setItemsDisponibles={setMarcasDisponibles}
         setItemsSeleccionados={setMarcasSeleccionadas}
         renderItem={renderMarcaItem}
-      /> */}
+        disabled={status === "idle"}
+        disabled2={status === "idle"}
+      />
     </div>
   );
 }

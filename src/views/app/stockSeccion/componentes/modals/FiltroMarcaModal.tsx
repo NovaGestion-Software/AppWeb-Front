@@ -4,6 +4,7 @@ import { MarcaModal } from '@/types';
 import ActionButton from '@/Components/ui/Buttons/ActionButton';
 import ModalInforme from '@/views/app/informes/_components/ModalInforme';
 
+
 interface FiltroMarcaModalProps {
   showModal: boolean;
   setShowModal: Dispatch<SetStateAction<boolean>>;
@@ -62,6 +63,7 @@ export default function FiltroMarcaModal({ showModal, setShowModal }: FiltroMarc
     setMarcasSeleccionadas(marcasSeleccionadasModal);
     setShowModal(false);
   };
+  
 
   const handleCloseModal = () => {
     setShowModal(false);

@@ -1,151 +1,96 @@
-import { ProductoAgrupado } from '@/types';
-import { useStockPorSeccion } from '@/views/app/stockSeccion/store/useStockPorSeccion';
-import { useEffect } from 'react';
+import { ProductoAgrupado } from "@/types";
+import { useStockPorSeccion } from "@/views/app/stockSeccion/store/useStockPorSeccion";
 
 export const useFiltros = () => {
   const {
     checkboxSeleccionados,
-    productos,
-    setProductos,
-    stockRenderizado,
     marcasSeleccionadas,
-    marcasDisponibles,
-    depositosDisponibles,
-    tablaStock,
-    setStockRenderizado,
-    setMarcasDisponibles,
-    setDepositosDisponibles,
+    depositosSeleccionados,
+    stockRenderizado,
   } = useStockPorSeccion();
 
-  const filtrarPorMarcas = (data: any[]) => {
-    if (!marcasSeleccionadas || marcasSeleccionadas.length === 0) return data;
-
-    const nMarcaSeleccionada = marcasSeleccionadas.map((marcaObj) => marcaObj.nmarca);
-
-    return data
-      .map((rubro) => ({
-        ...rubro,
-        productos: rubro.productos.filter((producto: any) =>
-          nMarcaSeleccionada.includes(producto.nmarca)
-        ),
-      }))
-      .filter((rubro) => rubro.productos.length > 0); // Eliminamos rubros sin productos filtrados
+  // aplicar filtros puede devolver dos resultados?
+  // ResultadoFiltro devuelve el resultado de los filtros por stock y por tipo que interactuan con la original.
+  // ResultadoOrdenamiento devuelve el resultado en base a lo renderizado en la
+  //  tabla, productos.
+  // Filtrar por marca y filtrar por deposito van sobre el stock original.
+  const esTalleNumerico = (talle: string | undefined): boolean => {
+    if (!talle?.trim()) return false;
+    // Verifica si el string contiene SOLO números (enteros o decimales)
+    return /^\d*\.?\d+$/.test(talle.trim());
   };
+  
+ const esTalleAlfabetico = (talle: string | undefined): boolean => {
+  if (!talle?.trim()) return false;
+  const talleNormalizado = talle.trim().toUpperCase();
+  // Lista de talles alfabéticos permitidos
+  const tallesValidos = ['XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'];
+  return tallesValidos.includes(talleNormalizado);
+};
+  
+const aplicarFiltros = () => {
+  if(!Array.isArray(stockRenderizado)) return [];
 
-  const aplicarFiltros = () => {
-    if (!tablaStock || !Array.isArray(tablaStock) || tablaStock.length === 0) return [];
-
-    // console.log(tablaStock);
-    let data = [...tablaStock]; // Siempre parte de los datos originales
-
-    if (!checkboxSeleccionados || !checkboxSeleccionados.grupo2) return data;
-
-    // console.log('tablaStock:', tablaStock);
-    // console.log('checkboxSeleccionados:', checkboxSeleccionados);
-
-    // Filtro por stock
-    if (checkboxSeleccionados.grupo2 === 'Con Stock') {
-      data = data
-        .map((rubro) => ({
-          ...rubro,
-          productos: rubro.productos
-            .map((producto: any) => ({
-              ...producto,
-              depositos: producto.depositos
-                .map((deposito: any) => ({
-                  ...deposito,
-                  talles: deposito.talles.filter((talle: any) => parseFloat(talle.stock) > 0), // Filtramos talles con stock > 0
-                }))
-                .filter((deposito: any) => deposito.talles.length > 0), // Eliminamos depósitos sin talles con stock
-            }))
-            .filter((producto: any) => producto.depositos.length > 0), // Eliminamos productos sin depósitos con stock
-        }))
-        .filter((rubro) => rubro.productos.length > 0); // Eliminamos rubros sin productos
-    } else if (checkboxSeleccionados.grupo2 === 'Negativos') {
-      data = data
-        .map((rubro) => ({
-          ...rubro,
-          productos: rubro.productos
-            .map((producto: any) => ({
-              ...producto,
-              depositos: producto.depositos
-                .map((deposito: any) => ({
-                  ...deposito,
-                  talles: deposito.talles.filter((talle: any) => parseFloat(talle.stock) < 0), // Solo talles con stock < 0
-                }))
-                .filter((deposito: any) => deposito.talles.length > 0), // Eliminamos depósitos sin talles negativos
-            }))
-            .filter((producto: any) => producto.depositos.length > 0), // Eliminamos productos sin depósitos negativos
-        }))
-        .filter((rubro) => rubro.productos.length > 0); // Eliminamos rubros sin productos negativos
+  let resultado = [...stockRenderizado].filter(p => {
+    const total = parseFloat(p.total);
+    
+    if (checkboxSeleccionados?.grupo2 === "Con Stock" && total <= 0) return false;
+    if (checkboxSeleccionados?.grupo2 === "Negativos" && total >= 0) return false;
+     // Filtro mejorado por tipo de talle
+     if (checkboxSeleccionados?.grupo1 === "Todos") {
+      return p.total; // Solo talles alfabéticos
     }
-
-    // Filtro por talles o artículos
-    if (checkboxSeleccionados.grupo1 === 'Talles') {
-      data = data
-        .map((rubro) => ({
-          ...rubro,
-          productos: rubro.productos
-            .map((producto: any) => ({
-              ...producto,
-              depositos: producto.depositos
-                .map((deposito: any) => ({
-                  ...deposito,
-                  talles: deposito.talles.filter(
-                    (talle: any) => talle.talle && talle.talle.trim() !== ''
-                  ), // Filtra solo los que tienen un talle definido y no vacío
-                }))
-                .filter((deposito: any) => deposito.talles.length > 0), // Eliminamos depósitos sin talles válidos
-            }))
-            .filter((producto: any) => producto.depositos.length > 0), // Eliminamos productos sin depósitos con talles válidos
-        }))
-        .filter((rubro) => rubro.productos.length > 0); // Eliminamos rubros sin productos válidos
-    } else if (checkboxSeleccionados.grupo1 === 'Articulos') {
-      data = data.filter((item) => !item.talle || item.talle === '');
+     if (checkboxSeleccionados?.grupo1 === "Talles") {
+      return esTalleNumerico(p.talle); // Solo talles numéricos
     }
+    
+    if (checkboxSeleccionados?.grupo1 === "Articulos") {
+      return esTalleAlfabetico(p.talle); // Solo talles alfabéticos
+    }
+   
+    
+    return true;
+  });
 
-    data = filtrarPorMarcas(data);
+  if(marcasSeleccionadas?.length) {
+    const marcas = marcasSeleccionadas.map((m) => m.nmarca.toLowerCase());
+    resultado = resultado.filter((p) => marcas.includes(p.nmarca.toLowerCase()));
+  }
+  if(depositosSeleccionados?.length) {
+    const depositos = depositosSeleccionados.map((d) => d.deposito);
+    resultado = resultado.filter((p) =>
+       Object.entries(p.stockPorDeposito || {}).some( 
+        ([id]) => depositos.includes(id)
+    ));
+  }
+  return resultado
+};
+const aplicarOrdenamiento = (datos: ProductoAgrupado[]) => {
+  if (!Array.isArray(datos)) return [];
 
-    // Filtro por ordenación
-    const criterioOrden = checkboxSeleccionados.grupo4;
-    // console.log('Criterio de orden:', criterioOrden); // Verifica el valor de criterioOrden
+  const orden = checkboxSeleccionados?.grupo4;
 
-    if (criterioOrden) {
-      switch (criterioOrden) {
-        case 'Código':
-          console.log(productos);
+  if (!orden) return [...datos];
 
-          productos.sort((a: any, b: any) => {
-            const codigoA = parseInt(a.codigo, 10);
-            const codigoB = parseInt(b.codigo, 10);
-
-            return codigoA - codigoB;
-          });
-
-          setProductos([...productos]);
-          console.log('Productos ordenados:', productos);
-
-          break;
-        case 'Marca':
-          data.forEach((rubro) => {
-            rubro.productos.sort((a: any, b: any) =>
-              (a.nmarca || '').localeCompare(b.nmarca || '', 'es', { sensitivity: 'base' })
-            );
-          });
-          break;
-        case 'Descripción':
-          data.forEach((rubro) => {
-            rubro.productos.sort((a: any, b: any) =>
-              (a.nombre || '').localeCompare(b.nombre || '', 'es', { sensitivity: 'base' })
-            );
-          });
-          break;
-        default:
-          break;
+  return [...datos].sort((a, b) => {
+    switch (orden) {
+      case 'Codigo': {
+        // Conversión robusta para manejar ceros a la izquierda
+        const numA = Number(a.codigo) || 0;
+        const numB = Number(b.codigo) || 0;
+        return numA - numB;
       }
-    }
-    return data;
-  };
 
-  return { aplicarFiltros };
+      case 'Marca':
+        return (a.nmarca || "").localeCompare(b.nmarca || "", 'es', { sensitivity: 'base' });
+
+      case 'Descripcion':
+        return (a.descripcion || "").localeCompare(b.descripcion || "", 'es', { sensitivity: 'base' });
+
+      default:
+        return 0;
+    }
+  });
+};
+  return { aplicarFiltros, aplicarOrdenamiento };
 };
