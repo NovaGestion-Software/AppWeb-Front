@@ -1,18 +1,26 @@
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import ActionButton from "@/Components/ui/Buttons/ActionButton";
-import ModalInforme from "@/views/app/informes/_components/ModalInforme";
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import ActionButton from '@/Components/ui/Buttons/ActionButton';
+import ModalInforme from '@/views/app/informes/_components/ModalInforme';
+import CheckboxInput from '@/Components/ui/Inputs/Checkbox';
+import showAlert from '@/utils/showAlert';
 
-interface FiltroModalProps {
-    showModal: boolean;
-    setShowModal: Dispatch<SetStateAction<boolean>>;
-    datos: string[]; // Datos originales para obtener los ítems disponibles
-    itemsDisponibles: string[]; // Lista de ítems disponibles
-    itemsSeleccionados: string[]; // Lista de ítems seleccionados (debe ser un array)
-    setItemsDisponibles: (items: string[]) => void; // Función para actualizar los ítems disponibles
-    setItemsSeleccionados: (items: string[]) => void; // Función para actualizar los ítems seleccionados
-    title: string; // Título del modal
-  }
-export default function FiltroModal({
+// Definir un tipo genérico que permitirá usar cualquier tipo de dato.
+interface FiltroModalProps<T> {
+  showModal: boolean;
+  setShowModal: Dispatch<SetStateAction<boolean>>;
+  datos: T[]; // Datos originales, ahora de tipo genérico
+  itemsDisponibles: T[]; // Lista de ítems disponibles, de tipo genérico
+  itemsSeleccionados: T[]; // Lista de ítems seleccionados, de tipo genérico
+  setItemsDisponibles: (items: T[]) => void; // Función para actualizar los ítems disponibles
+  setItemsSeleccionados: (items: T[]) => void; // Función para actualizar los ítems seleccionados
+  title: string; // Título del modal
+  renderItem: (item: T) => React.ReactNode; // Función de renderizado de cada ítem
+  setStockRenderizado?: (data: any[]) => void;
+  disabled?: boolean; // Propiedad opcional para deshabilitar el modal
+  disabled2?: boolean; // Propiedad opcional para deshabilitar el modal
+}
+
+export default function FiltroModal<T>({
   showModal,
   setShowModal,
   datos,
@@ -21,131 +29,149 @@ export default function FiltroModal({
   setItemsDisponibles,
   setItemsSeleccionados,
   title,
-}: FiltroModalProps) {
-  
+  renderItem,
+  disabled,
+  disabled2,
+}: // setStockRenderizado,
+FiltroModalProps<T>) {
+  const [itemsSeleccionadosModal, setItemsSeleccionadosModal] = useState<T[]>([]);
 
-  const [itemsSeleccionadasModal, setItemsSeleccionadasModal] = useState<
-    string[]
-  >([]);
+  // console.log(itemsDisponibles);
+  // console.log(itemsSeleccionados);
 
   useEffect(() => {
     const datoUnico = Array.from(new Set(datos));
-  
-    // Verificar si los datos han cambiado antes de actualizar el estado
+
     if (JSON.stringify(datoUnico) !== JSON.stringify(itemsDisponibles)) {
       setItemsDisponibles(datoUnico);
       setItemsSeleccionados(datoUnico);
     }
-  }, [datos]);
-
-
+  }, [datos, setItemsDisponibles, setItemsSeleccionados, itemsDisponibles]);
 
   useEffect(() => {
     if (showModal) {
-        setItemsSeleccionadasModal([...itemsSeleccionados]);
-      // Bloquea el scroll del body cuando el modal esté visible
-      document.body.style.overflow = "hidden";
+      setItemsSeleccionadosModal(
+        itemsSeleccionados.length > 0 ? [...itemsSeleccionados] : [...itemsDisponibles]
+      );
+      document.body.style.overflow = 'hidden';
     } else {
-      // Restaura el scroll del body cuando el modal se cierra
-      document.body.style.overflow = "auto";
+      document.body.style.overflow = 'auto';
     }
 
-    // Limpieza para restaurar el estado cuando el componente se desmonte o el modal se cierre
     return () => {
-      document.body.style.overflow = "auto";
+      document.body.style.overflow = 'auto';
     };
   }, [showModal, itemsSeleccionados]);
 
   const handleSelectAll = () => {
-    setItemsSeleccionadasModal(itemsDisponibles);
+    setItemsSeleccionadosModal(itemsDisponibles);
   };
 
   const handleDeselectAll = () => {
-    setItemsSeleccionadasModal([]);
+    setItemsSeleccionadosModal([]);
   };
 
-  const handleCheckboxChange = (id: string) => {
-    setItemsSeleccionadasModal((prev) =>
-      prev.includes(id) ? prev.filter((suc) => suc !== id) : [...prev, id]
-    );
+  const handleCheckboxChange = (item: T) => {
+    // Si el ítem YA está seleccionado y es el ÚLTIMO, no hagas nada
+    if (
+      itemsSeleccionadosModal.includes(item) && 
+      itemsSeleccionadosModal.length === 1
+    ) {
+      return; // Evita desmarcar el último
+    }
+  
+    // Si el ítem está seleccionado, desmárcalo; si no, agrégalo
+    const nuevosSeleccionados = itemsSeleccionadosModal.includes(item)
+      ? itemsSeleccionadosModal.filter((i) => i !== item) // Desmarca
+      : [...itemsSeleccionadosModal, item]; // Marca
+  
+    setItemsSeleccionadosModal(nuevosSeleccionados);
   };
 
-  const handleConfirm = () => {
-    setItemsSeleccionados(itemsSeleccionadasModal);
+  // console.log(itemsSeleccionadosModal);
+  const handleConfirm = async () => {
+    if (itemsSeleccionadosModal.length === 0) {
+      const result = await showAlert({
+        title: 'Error',
+        text: 'Debe seleccionar al menos un elemento.',
+        icon: 'error', // Usa 'error', 'warning', o 'info' según prefieras
+        showConfirmButton: true,
+        confirmButtonText: 'Entendido',
+        // Opcional: Ocultar el botón de cancelar si no es relevante
+        showCancelButton: false,
+      });
+       console.log(result);
+      return; // Detiene la ejecución si no hay ítems seleccionados
+    }
+  
+    // Si pasa la validación, procede con la acción
+    setItemsSeleccionados(itemsSeleccionadosModal);
     setShowModal(false);
   };
 
   const handleCloseModal = () => {
-    setShowModal(false); // Cerrar el modal
-    setItemsSeleccionados([...itemsSeleccionados]); // Revertir los cambios y restaurar las sucursales originales
-    //  clearMarcasSeleccionadas()
+    setShowModal(false);
+    setItemsSeleccionados([...itemsSeleccionados]);
   };
+
   return (
-    <>
-      <ModalInforme
-        buttons={true}
-        show={showModal}
-        title={title}
-        onClose={handleCloseModal}
-        onConfirm={handleConfirm}
-        disabled={true}
-        disabled2={true}
-      >
-        <div className="flex flex-col w-full h-[30rem] mx-auto  gap-1 ">
-          <div className="flex flex-row  items-center justify-end h-10 gap-2  ">
-            <ActionButton
-              text="Todos"
-              onClick={handleSelectAll}
-              color="blueSoft"
-              className="h-6 w-24 text-xs rounded-lg"
-              size="md"
-            />
-            <ActionButton
-              text="Ninguno"
-              onClick={handleDeselectAll}
-              color="blueSoft"
-              className="h-6 w-24 text-xs rounded-lg"
-              size="md"
-            />
-          </div>
-          <div className="w-[27rem] overflow-auto border border-gray-300 rounded-lg">
-            <table className="w-full border-collapse">
-              <thead className="bg-gray-200 sticky top-0">
-                <tr>
-                  <th className="p-2 w-10"></th>
-                  <th className="p-2 text-left">Detalle</th>
-                </tr>
-              </thead>
-              <tbody>
-                {itemsDisponibles.map((item, index) => (
-                  <tr
-                    key={index}
-                    className="hover:bg-blue-600 hover:bg-opacity-50 text-black font-semibold border-b border-gray-200"
-                  >
-                    <td className="p-2 text-center">
-                      <label className="cursor-pointer w-full h-full flex items-center justify-center">
-                        <input
-                          type="checkbox"
-                          className="w-5 h-5 cursor-pointer"
-                          checked={itemsSeleccionadasModal.includes(item)}
-                          onChange={() => handleCheckboxChange(item)}
-                          id={`checkbox-${index}`} // ID único para el checkbox
-                        />
-                      </label>
-                    </td>
-                    <td
-                      className="p-2 cursor-pointer"
-                      onClick={() => handleCheckboxChange(item)}
-                    >
-                      {item}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+    <ModalInforme
+      buttons={true}
+      show={showModal}
+      title={title}
+      onClose={handleCloseModal}
+      onConfirm={handleConfirm}
+      disabled={disabled}
+      disabled2={disabled2}
+    >
+      <div className="flex flex-col w-fit p-2 h-[30rem] mx-auto gap-1 ">
+        <div className="flex flex-row items-center justify-end h-10 gap-2 ">
+          <ActionButton
+            text="Todos"
+            onClick={handleSelectAll}
+            color="blueSoft"
+            className="h-6 w-24 text-xs rounded-lg"
+            size="md"
+          />
+          <ActionButton
+            text="Ninguno"
+            onClick={handleDeselectAll}
+            color="blueSoft"
+            className="h-6 w-24 text-xs rounded-lg"
+            size="md"
+          />
         </div>
-      </ModalInforme>
-    </>
+        <div className="w-[27rem] h-[25rem] overflow-auto border border-gray-300 rounded-lg">
+          <table className="w-full border-collapse">
+            <thead className="bg-gray-200 sticky top-0">
+              <tr>
+                <th className="p-1 w-10"></th>
+                <th className="p-1 text-left">Detalle</th>
+              </tr>
+            </thead>
+            <tbody>
+              {itemsDisponibles.map((item, index) => (
+                <tr
+                  key={index}
+                  className="hover:bg-blue-600 hover:bg-opacity-50 text-black font-semibold border-b border-gray-200"
+                >
+                  <td className="p-2 text-center">
+                    <CheckboxInput onChange={() => handleCheckboxChange(item)}     
+                        checked={itemsSeleccionadosModal.includes(item)}  disabled={itemsSeleccionadosModal.length === 1 && itemsSeleccionadosModal.includes(item)}
+  
+                        
+                       />
+              
+                  </td>
+                  <td className="p-1 cursor-pointer" onClick={() => handleCheckboxChange(item)}>
+                    {renderItem(item)}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </ModalInforme>
   );
 }

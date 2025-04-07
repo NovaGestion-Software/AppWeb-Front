@@ -8,6 +8,8 @@ interface HerramientasInformeProps<T> {
   handleExportExcel: () => void;
   handlePrint: () => void;
   children: React.ReactNode;
+  disabled1?: boolean;
+  disabled2?: boolean;
 }
 
 export default function HerramientasInforme<T>({
@@ -15,6 +17,8 @@ export default function HerramientasInforme<T>({
   isProcessing,
   handleExportExcel,
   handlePrint,
+  disabled1,
+  disabled2,
   children,
 }: HerramientasInformeProps<T>) {
   useEffect(() => {
@@ -22,21 +26,21 @@ export default function HerramientasInforme<T>({
   }, [data]);
 
   return (
-    <div className="flex items-center justify-center gap-6 py-2 h-14  px-4 bg-white w-fit rounded-lg border">
+    <div className="flex items-center justify-center gap-6 py-1 h-10 px-4 bg-white w-fit rounded-lg ">
       {children}
       <ActionButton
         onClick={handleExportExcel}
-        disabled={!isProcessing}
+        disabled={disabled1}
         size="xs"
-        className="2xl:h-11 rounded-md"
+        className="rounded-md"
         color={isProcessing ? 'green' : 'grayDeshab'}
         icon={<RiFileExcel2Fill size={20} />}
       />
       <ActionButton
         onClick={handlePrint}
-        disabled={!isProcessing}
+        disabled={disabled2}
         size="xs"
-        className="2xl:h-11 rounded-md"
+        className="rounded-md"
         color={isProcessing ? 'blue' : 'grayDeshab'}
         icon={<RiPrinterFill size={20} />}
       />

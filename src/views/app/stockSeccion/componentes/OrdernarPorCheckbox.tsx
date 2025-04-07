@@ -1,55 +1,36 @@
-import { useStockPorSeccion } from "@/store/useStockPorSeccion";
-import { useEffect, useState } from "react";
-import { useFiltros } from "../hooks/useFiltros";
-import CheckboxInput from "@/Components/ui/Inputs/Checkbox";
+import { useStockPorSeccion } from "@/views/app/stockSeccion/store/useStockPorSeccion";
+import RadioInput from "@/Components/ui/Inputs/RadioInput";
 
 export default function OrdenarPorCheckbox() {
-  const {
-    checkboxSeleccionados,
-    setCheckboxSeleccionados,
-    setStockRenderizado,
-  } = useStockPorSeccion();
-  const [disabled, setDisabled] = useState(false);
-  const { aplicarFiltros } = useFiltros();
+  const { checkboxSeleccionados, setCheckboxSeleccionados, status } = useStockPorSeccion();
 
   const handleCheckboxChange = (
     grupo: keyof typeof checkboxSeleccionados,
     value: string
   ) => {
     const nuevoValor = checkboxSeleccionados[grupo] === value ? null : value;
-
-    setCheckboxSeleccionados(grupo, nuevoValor);
-  };
-
-  // Aplicar filtros cada vez que cambie checkboxSeleccionados
-  useEffect(() => {
-    const datosFiltrados = aplicarFiltros();
-    setStockRenderizado(datosFiltrados);
-  }, [checkboxSeleccionados]);
+    setCheckboxSeleccionados(grupo, nuevoValor); };
 
   return (
     <>
       <div className="flex gap-1 border p-1 rounded-lg bg-white">
-        <CheckboxInput
+        <RadioInput
           onChange={() => handleCheckboxChange("grupo4", "Codigo")}
           checked={checkboxSeleccionados.grupo4 === "Codigo"}
-          label="Codigo"
-          disabled={disabled}
-          setDisabled={setDisabled}
+          label="Código"
+          disabled={status === "idle"}
         />
-        <CheckboxInput
+        <RadioInput
+          onChange={() => handleCheckboxChange("grupo4", "Descripcion")}
+          checked={checkboxSeleccionados.grupo4 === "Descripcion"}
+          label="Descripción"
+          disabled={status === "idle"}
+        />
+        <RadioInput
           onChange={() => handleCheckboxChange("grupo4", "Marca")}
           checked={checkboxSeleccionados.grupo4 === "Marca"}
           label="Marca"
-          disabled={disabled}
-          setDisabled={setDisabled}
-        />
-        <CheckboxInput
-          onChange={() => handleCheckboxChange("grupo4", "Descripcion")}
-          checked={checkboxSeleccionados.grupo4 === "Descripcion"}
-          label="Descripcion"
-          disabled={disabled}
-          setDisabled={setDisabled}
+          disabled={status === "idle"}
         />
       </div>
     </>

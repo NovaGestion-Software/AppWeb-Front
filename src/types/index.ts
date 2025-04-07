@@ -108,11 +108,14 @@ export interface VentaPorHora {
   //   totalPares: number | string;
 }
 
+export type Status = 'error' | 'idle' | 'pending' | 'success' | null;
+
 export interface TablaStocks extends TableNode {
   codigo: string;
   talle: string;
   descripcion: string;
   marca: string;
+  nmarca: string;
   precio: string;
   total: string;
   stockPorDeposito: {
@@ -128,10 +131,72 @@ export interface TableColumn<T> {
 
 export interface TableNode {
   id: string | number; // ID único para cada fila
+  codigo?: string;
 }
 
 export interface TablaSecciones extends TableNode {
   seccion: string;
   nseccion: string;
   rubros: { rubro: string; nrubro: string }[];
+}
+
+export interface Talle {
+  talle: string;
+  stock: string;
+}
+
+export interface Deposito {
+  deposito: string;
+  ndeposito: string;
+  talles: Talle[];
+}
+
+// DEPOSITO MODAL
+export interface DepositoModal {
+  deposito: string;
+  ndeposito: string;
+}
+// DEPOSITO MODAL
+export interface MarcaModal {
+  marca: string;
+  nmarca: string;
+}
+
+export interface Producto {
+  codigo: string;
+  nombre: string;
+  marca: string;
+  nmarca: string;
+  tipotalle: string;
+  prec1: string;
+  prec2: string;
+  prec3: string;
+  depositos: Deposito[];
+}
+
+export interface Rubro {
+  rubro: string;
+  nrubro: string;
+  productos: Producto[];
+}
+
+export type TablaStock1 = Rubro[];
+
+export  interface Precios {
+  contado: string;
+  lista2: string;
+  lista3: string;
+}
+
+export interface ProductoAgrupado {
+  id: string;
+  codigo: string;
+  talle: string;
+  descripcion: string;
+  marca: string;
+  nmarca: string;
+  precios: Precios;
+  precio: string;
+  stockPorDeposito: { [depositoId: string]: string };
+  total: string;
 }

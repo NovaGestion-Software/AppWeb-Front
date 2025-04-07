@@ -2,11 +2,13 @@ import { isAxiosError } from 'axios';
 import { FechasRango } from '@/types';
 import apiPhp from '../lib/axiosPhp';
 
+const user = JSON.parse(localStorage.getItem('_u') || '{}');
+const empresa = user.empresa ? user.empresa.toString().slice(-2) : '00'; // Extrae los últimos 2 dígitos
+
 export async function obtenerVentasHora(fechas: FechasRango) {
   try {
     // console.log('fechas seteadas en funcion', fechas);
-    const user = JSON.parse(localStorage.getItem('_u') || '{}');
-    const empresa = user.empresa ? user.empresa.toString().slice(-2) : '00'; // Extrae los últimos 2 dígitos
+
 
     // console.log(empresa);
     const { from, to } = fechas;
@@ -24,12 +26,60 @@ export async function obtenerVentasHora(fechas: FechasRango) {
   }
 }
 
-
-export async function obtenerProductos() {
+export async function obtenerRubrosDisponibles() {
   try {
-    const url = `/apinovades/generico/obtenerProducto.php`;
-
+    const url = `/apinovades/generico/obtenerSeccionesRubros.php?_i={"_e":"${empresa}","_s":"08","_m":"prod","_o":"1"}`;
     const { data } = await apiPhp(url);
+
+    // console.log(result);
+    return data;
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.error);
+    } else {
+      console.log(error);
+      throw new Error('Error desconocido al obtener  secciones de cajas');
+    }
+  }
+}
+
+export async function obtenerStock(rubros: string[]) {
+  try {
+    const url = `/apinovades/generico/obtenerStock.php`;
+
+    const datos = {
+      _e: empresa,
+      _m: 'prod',
+      _r: 'JSON',
+      _j: rubros,
+    };
+
+    // console.log(datos);
+
+    const { data } = await apiPhp(url, {
+      method: 'POST',
+      data: datos,
+    });
+
+    return data;
+  } catch (error) {
+    if (isAxiosError(error) && error.response) throw new Error(error.response.data.error);
+    console.log(error);
+  }
+}
+
+export async function obtenerProductos(secciones: string[], rubros: string[]) {
+  try {
+    const url = `/apinovades/generico/obtenerProducto.php?_i={"_e":"${empresa}","_s":"08","_m":"prod"}`;
+
+    const datos = { secciones, rubros };
+    // console.log(datos);
+    // Enviar las secciones y rubros en el cuerpo de la solicitud
+    const { data } = await apiPhp(url, {
+      method: 'POST',
+      data: datos,
+    });
+
     return data;
   } catch (error) {
     if (isAxiosError(error) && error.response) throw new Error(error.response.data.error);

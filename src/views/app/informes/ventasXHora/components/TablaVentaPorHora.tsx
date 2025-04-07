@@ -1,6 +1,7 @@
 import { CSSProperties, useEffect } from 'react';
-import TablaInforme from '../../_components/TablaInforme';
+import { useVentasHoraStore } from '@/store/useVentasHoraStore';
 import { VentaPorHora } from '@/types';
+import TablaInforme from '../../_components/TablaInforme';
 
 // Definicion de estructura de columnas
 interface TableColumn<T> {
@@ -22,6 +23,7 @@ export default function TablaVentaPorHora({
   footer,
   datosFooter,
 }: TablaVentaPorHoraProps) {
+  const { status } = useVentasHoraStore();
   useEffect(() => {
     // Para evitar console.log (solo para deployar en vercel)
   }, [isProcessing]);
@@ -229,13 +231,14 @@ export default function TablaVentaPorHora({
 
   return (
     <div>
-      <TablaInforme
+      <TablaInforme<VentaPorHora>
         columnas={COLUMNS}
         datosParaTabla={dataParaTabla}
         estilos={customTheme}
         footer={footer}
         datosFooter={datosFooter}
         procesado={isProcessing}
+        status={status}
       />
     </div>
   );

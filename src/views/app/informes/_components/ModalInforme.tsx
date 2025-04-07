@@ -63,7 +63,8 @@ export default function ModalInforme({
 
   return (
     <>
-      <div className="fixed inset-0 z-50 flex justify-center items-center overflow-x-hidden outline-none focus:outline-none">
+      <div className="absolute inset-0 z-50 flex justify-center  w-full
+      items-center overflow-x-hidden outline-none focus:outline-none">
         <div
           className="relative"
           ref={modalRef}
@@ -71,18 +72,18 @@ export default function ModalInforme({
         >
           <div className="relative grid grid-cols-3 grid-rows-[3rem_auto_auto_auto_auto] gap-1 p-4 bg-white rounded-lg shadow-lg outline-none focus:outline-none ">
             <div className="col-span-3 flex items-center justify-between px-5">
-              <h3 className="w-full text-3xl font-semibold underline underline-offset-4 decoration-4 decoration-gray-600">
+              <h3 className="w-full text-2xl font-semibold underline underline-offset-4 decoration-4 decoration-gray-600">
                 {title}
               </h3>
 
-              <ActionButton
+              {/* <ActionButton
                 text="X"
                 onClick={onClose}
                 color="redSoft"
                 className="h-8 w-10 rounded border border-slate-900/50"
                 textClassName="text-slate-600"
                 size="md"
-              />
+              /> */}
             </div>
 
             {/* Contenido dinámico */}
@@ -96,19 +97,18 @@ export default function ModalInforme({
                   {buttons && (
                     <div className="flex flex-col gap-3">
                       <ActionButton
-                        icon={<img src="/icons/done.png" alt="Confirmar" className="w-6 h-6" />}
+                        icon={<img src="/icons/done.png" alt="Confirmar" className="w-5 h-5  " />}
                         size="md"
-                        color="grayDefault"
-                        // className="border-2 border-slate-500 bg-gray-100 rounded-md"
+                        className={`${disabled ? ' bg-slate-200 ' : ' bg-[#F5F5F5] hover:bg-[#daf5dc] hover:scale-105  hover:rounded-sm'} rounded-md  transition-all duration-100`}
                         onClick={onConfirm || (() => {})}
-                        disabled={!disabled}
+                        disabled={disabled}
                       />
                       <ActionButton
-                        icon={<img src="/icons/close.png" alt="Confirmar" className="w-6 h-6" />}
+                        icon={<img src="/icons/close.png" alt="Cancelar" className="w-5 h-5 "  /> }
                         size="md"
-                        className="rounded-md"
+                        className={`${disabled2 ? ' bg-slate-200 ' : ' bg-[#F5F5F5] hover:bg-[#FFEBEE] hover:scale-105  hover:rounded-sm'} rounded-md  transition-all duration-100`}
                         onClick={onClose}
-                        disabled={!disabled2}
+                        disabled={disabled2}
                       />
                     </div>
                   )}
@@ -118,7 +118,7 @@ export default function ModalInforme({
           </div>
         </div>
       </div>
-      <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
+      <div className="absolute inset-0 z-40 bg-black opacity-25 "></div>
     </>
   );
 }

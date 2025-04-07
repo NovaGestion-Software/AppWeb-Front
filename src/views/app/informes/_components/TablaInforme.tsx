@@ -15,10 +15,9 @@ import {
 } from '@table-library/react-table-library/table';
 import { getTheme, DEFAULT_OPTIONS } from '@table-library/react-table-library/material-ui';
 import { useTheme } from '@table-library/react-table-library/theme';
-import { useVentasHoraStore } from '@/store/useVentasHoraStore';
+// import { useVentasHoraStore } from '@/store/useVentasHoraStore';
 import { ClipLoader } from 'react-spinners';
-import { useStockPorSeccion } from '@/store/useStockPorSeccion';
-import { TableColumn, TableNode } from '@/types';
+import { Status, TableColumn, TableNode } from '@/types';
 
 interface TablaFooterProps {
   datos?: {
@@ -30,8 +29,8 @@ const TablaFooter: React.FC<TablaFooterProps> = ({ datos = {} }) => {
   if (!Object.keys(datos).length) return null; // No renderiza si `datos` está vacío
 
   return (
-    <Footer layout={{ fixedHeader: true }}>
-      <FooterRow>
+    <Footer  layout={{ fixedHeader: true }}>
+      <FooterRow className='mt-4'>
         {Object.entries(datos).map(([_, value], index) => (
           <FooterCell key={index}>
             {typeof value === 'number' ? value.toLocaleString('es-AR') : value}
@@ -46,12 +45,20 @@ interface TableProps<T extends TableNode> {
   columnas: TableColumn<T>[];
   datosParaTabla: TableNode[];
   estilos: object;
-  getCellProps?: (item: T, column: keyof T | string) => { style: CSSProperties }; // Estilos específicos para cada celda
+  getCellProps?: (item: T, column: keyof T | string) => { style: CSSProperties };
   footer?: boolean;
   datosFooter?: {};
   procesado: boolean;
+  hayFuncionBusqueda?: boolean;
+
+  status?: Status;
   idsCoincidentes?: (string | number)[]; // Prop opcional
   indiceSeleccionado?: number; // Prop opcional
+  buscado?: boolean;
+  modoNavegacion?: string;
+  setUltimoIndiceBusqueda?: (index: number) => void;
+  setIndiceGlobal?: (index: number) => void,
+  indiceGlobal?: number;    
 }
 
 export default function TablaInforme<T extends TableNode>({
@@ -60,38 +67,47 @@ export default function TablaInforme<T extends TableNode>({
   estilos,
   footer,
   datosFooter,
-  procesado, 
+  procesado,
+  status,
   idsCoincidentes = [], // Valor por defecto: array vacío
-  indiceSeleccionado = -1, 
+  indiceSeleccionado = -1,
+  buscado,
+  modoNavegacion,
+  hayFuncionBusqueda = false,
+  setUltimoIndiceBusqueda, indiceGlobal, setIndiceGlobal,
 }: TableProps<T>) {
+
+  // aca tengo que agregarle las dependencias de la store como props 
+  // pero tambien hacer condicional todo el tema de la busqueda para que solo se active si se pide.
   const [isActive, setIsActive] = useState(false);
   const [currentHorario, setCurrentHorario] = useState<TableNode | null>(null);
   const [scrollPosition, setScrollPosition] = useState(0);
-  const { status } = useVentasHoraStore();
-  const { buscado} = useStockPorSeccion();
+
 
   const tableRef = useRef<HTMLDivElement | null>(null);
   const materialTheme = getTheme(DEFAULT_OPTIONS);
   const theme = useTheme([materialTheme, estilos]);
-  const rowHeight = 30;
-  const headerHeight = 5;
+  const rowHeight = 20;
+  const headerHeight = 3;
   const data: Data<TableNode> = {
     nodes: datosParaTabla,
   };
   const select = useRowSelect(data, {
     onChange: onSelectChange,
   });
-
+  // console.log(datosParaTabla[0]);
   //  Establece la primera fila seleccionada si no hay ninguna y los datos ya están procesados
   useEffect(() => {
     if (procesado && datosParaTabla.length > 0 && !currentHorario) {
       const firstItem = datosParaTabla[0];
+      // console.log(firstItem);
       setCurrentHorario(firstItem);
       select.fns.onToggleByIdExclusively(firstItem.id);
       setIsActive(true);
     }
   }, [procesado, datosParaTabla, select, currentHorario]);
 
+  // console.log(currentHorario);
   //  Si la tabla está activa, poner foco en ella automáticamente
   useEffect(() => {
     if (isActive && tableRef.current) {
@@ -150,6 +166,79 @@ export default function TablaInforme<T extends TableNode>({
     }
   }, [scrollPosition]);
 
+  // SELECCION POR BUSQUEDA
+// useEffect para manejar navegación global
+useEffect(() => {
+  if (
+    hayFuncionBusqueda &&
+    modoNavegacion === 'normal' &&
+    typeof indiceGlobal === 'number' &&
+    indiceGlobal >= 0
+  ) {
+    const itemSeleccionado = datosParaTabla[indiceGlobal];
+    if (itemSeleccionado && itemSeleccionado.id !== currentHorario?.id) {
+      setCurrentHorario(itemSeleccionado);
+      select.fns.onToggleByIdExclusively(itemSeleccionado.id);
+      
+      const newScrollPosition = indiceGlobal * rowHeight + headerHeight;
+      setScrollPosition(newScrollPosition);
+    }
+  }
+}, [indiceGlobal, modoNavegacion, datosParaTabla, hayFuncionBusqueda]);
+
+useEffect(() => {
+  if (hayFuncionBusqueda && buscado && modoNavegacion === 'busqueda' && idsCoincidentes.length > 0) {
+    const idSeleccionado = idsCoincidentes[indiceSeleccionado];
+    const itemSeleccionado = datosParaTabla.find(item => item.codigo === idSeleccionado);
+    
+    if (itemSeleccionado && itemSeleccionado.id !== currentHorario?.id) {
+      setCurrentHorario(itemSeleccionado);
+      select.fns.onToggleByIdExclusively(itemSeleccionado.id);
+      
+      // Scroll
+      const itemIndex = datosParaTabla.findIndex(item => item.codigo === idSeleccionado);
+      if (itemIndex >= 0) {
+        const newScrollPosition = itemIndex * rowHeight + headerHeight;
+        setScrollPosition(newScrollPosition);
+      }
+    }
+  }
+
+
+}, [indiceSeleccionado, buscado, modoNavegacion, idsCoincidentes, datosParaTabla]);
+
+  // Efecto adicional para sincronización cuando cambian los datos
+  useEffect(() => {
+    if (
+      hayFuncionBusqueda &&
+      buscado &&
+      modoNavegacion === 'busqueda' &&
+      idsCoincidentes &&
+      currentHorario &&
+      typeof setUltimoIndiceBusqueda === 'function'
+    ) {
+      const idActual = currentHorario.codigo;
+      if (idActual !== undefined && idsCoincidentes.includes(idActual)) {
+        setUltimoIndiceBusqueda(idsCoincidentes.indexOf(idActual));
+      }
+    }
+  }, [datosParaTabla, currentHorario, idsCoincidentes, buscado, modoNavegacion, hayFuncionBusqueda]);
+  
+
+  // nuevo efecto para manejar selección manual (click)
+useEffect(() => {
+  if (hayFuncionBusqueda && !procesado || !currentHorario) return;
+
+  
+  // Cuando se selecciona manualmente, actualizar indiceGlobal
+  const newIndex = datosParaTabla.findIndex(item => item.id === currentHorario.id);
+  if (newIndex >= 0) {
+    if (setIndiceGlobal) {
+      setIndiceGlobal(newIndex);
+    }
+  }
+}, [currentHorario, datosParaTabla, procesado]);
+
   function onSelectChange(action: any, state: any) {
     console.log(action);
     const selectedItem = datosParaTabla.find((node) => node.id === state.id);
@@ -169,83 +258,58 @@ export default function TablaInforme<T extends TableNode>({
   const handleBlur = () => {
     setIsActive(false);
   };
-  // SELECCION POR BUSQUEDA
-  useEffect(() => {
-    // Solo ejecutar si se está buscando y los valores son válidos
-    if (
-      buscado && // Solo si se está buscando
-      idsCoincidentes.length > 0 && // `idsCoincidentes` no está vacío
-      indiceSeleccionado >= 0 && // `indiceSeleccionado` es un número válido
-      indiceSeleccionado < idsCoincidentes.length // `indiceSeleccionado` está dentro del rango
-    ) {
-      const idSeleccionado = idsCoincidentes[indiceSeleccionado];
-      const itemSeleccionado = datosParaTabla.find((item) => item.id === idSeleccionado);
-  
-      if (itemSeleccionado && itemSeleccionado.id !== currentHorario?.id) {
-        // Solo actualizar si el ítem seleccionado es diferente al actual
-        setCurrentHorario(itemSeleccionado);
-        select.fns.onToggleByIdExclusively(itemSeleccionado.id);
-  
-        // Calcular la posición del scroll para el ítem seleccionado
-        const itemIndex = datosParaTabla.findIndex((item) => item.id === idSeleccionado);
-        if (itemIndex !== -1) {
-          const newScrollPosition = itemIndex * rowHeight + headerHeight;
-          setScrollPosition(newScrollPosition);
-        }
-      }
-    }
-  }, [idsCoincidentes, indiceSeleccionado, datosParaTabla, select, buscado, currentHorario])
+
   return (
     <div
-    className="p-2 w-fit  rounded-xl bg-white"
-    id="table-to-print"
-    ref={tableRef}
-    tabIndex={0}
-    onClick={handleTableClick}
-    onBlur={handleBlur}
-  > 
-    <Table
-      data={{ nodes: datosParaTabla }}
-      theme={theme}
-      layout={{ fixedHeader: true }}
-      select={select}
+      className="p-2 w-fit  rounded-xl bg-white"
+      id="table-to-print"
+      ref={tableRef}
+      tabIndex={0}
+      onClick={handleTableClick}
+      onBlur={handleBlur}
     >
-      {(tableList: T[]) => (
-        <>
-          <Header>
-            <HeaderRow>
-              {columnas.map((column, index) => (
-                <HeaderCell key={index}>{column.label}</HeaderCell>
+      <Table
+        data={{ nodes: datosParaTabla }}
+        theme={theme}
+        layout={{ fixedHeader: true }}
+        select={select}
+      >
+        {(tableList: T[]) => (
+          <>
+            <Header>
+              <HeaderRow>
+                {columnas.map((column, index) => (
+                  <HeaderCell key={index}>{column.label}</HeaderCell>
+                ))}
+              </HeaderRow>
+            </Header>
+            <Body>
+              {status === 'pending' && (
+                <tr className="absolute inset-0 flex justify-center items-center z-10">
+                  <td className="flex flex-col items-center">
+                    <ClipLoader color="#36d7b7" size={50} speedMultiplier={0.5} />
+                    <p className="mt-2 text-gray-600">Cargando...</p>
+                  </td>
+                </tr>
+              )}
+
+              {tableList.map((item, rowIndex) => (
+                <Row key={rowIndex} item={item}>
+                  {columnas.map((column, columnIndex) => {
+                    return (
+                      <Cell key={columnIndex} {...column.cellProps?.(item)}>
+                        {column.renderCell(item)}
+                      </Cell>
+                    );
+                  })}
+                </Row>
               ))}
-            </HeaderRow>
-          </Header>
-          <Body>
-            {status === 'pending' && (
-              <div className="absolute inset-0 flex justify-center items-center z-10">
-                <div className="flex flex-col items-center">
-                  <ClipLoader color="#36d7b7" size={50} speedMultiplier={0.5} />
-                  <p className="mt-2 text-gray-600">Cargando...</p>
-                </div>
-              </div>
-            )}
+            </Body>
 
-            {tableList.map((item, rowIndex) => (
-              <Row key={rowIndex} item={item}>
-                {columnas.map((column, columnIndex) => {
-                  return (
-                    <Cell key={columnIndex} {...column.cellProps?.(item)}>
-                      {column.renderCell(item)}
-                    </Cell>
-                  );
-                })}
-              </Row>
-            ))}
-          </Body>
-
-          {footer && datosParaTabla && <TablaFooter datos={datosFooter} />}
-        </>
-      )}
-    </Table>
-  </div>
+            {footer && datosParaTabla && <TablaFooter datos={datosFooter} />}
+          </>
+        )}
+      </Table>
+    </div>
   );
 }
