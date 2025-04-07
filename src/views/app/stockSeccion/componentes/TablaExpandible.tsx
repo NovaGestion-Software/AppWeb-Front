@@ -170,7 +170,21 @@ export default function TablaExpandible<T extends TableNode>({
 
   const handleCheckboxItems = (item: T) => {
     const isSelected = !localSelectedItems[item.seccion];
-    setLocalSelectedItems((prev) => {
+    
+    setLocalSelectedSubItems(prev => {
+      // Obtener todos los IDs de subitems del item actual
+      const subItemsIds = item[subItemsProperty]?.map((subItem: any) => subItem[subItemKeyProperty]) || [];
+      
+      // Si estamos seleccionando el item, añadir todos sus subitems
+      // Si estamos deseleccionando, quitar todos sus subitems
+      const newSelectedSubItems = isSelected
+        ? [...new Set([...prev, ...subItemsIds])] // Elimina duplicados
+        : prev.filter(id => !subItemsIds.includes(id));
+      
+      return newSelectedSubItems;
+    });
+  
+    setLocalSelectedItems(prev => {
       const updatedItems = {
         ...prev,
         [item.seccion]: isSelected,
@@ -272,8 +286,11 @@ export default function TablaExpandible<T extends TableNode>({
                                
                                 `}
                                 key={subItem[subItemKeyProperty]}
-                                onClick={() => handleCheckboxSubItems(subItem[subItemKeyProperty], item)}
-                              >
+                                onClick={(e) => {
+                                  if (!elementosCoincidentes.includes(subItem[subItemKeyProperty])) {
+                                    handleCheckboxSubItems(subItem[subItemKeyProperty], item);
+                                  }
+                                }} >
                                 <div className="ml-2">
                                   <CheckboxInput
                                     onChange={() => {}}
