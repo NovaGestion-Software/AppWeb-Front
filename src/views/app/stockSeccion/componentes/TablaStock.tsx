@@ -420,7 +420,7 @@ export default function TablaStock({ datosParaTabla }: TableProps<TableNode>) {
     })).sort((a, b) => a.nmarca.localeCompare(b.nmarca));
   }
 
-  // console.log(productos);
+   console.log(productos);
   return (
     <>
       <TablaInforme

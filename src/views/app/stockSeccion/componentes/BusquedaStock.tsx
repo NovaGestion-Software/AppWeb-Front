@@ -53,15 +53,16 @@ export default function BusquedaStock({ data }: any) {
   useEffect(() => {
     // Filtramos solo los productos que contienen código, marca y descripción
     const filtered = stockRenderizado
-      .flatMap((rubro: any) => rubro.productos) // Aplanamos los productos de cada rubro
-      .filter((producto: any) => producto && producto.codigo && producto.nombre && producto.marca) // Filtramos productos válidos
-      .filter((producto: any) => {
-        const matchesCodigo = producto.codigo.includes(codigoBusqueda); // Filtro por código
-        const matchesTexto =
-          producto.nombre.toLowerCase().includes(textoBusqueda.toLowerCase()) || // Filtro por nombre
-          producto.marca.toLowerCase().includes(textoBusqueda.toLowerCase()); // Filtro por marca
-        return matchesCodigo && matchesTexto;
-      });
+    .flatMap((rubro: any) => rubro.productos)
+    .filter((producto: any) => producto && producto.codigo && producto.nombre && producto.marca)
+    .filter((producto: any) => {
+      const matchesCodigo = producto.codigo.includes(codigoBusqueda);
+      const matchesTexto =
+        producto.nombre.toLowerCase().includes(textoBusqueda.toLowerCase()) ||
+        producto.marca.toLowerCase().includes(textoBusqueda.toLowerCase());
+      return matchesCodigo && matchesTexto;
+    });
+  
 
     const ids = filtered.map((producto: any) => producto.codigo); // Aquí se toma el `codigo` del producto como el ID
 
