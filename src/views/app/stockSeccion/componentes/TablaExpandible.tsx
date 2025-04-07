@@ -286,7 +286,7 @@ export default function TablaExpandible<T extends TableNode>({
                                
                                 `}
                                 key={subItem[subItemKeyProperty]}
-                                onClick={(e) => {
+                                onClick={() => {
                                   if (!elementosCoincidentes.includes(subItem[subItemKeyProperty])) {
                                     handleCheckboxSubItems(subItem[subItemKeyProperty], item);
                                   }
