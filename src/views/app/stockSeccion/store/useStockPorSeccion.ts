@@ -31,6 +31,8 @@ type StockPorSeccionProps = {
   clearRubrosFetch: () => void;
 
   // TABLA STOCK
+  tipoPrecio: 'prec1' | 'prec2' | 'prec3'; // Tipo de precio seleccionado (CONTADO, LISTA 2, LISTA 3)
+  setTipoPrecio: (tipo: 'prec1' | 'prec2' | 'prec3') => void; // Setter para el tipo de precio
   // tabla stock como la informacion despues de la peticion, y tabla renderizada como la informacion ordenada
   // el tema es que despues de data renderizada sea vacia como va a volver a llenarse?
   tablaStock: any[];
@@ -121,7 +123,8 @@ export const useStockPorSeccion = create<StockPorSeccionProps>()(
       setTablaStock: (data: any[]) => set({ tablaStock: data }),
       stockRenderizado: [] as any[],
       setStockRenderizado: (data: any[]) => set({ stockRenderizado: data }),
-
+      tipoPrecio: "prec1", // Valor inicial
+      setTipoPrecio: (tipo: 'prec1' | 'prec2' | 'prec3') => set({ tipoPrecio: tipo }),
       productos: [] as ProductoAgrupado[],
       setProductos: (data: ProductoAgrupado[]) => set({ productos: data }),
 

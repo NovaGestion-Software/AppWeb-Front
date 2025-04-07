@@ -62,9 +62,7 @@ export default function TablaExpandible<T extends TableNode>({
   const materialTheme = getTheme(DEFAULT_OPTIONS);
   const theme = useTheme([materialTheme, estilos]);
   const [expandedIds, setExpandedIds] = useState<string[]>([]);
-  const [localSelectedItems, setLocalSelectedItems] = useState<{
-    [key: string]: boolean;
-  }>({});
+  const [localSelectedItems, setLocalSelectedItems] = useState<{[key: string]: boolean;}>({});
   const [localSelectedSubItems, setLocalSelectedSubItems] = useState<string[]>([]);
 
   const lastNavigatedId = useRef<string | number | null>(null);
@@ -106,14 +104,7 @@ export default function TablaExpandible<T extends TableNode>({
 
           lastNavigatedId.current = targetRubroId;
         }
-        if (element) {
-          clearInterval(intervalId);
-          element.scrollIntoView({
-            behavior: "smooth",
-            block: "center", // Más confiable que 'center'
-          });
-          lastNavigatedId.current = targetRubroId;
-        } else if (intentos >= maxIntentos) {
+      else if (intentos >= maxIntentos) {
           clearInterval(intervalId);
         }
       }, 350); // Chequea cada 350ms (ajustable)

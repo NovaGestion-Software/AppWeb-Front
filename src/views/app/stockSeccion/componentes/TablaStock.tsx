@@ -28,7 +28,7 @@ export default function TablaStock() {
     setDepositosDisponibles,
     buscado,
     modoNavegacion,
-    setUltimoIndiceBusqueda, indiceGlobal
+    setUltimoIndiceBusqueda, indiceGlobal, tipoPrecio
   } = useStockPorSeccion();
   //depositos utiliza stock renderizado
   const depositos = obtenerDepositos(tablaStock);
@@ -39,7 +39,7 @@ export default function TablaStock() {
   const datosFooter: { [key: string]: string } = {
     id: cantidadItems.toString(),
   };
-  let idCounter = 0;
+//  let idCounter = 0;
 
   const COLUMNS: TableColumn<TablaStocks>[] = [
     {
@@ -85,7 +85,7 @@ export default function TablaStock() {
     },
   ];
 
-// Un before con css en header  y footer con un color solido blanco que funcione de fondo para que las partes de la tabla que pasan por ahi no se vean.
+// ESTILOS.
 const customTheme = {
   Table: `
   
@@ -245,15 +245,13 @@ const customTheme = {
     max-height: 500px;
   `,
 };
-
-
   // Este use Effect funciona cuando los datos de tablaStock cambian
   // Lo toma y crea datosAgrupados con lo que setea el StockRenderizado
   useEffect(() => {
     // Agrupar los productos solo cuando stockRenderizado cambie
     const datosAgrupados = agruparPorProducto(tablaStock);
     setStockRenderizado(datosAgrupados);
-  }, [tablaStock]);
+  }, [tablaStock, tipoPrecio]);
 
 
   // Filtramos los totales solo para depósitos y marcas seleccionadas
@@ -317,13 +315,13 @@ const customTheme = {
 
   function agruparPorProducto(data: any): ProductoAgrupado[] {
     const productosAgrupados: ProductoAgrupado[] = [];
-
+    let idCounter = 1;
+  
     if (!data) return productosAgrupados;
-
+  
     for (const rubroKey in data) {
       if (data.hasOwnProperty(rubroKey)) {
         const rubro = data[rubroKey];
-
         if (rubro.productos) {
           rubro.productos.forEach((producto: any) => {
             if (producto.depositos) {
@@ -332,14 +330,13 @@ const customTheme = {
                   deposito.talles.forEach((talle: any) => {
                     let stockPorDeposito: { [deposito: string]: string } = {};
                     let totalStock = 0;
-
+  
                     const depositoId = deposito.deposito || "default";
                     const stock = parseFloat(talle.stock || "0.0000");
-
+  
                     stockPorDeposito[depositoId] = stock.toString();
-
                     totalStock += stock;
-
+  
                     productosAgrupados.push({
                       id: `${idCounter++}`,
                       codigo: producto.codigo,
@@ -347,7 +344,12 @@ const customTheme = {
                       descripcion: producto.nombre,
                       marca: producto.marca,
                       nmarca: producto.nmarca,
-                      precio: producto.prec1,
+                      precios: { // 👈 Guardamos todos los precios
+                        contado: producto.prec1,
+                        lista2: producto.prec2,
+                        lista3: producto.prec3
+                      },
+                      precio: producto.prec1, // Precio por defecto
                       stockPorDeposito,
                       total: totalStock.toString(),
                     });
@@ -359,7 +361,6 @@ const customTheme = {
         }
       }
     }
-    // setProductos(productosAgrupados);
     return productosAgrupados;
   }
 

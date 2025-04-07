@@ -182,6 +182,12 @@ export interface Rubro {
 
 export type TablaStock1 = Rubro[];
 
+export  interface Precios {
+  contado: string;
+  lista2: string;
+  lista3: string;
+}
+
 export interface ProductoAgrupado {
   id: string;
   codigo: string;
@@ -189,6 +195,7 @@ export interface ProductoAgrupado {
   descripcion: string;
   marca: string;
   nmarca: string;
+  precios: Precios;
   precio: string;
   stockPorDeposito: { [depositoId: string]: string };
   total: string;

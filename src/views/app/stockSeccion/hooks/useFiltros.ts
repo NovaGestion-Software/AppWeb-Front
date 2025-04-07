@@ -14,19 +14,7 @@ export const useFiltros = () => {
   // ResultadoOrdenamiento devuelve el resultado en base a lo renderizado en la
   //  tabla, productos.
   // Filtrar por marca y filtrar por deposito van sobre el stock original.
-  const esTalleNumerico = (talle: string | undefined): boolean => {
-    if (!talle?.trim()) return false;
-    // Verifica si el string contiene SOLO números (enteros o decimales)
-    return /^\d*\.?\d+$/.test(talle.trim());
-  };
-  
- const esTalleAlfabetico = (talle: string | undefined): boolean => {
-  if (!talle?.trim()) return false;
-  const talleNormalizado = talle.trim().toUpperCase();
-  // Lista de talles alfabéticos permitidos
-  const tallesValidos = ['XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'];
-  return tallesValidos.includes(talleNormalizado);
-};
+
   
 const aplicarFiltros = () => {
   if(!Array.isArray(stockRenderizado)) return [];
@@ -36,19 +24,8 @@ const aplicarFiltros = () => {
     
     if (checkboxSeleccionados?.grupo2 === "Con Stock" && total <= 0) return false;
     if (checkboxSeleccionados?.grupo2 === "Negativos" && total >= 0) return false;
-     // Filtro mejorado por tipo de talle
-     if (checkboxSeleccionados?.grupo1 === "Todos") {
-      return p.total; // Solo talles alfabéticos
-    }
-     if (checkboxSeleccionados?.grupo1 === "Talles") {
-      return esTalleNumerico(p.talle); // Solo talles numéricos
-    }
     
-    if (checkboxSeleccionados?.grupo1 === "Articulos") {
-      return esTalleAlfabetico(p.talle); // Solo talles alfabéticos
-    }
    
-    
     return true;
   });
 
@@ -63,8 +40,46 @@ const aplicarFiltros = () => {
         ([id]) => depositos.includes(id)
     ));
   }
+
+   // Solo aplicar agrupación si está en modo "Artículos"
+   if (checkboxSeleccionados?.grupo1 === "Articulos") {
+    return agruparPorArticulo(resultado);
+  }
   return resultado
 };
+
+
+const agruparPorArticulo = (datos: ProductoAgrupado[]): ProductoAgrupado[] => {
+  const agrupados: Record<string, ProductoAgrupado> = {};
+
+  datos.forEach(item => {
+    const clave = `${item.codigo}-${item.nmarca}-${item.descripcion}`;
+    
+    if (!agrupados[clave]) {
+      agrupados[clave] = {
+        ...item,
+        talle: '', // o '' si prefieres vacío
+        stockPorDeposito: {...item.stockPorDeposito} // Clonamos el stock por depósito
+      };
+    } else {
+      // Sumar el stock total
+      const totalActual = parseFloat(agrupados[clave].total) || 0;
+      const totalNuevo = parseFloat(item.total) || 0;
+      agrupados[clave].total = (totalActual + totalNuevo).toString();
+      
+      // Sumar stocks por depósito (como números)
+      Object.entries(item.stockPorDeposito || {}).forEach(([deposito, cantidadStr]) => {
+        const cantidad = parseFloat(cantidadStr) || 0;
+        const stockActual = parseFloat(agrupados[clave].stockPorDeposito[deposito]?.toString() || '0') || 0;
+        agrupados[clave].stockPorDeposito[deposito] = (stockActual + cantidad).toString();
+      });
+    }
+  });
+
+  return Object.values(agrupados);
+};
+
+
 const aplicarOrdenamiento = (datos: ProductoAgrupado[]) => {
   if (!Array.isArray(datos)) return [];
 
@@ -92,5 +107,5 @@ const aplicarOrdenamiento = (datos: ProductoAgrupado[]) => {
     }
   });
 };
-  return { aplicarFiltros, aplicarOrdenamiento };
+  return { aplicarFiltros,agruparPorArticulo,aplicarOrdenamiento };
 };

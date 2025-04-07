@@ -10,18 +10,11 @@ export default function FiltrarPorTipo() {
     value: string
   ) => {
     const nuevoValor = checkboxSeleccionados[grupo] === value ? "" : value;
-
     setCheckboxSeleccionados(grupo, nuevoValor);
   };
 
   return (
     <div className="flex gap-1 border p-1 rounded-lg bg-white">
-      <RadioInput
-        onChange={() => handleCheckboxChange("grupo1", "Todos")}
-        checked={checkboxSeleccionados.grupo1 === "Todos"}
-        disabled={status === "idle"}
-        label="Todos"
-      />{" "}
       <RadioInput
         onChange={() => handleCheckboxChange("grupo1", "Talles")}
         checked={checkboxSeleccionados.grupo1 === "Talles"}

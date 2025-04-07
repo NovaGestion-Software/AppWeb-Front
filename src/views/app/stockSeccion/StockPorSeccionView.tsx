@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { DepositoModal, MarcaModal } from "@/types";
+import { DepositoModal, MarcaModal, Precios } from "@/types";
 import { useStockPorSeccion } from "@/views/app/stockSeccion/store/useStockPorSeccion";
 import { obtenerRubrosDisponibles } from "@/services/ApiPhpService";
 import ViewTitle from "@/Components/ui/Labels/ViewTitle";
@@ -65,21 +65,44 @@ export default function StockPorSeccionView() {
   // SETEA FILTROS DE CHECKBOXS
   useEffect(() => {
     if (stockRenderizado.length > 0) {
-      setCheckboxSeleccionados("grupo1", "Todos");
+      setCheckboxSeleccionados("grupo1", "Talles");
       setCheckboxSeleccionados("grupo2", "Todos");
       setCheckboxSeleccionados("grupo3", "CONTADO");
       setCheckboxSeleccionados("grupo4", "Descripcion"); // Asegúrate de que este valor sea válido
     }
   }, [stockRenderizado, setCheckboxSeleccionados]);
-
-// APLICACION DE FILTROS Y RE ORDENAMIENTO
+  const getPrecioKey = (grupo3: string): keyof Precios => {
+    return grupo3 === 'LISTA 2' ? 'lista2' : 
+           grupo3 === 'LISTA 3' ? 'lista3' : 'contado';
+  };
+  
+  // APLICACIÓN DE FILTROS, PRECIOS Y REORDENAMIENTO
   useEffect(() => {
     if (stockRenderizado.length === 0) return;
+    
+    // 1. Aplicar filtros base
     const filtrados = aplicarFiltros();
-    const ordenados = aplicarOrdenamiento(filtrados);
-    setProductos(ordenados); // Actualiza la tabla con nuevo orden
-  }, [stockRenderizado,checkboxSeleccionados.grupo1,checkboxSeleccionados.grupo2, checkboxSeleccionados.grupo4,depositosSeleccionados,marcasSeleccionadas,]);
-
+    
+    // 2. Aplicar precio seleccionado
+    const precioKey = getPrecioKey(checkboxSeleccionados.grupo3 || "CONTADO");
+    const productosConPrecio = filtrados.map(item => ({
+      ...item,
+      precio: item.precios[precioKey] || item.precio // Fallback al precio actual
+    }));
+    
+    // 3. Ordenar
+    const ordenados = aplicarOrdenamiento(productosConPrecio);
+    
+    setProductos(ordenados);
+  }, [
+    stockRenderizado,
+    checkboxSeleccionados.grupo1,
+    checkboxSeleccionados.grupo2,
+    checkboxSeleccionados.grupo3, // ¡Añadido!
+    checkboxSeleccionados.grupo4,
+    depositosSeleccionados,
+    marcasSeleccionadas
+  ]);
   // RENDERIZADO DE ITEMS DE LOS MODALES
   const renderMarcaItem = (item: MarcaModal) => { return <>{item.nmarca}</>; };
   const renderDepositoItem = (item: DepositoModal) => { return (   <>{item.deposito} - {item.ndeposito} </>);   };
@@ -90,6 +113,9 @@ export default function StockPorSeccionView() {
     else { setStatus("success")} 
   }, [status, setStatus, tablaStock]);
 
+// 
+console.log("tipoPrecio", checkboxSeleccionados.grupo3);
+console.log("productos", productos);
   // Tabla stock serian los datos originales del endpoint
   // Stock Renderizado es el resultado de la funcion agrupar por stock
   // Productos es una copia de stock renderizado
@@ -107,9 +133,7 @@ export default function StockPorSeccionView() {
   // La busqueda tiene que ser sobre los elementos de la tabla, es decir Productos.
   return (
     <div className="w-full h-screen px-4 pt-0 overflow-hidden">
-      <ViewTitle title={"Stock por Sección"} />
-
- 
+      <ViewTitle title={"Stock por Sección"} /> 
       {/** HERRAMIENTAS DE LA VISTA */}
       <div className="grid grid-cols-10 grid-rows-2 px-2">
       {/**BOTONES SHOW MODAL DEPOSITOS Y RUBROS - ORDENAR POR CHECKBOXS( CODIGO , MARCA Y DESCRIPCION )*/}
