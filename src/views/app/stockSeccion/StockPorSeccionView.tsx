@@ -15,6 +15,7 @@ import TablaSeccionRubro from "./componentes/TablaSeccionRubro";
 import TablaStock from "./componentes/TablaStock";
 import ActionButton from "@/Components/ui/Buttons/ActionButton";
 import { useFiltros } from "./hooks/useFiltros";
+import { formatPrice } from "./utils/formatPrice";
 
 export default function StockPorSeccionView() {
   const [showMarcasModal, setShowMarcasModal] = useState(false);
@@ -79,18 +80,12 @@ export default function StockPorSeccionView() {
   // APLICACIÓN DE FILTROS, PRECIOS Y REORDENAMIENTO
   useEffect(() => {
     if (stockRenderizado.length === 0) return;
-    
-    // 1. Aplicar filtros base
     const filtrados = aplicarFiltros();
-    
-    // 2. Aplicar precio seleccionado
     const precioKey = getPrecioKey(checkboxSeleccionados.grupo3 || "CONTADO");
     const productosConPrecio = filtrados.map(item => ({
       ...item,
-      precio: item.precios[precioKey] || item.precio // Fallback al precio actual
+      precio: formatPrice(item.precios[precioKey]),
     }));
-    
-    // 3. Ordenar
     const ordenados = aplicarOrdenamiento(productosConPrecio);
     
     setProductos(ordenados);
@@ -98,7 +93,7 @@ export default function StockPorSeccionView() {
     stockRenderizado,
     checkboxSeleccionados.grupo1,
     checkboxSeleccionados.grupo2,
-    checkboxSeleccionados.grupo3, // ¡Añadido!
+    checkboxSeleccionados.grupo3, 
     checkboxSeleccionados.grupo4,
     depositosSeleccionados,
     marcasSeleccionadas
@@ -113,9 +108,10 @@ export default function StockPorSeccionView() {
     else { setStatus("success")} 
   }, [status, setStatus, tablaStock]);
 
-// 
-console.log("tipoPrecio", checkboxSeleccionados.grupo3);
-console.log("productos", productos);
+// tabla stock tiene los datos actuales, los datos actuales se pasan por datos agrupados y se setean en stock renderizado.
+// la pregunta es que pasa si agrego mas datos, a tablastock, se vuelve a hacer la peticion y se setea stock renderizado con los nuevos datos? pero se puede conservar los anteriores no?
+// ya tenemos en la store rubrostofetch que serian los que ya fueron llamados.
+
   // Tabla stock serian los datos originales del endpoint
   // Stock Renderizado es el resultado de la funcion agrupar por stock
   // Productos es una copia de stock renderizado

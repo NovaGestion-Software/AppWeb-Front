@@ -186,7 +186,7 @@ const customTheme = {
       border-left: 1px solid black;
     }
 
-    &:nth-of-type(n+3) {
+    &:nth-of-type(n+5) {
       text-align: right;
     }
 
