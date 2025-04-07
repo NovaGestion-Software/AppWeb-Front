@@ -100,7 +100,7 @@ export default function BusquedaStock() {
   }, [codigoBusqueda, textoBusqueda, productos, navegandoCoincidentes]);
   const handleSiguienteClick = () => {
     if (idsCoincidentes.length > 0) {
-      const nuevoIndice = (indiceSeleccionado + 1) % idsCoincidentes.length;
+      const nuevoIndice = ((indiceSeleccionado ?? 0) + 1) % idsCoincidentes.length;
       setIndiceSeleccionado(nuevoIndice);
     }
   };
@@ -142,7 +142,7 @@ export default function BusquedaStock() {
       } else {
         // Navegación entre resultados
         if (idsCoincidentes.length > 0) {
-          const nuevoIndice = (indiceSeleccionado + 1) % idsCoincidentes.length;
+          const nuevoIndice = ((indiceSeleccionado ?? 0) + 1) % idsCoincidentes.length;
           setIndiceSeleccionado(nuevoIndice);
           setUltimoIndiceBusqueda(nuevoIndice);
         }
@@ -172,7 +172,7 @@ export default function BusquedaStock() {
         idsCoincidentes.length > 0
       ) {
         // Si estamos en modo búsqueda, usar el ID actual para encontrar la posición global
-        const currentId = idsCoincidentes[indiceSeleccionado];
+        const currentId = indiceSeleccionado !== null ? idsCoincidentes[indiceSeleccionado] : undefined;
         currentIndex = productos.findIndex((p) => p.codigo === currentId);
       } else {
         // Si estamos en modo normal, usar el índice global directamente

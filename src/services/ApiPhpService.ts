@@ -1,12 +1,14 @@
 import { isAxiosError } from 'axios';
 import { FechasRango } from '@/types';
 import apiPhp from '../lib/axiosPhp';
-//FALTA FUNCION QUE TOMA LA EMPRESA, YA ESTABA HECHA.
+
+const user = JSON.parse(localStorage.getItem('_u') || '{}');
+const empresa = user.empresa ? user.empresa.toString().slice(-2) : '00'; // Extrae los últimos 2 dígitos
+
 export async function obtenerVentasHora(fechas: FechasRango) {
   try {
     // console.log('fechas seteadas en funcion', fechas);
-    const user = JSON.parse(localStorage.getItem('_u') || '{}');
-    const empresa = user.empresa ? user.empresa.toString().slice(-2) : '00'; // Extrae los últimos 2 dígitos
+
 
     // console.log(empresa);
     const { from, to } = fechas;
@@ -26,7 +28,7 @@ export async function obtenerVentasHora(fechas: FechasRango) {
 
 export async function obtenerRubrosDisponibles() {
   try {
-    const url = `/apinovades/generico/obtenerSeccionesRubros.php?_i={"_e":"12","_s":"08","_m":"prod","_o":"1"}`;
+    const url = `/apinovades/generico/obtenerSeccionesRubros.php?_i={"_e":"${empresa}","_s":"08","_m":"prod","_o":"1"}`;
     const { data } = await apiPhp(url);
 
     // console.log(result);
@@ -46,7 +48,7 @@ export async function obtenerStock(rubros: string[]) {
     const url = `/apinovades/generico/obtenerStock.php`;
 
     const datos = {
-      _e: '000012',
+      _e: empresa,
       _m: 'prod',
       _r: 'JSON',
       _j: rubros,
@@ -68,7 +70,7 @@ export async function obtenerStock(rubros: string[]) {
 
 export async function obtenerProductos(secciones: string[], rubros: string[]) {
   try {
-    const url = `/apinovades/generico/obtenerProducto.php?_i={"_e":"12","_s":"08","_m":"prod"}`;
+    const url = `/apinovades/generico/obtenerProducto.php?_i={"_e":"${empresa}","_s":"08","_m":"prod"}`;
 
     const datos = { secciones, rubros };
     // console.log(datos);

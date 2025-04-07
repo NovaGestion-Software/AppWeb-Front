@@ -68,7 +68,7 @@ export default function BusquedaRubros() {
 
     // 4. Si estamos navegando entre coincidencias, seleccionamos el primer índice
     if (navegandoCoincidentes && ids.length > 0) {
-      setIndiceSeleccionado(0);
+      setIndiceSeleccionado(null);
 
       // 5. Expandir automáticamente el item principal del primer subitem coincidente
       const primerRubro = rubrosFiltrados[0];
@@ -85,7 +85,7 @@ export default function BusquedaRubros() {
   const handleSiguienteClick = () => {
     if (idsCoincidentes.length > 0) {
       console.log("indce seleccionado", indiceSeleccionado);
-      const nuevoIndice = (indiceSeleccionado + 1) % idsCoincidentes.length;
+      const nuevoIndice = ((indiceSeleccionado ?? -1) + 1) % idsCoincidentes.length;
       console.log(idsCoincidentes);
       console.log(nuevoIndice);
       setIndiceSeleccionado(nuevoIndice);
@@ -134,7 +134,7 @@ export default function BusquedaRubros() {
       } else {
         // Navegación entre resultados
         if (idsCoincidentes.length > 0) {
-          const nuevoIndice = (indiceSeleccionado + 1) % idsCoincidentes.length;
+          const nuevoIndice = ((indiceSeleccionado ?? -1) + 1) % idsCoincidentes.length;
           setIndiceSeleccionado(nuevoIndice);
           setUltimoIndiceBusqueda(nuevoIndice);
         }
@@ -180,7 +180,7 @@ export default function BusquedaRubros() {
   };
 
   return (
-    <div className="flex gap-1 items-center border py-1.5 px-2 rounded-lg bg-slate-50 border border-black">
+    <div className="flex gap-1 items-center border py-1.5 px-2 rounded-lg bg-slate-50  border-black">
       <FlexibleInputField
         value={textoBusqueda || ""}
         placeholder="Descripción o Marca"
@@ -229,7 +229,7 @@ export default function BusquedaRubros() {
 
       {buscado && idsCoincidentes.length > 0 && (
         <span className="text-xs text-black px-2">
-          Mostrando: {indiceSeleccionado + 1} de {idsCoincidentes.length}
+          Mostrando: {(indiceSeleccionado ?? 0) + 1} de {idsCoincidentes.length}
         </span>
       )}
     </div>

@@ -26,6 +26,9 @@ export default function TablaStock() {
     setMarcasSeleccionadas,
     setDepositosSeleccionados,
     setDepositosDisponibles,
+    buscado,
+    modoNavegacion,
+    setUltimoIndiceBusqueda, indiceGlobal
   } = useStockPorSeccion();
   //depositos utiliza stock renderizado
   const depositos = obtenerDepositos(tablaStock);
@@ -83,38 +86,40 @@ export default function TablaStock() {
   ];
 
 // Un before con css en header  y footer con un color solido blanco que funcione de fondo para que las partes de la tabla que pasan por ahi no se vean.
-  const customTheme = {
-    Table: `
+const customTheme = {
+  Table: `
+  
+    display: grid;
     grid-template-columns: 
-        minmax(80px, 100px)
-        minmax(50px, 70px)
-        minmax(200px, 300px)
-        minmax(100px, 150px)
-        minmax(90px, 150px)
-        ${"minmax(70px, 90px)".repeat(depositosDisponibles.length || 0)}
-        minmax(80px, 100px);
-    max-width: 70rem;
-    overflow-y: auto;
-    scrollbar-width: thin;
+      minmax(80px, 100px)
+      minmax(50px, 70px)
+      minmax(200px, 300px)
+      minmax(100px, 150px)
+      minmax(90px, 150px)
+      ${"minmax(70px, 90px)".repeat(depositosDisponibles.length || 0)}
+      minmax(80px, 100px);
+    grid-template-rows: 30px auto;
+    grid-auto-rows: auto;
+
     font-variant-numeric: tabular-nums;
     font-size: 14px;
-border-radius: 10px 6px 5px 5px;
-        grid-template-rows: 30px auto ;
-
-    /* Asegura que la tabla use grid layout */
-    display: grid;
-    grid-auto-rows: auto; /* Para filas dinámicas adicionales */
-
-    /* Solución clave: */
-    height: auto;
+    max-width: 70rem;
     min-height: 200px;
     max-height: 600px;
-    
+    overflow-y: auto;
+    scrollbar-width: none;
+    scrollbar-color: #2973B2 #fff;
+    scroll-behavior: smooth;
+    scrollbar-thumb:hover {
+      background-color: #2973B2;
+    }
+    border-radius: 10px;
+    border: 1px solid black;
 
-     .tr {
+    .tr {
       min-height: 10px;
     }
-    
+
     @media (min-width: 1280px) and (max-width: 1380px) {
       width: 55rem;
       max-height: 420px;
@@ -123,137 +128,125 @@ border-radius: 10px 6px 5px 5px;
 
     @media (min-width: 1500px) {
       width: 55rem;
-      max-height: 500;
+      max-height: 500px;
       font-size: 12px;
     }
-      
-    `,
+  `,
 
-    /* Mantenemos exactamente los mismos estilos para HeaderCell, Row, Cell y FooterCell */
-    HeaderCell: `
-      background: #2973B2;
-      color: white;
-      height: 30px;
-      font-size: 14px;
+  HeaderCell: `
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background-color: #2973B2;
+    color: white;
+    height: 30px;
+    font-size: 14px;
+    padding: 8px;
+    border-bottom: 1px solid black;
+
+    &:first-of-type {
+      border-top-left-radius: 10px;
+    }
+
+    &:last-of-type {
+      border-top-right-radius: 10px;
+    }
+
+    &:nth-of-type(n+3) {
+      text-align: center;
+    }
+
+    @media (min-width: 1280px) and (max-width: 1380px) {
+      font-size: 12px;
       padding: 8px;
-      border-top: 1px solid black;
-      border-bottom: 1px solid black;
-      &:first-child {
-        border-left: 1px solid black;
-      }
-  
-      &:last-child {
-        border-right: 1px solid black;
-        border-radius: 0px 12px 0px 0px;
-        }
-  
-      &:nth-of-type(n+3) {
-        text-align: center;
-      }
-  
-      @media (min-width: 1280px) and (max-width: 1380px) {
-        font-size: 12px;
-        padding: 8px;
-      }
-    `,
+    }
+  `,
 
-    Row: `
-     height: auto !important;
-       min-height: 35px; /* Altura mínima para contenido */
-      font-size: 14px;
-      border: 1px solid #ccc;
+  Row: `
+    min-height: 35px;
+    font-size: 14px;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+    &:nth-of-type(odd) { background-color: #fff; }
+    &:nth-of-type(even) { background-color: #eaf5fd; }
+
+    &.row-select-single-selected { background-color: #CAE0BC !important; }
+
+    @media (min-width: 1280px) and (max-width: 1380px) {
+      font-size: 12px;
+    }
+  `,
+
+  Cell: `
+    padding: 6px;
+    border-right: 1px solid #ccc;
+    font-size: 14px;
+
+    &:first-of-type {
       border-left: 1px solid black;
-      border-right: 1px solid black;
-  
-      &:nth-of-type(odd) { background-color: #fff; }
-      &:nth-of-type(even) { background-color: #eaf5fd; }
-      
-      &.row-select-single-selected { background-color: #CAE0BC !important; }
-      border-bottom: 1px solid #ccc;
-  
-      @media (min-width: 1280px) and (max-width: 1380px) {
-        font-size: 12px;
-      }
-    `,
+    }
 
-    Cell: `
-      padding: 6px;
-      border-right: 1px solid #ccc;
-      font-size: 14px;
-      
-  
-      &:first-child {
-        border-left: 1px solid black;
-      }
-  
-      &:last-child {
-        border-right: 1px solid black;
-      }
-  
-      &:nth-of-type(n+3) {
-        text-align: right;
-      }
-  
-      @media (min-width: 1280px) and (max-width: 1380px) {
-        padding: 2px;
-        font-size: 12px;
-
-      }
-    `,
-    FooterRow: `
-    border-radius: 12px 24px 32px 12px;
-    background-color: white;
-    border-top: 1px solid black;
-`,
-Body: `
-max-height: 500px;
-overflow-y: hidden;
-`,
-
-    FooterCell: `
-      position: sticky;
-      bottom: 0;
-      height: 30px;
-      padding: 8px;
-      border-top: 1px solid black;
-      background-color: #fff;
+    &:nth-of-type(n+3) {
       text-align: right;
-      font-size: 14px;
-      color: red;
-      z-index: 1;
-  
-      &:last-child {
-      border-bottom-right-radius: 22px;
-        border: 1px solid black;
+    }
 
-      }
-  
-      &:nth-of-type(1) {
-        border: 1px solid black;
-        background-color: #A5C9FF;
-      border-bottom-left-radius: 14px;
-        font-weight: bold;
-      }
-  
-      &:nth-of-type(6) {
-        background-color: #A5C9FF; 
-        border-left: 1px solid black; 
-      }
-  
-      &:nth-of-type(n+6) {
-        background-color: #A5C9FF; 
-        border-bottom: 1px solid black; 
-        border-right: 1px solid black; 
+    @media (min-width: 1280px) and (max-width: 1380px) {
+      padding: 2px;
+      font-size: 12px;
+    }
+  `,
 
-      }
-  
-      @media (min-width: 1280px) and (max-width: 1380px) {
-        padding: 4px;
-        font-size: 12px;
-        bottom: 0px;
-      }
-    `,
-  };
+  FooterRow: `
+    background-color: white;
+  `,
+
+  FooterCell: `
+    position: sticky;
+    bottom: 0;
+    z-index: 2;
+    height: auto;
+    min-height: 30px;
+    max-height: 60px;
+    padding: 8px;
+    background-color: #FFF;
+    text-align: right;
+    font-size: 14px;
+    color: red;
+    border-top: 1px solid black;
+
+    &:first-of-type {
+      background-color: #A5C9FF;
+      font-weight: bold;
+      border-bottom-left-radius: 10px;
+    border-right: 1px solid black;
+    }
+
+    &:last-of-type {
+      border-bottom-right-radius: 10px;
+    border-left: 1px solid black;
+
+    }
+
+    &:nth-of-type(n+6) {
+      background-color: #A5C9FF;
+    border-right: 1px solid black;
+    }
+        &:nth-of-type(6), &:nth-of-type(7) {
+    border-left: 1px solid black;
+    }  
+
+    @media (min-width: 1280px) and (max-width: 1380px) {
+      padding: 4px;
+      font-size: 12px;
+    }
+  `,
+
+  Body: `
+    max-height: 500px;
+  `,
+};
+
+
   // Este use Effect funciona cuando los datos de tablaStock cambian
   // Lo toma y crea datosAgrupados con lo que setea el StockRenderizado
   useEffect(() => {
@@ -434,7 +427,12 @@ overflow-y: hidden;
         datosFooter={datosFooter}
         status={status}
         idsCoincidentes={idsCoincidentes}
-        indiceSeleccionado={indiceSeleccionado}
+        indiceSeleccionado={indiceSeleccionado ?? undefined}
+        buscado={buscado}
+        modoNavegacion={modoNavegacion}
+        setUltimoIndiceBusqueda={setUltimoIndiceBusqueda} 
+        indiceGlobal={indiceGlobal}
+        hayFuncionBusqueda={true}
       />
     </>
   );

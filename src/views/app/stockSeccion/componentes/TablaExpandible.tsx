@@ -119,7 +119,6 @@ export default function TablaExpandible<T extends TableNode>({
       }, 350); // Chequea cada 350ms (ajustable)
     }
   }, [indiceSeleccionado, buscado, modoNavegacion, idsCoincidentes, datosParaTabla]);
-  // Resto de efectos y funciones existentes
   useEffect(() => {
     if (procesado && datosParaTabla.length > 0 && !currentHorario) {
       const firstItem = datosParaTabla[0];

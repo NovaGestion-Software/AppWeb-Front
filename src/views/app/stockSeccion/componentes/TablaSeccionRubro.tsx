@@ -80,7 +80,7 @@ export default function TablaSeccionRubro({
       padding: 8px;
       border-right: 1px solid #ccc;
   
-      &:last-child {
+      &:last-of-type {
         border-right: none;
       }
   
@@ -117,7 +117,7 @@ export default function TablaSeccionRubro({
     onSuccess: (data) => {
       // console.log(data.data);
       const arrayDeRubros: TablaStock1[] = Object.values(data.data);
-      console.log('array de rubros',arrayDeRubros)
+    //  console.log('array de rubros',arrayDeRubros)
       setFooter(true);
       setTablaStock(arrayDeRubros);
       setStatus('success');
@@ -200,7 +200,7 @@ export default function TablaSeccionRubro({
           buscado={buscado}
           modoNavegacion={modoNavegacion}
           idsCoincidentes={idsCoincidentes}
-          indiceSeleccionado={indiceSeleccionado}
+          indiceSeleccionado={indiceSeleccionado ?? 0}
         />
        </div>
       </ModalInforme>

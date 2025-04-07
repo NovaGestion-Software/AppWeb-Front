@@ -17,7 +17,6 @@ import { getTheme, DEFAULT_OPTIONS } from '@table-library/react-table-library/ma
 import { useTheme } from '@table-library/react-table-library/theme';
 // import { useVentasHoraStore } from '@/store/useVentasHoraStore';
 import { ClipLoader } from 'react-spinners';
-import { useStockPorSeccion } from '@/views/app/stockSeccion/store/useStockPorSeccion';
 import { Status, TableColumn, TableNode } from '@/types';
 
 interface TablaFooterProps {
@@ -50,9 +49,16 @@ interface TableProps<T extends TableNode> {
   footer?: boolean;
   datosFooter?: {};
   procesado: boolean;
+  hayFuncionBusqueda?: boolean;
+
   status?: Status;
   idsCoincidentes?: (string | number)[]; // Prop opcional
   indiceSeleccionado?: number; // Prop opcional
+  buscado?: boolean;
+  modoNavegacion?: string;
+  setUltimoIndiceBusqueda?: (index: number) => void;
+  setIndiceGlobal?: (index: number) => void,
+  indiceGlobal?: number;    
 }
 
 export default function TablaInforme<T extends TableNode>({
@@ -65,6 +71,10 @@ export default function TablaInforme<T extends TableNode>({
   status,
   idsCoincidentes = [], // Valor por defecto: array vacío
   indiceSeleccionado = -1,
+  buscado,
+  modoNavegacion,
+  hayFuncionBusqueda = false,
+  setUltimoIndiceBusqueda, indiceGlobal, setIndiceGlobal,
 }: TableProps<T>) {
 
   // aca tengo que agregarle las dependencias de la store como props 
@@ -72,8 +82,7 @@ export default function TablaInforme<T extends TableNode>({
   const [isActive, setIsActive] = useState(false);
   const [currentHorario, setCurrentHorario] = useState<TableNode | null>(null);
   const [scrollPosition, setScrollPosition] = useState(0);
-  // const { status } = useVentasHoraStore();
-  const { buscado, modoNavegacion, setUltimoIndiceBusqueda, indiceGlobal} = useStockPorSeccion();
+
 
   const tableRef = useRef<HTMLDivElement | null>(null);
   const materialTheme = getTheme(DEFAULT_OPTIONS);
@@ -157,27 +166,28 @@ export default function TablaInforme<T extends TableNode>({
     }
   }, [scrollPosition]);
 
-  // console.log(datosParaTabla);
   // SELECCION POR BUSQUEDA
-// Nuevo useEffect para manejar navegación global
+// useEffect para manejar navegación global
 useEffect(() => {
-  if (modoNavegacion === 'normal' && indiceGlobal >= 0) {
+  if (
+    hayFuncionBusqueda &&
+    modoNavegacion === 'normal' &&
+    typeof indiceGlobal === 'number' &&
+    indiceGlobal >= 0
+  ) {
     const itemSeleccionado = datosParaTabla[indiceGlobal];
     if (itemSeleccionado && itemSeleccionado.id !== currentHorario?.id) {
       setCurrentHorario(itemSeleccionado);
       select.fns.onToggleByIdExclusively(itemSeleccionado.id);
       
-      // Scroll
       const newScrollPosition = indiceGlobal * rowHeight + headerHeight;
       setScrollPosition(newScrollPosition);
     }
   }
-}, [indiceGlobal, modoNavegacion, datosParaTabla]);
+}, [indiceGlobal, modoNavegacion, datosParaTabla, hayFuncionBusqueda]);
 
-
-// Mantén el efecto existente para búsqueda
 useEffect(() => {
-  if (buscado && modoNavegacion === 'busqueda' && idsCoincidentes.length > 0) {
+  if (hayFuncionBusqueda && buscado && modoNavegacion === 'busqueda' && idsCoincidentes.length > 0) {
     const idSeleccionado = idsCoincidentes[indiceSeleccionado];
     const itemSeleccionado = datosParaTabla.find(item => item.codigo === idSeleccionado);
     
@@ -199,24 +209,33 @@ useEffect(() => {
 
   // Efecto adicional para sincronización cuando cambian los datos
   useEffect(() => {
-    if (buscado && modoNavegacion === 'busqueda' && idsCoincidentes.length > 0) {
-      const idActual = currentHorario?.codigo;
-      if (idActual && idsCoincidentes.includes(idActual)) {
+    if (
+      hayFuncionBusqueda &&
+      buscado &&
+      modoNavegacion === 'busqueda' &&
+      idsCoincidentes &&
+      currentHorario &&
+      typeof setUltimoIndiceBusqueda === 'function'
+    ) {
+      const idActual = currentHorario.codigo;
+      if (idActual !== undefined && idsCoincidentes.includes(idActual)) {
         setUltimoIndiceBusqueda(idsCoincidentes.indexOf(idActual));
       }
     }
-  }, [datosParaTabla]);
+  }, [datosParaTabla, currentHorario, idsCoincidentes, buscado, modoNavegacion, hayFuncionBusqueda]);
+  
 
   // nuevo efecto para manejar selección manual (click)
 useEffect(() => {
-  if (!procesado || !currentHorario) return;
+  if (hayFuncionBusqueda && !procesado || !currentHorario) return;
 
-  const { setIndiceGlobal } = useStockPorSeccion();
   
   // Cuando se selecciona manualmente, actualizar indiceGlobal
   const newIndex = datosParaTabla.findIndex(item => item.id === currentHorario.id);
   if (newIndex >= 0) {
-    setIndiceGlobal(newIndex);
+    if (setIndiceGlobal) {
+      setIndiceGlobal(newIndex);
+    }
   }
 }, [currentHorario, datosParaTabla, procesado]);
 
@@ -266,12 +285,12 @@ useEffect(() => {
             </Header>
             <Body>
               {status === 'pending' && (
-                <div className="absolute inset-0 flex justify-center items-center z-10">
-                  <div className="flex flex-col items-center">
+                <tr className="absolute inset-0 flex justify-center items-center z-10">
+                  <td className="flex flex-col items-center">
                     <ClipLoader color="#36d7b7" size={50} speedMultiplier={0.5} />
                     <p className="mt-2 text-gray-600">Cargando...</p>
-                  </div>
-                </div>
+                  </td>
+                </tr>
               )}
 
               {tableList.map((item, rowIndex) => (

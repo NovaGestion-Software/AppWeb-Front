@@ -41,6 +41,7 @@ export default function StockPorSeccionView() {
     setDepositosSeleccionados,
     setCheckboxSeleccionados,
     setStatus,
+    productos,
     status
   } = useStockPorSeccion();
 
@@ -103,14 +104,17 @@ export default function StockPorSeccionView() {
   // Si el filtro es de ordenamiento se hace sobre productos.
   // Si el filtro es talles o articulos se hace sobre Stock renderizado.
 
-  // La busqueda se esta activando porque esta encontrando coincidencias en una tabla que no tiene valores.
   // La busqueda tiene que ser sobre los elementos de la tabla, es decir Productos.
   return (
     <div className="w-full h-screen px-4 pt-0 overflow-hidden">
       <ViewTitle title={"Stock por Sección"} />
+
+ 
+      {/** HERRAMIENTAS DE LA VISTA */}
+      <div className="grid grid-cols-10 grid-rows-2 px-2">
       {/**BOTONES SHOW MODAL DEPOSITOS Y RUBROS - ORDENAR POR CHECKBOXS( CODIGO , MARCA Y DESCRIPCION )*/}
-      <div className="grid grid-cols-11 grid-rows-1 rounded py-2 px-8 h-11 items-center mt-1">
-        <div className="flex gap-6 items-center w-fit bg-white py-1 px-3 rounded-lg col-start-3 col-span-5 2xl:col-span-3 2xl:col-start-4 ">
+     
+      <div className="flex gap-6 items-center mt-3 mb-1 w-fit h-10 bg-white py- px-3 rounded-lg col-start-3 col-span-5 2xl:col-span-3 2xl:col-start-4 ">
           <ActionButton
             text="Depósitos"
             onClick={() => setShowDepositosModal(true)}
@@ -129,9 +133,10 @@ export default function StockPorSeccionView() {
           <OrdenarPorCheckbox />
         </div>
         {/** EXPORTORTAR A EXCEEL E IMPRIMIR. */}
-        <div className="p-1 rounded-lg col-span-2 col-start-8 2xl:col-span-2 2xl:col-start-7 2xl:left-10 2xl:relative 2xl:px-4">
+        <div className="p-1 my-2 rounded-lg col-span-2 
+        col-start-8 2xl:col-span-2 2xl:col-start-7 2xl:left-10 2xl:relative 2xl:px-4">
           <HerramientasComponent
-            data={stockRenderizado}
+            data={productos}
             isProcessing={!isProcessing}
             datosParaFooter={datosRubros}
             modalSucursales={false}
@@ -139,16 +144,10 @@ export default function StockPorSeccionView() {
 
           />
         </div>
-      </div>
-      {/** HERRAMIENTAS DE LA VISTA */}
-      <div className="grid grid-cols-10 grid-rows-2 space-x-4 px-2">
-        {/* *FOTO Y BOTONES
-        <div className="col-start-1 row-start-1 col-span-2 row-span-2 2xl:left-0 2xl:col-start-2 2xl:pl-10 ">
-          <VerFoto />
-        </div> */}
 
         {/**CON STOCK, TODOS, NEGATIVOS - CONTADO, LISTA 2, LISTA 3 */}
-        <div className="flex gap-2 items-center rounded-lg col-start-3 col-span-8 row-span-1  2xl:col-span- 2xl:col-start-4">
+        <div className="flex gap-2 my-2 items-center rounded-lg 
+        col-start-3 col-span-8 row-span-1  2xl:col-span- 2xl:col-start-4">
           {/**GRUPO 1 */}
           <div className="border p-1 bg-white rounded-lg">
             <FiltrarPorTipo />
@@ -164,7 +163,9 @@ export default function StockPorSeccionView() {
         </div>
 
         {/**INPUTS BUSCAR - BOTONES SHOW MODAL TEMPORADAS Y MARCAS */}
-        <div className="flex gap-3 items-center w-fit row-start-2 border px-1 rounded-lg bg-white col-start-3 col-span-7 2xl:col-span-5 2xl:px-4 2xl:col-start-4">
+        <div className="flex gap-3 my-2 items-center w-fit 
+        row-start-2 border px-1 rounded-lg bg-white col-start-3
+         col-span-7 2xl:col-span-5 2xl:px-4 2xl:col-start-4">
           <BusquedaStock />
           <ActionButton
             text="Marcas"

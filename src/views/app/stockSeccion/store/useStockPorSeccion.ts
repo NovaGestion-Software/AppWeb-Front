@@ -43,9 +43,10 @@ type StockPorSeccionProps = {
   setProductos: (data: ProductoAgrupado[]) => void;
 
   //BUSQUEDA TABLA STOCK
-  indiceSeleccionado: number;
+  // Indice seleccionado para la tabla stock
+  indiceSeleccionado: number | null;
   idsCoincidentes: (string | number)[];
-  setIndiceSeleccionado: (indice: number) => void;
+  setIndiceSeleccionado: (indice: number | null) => void;
   setIdsCoincidentes: (ids: (string | number)[]) => void;
 
   // RE ORDENAMIENTO DE STOCK
@@ -96,7 +97,7 @@ type StockPorSeccionProps = {
 export const useStockPorSeccion = create<StockPorSeccionProps>()(
   persist(
     (set) => ({
-      status: "idle",
+      status: "pending",
       footer: true,
       setFooter: (footer: boolean) => set({ footer }),
       datosRubros: [],
