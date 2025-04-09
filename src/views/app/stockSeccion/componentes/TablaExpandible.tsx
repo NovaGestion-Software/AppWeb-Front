@@ -69,48 +69,72 @@ export default function TablaExpandible<T extends TableNode>({
   const data: Data<TableNode> = { nodes: datosParaTabla };
   const select = useRowSelect(data, { onChange: onSelectChange });
   const elementosCoincidentes = localSelectedSubItems.filter((item) => subItemToFetch.includes(String(item)));
+// Efecto para manejar el scroll y resaltado durante la navegación
+useEffect(() => {
+  if (!buscado || modoNavegacion !== "busqueda" || !idsCoincidentes.length || indiceSeleccionado === null) {
+    return;
+  }
+  const targetRubroId = idsCoincidentes[indiceSeleccionado];
+  if (lastNavigatedId.current === targetRubroId) return;
 
-  // Efecto para manejar el scroll y resaltado durante la navegación
-  useEffect(() => {
-    if (!buscado || modoNavegacion !== "busqueda" || !idsCoincidentes.length || indiceSeleccionado < 0) return;
-    const targetRubroId = idsCoincidentes[indiceSeleccionado];
-    if (lastNavigatedId.current === targetRubroId) return;
-    const seccionContenedora = datosParaTabla.find((seccion) =>
-      seccion[subItemsProperty]?.some((rubro: any) => rubro[subItemKeyProperty] === targetRubroId)
-    );
+  // 1. Encontrar todos los items relevantes para la búsqueda actual
+  const seccionesRelevantes = datosParaTabla.filter(seccion => 
+    seccion[subItemsProperty]?.some((rubro: { [x: string]: string | number; }) => 
+      idsCoincidentes.includes(rubro[subItemKeyProperty])
+  ));
 
-    if (seccionContenedora) {
-      setExpandedIds([seccionContenedora.seccion]);
+  // 2. Cerrar items no relevantes y abrir solo los necesarios
+  setExpandedIds(prev => {
+    const nuevosIds = seccionesRelevantes.map(s => s.seccion);
+    return [...new Set([...prev.filter(id => 
+      seccionesRelevantes.some(s => s.seccion === id)), 
+      ...nuevosIds
+    ])];
+  });
 
-      // Intentar el scroll hasta 3 veces con retry
-      let intentos = 0;
-      const maxIntentos = 3;
-      const intervalId = setInterval(() => {
-        const element = document.querySelector(`[data-rubro-id="${targetRubroId}"]`);
-        intentos++;
+  // 3. Encontrar la sección contenedora del item actual
+  const seccionContenedora = seccionesRelevantes.find(seccion =>
+    seccion[subItemsProperty]?.some((rubro: { [x: string]: string | number; }) => rubro[subItemKeyProperty] === targetRubroId)
+  );
 
-        // Dentro del efecto de navegación:
-        if (element) {
-          clearInterval(intervalId);
+  if (!seccionContenedora) return;
 
-          // Scroll al elemento
-          element.scrollIntoView({ behavior: "smooth", block: "center" });
+  // 4. Scroll optimizado con doble fase
+  const scrollToElement = () => {
+    const targetElement = document.querySelector(`[data-rubro-id="${targetRubroId}"]`);
+    if (targetElement) {
+      // Fase 1: Scroll instantáneo
+      targetElement.scrollIntoView({ behavior: 'auto', block: 'nearest' });
+      
+      // Fase 2: Ajuste suave (opcional)
+      setTimeout(() => {
+        targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 50);
 
-          // Resaltado temporal
-          element.classList.add("bg-green-500");
-          setTimeout(() => {
-            element.classList.remove("bg-green-500");
-          }, 1000);
+      // Resaltado
+      targetElement.classList.add('bg-green-500', 'shadow-md', 'transition-all', 'duration-300');
+      setTimeout(() => {
+        targetElement.classList.remove('bg-green-500', 'shadow-md', 'transition-all', 'duration-300');
+      }, 1000);
 
-          lastNavigatedId.current = targetRubroId;
-        }
-      else if (intentos >= maxIntentos) {
-          clearInterval(intervalId);
-        }
-      }, 350); // Chequea cada 350ms (ajustable)
+      lastNavigatedId.current = targetRubroId;
     }
-  }, [indiceSeleccionado, buscado, modoNavegacion, idsCoincidentes, datosParaTabla]);
-  useEffect(() => {
+  };
+
+  // Intento inmediato
+  setTimeout(scrollToElement, 10);
+
+  // Intento de respaldo por si el elemento no está listo aún
+  const backupScroll = setTimeout(scrollToElement, 200);
+
+  return () => {
+    clearTimeout(backupScroll);
+  };
+
+}, [indiceSeleccionado, buscado, modoNavegacion, idsCoincidentes, datosParaTabla, subItemsProperty]);
+
+
+useEffect(() => {
     if (procesado && datosParaTabla.length > 0 && !currentHorario) {
       const firstItem = datosParaTabla[0];
       setCurrentHorario(firstItem);
@@ -209,6 +233,10 @@ export default function TablaExpandible<T extends TableNode>({
       return newSelectedSubItems;
     });
   };
+useEffect(() => { 
+  if(!buscado){
+    setExpandedIds([]);
+  } }, [buscado]);
 
   return (
     <div

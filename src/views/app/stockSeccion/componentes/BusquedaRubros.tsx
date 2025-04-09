@@ -13,15 +13,17 @@ export default function BusquedaRubros() {
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [textoBusqueda, setTextoBusqueda] = useState<string>("");
   const [isDisabled, setIsDisabled] = useState(true);
-// cuando borro la busqueda deja el primer item abierto y seleccionado el primer sub item.
 
+// La busqueda se realiza en el useEffect con el texto a medida que va escribiendo.
+// Cuando el usuario escribe en el input una busqueda que no va a tener coincidencia ya se le avisa con el boton
+// Al realizar la busqueda con el enter o el click lo que se activa es la navegacion
+  
 // en los estilos de la tabla puedo hacer que eliminamos el border derecho de la tabla pero a los ultimos elementos de las row le sumamos un borde black a la derecha.
-// a la tabla le falta paginacion.
+  // a la tabla le falta paginacion.
   const {
     idsCoincidentes,
     setBuscado,
     setIdsCoincidentes,
-    navegandoCoincidentes,
     setIndiceSeleccionado,
     setNavegandoCoincidentes,
     setModoNavegacion,
@@ -29,105 +31,96 @@ export default function BusquedaRubros() {
     indiceSeleccionado,
     buscado,
     setIndiceGlobal,
-    indiceGlobal,
     datosRubros,
   } = useStockPorSeccion();
 
+
+  // deshabilitar el boton de busqueda si no hay texto. ✓
   useEffect(() => {
     setIsDisabled(textoBusqueda.length === 0);
   }, [textoBusqueda]);
 
+  
+  //Busqueda de coincidencias en Rubros. ✓
   useEffect(() => {
-    if (textoBusqueda.length <= 0) {
-      setBuscado(false);
+    if (!datosRubros || datosRubros.length === 0 || !textoBusqueda.trim()) {
+      setIdsCoincidentes([]);
+      return;
     }
-  }, [idsCoincidentes]);
 
-  //Busqueda de coincidencias en Rubros
-  useEffect(() => {
-    if (!datosRubros || datosRubros.length === 0) return;
-    // 1. Filtramos las secciones y rubros que coincidan con la búsqueda
     const rubrosFiltrados = datosRubros.flatMap((seccion) =>
       seccion.rubros
-        .filter((rubro) => {
-          const matchesTexto = rubro.nrubro
-            .toLowerCase()
-            .includes(textoBusqueda.toLowerCase());
-          return matchesTexto;
-        })
-        .map((rubro) => ({
-          ...rubro,
-          parentId: seccion.seccion,
-        }))
+        .filter((rubro) =>
+          rubro.nrubro.toLowerCase().includes(textoBusqueda.toLowerCase())
+        )
+        .map((rubro) => ({ ...rubro, parentId: seccion.seccion }))
     );
 
-    // 2. Extraemos los códigos de los rubros coincidentes
-    const ids = rubrosFiltrados.map((rubro) => rubro.rubro);
+    const nuevosIds = rubrosFiltrados.map((rubro) => rubro.rubro);
+    setIdsCoincidentes(nuevosIds);
 
-    // 3. Actualizamos los IDs coincidentes
-    setIdsCoincidentes(ids);
-
-    // 4. Si estamos navegando entre coincidencias, seleccionamos el primer índice
-    if (navegandoCoincidentes && ids.length > 0) {
-      setIndiceSeleccionado(null);
-
-      // 5. Expandir automáticamente el item principal del primer subitem coincidente
+    // Solo si es una nueva búsqueda (no navegación)
+    if (
+      textoBusqueda !== buscadoTextoAnterior.current &&
+      nuevosIds.length > 0
+    ) {
+      setIndiceSeleccionado(0);
       const primerRubro = rubrosFiltrados[0];
       if (primerRubro) {
         setIndiceGlobal(
-          datosRubros.findIndex(
-            (seccion) => seccion.seccion === primerRubro.parentId
-          )
+          datosRubros.findIndex((s) => s.seccion === primerRubro.parentId)
         );
       }
     }
-  }, [textoBusqueda, datosRubros, navegandoCoincidentes]);
+  }, [textoBusqueda, datosRubros]);
 
-  const handleSiguienteClick = () => {
-    if (idsCoincidentes.length > 0) {
-      console.log("indce seleccionado", indiceSeleccionado);
-      const nuevoIndice = ((indiceSeleccionado ?? -1) + 1) % idsCoincidentes.length;
-      console.log(idsCoincidentes);
-      console.log(nuevoIndice);
-      setIndiceSeleccionado(nuevoIndice);
-    }
-  };
 
-  const handleSearch = () => {
-    if (textoBusqueda.trim()) {
-      setModoNavegacion("busqueda");
-      setNavegandoCoincidentes(true);
-      setBuscado(true);
-      buscadoTextoAnterior.current = textoBusqueda;
-      
-      if (idsCoincidentes.length > 0) {
-        setIndiceSeleccionado(0);
-        setUltimoIndiceBusqueda(0);
-      }
-    } else {
-      setBuscado(false);
-      setIdsCoincidentes([]);
-    }
-  };
-
-  const handleActionButtonClick = () => {
-    if (!buscado || textoBusqueda !== buscadoTextoAnterior.current) {
-      // Ejecutar búsqueda (como Enter)
-      handleSearch();
-    } else {
-      // Navegar al siguiente (como F4)
-      if (idsCoincidentes.length > 0) {
-        const nuevoIndice = ((indiceSeleccionado ?? -1) + 1) % idsCoincidentes.length;
-        setIndiceSeleccionado(nuevoIndice);
-        setUltimoIndiceBusqueda(nuevoIndice);
-      }
-    }
-  };
   const buscadoTextoAnterior = useRef<string>("");
 
+  const handleSearch = () => {
+    const textoLimpio = textoBusqueda.trim();
+    
+ 
+    // Caso 3: Nueva búsqueda
+    buscadoTextoAnterior.current = textoLimpio;
+    setBuscado(true);
+    setModoNavegacion("busqueda");
+    setNavegandoCoincidentes(true);
+    setShowHint(true);
+    
+    // Ocultar hint después de 3 segundos
+    setTimeout(() => setShowHint(false), 3000);
+  
+    // Si hay coincidencias, navegar al primer resultado
+    if (idsCoincidentes.length > 0) {
+      setIndiceSeleccionado(0);
+      setUltimoIndiceBusqueda(0);
+    }
+  };
+  // Aca la logica esta mal porque en el primero para mandar handle search pregunta si buscado es true y si texto busqueda es diferente al anterior
+  // y el segundo if maneja la navegacion en caso de que este abierto ya y apretando en siguiente con el boton
+  // por loi tanto pregunta si hay ids coincidentes y navega al siguiente.
+  // cuando deberia de ser uno preguntando si es la primera busqueda, es decir busqueda esta en falso y el texto de busqueda es diferente al anterior.
+  // y el otro deberia de ser si buscado ya es true y hay ids coincidentes navega al siguiente.
+  const handleActionButtonClick = () => {
+    // Si no hay búsqueda activa o el texto cambió => nueva búsqueda
+    if (!buscado || textoBusqueda.trim() !== buscadoTextoAnterior.current) {
+      handleSearch();
+    } 
+    // Si ya hay búsqueda activa => navegar al siguiente
+    else {
+      handleNextResult();
+    }
+  };
+  
+
   const handleNextResult = () => {
+    // Solo funciona si hay una búsqueda activa con resultados
     if (buscado && idsCoincidentes.length > 0) {
-      const nuevoIndice = ((indiceSeleccionado ?? -1) + 1) % idsCoincidentes.length;
+      const nuevoIndice = (indiceSeleccionado === null || indiceSeleccionado === idsCoincidentes.length - 1) 
+        ? 0 
+        : indiceSeleccionado + 1;
+      
       setIndiceSeleccionado(nuevoIndice);
       setUltimoIndiceBusqueda(nuevoIndice);
     }
@@ -135,64 +128,53 @@ export default function BusquedaRubros() {
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     switch (event.key) {
-      case 'Enter': {
+      case "Enter": {
         event.preventDefault();
-        
-        // Caso 1: Campo vacío → Limpiar búsqueda
-        if (!textoBusqueda.trim()) {
-          setBuscado(false);
-          setIdsCoincidentes([]);
-          return;
-        }
-  
-        // Caso 2: Nueva búsqueda o texto modificado → Ejecutar búsqueda
-        if (!buscado || textoBusqueda !== buscadoTextoAnterior.current) {
-          handleSearch();
-        }
+        handleSearch();
         break;
       }
-  
-      case 'F4': {
+
+      case "F4": {
         event.preventDefault();
-        
-        // Solo navegar si hay una búsqueda activa con resultados
-        if (buscado && idsCoincidentes.length > 0) {
-          handleNextResult();
-        }
+     handleNextResult();
         break;
       }
-  
-      case 'ArrowDown':
-      case 'ArrowUp': {
-        event.preventDefault();
-        const direction = event.key === 'ArrowDown' ? 1 : -1;
-  
-        // Navegación global en la tabla
-        const newIndex = Math.max(0, Math.min(datosRubros.length - 1, indiceGlobal + direction));
-        setIndiceGlobal(newIndex);
-        
-        setModoNavegacion('normal');
-        break;
-      }
-  
-      case 'Escape': {
+
+      // case "ArrowDown":
+      // case "ArrowUp": {
+      //   event.preventDefault();
+      //   const direction = event.key === "ArrowDown" ? 1 : -1;
+
+      //   // Navegación global en la tabla
+      //   const newIndex = Math.max(
+      //     0,
+      //     Math.min(datosRubros.length - 1, indiceGlobal + direction)
+      //   );
+      //   setIndiceGlobal(newIndex);
+
+      //   setModoNavegacion("normal");
+      //   break;
+      // }
+
+      case "Escape": {
         event.preventDefault();
         resetBusqueda();
         break;
       }
-  
+
       default:
         break;
     }
   };
-  
+
   // Función auxiliar para reset (usada en Escape)
   const resetBusqueda = () => {
-    setTextoBusqueda('');
-    buscadoTextoAnterior.current = '';
     setBuscado(false);
-    setModoNavegacion('normal');
+    setIdsCoincidentes([]);
+    setIndiceSeleccionado(null);
+    setModoNavegacion("normal");
     setNavegandoCoincidentes(false);
+    setUltimoIndiceBusqueda(null);
   };
 
   const handleClean = async () => {
@@ -211,9 +193,9 @@ export default function BusquedaRubros() {
       setIndiceSeleccionado(0);
       setIdsCoincidentes([]);
       setTextoBusqueda("");
+      
     }
   };
-
 
   const handleFocus = () => {
     setShowHint(true);
@@ -226,7 +208,6 @@ export default function BusquedaRubros() {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     setShowHint(false); // se oculta si pierde el foco antes
   };
-
 
   return (
     <div className="flex gap-4 items-center border py-1.5 px-2 rounded-lg bg-slate-50 border-gray-300">
@@ -247,7 +228,7 @@ export default function BusquedaRubros() {
         showHint={showHint}
         mensajeTooltip="Presiona Enter para buscar y F4 para navegar entre los resultados."
       />
- 
+
       <ActionButton
         icon={
           // Si hay texto de búsqueda (texto)

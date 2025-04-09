@@ -124,8 +124,8 @@ export default function ModalSucursales({ isProcessing }: ModalSucursalesProps) 
             title="Sucursales"
             onClose={handleCloseModal}
             onConfirm={handleConfirm}
-            disabled={isProcessing}
-            disabled2={isProcessing}
+            disabled={!isProcessing}
+            disabled2={!isProcessing}
             buttons={true}
           >
             {/* Contenido del Modal */}
@@ -190,6 +190,7 @@ export default function ModalSucursales({ isProcessing }: ModalSucursalesProps) 
                   color="blueSoft"
                   className="h-8 w-32 text-sm"
                   size="md"
+
                 />
               ))}
             </div>

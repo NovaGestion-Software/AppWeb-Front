@@ -128,7 +128,7 @@ export default function StockPorSeccionView() {
 
   // La busqueda tiene que ser sobre los elementos de la tabla, es decir Productos.
   return (
-    <div className="w-full h-full  ">
+    <div className="w-full h-lvh border border-red-950  ">
       <ViewTitle title={"Stock por Sección"} /> 
       {/** HERRAMIENTAS DE LA VISTA */}
       <div className="grid grid-cols-10 grid-rows-2 px-2 py-2">

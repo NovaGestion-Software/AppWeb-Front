@@ -434,6 +434,7 @@ export default function VentasHoraView() {
               data={dataParaTabla}
               isProcessing={isProcessing}
               datosParaFooter={datosParaFooter}
+              disabled={false}
             />
           </div>
         </div>

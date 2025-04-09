@@ -84,9 +84,9 @@ type StockPorSeccionProps = {
   navegandoCoincidentes: boolean;
   setNavegandoCoincidentes: (valor: boolean) => void;
   modoNavegacion: 'normal' | 'busqueda';
-  ultimoIndiceBusqueda: number;
+  ultimoIndiceBusqueda: number |  null;
   setModoNavegacion: (modo: 'normal' | 'busqueda') => void;
-  setUltimoIndiceBusqueda: (index: number) => void;
+  setUltimoIndiceBusqueda: (index: number | null) => void;
 
   indiceBusqueda: number;      // Índice para navegación en resultados (0 a idsCoincidentes.length - 1)
   indiceGlobal: number;        // Índice para navegación global (0 a productos.length - 1)

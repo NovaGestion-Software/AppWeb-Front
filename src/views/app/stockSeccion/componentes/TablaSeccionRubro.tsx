@@ -172,7 +172,6 @@ export default function TablaSeccionRubro({
   };
 
   return (
-
       <ModalInforme
         show={showRubrosModal}
         title="Secciones y Rubros"
@@ -181,8 +180,9 @@ export default function TablaSeccionRubro({
         buttons={true}
         disabled={isConfirmEnabled}
         disabled2={isCancelEnabled}
+        classModal='bottom-56 w-3/5 h-1/4 2xl:bottom-0 2xl:w-fit 2xl:h-fit'
       >
-       <div className='flex flex-col gap-8 w-fit p-2  overflow-hidden  h-auto  mx-auto'>
+       <div className='flex flex-col gap-8  2xl:w-fit  p-2  overflow-hidden  h-auto  mx-auto'>
        <BusquedaRubros />
         <TablaExpandible
           columnas={COLUMNS}
