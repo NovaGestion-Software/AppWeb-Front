@@ -10,12 +10,14 @@ interface InputFieldProps {
   required?: boolean;
   maxLength?: number;
   className?: string;
+  onBlur?: () => void;
+  onFocus?: () => void;
   onKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void; 
 }
 
 const InputField1 = React.forwardRef(
   (
-    { type, value, onChange, placeholder, disabled, required, maxLength, className = '',onKeyDown }: InputFieldProps,
+    { type, value, onChange, placeholder, disabled, required, maxLength, className = '',onKeyDown, onBlur, onFocus }: InputFieldProps,
     ref: ForwardedRef<HTMLInputElement>,
   ) => {
     const baseClasses = `px-2 py-1 focus:outline-none  transition border ${
@@ -35,6 +37,8 @@ const InputField1 = React.forwardRef(
         required={required}
         maxLength={type === 'text' ? maxLength : undefined}
         className={baseClasses}
+        onFocus={onFocus}
+        onBlur={onBlur}
         onKeyDown={onKeyDown}
       />
     );

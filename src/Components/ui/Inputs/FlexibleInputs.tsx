@@ -14,6 +14,9 @@ interface FlexibleInputFieldProps {
   placeholder?: string;
   disabled?: boolean;
   options?: { value: string; label: string }[]; // Para el select
+  onFocus?: () => void;
+  onBlur?: () => void;
+
 
   // Width control
   labelWidth?: string;
@@ -36,6 +39,11 @@ interface FlexibleInputFieldProps {
   id?: string;
   maxLength?: number;
    onKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void; 
+
+   //tooltip
+   showHint?: boolean;
+  setShowHint?: (show: boolean) => void;
+  mensajeTooltip?: string;
 }
 
 export default function FlexibleInputField({
@@ -46,6 +54,8 @@ export default function FlexibleInputField({
   placeholder,
   disabled = false,
   options = [],
+  onBlur,
+  onFocus,
 
   // Width control - defaults
   labelWidth = '120px',
@@ -62,6 +72,11 @@ export default function FlexibleInputField({
   labelClassName = '',
   inputClassName = '',
   containerClassName = '',
+
+  // Tooltip
+  showHint = false,
+  setShowHint = () => {},
+  mensajeTooltip = '',
 
   // Otros
   required = false,
@@ -195,6 +210,8 @@ export default function FlexibleInputField({
             maxLength={maxLength}
             className={`border rounded-lg ${baseInputClasses} ${inputWidth}`}
             onKeyDown={onKeyDown}
+            onFocus={onFocus}
+            onBlur={onBlur}
           />
         );
     }
@@ -205,6 +222,11 @@ export default function FlexibleInputField({
       className={`grid items-center gap-3 ${getGridColumns()} ${containerWidth} ${containerClassName}`}
       style={{ '--label-width': labelWidth } as React.CSSProperties}
     >
+      {showHint && (
+        <div className="absolute  mt-16 z-50 text-sm bg-black text-white p-1 rounded shadow">
+          {mensajeTooltip}
+        </div>
+      )}
       {label && (
         <label
           htmlFor={id}

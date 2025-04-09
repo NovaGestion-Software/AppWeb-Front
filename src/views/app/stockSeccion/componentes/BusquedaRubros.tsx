@@ -9,9 +9,10 @@ import { FiAlertTriangle } from "react-icons/fi";
 import { IoTrash } from "react-icons/io5";
 
 export default function BusquedaRubros() {
+  const [showHint, setShowHint] = useState(false);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [textoBusqueda, setTextoBusqueda] = useState<string>("");
   const [isDisabled, setIsDisabled] = useState(true);
-// el scroll sucede antes de que se habra el item en el la tabla por lo tanto queda fuera de lugar.
 // cuando borro la busqueda deja el primer item abierto y seleccionado el primer sub item.
 
 // en los estilos de la tabla puedo hacer que eliminamos el border derecho de la tabla pero a los ultimos elementos de las row le sumamos un borde black a la derecha.
@@ -93,71 +94,105 @@ export default function BusquedaRubros() {
   };
 
   const handleSearch = () => {
-    // console.log(buscado);
-    if (idsCoincidentes.length > 0) {
+    if (textoBusqueda.trim()) {
+      setModoNavegacion("busqueda");
+      setNavegandoCoincidentes(true);
       setBuscado(true);
+      buscadoTextoAnterior.current = textoBusqueda;
+      
+      if (idsCoincidentes.length > 0) {
+        setIndiceSeleccionado(0);
+        setUltimoIndiceBusqueda(0);
+      }
     } else {
       setBuscado(false);
+      setIdsCoincidentes([]);
     }
   };
 
-  const handleButton = () => {
-    if (buscado) {
-      setNavegandoCoincidentes(true); // Habilitar la navegación entre idsCoincidentes
-      handleSiguienteClick();
-    } else {
+  const handleActionButtonClick = () => {
+    if (!buscado || textoBusqueda !== buscadoTextoAnterior.current) {
+      // Ejecutar búsqueda (como Enter)
       handleSearch();
+    } else {
+      // Navegar al siguiente (como F4)
+      if (idsCoincidentes.length > 0) {
+        const nuevoIndice = ((indiceSeleccionado ?? -1) + 1) % idsCoincidentes.length;
+        setIndiceSeleccionado(nuevoIndice);
+        setUltimoIndiceBusqueda(nuevoIndice);
+      }
     }
   };
   const buscadoTextoAnterior = useRef<string>("");
-  // FUNCION PAR MANEJAR LA NAVEGACION DE LA TABLA POR LA BUSQUEDA, FLECHAS, ENTER Y ESCAPE.
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter") {
-      event.preventDefault();
-      if (!textoBusqueda.trim()) {
-        setBuscado(false);
-        setIdsCoincidentes([]);
-        return;
-      }
-      // Activar modo búsqueda
-      setModoNavegacion("busqueda");
-      setNavegandoCoincidentes(true);
 
-      if (!buscado || textoBusqueda !== buscadoTextoAnterior.current) {
-        // Primera búsqueda
-        setBuscado(true);
-        buscadoTextoAnterior.current = textoBusqueda;
-        if (idsCoincidentes.length > 0) {
-          setIndiceSeleccionado(0);
-          setUltimoIndiceBusqueda(0);
-        }
-      } else {
-        // Navegación entre resultados
-        if (idsCoincidentes.length > 0) {
-          const nuevoIndice = ((indiceSeleccionado ?? -1) + 1) % idsCoincidentes.length;
-          setIndiceSeleccionado(nuevoIndice);
-          setUltimoIndiceBusqueda(nuevoIndice);
-        }
-      }
-    } else if (["ArrowDown", "ArrowUp"].includes(event.key)) {
-      event.preventDefault();
-      const direction = event.key === "ArrowDown" ? 1 : -1;
-
-      // Navegación global
-      let newIndex = indiceGlobal + direction;
-      if (newIndex < 0) newIndex = datosRubros.length - 1;
-      if (newIndex >= datosRubros.length) newIndex = 0;
-
-      setIndiceGlobal(newIndex);
-      setModoNavegacion("normal");
-    } else if (event.key === "Escape") {
-      event.preventDefault();
-      setTextoBusqueda("");
-      buscadoTextoAnterior.current = "";
-      setBuscado(false);
-      setModoNavegacion("normal");
-      setNavegandoCoincidentes(false);
+  const handleNextResult = () => {
+    if (buscado && idsCoincidentes.length > 0) {
+      const nuevoIndice = ((indiceSeleccionado ?? -1) + 1) % idsCoincidentes.length;
+      setIndiceSeleccionado(nuevoIndice);
+      setUltimoIndiceBusqueda(nuevoIndice);
     }
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    switch (event.key) {
+      case 'Enter': {
+        event.preventDefault();
+        
+        // Caso 1: Campo vacío → Limpiar búsqueda
+        if (!textoBusqueda.trim()) {
+          setBuscado(false);
+          setIdsCoincidentes([]);
+          return;
+        }
+  
+        // Caso 2: Nueva búsqueda o texto modificado → Ejecutar búsqueda
+        if (!buscado || textoBusqueda !== buscadoTextoAnterior.current) {
+          handleSearch();
+        }
+        break;
+      }
+  
+      case 'F4': {
+        event.preventDefault();
+        
+        // Solo navegar si hay una búsqueda activa con resultados
+        if (buscado && idsCoincidentes.length > 0) {
+          handleNextResult();
+        }
+        break;
+      }
+  
+      case 'ArrowDown':
+      case 'ArrowUp': {
+        event.preventDefault();
+        const direction = event.key === 'ArrowDown' ? 1 : -1;
+  
+        // Navegación global en la tabla
+        const newIndex = Math.max(0, Math.min(datosRubros.length - 1, indiceGlobal + direction));
+        setIndiceGlobal(newIndex);
+        
+        setModoNavegacion('normal');
+        break;
+      }
+  
+      case 'Escape': {
+        event.preventDefault();
+        resetBusqueda();
+        break;
+      }
+  
+      default:
+        break;
+    }
+  };
+  
+  // Función auxiliar para reset (usada en Escape)
+  const resetBusqueda = () => {
+    setTextoBusqueda('');
+    buscadoTextoAnterior.current = '';
+    setBuscado(false);
+    setModoNavegacion('normal');
+    setNavegandoCoincidentes(false);
   };
 
   const handleClean = async () => {
@@ -179,8 +214,22 @@ export default function BusquedaRubros() {
     }
   };
 
+
+  const handleFocus = () => {
+    setShowHint(true);
+    timeoutRef.current = setTimeout(() => {
+      setShowHint(false);
+    }, 3000); // se oculta a los 3 segundos
+  };
+
+  const handleBlur = () => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    setShowHint(false); // se oculta si pierde el foco antes
+  };
+
+
   return (
-    <div className="flex gap-1 items-center border py-1.5 px-2 rounded-lg bg-slate-50  border-black">
+    <div className="flex gap-4 items-center border py-1.5 px-2 rounded-lg bg-slate-50 border-gray-300">
       <FlexibleInputField
         value={textoBusqueda || ""}
         placeholder="Descripción o Marca"
@@ -193,8 +242,12 @@ export default function BusquedaRubros() {
           }
         }}
         onKeyDown={handleKeyDown}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
+        showHint={showHint}
+        mensajeTooltip="Presiona Enter para buscar y F4 para navegar entre los resultados."
       />
-
+ 
       <ActionButton
         icon={
           // Si hay texto de búsqueda (texto)
@@ -215,7 +268,7 @@ export default function BusquedaRubros() {
         }
         color="blue"
         size="xs"
-        onClick={handleButton}
+        onClick={handleActionButtonClick}
         disabled={isDisabled}
       />
 

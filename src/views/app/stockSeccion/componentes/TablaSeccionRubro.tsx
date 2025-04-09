@@ -182,7 +182,7 @@ export default function TablaSeccionRubro({
         disabled={isConfirmEnabled}
         disabled2={isCancelEnabled}
       >
-       <div className='flex flex-col gap-3 w-fit p-2 h-[30rem] mx-auto'>
+       <div className='flex flex-col gap-8 w-fit p-2  overflow-hidden  h-auto  mx-auto'>
        <BusquedaRubros />
         <TablaExpandible
           columnas={COLUMNS}

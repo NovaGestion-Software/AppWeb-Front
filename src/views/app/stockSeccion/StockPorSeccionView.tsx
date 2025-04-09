@@ -128,12 +128,11 @@ export default function StockPorSeccionView() {
 
   // La busqueda tiene que ser sobre los elementos de la tabla, es decir Productos.
   return (
-    <div className="w-full h-screen px-4 pt-0 overflow-hidden">
+    <div className="w-full h-full  ">
       <ViewTitle title={"Stock por Sección"} /> 
       {/** HERRAMIENTAS DE LA VISTA */}
-      <div className="grid grid-cols-10 grid-rows-2 px-2">
+      <div className="grid grid-cols-10 grid-rows-2 px-2 py-2">
       {/**BOTONES SHOW MODAL DEPOSITOS Y RUBROS - ORDENAR POR CHECKBOXS( CODIGO , MARCA Y DESCRIPCION )*/}
-     
       <div className="flex gap-6 items-center mt-3 mb-1 w-fit h-10 bg-white py- px-3 rounded-lg col-start-3 col-span-5 2xl:col-span-3 2xl:col-start-4 ">
           <ActionButton
             text="Depósitos"
@@ -153,7 +152,7 @@ export default function StockPorSeccionView() {
           <OrdenarPorCheckbox />
         </div>
         {/** EXPORTORTAR A EXCEEL E IMPRIMIR. */}
-        <div className="p-1 my-2 rounded-lg col-span-2 
+        <div className="p-1 my-1 rounded-lg col-span-2 
         col-start-8 2xl:col-span-2 2xl:col-start-7 2xl:left-10 2xl:relative 2xl:px-4">
           <HerramientasComponent
             data={productos}
@@ -166,7 +165,7 @@ export default function StockPorSeccionView() {
         </div>
 
         {/**CON STOCK, TODOS, NEGATIVOS - CONTADO, LISTA 2, LISTA 3 */}
-        <div className="flex gap-2 my-2 items-center rounded-lg 
+        <div className="flex gap-2 my-1 items-center rounded-lg 
         col-start-3 col-span-8 row-span-1  2xl:col-span- 2xl:col-start-4">
           {/**GRUPO 1 */}
           <div className="border p-1 bg-white rounded-lg">
@@ -183,7 +182,7 @@ export default function StockPorSeccionView() {
         </div>
 
         {/**INPUTS BUSCAR - BOTONES SHOW MODAL TEMPORADAS Y MARCAS */}
-        <div className="flex gap-3 my-2 items-center w-fit 
+        <div className="flex gap-3 my-1 items-center w-fit 
         row-start-2 border px-1 rounded-lg bg-white col-start-3
          col-span-7 2xl:col-span-5 2xl:px-4 2xl:col-start-4">
           <BusquedaStock />
@@ -198,7 +197,7 @@ export default function StockPorSeccionView() {
       </div>
       {/**TABLA STOCK */}
       <div className="grid grid-cols-12 px-4 py-2">
-        <div className="flex items-center justify-center col-span-full">
+        <div className="flex items-center justify-center col-span-full p-2 pb-5">
           <TablaStock />
         </div>
       </div>

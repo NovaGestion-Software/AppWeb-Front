@@ -212,7 +212,7 @@ export default function TablaExpandible<T extends TableNode>({
 
   return (
     <div
-      className="p-2 w-fit rounded-xl bg-white overflow-auto border border-black mr-4"
+      className="p-2 w-fit  rounded-xl bg-white  border border-black mr-4"
       id="table-to-print"
       ref={tableRef}
       tabIndex={0}
