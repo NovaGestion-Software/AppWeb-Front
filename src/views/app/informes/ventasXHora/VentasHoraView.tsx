@@ -1,17 +1,29 @@
-import { useEffect, useState } from 'react';
-import { useMutation } from '@tanstack/react-query';
-import { useVentasHoraStore } from '@/store/useVentasHoraStore';
-import { obtenerVentasHora } from '@/services/ApiPhpService';
-import { ApiResponse, FechasRango, Sucursal, VentaPorHora } from '@/types';
-import { formatearNumero } from '@/utils';
-import ViewTitle from '@/Components/ui/Labels/ViewTitle';
-import FechasInforme from '../_components/FechasInforme';
-import HerramientasComponent from './components/HerramientasComponent';
-import TablaVentaPorHora from './components/TablaVentaPorHora';
-import showAlert from '@/utils/showAlert';
-import GraficoInforme from '../_components/GraficoInforme';
+import { useEffect, useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+import { useVentasHoraStore } from "@/store/useVentasHoraStore";
+import { obtenerVentasHora } from "@/services/ApiPhpService";
+import {
+  ApiResponse,
+  FechasRango,
+  MarcaModal,
+  Sucursal,
+  SucursalesModal,
+  VentaPorHora,
+} from "@/types";
+import { formatearNumero } from "@/utils";
+import ViewTitle from "@/Components/ui/Labels/ViewTitle";
+import FechasInforme from "../_components/FechasInforme";
+import HerramientasComponent from "./components/HerramientasComponent";
+import TablaVentaPorHora from "./components/TablaVentaPorHora";
+import showAlert from "@/utils/showAlert";
+import GraficoInforme from "../_components/GraficoInforme";
+import FiltroModal from "./../../../../../componentes-generales/Modales/FiltrosModal";
+import ActionButton from "../../../../../componentes-generales/Buttons/ActionButton";
 
-type DatosAgrupados = Record<string, { cantidad: number; importe: string; pares: number }>;
+type DatosAgrupados = Record<
+  string,
+  { cantidad: number; importe: string; pares: number }
+>;
 
 type Totales = {
   totalImporte: number;
@@ -31,6 +43,7 @@ export default function VentasHoraView() {
     sucursalesSeleccionadas,
     sucursalesDisponibles,
     ventasPorHora,
+
     setVentasPorHora,
     setSucursalesSeleccionadas,
     setSucursalesDisponibles,
@@ -43,19 +56,19 @@ export default function VentasHoraView() {
   const { mutate } = useMutation<ApiResponse, Error, FechasRango>({
     mutationFn: () => obtenerVentasHora(fechas),
     onMutate: () => {
-      setStatus('pending');
+      setStatus("pending");
     },
     onError: (error) => {
-      console.error('Error al obtener los datos:', error);
-      setStatus('error');
+      console.error("Error al obtener los datos:", error);
+      setStatus("error");
     },
     onSuccess: (data) => {
       // console.log(data.data);
       if (data.data.length === 0) {
         showAlert({
-          text: 'El rango de fecha seleccionado no contiene información',
-          icon: 'error',
-          cancelButtonText: 'Cerrar',
+          text: "El rango de fecha seleccionado no contiene información",
+          icon: "error",
+          cancelButtonText: "Cerrar",
           showCancelButton: true,
           timer: 2200,
         });
@@ -65,21 +78,25 @@ export default function VentasHoraView() {
       // setSucursalesSeleccionadas(data.data.map((sucursal) => sucursal.nsucursal));
       // setIsProcessing(true);
       // setFooter(true);
-      setStatus('success');
+      setStatus("success");
     },
     onSettled: () => {
-      setStatus('idle');
+      setStatus("idle");
     },
   });
 
   // SETEAR ESTADOS SI DATOS TIENE INFO.
   useEffect(() => {
     if (ventasPorHora?.length) {
-      setSucursalesDisponibles(ventasPorHora.map((sucursal) => sucursal.nsucursal));
+      setSucursalesDisponibles(
+        ventasPorHora.map((sucursal) => sucursal.nsucursal)
+      );
       setIsProcessing(true);
       setFooter(true);
       if (sucursalesSeleccionadas.length === 0) {
-        setSucursalesSeleccionadas(ventasPorHora.map((sucursal) => sucursal.nsucursal));
+        setSucursalesSeleccionadas(
+          ventasPorHora.map((sucursal) => sucursal.nsucursal)
+        );
       }
     }
   }, [ventasPorHora]);
@@ -107,17 +124,17 @@ export default function VentasHoraView() {
   // USAR ESCAPE PARA VACIAR INFORME
   useEffect(() => {
     const handleEscapeKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && ventasPorHora) {
+      if (e.key === "Escape" && ventasPorHora) {
         handleClearData();
       }
     };
 
     // Escuchar el evento de la tecla Escape
-    window.addEventListener('keydown', handleEscapeKey);
+    window.addEventListener("keydown", handleEscapeKey);
 
     // Limpiar el event listener cuando el componente se desmonte
     return () => {
-      window.removeEventListener('keydown', handleEscapeKey);
+      window.removeEventListener("keydown", handleEscapeKey);
     };
   }, [ventasPorHora]);
 
@@ -230,8 +247,14 @@ export default function VentasHoraView() {
   // const horarios = obtenerHorarios();
   // console.log(horarios);
 
-  const agruparPorHorario = (data: Sucursal[] | null, sucursalesSeleccionadas: string[] | null) => {
-    const resultado: Record<string, { importe: string; cantidad: number; pares: number }> = {};
+  const agruparPorHorario = (
+    data: Sucursal[] | null,
+    sucursalesSeleccionadas: string[] | null
+  ) => {
+    const resultado: Record<
+      string,
+      { importe: string; cantidad: number; pares: number }
+    > = {};
 
     const horarios = obtenerHorarios();
 
@@ -251,12 +274,14 @@ export default function VentasHoraView() {
 
     // 2️⃣ Inicializamos el resultado con todos los horarios posibles, incluso vacíos
     horarios.forEach((horario) => {
-      resultado[horario] = { importe: '0', cantidad: 0, pares: 0 }; // Aseguramos que todos los horarios tengan un valor inicial
+      resultado[horario] = { importe: "0", cantidad: 0, pares: 0 }; // Aseguramos que todos los horarios tengan un valor inicial
     });
 
     // 3️⃣ Procesamos las sucursales seleccionadas y agrupamos por horario
     data
-      ?.filter((sucursal) => sucursalesSeleccionadas.includes(sucursal.nsucursal))
+      ?.filter((sucursal) =>
+        sucursalesSeleccionadas.includes(sucursal.nsucursal)
+      )
       .forEach((sucursal) => {
         sucursal.info.forEach((intervalo) => {
           const horario = intervalo.horaini.trim(); // Aseguramos que el horario esté bien formateado
@@ -289,7 +314,9 @@ export default function VentasHoraView() {
 
     // **Formateamos los importes en el resultado antes de devolverlos**
     for (const horario in resultado) {
-      resultado[horario].importe = formatearNumero(parseFloat(resultado[horario].importe));
+      resultado[horario].importe = formatearNumero(
+        parseFloat(resultado[horario].importe)
+      );
     }
 
     return {
@@ -306,10 +333,12 @@ export default function VentasHoraView() {
     totalOperaciones,
     totalPares,
   }: { datosAgrupados: DatosAgrupados } & Totales) => {
-    const entries = Object.entries(datosAgrupados).sort((a, b) => a[0].localeCompare(b[0]));
+    const entries = Object.entries(datosAgrupados).sort((a, b) =>
+      a[0].localeCompare(b[0])
+    );
     // console.log(entries);
     return entries.map(([horario, datos], index) => {
-      const importeNumerico = parseFloat(datos.importe.replace(/\./g, ''));
+      const importeNumerico = parseFloat(datos.importe.replace(/\./g, ""));
 
       // console.log(`Importe: ${importeNumerico}`)
       // console.log(horario);
@@ -318,21 +347,24 @@ export default function VentasHoraView() {
         hora: horario,
         nOperaciones: datos.cantidad,
         porcentajeOperaciones:
-          totalOperaciones > 0 ? ((datos.cantidad / totalOperaciones) * 100).toFixed(2) : 0,
+          totalOperaciones > 0
+            ? ((datos.cantidad / totalOperaciones) * 100).toFixed(2)
+            : 0,
         importe: datos.importe,
         porcentajeImporte:
-          totalImporte > 0 ? ((importeNumerico / totalImporte) * 100).toFixed(2) : 0,
+          totalImporte > 0
+            ? ((importeNumerico / totalImporte) * 100).toFixed(2)
+            : 0,
         pares: datos.pares,
-        porcentajePares: totalPares > 0 ? ((datos.pares / totalPares) * 100).toFixed(2) : 0,
+        porcentajePares:
+          totalPares > 0 ? ((datos.pares / totalPares) * 100).toFixed(2) : 0,
       };
     });
   };
 
   // IMPLEMENTACION DE FUNCIONES
-  const { datosAgrupados, totalImporte, totalOperaciones, totalPares } = agruparPorHorario(
-    ventasPorHora,
-    sucursalesSeleccionadas
-  );
+  const { datosAgrupados, totalImporte, totalOperaciones, totalPares } =
+    agruparPorHorario(ventasPorHora, sucursalesSeleccionadas);
 
   // console.log(datosAgrupados);
   const dataParaTabla = crearDataParaTabla({
@@ -347,12 +379,12 @@ export default function VentasHoraView() {
     key: keyof VentaPorHora
   ): { maxValue: number; hora: string | null } => {
     let maxValue = -Infinity;
-    let hora = '';
+    let hora = "";
 
     datos.forEach((currentItem) => {
       const currentValue =
-        typeof currentItem[key] === 'string'
-          ? parseFloat(currentItem[key].replace(/\./g, '').replace(',', '.'))
+        typeof currentItem[key] === "string"
+          ? parseFloat(currentItem[key].replace(/\./g, "").replace(",", "."))
           : currentItem[key];
       if (currentValue > maxValue) {
         maxValue = currentValue;
@@ -363,7 +395,7 @@ export default function VentasHoraView() {
     return { maxValue, hora };
   };
 
-  const maxImporteValor = findMaxValueAndHourByKey(dataParaTabla, 'importe');
+  const maxImporteValor = findMaxValueAndHourByKey(dataParaTabla, "importe");
   const maxImporteFormateado = formatearNumero(maxImporteValor.maxValue);
 
   // formateo con miles y centavos
@@ -371,28 +403,28 @@ export default function VentasHoraView() {
 
   // FOOTER TABLA 1
   const datosParaFooter = {
-    id: '',
-    hora: '',
+    id: "",
+    hora: "",
     totalOperaciones: totalOperaciones,
-    porcentajeOperaciones: '',
+    porcentajeOperaciones: "",
     totalPares: totalPares,
-    porcentajePares: '',
+    porcentajePares: "",
     totalImporte: totalImporteFormateado,
-    porcentajeImporte: '',
+    porcentajeImporte: "",
   };
 
   // HANDLE FETCH
   const handleFetchData = async () => {
     try {
       if (!fechas.from || !fechas.to) {
-        console.log(fechas, 'fechas');
-        console.log('Rango de fechas inválido');
+        console.log(fechas, "fechas");
+        console.log("Rango de fechas inválido");
         return;
       }
       mutate(fechas);
     } catch (error) {
-      console.error('Error en la petición:', error);
-      alert('Error al obtener los datos');
+      console.error("Error en la petición:", error);
+      alert("Error al obtener los datos");
       setFoco(true);
     }
   };
@@ -408,10 +440,14 @@ export default function VentasHoraView() {
   };
 
   // console.log(dataParaTabla);
+  const [showModalSucursales, setShowModalSucursales] = useState(false);
+  const renderSucursalesItem = (item: string) => {
+    return <>{item}</>;
+  };
 
   return (
     <div className="h-screen ">
-      <ViewTitle title={'Ventas por Hora'} />
+      <ViewTitle title={"Ventas por Hora"} />
 
       <div className="flex flex-col h-fit mx-4">
         {/** BOTONERA */}
@@ -423,18 +459,54 @@ export default function VentasHoraView() {
               onFetchData={handleFetchData}
               onClearData={handleClearData}
               isProcessing={isProcessing}
-              buttonText={{ fetch: 'Procesar', clear: 'Borrar' }}
+              buttonText={{ fetch: "Procesar", clear: "Borrar" }}
               whitButttons={true}
             />
           </div>
 
           {/**modales y funcionabilidades */}
-          <div className="col-span-4 col-start-8 2xl:col-span-3 2xl:col-start-8">
+          <div className="flex gap-1 items-center justify-center bg-white rounded-lg col-span-3 col-start-8
+           2xl:col-span-2 2xl:col-start-8">
+            <ActionButton
+              text="Rubros"
+              onClick={() => setShowModalSucursales(true)}
+              disabled={false}
+              color="blue"
+              size="xs"
+            />{" "}
             <HerramientasComponent
               data={dataParaTabla}
               isProcessing={isProcessing}
               datosParaFooter={datosParaFooter}
               disabled={false}
+              modalSucursales={false}
+            />
+            {/* <FiltroModal<DepositoModal>
+                    title="Depósitos"
+                    showModal={showDepositosModal}
+                    setShowModal={setShowDepositosModal}
+                    datos={depositosDisponibles} 
+                    itemsDisponibles={depositosDisponibles}
+                    itemsSeleccionados={depositosSeleccionados}
+                    setItemsDisponibles={setDepositosDisponibles}
+                    setItemsSeleccionados={setDepositosSeleccionados}
+                    renderItem={renderDepositoItem}
+                    disabled={status === "idle"}
+                    disabled2={status === "idle"}
+                    
+                  /> */}
+            <FiltroModal
+              title="Sucursales"
+              renderItem={renderSucursalesItem}
+              showModal={showModalSucursales}
+              setShowModal={setShowModalSucursales}
+              datos={sucursalesDisponibles}
+              disabled2={false}
+              disabled={false}
+              itemsDisponibles={sucursalesDisponibles}
+              itemsSeleccionados={sucursalesSeleccionadas}
+              setItemsDisponibles={setSucursalesDisponibles}
+              setItemsSeleccionados={setSucursalesSeleccionadas}
             />
           </div>
         </div>
@@ -446,7 +518,9 @@ export default function VentasHoraView() {
               <div className="col-start-1 col-span-5 row-start-1 w-fit h-fit py-2 px-4 bg-white rounded-lg font-semibold shadow-md space-y-2">
                 <ul
                   className={`grid gap-x-4 ${
-                    sucursalesDisponibles.length > 3 ? 'grid-cols-3' : 'grid-cols-1' // Si hay más de 3 sucursales, divide en 3 columnas
+                    sucursalesDisponibles.length > 3
+                      ? "grid-cols-3"
+                      : "grid-cols-1" // Si hay más de 3 sucursales, divide en 3 columnas
                   } grid-rows-auto list-disc list-inside text-xs 2xl:text-base 2xl:p-2`}
                 >
                   {sucursalesDisponibles.map((sucursal, index) => (
@@ -454,8 +528,8 @@ export default function VentasHoraView() {
                       key={index}
                       className={`${
                         sucursalesSeleccionadas.includes(sucursal)
-                          ? 'text-green-600' // Estilo para sucursales seleccionadas
-                          : 'text-gray-400 line-through' // Estilo para sucursales no seleccionadas
+                          ? "text-green-600" // Estilo para sucursales seleccionadas
+                          : "text-gray-400 line-through" // Estilo para sucursales no seleccionadas
                       }`}
                     >
                       {sucursal}
@@ -467,12 +541,18 @@ export default function VentasHoraView() {
               {/* Información de ventas */}
               <div className="flex flex-col w-fit 2xl:w-[25rem] 2xl:text-lg bg-white rounded-lg py-1 px-3">
                 <div className="flex gap-4">
-                  <p className="text-blue-500 font-semibold">Mayores Ventas: </p>
-                  <span className="text-green-600 font-bold ">{maxImporteValor.hora}</span>
+                  <p className="text-blue-500 font-semibold">
+                    Mayores Ventas:{" "}
+                  </p>
+                  <span className="text-green-600 font-bold ">
+                    {maxImporteValor.hora}
+                  </span>
                 </div>
                 <div className="flex gap-5">
                   <p className="text-blue-500 font-semibold">Mayor Importe: </p>
-                  <p className=" text-green-600 font-bold ">{'$' + maxImporteFormateado}</p>
+                  <p className=" text-green-600 font-bold ">
+                    {"$" + maxImporteFormateado}
+                  </p>
                 </div>
               </div>
 
@@ -486,8 +566,8 @@ export default function VentasHoraView() {
           <div
             className={`flex h-fit w-fit ml-5 transition-all duration-500 ease-out ${
               isProcessing
-                ? 'col-start-6 2xl:col-start-7 transform'
-                : ' col-start-3 2xl:col-start-4 transform translate-x-0'
+                ? "col-start-6 2xl:col-start-7 transform"
+                : " col-start-3 2xl:col-start-4 transform translate-x-0"
             }`}
           >
             <TablaVentaPorHora

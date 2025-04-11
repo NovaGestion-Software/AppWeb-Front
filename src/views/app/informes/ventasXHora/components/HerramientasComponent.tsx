@@ -86,7 +86,7 @@ export default function HerramientasComponent({
         disabled1={disabled}
         disabled2={disabled}
         
-      >
+        >
         {modalSucursales && <ModalSucursales isProcessing={isProcessing} />}
       </HerramientasInforme>
     </>

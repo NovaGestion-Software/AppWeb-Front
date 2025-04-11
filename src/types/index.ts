@@ -161,6 +161,10 @@ export interface MarcaModal {
   marca: string;
   nmarca: string;
 }
+export interface SucursalesModal {
+  marsucursal: string;
+  nsucursal: string;
+}
 
 export interface Producto {
   codigo: string;
