@@ -1,0 +1,3 @@
+[submodule "src/frontend-resourses"]
+	path = src/frontend-resourses
+	url = https://github.com/NovaGestionSoftware/frontend-resourses.git
