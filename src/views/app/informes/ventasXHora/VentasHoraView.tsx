@@ -5,9 +5,7 @@ import { obtenerVentasHora } from "@/services/ApiPhpService";
 import {
   ApiResponse,
   FechasRango,
-  MarcaModal,
   Sucursal,
-  SucursalesModal,
   VentaPorHora,
 } from "@/types";
 import { formatearNumero } from "@/utils";
@@ -17,8 +15,8 @@ import HerramientasComponent from "./components/HerramientasComponent";
 import TablaVentaPorHora from "./components/TablaVentaPorHora";
 import showAlert from "@/utils/showAlert";
 import GraficoInforme from "../_components/GraficoInforme";
-import FiltroModal from "./../../../../../componentes-generales/Modales/FiltrosModal";
-import ActionButton from "../../../../../componentes-generales/Buttons/ActionButton";
+import FiltroModal from "@componentes-generales/Modales/FiltrosModal";
+import ActionButton from "@componentes-generales/Buttons/ActionButton";
 
 type DatosAgrupados = Record<
   string,
@@ -468,7 +466,7 @@ export default function VentasHoraView() {
           <div className="flex gap-1 items-center justify-center bg-white rounded-lg col-span-3 col-start-8
            2xl:col-span-2 2xl:col-start-8">
             <ActionButton
-              text="Rubros"
+              text="Sucursales"
               onClick={() => setShowModalSucursales(true)}
               disabled={false}
               color="blue"
