@@ -2,6 +2,7 @@ import { CSSProperties, useEffect } from 'react';
 import { useVentasHoraStore } from '@/store/useVentasHoraStore';
 import { VentaPorHora } from '@/types';
 import TablaInforme from '../../_components/TablaInforme';
+import { TableUtils } from '@/frontend-resourses/components/Tables/TableUtils';
 
 // Definicion de estructura de columnas
 interface TableColumn<T> {
@@ -31,9 +32,17 @@ export default function TablaVentaPorHora({
   //   ?.empresa.toString()
   //   .slice(-2);
   // console.log(empresa);
-  const customTheme = {
+  const customThemeq  = {
     Table: `
-      grid-template-columns: minmax(0px, 0px) minmax(90px, 90px) minmax(100px, 100px) minmax(80px, 80px) minmax(80px, 80px) minmax(80px, 80px) minmax(50px, 180px) minmax(50px, 80px);
+      grid-template-columns:
+       minmax(0px, 0px)
+        minmax(90px, 90px)
+        minmax(100px, 100px)
+         minmax(80px, 80px)
+         minmax(80px, 80px)
+          minmax(80px, 80px) 
+          minmax(50px, 180px)
+           minmax(50px, 80px);
       border-radius: 12px;
       width: 680px;
       height: 600px;
@@ -133,9 +142,32 @@ export default function TablaVentaPorHora({
       }
     `,
   };
+    type ExtendedColumn<T> = {
+      key: keyof T;
+      label: string;
+      minWidth?: string | number;
+      maxWidth?: string | number;
+      renderCell?: (item: T) => React.ReactNode;
+    };
+  type ProductosCType = {
+    id: number;
+    codigo: string;
+    talle: string;
+    descripcion: string;
+    marca: string;
+    nmarca: string;
+    precios: {
+      contado: string;
+      lista2: string;
+      lista3: string;
+    };
+    precio: string;
+    stockPorDeposito: { [deposito: string]: string };
+    total: string;
+  };
 
   // COLUMNAS DE TABLA
-  const COLUMNS: TableColumn<VentaPorHora>[] = [
+  const COLUMNSQ: TableColumn<VentaPorHora>[] = [
     {
       label: '',
       renderCell: (item: VentaPorHora) => item.id,
@@ -175,6 +207,39 @@ export default function TablaVentaPorHora({
       cellProps: (item: VentaPorHora) => getCellProps(item, 'porcentajeImporte'),
     },
   ];
+
+    const columnasGrid = `
+        minmax(90px, 120px)
+        minmax(100px, 100px)
+         minmax(80px, 80px)
+         minmax(80px, 80px)
+          minmax(80px, 80px) 
+          minmax(50px, 180px)
+           minmax(50px, 80px);
+  `;
+  
+    const customTheme = TableUtils.generateTableTheme({
+      columns: columnasGrid,
+      width: "680px",
+      withFooter: false,
+      maxHeight: "600px",
+    });
+    const productosColumns: Array<ExtendedColumn> = [
+      { key: "hora", label: "Hora", },
+      { key: "nOperaciones", label: "N. Opera",},
+      { key: 'porcentajeOperaciones', label: "%"},
+      { key: 'pares', label: "Pares"},
+      { key: 'porcentajePares', label: "%"},
+      { key: 'importe', label: "Importes $"},
+      { key: 'porcentajeImporte', label: "%"},
+    ];
+  
+    const COLUMNS = TableUtils.generateTableColumns<ProductosCType>(
+      productosColumns.map((column) => ({
+        ...column
+      }))
+    );
+  
 
   const findMaxByKey = (array: VentaPorHora[], key: keyof VentaPorHora) => {
     if (!array || array.length === 0) return null;

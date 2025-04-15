@@ -9,7 +9,7 @@ import OrdenarPorCheckbox from "./componentes/OrdernarPorCheckbox";
 import FiltroPorStock from "./componentes/FiltroPorStock";
 import FiltrarPorTipo from "./componentes/FiltrarPorTipo";
 import FiltrarSegunLista from "./componentes/FiltrarSegunLista";
-import FiltroModal from "@/layouts/FiltrosModal";
+import FiltroModal from "@/frontend-resourses/components/Modales/FiltrosModal";
 import BusquedaStock from "./componentes/BusquedaStock";
 import TablaSeccionRubro from "./componentes/TablaSeccionRubro";
 import TablaStock from "./componentes/TablaStock";
@@ -133,7 +133,7 @@ export default function StockPorSeccionView() {
       {/** HERRAMIENTAS DE LA VISTA */}
       <div className="grid grid-cols-10 grid-rows-2 px-2 py-2">
       {/**BOTONES SHOW MODAL DEPOSITOS Y RUBROS - ORDENAR POR CHECKBOXS( CODIGO , MARCA Y DESCRIPCION )*/}
-      <div className="flex gap-6 items-center mt-3 mb-1 w-fit h-10 bg-white py- px-3 rounded-lg col-start-3 col-span-5 2xl:col-span-3 2xl:col-start-4 ">
+      <div className="flex gap-6 items-center mt-3 mb-1 w-fit h-10 bg-white px-3 rounded-lg col-start-3 col-span-5 2xl:col-span-3 2xl:col-start-4 ">
           <ActionButton
             text="Depósitos"
             onClick={() => setShowDepositosModal(true)}
@@ -152,7 +152,7 @@ export default function StockPorSeccionView() {
           <OrdenarPorCheckbox />
         </div>
         {/** EXPORTORTAR A EXCEEL E IMPRIMIR. */}
-        <div className="p-1 my-1 rounded-lg col-span-2 
+        <div className=" mt-3 mb-1 rounded-lg col-span-2  w-fit h-10 items-center  bg-white
         col-start-8 2xl:col-span-2 2xl:col-start-7 2xl:left-10 2xl:relative 2xl:px-4">
           <HerramientasComponent
             data={productos}
@@ -196,8 +196,8 @@ export default function StockPorSeccionView() {
         </div>
       </div>
       {/**TABLA STOCK */}
-      <div className="grid grid-cols-12 px-4 py-2">
-        <div className="flex items-center justify-center col-span-full p-2 pb-5">
+      <div className="grid grid-cols-12  px-4 py-2">
+        <div className="flex items-center justify-center col-span-full">
           <TablaStock />
         </div>
       </div>

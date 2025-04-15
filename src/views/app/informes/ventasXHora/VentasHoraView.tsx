@@ -15,8 +15,8 @@ import HerramientasComponent from "./components/HerramientasComponent";
 import TablaVentaPorHora from "./components/TablaVentaPorHora";
 import showAlert from "@/utils/showAlert";
 import GraficoInforme from "../_components/GraficoInforme";
-import FiltroModal from "@componentes-generales/Modales/FiltrosModal";
-import ActionButton from "@componentes-generales/Buttons/ActionButton";
+import FiltroModal from "@/frontend-resourses/components/Modales/FiltrosModal";
+import ActionButton from "@/frontend-resourses/components/Buttons/ActionButton";
 
 type DatosAgrupados = Record<
   string,
@@ -30,8 +30,6 @@ type Totales = {
 };
 
 export default function VentasHoraView() {
-  // const [sucursalesSeleccionadas, setSucursalesSeleccionadas] = useState<string[]>([]);
-  // const [sucursalesDisponibles, setSucursalesDisponibles] = useState<string[]>([]);
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const [footer, setFooter] = useState<boolean>(false);
   const [foco, setFoco] = useState<boolean>(false);
@@ -41,7 +39,6 @@ export default function VentasHoraView() {
     sucursalesSeleccionadas,
     sucursalesDisponibles,
     ventasPorHora,
-
     setVentasPorHora,
     setSucursalesSeleccionadas,
     setSucursalesDisponibles,
@@ -463,14 +460,14 @@ export default function VentasHoraView() {
           </div>
 
           {/**modales y funcionabilidades */}
-          <div className="flex gap-1 items-center justify-center bg-white rounded-lg col-span-3 col-start-8
+          <div className="flex gap-1 items-center justify-center h-10 bg-white rounded-lg col-span-3 col-start-8
            2xl:col-span-2 2xl:col-start-8">
             <ActionButton
               text="Sucursales"
               onClick={() => setShowModalSucursales(true)}
               disabled={false}
               color="blue"
-              size="xs"
+              size='xs'
             />{" "}
             <HerramientasComponent
               data={dataParaTabla}
