@@ -485,7 +485,8 @@ export default function TablaStock() {
         modoNavegacion={modoNavegacion}
         setUltimoIndiceBusqueda={setUltimoIndiceBusqueda}
         indiceGlobal={indiceGlobal}
-        productosColumns={productosColumns}
+        objetcColumns={productosColumns}
+        footerWidth="w-[55rem]"
         columnasGrid={columnasGrid}
 />
   

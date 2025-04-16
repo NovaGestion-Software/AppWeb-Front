@@ -1,8 +1,8 @@
-import { CSSProperties, useEffect } from 'react';
-import { useVentasHoraStore } from '@/store/useVentasHoraStore';
-import { VentaPorHora } from '@/types';
-import TablaInforme from '../../_components/TablaInforme';
-import { TableUtils } from '@/frontend-resourses/components/Tables/TableUtils';
+import { CSSProperties, useEffect, useMemo } from "react";
+import { useVentasHoraStore } from "@/store/useVentasHoraStore";
+import { VentaPorHora } from "@/types";
+import TablaInforme from "@/frontend-resourses/components/Tables/TablaInforme";
+import { TableUtils } from "@/frontend-resourses/components/Tables/TableUtils";
 
 // Definicion de estructura de columnas
 interface TableColumn<T> {
@@ -32,7 +32,8 @@ export default function TablaVentaPorHora({
   //   ?.empresa.toString()
   //   .slice(-2);
   // console.log(empresa);
-  const customThemeq  = {
+
+  const customThemeq = {
     Table: `
       grid-template-columns:
        minmax(0px, 0px)
@@ -142,131 +143,126 @@ export default function TablaVentaPorHora({
       }
     `,
   };
-    type ExtendedColumn<T> = {
-      key: keyof T;
-      label: string;
-      minWidth?: string | number;
-      maxWidth?: string | number;
-      renderCell?: (item: T) => React.ReactNode;
-    };
-  type ProductosCType = {
-    id: number;
-    codigo: string;
-    talle: string;
-    descripcion: string;
-    marca: string;
-    nmarca: string;
-    precios: {
-      contado: string;
-      lista2: string;
-      lista3: string;
-    };
-    precio: string;
-    stockPorDeposito: { [deposito: string]: string };
-    total: string;
+  type ExtendedColumn<T = any> = {
+    key: keyof T;
+    label?: string;
+    renderCell?: (item: T) => React.ReactNode;
+    cellProps?: (item: T) => React.HTMLAttributes<HTMLElement>;
+    withCellProps?: boolean; // 👈 nueva prop opcional
+  };
+
+  type VentaXHoraCType = {
+    id: number; // Added 'id' property to match VentaPorHora
+    hora: string;
+    nOperaciones: number;
+    porcentajeOperaciones: number;
+    pares: number;
+    porcentajePares: number;
+    importe: string; // Changed to match VentaPorHora
+    porcentajeImporte: number;
   };
 
   // COLUMNAS DE TABLA
   const COLUMNSQ: TableColumn<VentaPorHora>[] = [
     {
-      label: '',
+      label: "",
       renderCell: (item: VentaPorHora) => item.id,
     },
     {
-      label: 'Hora',
+      label: "Hora",
       renderCell: (item: VentaPorHora) => item.hora,
     },
     {
-      label: 'N. Opera',
+      label: "N. Opera",
       renderCell: (item: VentaPorHora) => item.nOperaciones,
-      cellProps: (item: VentaPorHora) => getCellProps(item, 'nOperaciones'),
+      cellProps: (item: VentaPorHora) => getCellProps(item, "nOperaciones"),
     },
     {
-      label: '%',
+      label: "%",
       renderCell: (item: VentaPorHora) => item.porcentajeOperaciones,
-      cellProps: (item: VentaPorHora) => getCellProps(item, 'porcentajeOperaciones'),
+      cellProps: (item: VentaPorHora) =>
+        getCellProps(item, "porcentajeOperaciones"),
     },
     {
-      label: 'Pares',
+      label: "Pares",
       renderCell: (item: VentaPorHora) => item.pares,
-      cellProps: (item: VentaPorHora) => getCellProps(item, 'pares'),
+      cellProps: (item: VentaPorHora) => getCellProps(item, "pares"),
     },
     {
-      label: '%',
+      label: "%",
       renderCell: (item: VentaPorHora) => item.porcentajePares,
-      cellProps: (item: VentaPorHora) => getCellProps(item, 'porcentajePares'),
+      cellProps: (item: VentaPorHora) => getCellProps(item, "porcentajePares"),
     },
     {
-      label: 'Importes $',
+      label: "Importes $",
       renderCell: (item: VentaPorHora) => item.importe,
-      cellProps: (item: VentaPorHora) => getCellProps(item, 'importe'),
+      cellProps: (item: VentaPorHora) => getCellProps(item, "importe"),
     },
     {
-      label: '%',
+      label: "%",
       renderCell: (item: VentaPorHora) => item.porcentajeImporte,
-      cellProps: (item: VentaPorHora) => getCellProps(item, 'porcentajeImporte'),
+      cellProps: (item: VentaPorHora) =>
+        getCellProps(item, "porcentajeImporte"),
     },
   ];
 
-    const columnasGrid = `
-        minmax(90px, 120px)
-        minmax(100px, 100px)
-         minmax(80px, 80px)
-         minmax(80px, 80px)
-          minmax(80px, 80px) 
-          minmax(50px, 180px)
-           minmax(50px, 80px);
-  `;
-  
-    const customTheme = TableUtils.generateTableTheme({
-      columns: columnasGrid,
-      width: "680px",
-      withFooter: false,
-      maxHeight: "600px",
-    });
-    const productosColumns: Array<ExtendedColumn> = [
-      { key: "hora", label: "Hora", },
-      { key: "nOperaciones", label: "N. Opera",},
-      { key: 'porcentajeOperaciones', label: "%"},
-      { key: 'pares', label: "Pares"},
-      { key: 'porcentajePares', label: "%"},
-      { key: 'importe', label: "Importes $"},
-      { key: 'porcentajeImporte', label: "%"},
-    ];
-  
-    const COLUMNS = TableUtils.generateTableColumns<ProductosCType>(
-      productosColumns.map((column) => ({
-        ...column
-      }))
-    );
-  
+  const columnasGrid = "minmax(90px, 120px) minmax(100px, 100px) minmax(80px, 80px) minmax(80px, 80px) minmax(80px, 80px) minmax(50px, 180px) minmax(50px, 80px)";
+ 
+  const customTheme = TableUtils.generateTableTheme({
+    columns: columnasGrid,
+    width: "680px",
+    withFooter: false,
+    maxHeight: "600px",
+  });
+
+  const VentaXHoraColumns: Array<ExtendedColumn<VentaXHoraCType>> = [
+    { key: "hora", label: "Hora" },
+    { key: "nOperaciones", label: "N. Opera", withCellProps: true },
+    { key: "porcentajeOperaciones", label: "%", withCellProps: true },
+    { key: "pares", label: "Pares", withCellProps: true },
+    { key: "porcentajePares", label: "%", withCellProps: true },
+    { key: "importe", label: "Importes $", withCellProps: true },
+    { key: "porcentajeImporte", label: "%", withCellProps: true },
+  ];
+
+  const COLUMNS = TableUtils.generateTableColumns<VentaXHoraCType>(
+    VentaXHoraColumns.map((column) => ({
+      ...column,
+      cellProps: column.withCellProps
+        ? (item) => getCellProps(item, column.key as string)
+        : undefined,
+    }))
+  );
 
   const findMaxByKey = (array: VentaPorHora[], key: keyof VentaPorHora) => {
     if (!array || array.length === 0) return null;
 
     return array.reduce((maxItem, currentItem) => {
       const currentValue =
-        typeof currentItem[key] === 'string'
-          ? parseFloat(currentItem[key].replace(/\./g, ''))
+        typeof currentItem[key] === "string"
+          ? parseFloat(currentItem[key].replace(/\./g, ""))
           : currentItem[key];
 
       const maxValue =
-        typeof maxItem[key] === 'string'
-          ? parseFloat(maxItem[key].replace(/\./g, ''))
+        typeof maxItem[key] === "string"
+          ? parseFloat(maxItem[key].replace(/\./g, ""))
           : maxItem[key];
 
       return currentValue > maxValue ? currentItem : maxItem;
     }, array[0]);
   };
 
-  const maxNOperaciones = findMaxByKey(dataParaTabla, 'nOperaciones');
-  const maxImporte = findMaxByKey(dataParaTabla, 'importe');
-  const maxPares = findMaxByKey(dataParaTabla, 'pares');
+  const maxNOperaciones = findMaxByKey(dataParaTabla, "nOperaciones");
+  const maxImporte = findMaxByKey(dataParaTabla, "importe");
+  const maxPares = findMaxByKey(dataParaTabla, "pares");
   const maxParesId = maxPares ? maxPares.id : null;
   const maxNOperacionesId = maxNOperaciones ? maxNOperaciones.id : null;
   const maxImporteId = maxImporte ? maxImporte.id : null;
 
-  const getCellProps = (item: VentaPorHora, column: keyof VentaPorHora | string) => {
+  const getCellProps = (
+    item: VentaPorHora,
+    column: keyof VentaPorHora | string
+  ) => {
     const isMaxNOperaciones = item.id === maxNOperacionesId;
     const isMaxImporte = item.id === maxImporteId;
     const isMaxPares = item.id === maxParesId;
@@ -274,29 +270,33 @@ export default function TablaVentaPorHora({
     let style: CSSProperties = {}; // Inicializar el estilo como un objeto vacío
 
     if (
-      (column === 'nOperaciones' && isMaxNOperaciones) ||
-      (column === 'porcentajeOperaciones' && isMaxNOperaciones)
+      (column === "nOperaciones" && isMaxNOperaciones) ||
+      (column === "porcentajeOperaciones" && isMaxNOperaciones)
     ) {
-      style = { color: 'white', fontWeight: 'bolder', background: 'green' };
+      style = { color: "white", fontWeight: "bolder", background: "green" };
     }
 
     if (
-      (column === 'importe' && isMaxImporte) ||
-      (column === 'porcentajeImporte' && isMaxImporte)
+      (column === "importe" && isMaxImporte) ||
+      (column === "porcentajeImporte" && isMaxImporte)
     ) {
-      style = { color: 'white', fontWeight: 'bolder', background: 'green' };
+      style = { color: "white", fontWeight: "bolder", background: "green" };
     }
 
-    if ((column === 'pares' && isMaxPares) || (column === 'porcentajePares' && isMaxPares)) {
-      style = { color: 'white', fontWeight: 'bolder', background: 'green' };
+    if (
+      (column === "pares" && isMaxPares) ||
+      (column === "porcentajePares" && isMaxPares)
+    ) {
+      style = { color: "white", fontWeight: "bolder", background: "green" };
     }
 
     return { style }; // Devolver siempre un objeto con la propiedad 'style'
   };
 
+
   return (
     <div>
-      <TablaInforme<VentaPorHora>
+      <TablaInforme<VentaXHoraCType>
         columnas={COLUMNS}
         datosParaTabla={dataParaTabla}
         estilos={customTheme}
@@ -304,6 +304,9 @@ export default function TablaVentaPorHora({
         datosFooter={datosFooter}
         procesado={isProcessing}
         status={status}
+        objetcColumns={VentaXHoraColumns}
+        footerWidth="w-[680px]"
+        columnasGrid={columnasGrid}
       />
     </div>
   );

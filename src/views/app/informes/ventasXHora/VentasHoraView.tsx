@@ -398,13 +398,12 @@ export default function VentasHoraView() {
 
   // FOOTER TABLA 1
   const datosParaFooter = {
-    id: "",
     hora: "",
-    totalOperaciones: totalOperaciones,
+    nOperaciones: totalOperaciones,
     porcentajeOperaciones: "",
-    totalPares: totalPares,
+    pares: totalPares,
     porcentajePares: "",
-    totalImporte: totalImporteFormateado,
+    importe: totalImporteFormateado,
     porcentajeImporte: "",
   };
 
