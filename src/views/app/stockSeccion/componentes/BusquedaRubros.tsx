@@ -140,22 +140,6 @@ export default function BusquedaRubros() {
         break;
       }
 
-      // case "ArrowDown":
-      // case "ArrowUp": {
-      //   event.preventDefault();
-      //   const direction = event.key === "ArrowDown" ? 1 : -1;
-
-      //   // Navegación global en la tabla
-      //   const newIndex = Math.max(
-      //     0,
-      //     Math.min(datosRubros.length - 1, indiceGlobal + direction)
-      //   );
-      //   setIndiceGlobal(newIndex);
-
-      //   setModoNavegacion("normal");
-      //   break;
-      // }
-
       case "Escape": {
         event.preventDefault();
         resetBusqueda();

@@ -17,6 +17,24 @@ interface TablaVentaPorHoraProps {
   footer: boolean;
   datosFooter?: {};
 }
+type ExtendedColumn<T = any> = {
+  key: keyof T;
+  label?: string;
+  renderCell?: (item: T) => React.ReactNode;
+  cellProps?: (item: T) => React.HTMLAttributes<HTMLElement>;
+  withCellProps?: boolean; // 👈 nueva prop opcional
+};
+
+type VentaXHoraCType = {
+  id: number;
+  hora: string;
+  nOperaciones: number;
+  porcentajeOperaciones: number;
+  pares: number;
+  porcentajePares: number;
+  importe: string; 
+  porcentajeImporte: number;
+};
 
 export default function TablaVentaPorHora({
   dataParaTabla,
@@ -25,192 +43,28 @@ export default function TablaVentaPorHora({
   datosFooter,
 }: TablaVentaPorHoraProps) {
   const { status } = useVentasHoraStore();
+  
+  const maxNOperaciones = findMaxByKey(dataParaTabla, "nOperaciones");
+  const maxImporte = findMaxByKey(dataParaTabla, "importe");
+  const maxPares = findMaxByKey(dataParaTabla, "pares");
+  const maxParesId = maxPares ? maxPares.id : null;
+  const maxNOperacionesId = maxNOperaciones ? maxNOperaciones.id : null;
+  const maxImporteId = maxImporte ? maxImporte.id : null;
+  
   useEffect(() => {
     // Para evitar console.log (solo para deployar en vercel)
   }, [isProcessing]);
-  // const empresa = JSON.parse(localStorage.getItem('_u') || '{}')
-  //   ?.empresa.toString()
-  //   .slice(-2);
-  // console.log(empresa);
-
-  const customThemeq = {
-    Table: `
-      grid-template-columns:
-       minmax(0px, 0px)
-        minmax(90px, 90px)
-        minmax(100px, 100px)
-         minmax(80px, 80px)
-         minmax(80px, 80px)
-          minmax(80px, 80px) 
-          minmax(50px, 180px)
-           minmax(50px, 80px);
-      border-radius: 12px;
-      width: 680px;
-      height: 600px;
-      scrollbar-width: thin;
-      border: 1px solid black;
-      font-variant-numeric: tabular-nums;
-      @media (min-width: 1280px) and (max-width: 1380px) {
-        height: 500px;
-      }
-      @media (min-width: 1536px) {
-      width: 790px;
-      height: 780px;
-      grid-template-columns: 
-        minmax(0px, 0px) 
-        minmax(100px, 100px) 
-        minmax(100px, 100px) 
-        minmax(100px, 100px) 
-        minmax(100px, 100px) 
-        minmax(100px, 100px) 
-        minmax(80px, 200px)
-        minmax(80px, 100px);
-      }
-    `,
-
-    Row: `
-      &:nth-of-type(odd) { background-color: #fff; }
-      &:nth-of-type(even) { background-color: #eaf5fd; }
-      
-      &.row-select-single-selected { background-color: #CAE0BC !important; }
-      border-bottom: 1px solid #ccc;
-    `,
-
-    HeaderCell: `
-      background: #2973B2;
-      color: white;
-      min-height: 23px;
-      height: 23px;
-      font-size: 13px;
-      padding: 12px;
-      &:nth-of-type(n+3) {
-        text-align: center;
-      }
-    `,
-
-    Cell: `
-      padding: 0.5px 4px;
-      border-right: 1px solid #ccc;
-      max-height: 30px;
-
-      &:last-child {
-        border-right: none;
-      }
-  
-      &:nth-of-type(n+3) {
-        text-align: right;
-      }
-
-       @media (min-width: 1536px) {
-        padding: 5px;
-        font-size: 15px;
-       }
-    `,
-
-    FooterCell: `
-      position: sticky;
-      bottom: 0px;
-      padding: 2px;
-      border-right: 1px solid #ccc;
-      background-color: #fff;
-      text-align: right;
-      max-height: 30px;
-
-      @media (min-width: 1536px) {
-        padding: 6px;
-        font-size: 15px;
-      }
-      &:last-child {
-        border-right: none;
-      }
-  
-      &:nth-of-type(3) {
-        border-right: 1px solid black;
-        background-color: #A5C9FF;
-        font-weight: bold;
-      }
-  
-      &:nth-of-type(5) {
-        border-right: 1px solid black;
-        background-color: #A5C9FF;
-        font-weight: bold;
-      }
-  
-      &:nth-of-type(7) {
-        border-right: 1px solid black;
-        background-color: #A5C9FF;
-        font-weight: bold;
-      }
-    `,
-  };
-  type ExtendedColumn<T = any> = {
-    key: keyof T;
-    label?: string;
-    renderCell?: (item: T) => React.ReactNode;
-    cellProps?: (item: T) => React.HTMLAttributes<HTMLElement>;
-    withCellProps?: boolean; // 👈 nueva prop opcional
-  };
-
-  type VentaXHoraCType = {
-    id: number; // Added 'id' property to match VentaPorHora
-    hora: string;
-    nOperaciones: number;
-    porcentajeOperaciones: number;
-    pares: number;
-    porcentajePares: number;
-    importe: string; // Changed to match VentaPorHora
-    porcentajeImporte: number;
-  };
-
-  // COLUMNAS DE TABLA
-  const COLUMNSQ: TableColumn<VentaPorHora>[] = [
-    {
-      label: "",
-      renderCell: (item: VentaPorHora) => item.id,
-    },
-    {
-      label: "Hora",
-      renderCell: (item: VentaPorHora) => item.hora,
-    },
-    {
-      label: "N. Opera",
-      renderCell: (item: VentaPorHora) => item.nOperaciones,
-      cellProps: (item: VentaPorHora) => getCellProps(item, "nOperaciones"),
-    },
-    {
-      label: "%",
-      renderCell: (item: VentaPorHora) => item.porcentajeOperaciones,
-      cellProps: (item: VentaPorHora) =>
-        getCellProps(item, "porcentajeOperaciones"),
-    },
-    {
-      label: "Pares",
-      renderCell: (item: VentaPorHora) => item.pares,
-      cellProps: (item: VentaPorHora) => getCellProps(item, "pares"),
-    },
-    {
-      label: "%",
-      renderCell: (item: VentaPorHora) => item.porcentajePares,
-      cellProps: (item: VentaPorHora) => getCellProps(item, "porcentajePares"),
-    },
-    {
-      label: "Importes $",
-      renderCell: (item: VentaPorHora) => item.importe,
-      cellProps: (item: VentaPorHora) => getCellProps(item, "importe"),
-    },
-    {
-      label: "%",
-      renderCell: (item: VentaPorHora) => item.porcentajeImporte,
-      cellProps: (item: VentaPorHora) =>
-        getCellProps(item, "porcentajeImporte"),
-    },
-  ];
 
   const columnasGrid = "minmax(90px, 120px) minmax(100px, 100px) minmax(80px, 80px) minmax(80px, 80px) minmax(80px, 80px) minmax(50px, 180px) minmax(50px, 80px)";
- 
+  const widthBase = "40rem";
+  const width1440px = "43rem";
+  const width1536px = "42rem";
+
   const customTheme = TableUtils.generateTableTheme({
     columns: columnasGrid,
-    width: "680px",
+    width: widthBase,
+    width1440px: width1440px,
+    width1536px: width1536px,
     withFooter: false,
     maxHeight: "600px",
   });
@@ -234,7 +88,7 @@ export default function TablaVentaPorHora({
     }))
   );
 
-  const findMaxByKey = (array: VentaPorHora[], key: keyof VentaPorHora) => {
+  function findMaxByKey(array: VentaPorHora[], key: keyof VentaPorHora): VentaPorHora | null {
     if (!array || array.length === 0) return null;
 
     return array.reduce((maxItem, currentItem) => {
@@ -252,12 +106,6 @@ export default function TablaVentaPorHora({
     }, array[0]);
   };
 
-  const maxNOperaciones = findMaxByKey(dataParaTabla, "nOperaciones");
-  const maxImporte = findMaxByKey(dataParaTabla, "importe");
-  const maxPares = findMaxByKey(dataParaTabla, "pares");
-  const maxParesId = maxPares ? maxPares.id : null;
-  const maxNOperacionesId = maxNOperaciones ? maxNOperaciones.id : null;
-  const maxImporteId = maxImporte ? maxImporte.id : null;
 
   const getCellProps = (
     item: VentaPorHora,
@@ -293,7 +141,6 @@ export default function TablaVentaPorHora({
     return { style }; // Devolver siempre un objeto con la propiedad 'style'
   };
 
-
   return (
     <div>
       <TablaInforme<VentaXHoraCType>
@@ -305,8 +152,12 @@ export default function TablaVentaPorHora({
         procesado={isProcessing}
         status={status}
         objetcColumns={VentaXHoraColumns}
-        footerWidth="w-[680px]"
+        footerWidth={widthBase}
+        footerWidth1440px={width1440px}
+        footerWidth1536px={width1536px}
+        footerHeight="h-8"
         columnasGrid={columnasGrid}
+        
       />
     </div>
   );

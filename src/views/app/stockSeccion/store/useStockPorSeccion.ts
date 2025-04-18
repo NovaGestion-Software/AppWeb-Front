@@ -8,6 +8,7 @@ interface CheckboxState {
   grupo2: string | null; // Stock (Con Stock, Todos, Negativos)
   grupo3: string | null; // Listas (CONTADO, LISTA 2, LISTA 3)
   grupo4: string | null; // Ordenar (Código, Marca, Descripción)
+  [key: string]: string | null;
 }
 
 type StockPorSeccionProps = {

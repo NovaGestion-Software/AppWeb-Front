@@ -33,6 +33,8 @@ export default function VentasHoraView() {
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const [footer, setFooter] = useState<boolean>(false);
   const [foco, setFoco] = useState<boolean>(false);
+  const [showModalSucursales, setShowModalSucursales] = useState(false);
+
 
   const {
     fechas,
@@ -434,7 +436,6 @@ export default function VentasHoraView() {
   };
 
   // console.log(dataParaTabla);
-  const [showModalSucursales, setShowModalSucursales] = useState(false);
   const renderSucursalesItem = (item: string) => {
     return <>{item}</>;
   };
@@ -505,10 +506,10 @@ export default function VentasHoraView() {
           </div>
         </div>
 
-        <div className="grid grid-cols-12 gap-2 ml-4 2xl:ml-0 2xl:mt-5 ">
+        <div className="grid grid-cols-12 gap-2 ml-4 2xl:ml-0 2xl:mt-5 overflow-hidden">
           {isProcessing && (
-            <div className="col-span-5 2xl:col-start-2 flex flex-col items-center justify-evenly 2xl:justify-evenly 2xl:items-center transition-all duration-500 ease-out">
-              {/* Sucursales */}
+            <div className="col-span-5 2xl:col-start-2  flex flex-col items-center justify-evenly 2xl:justify-evenly 2xl:items-center transition-all duration-500 ease-out">
+              {/* Lista Sucursales */}
               <div className="col-start-1 col-span-5 row-start-1 w-fit h-fit py-2 px-4 bg-white rounded-lg font-semibold shadow-md space-y-2">
                 <ul
                   className={`grid gap-x-4 ${
@@ -558,9 +559,9 @@ export default function VentasHoraView() {
           )}
 
           <div
-            className={`flex h-fit w-fit ml-5 transition-all duration-500 ease-out ${
+            className={`flex h-fit w-fit overflow-hidden ml-5 transition-all duration-500 ease-out  ${
               isProcessing
-                ? "col-start-6 2xl:col-start-7 transform"
+                ? "col-start-6 col-span-2 2xl:col-start-7 transform"
                 : " col-start-3 2xl:col-start-4 transform translate-x-0"
             }`}
           >

@@ -3,9 +3,10 @@ import { useMutation } from '@tanstack/react-query';
 import { useStockPorSeccion } from '@/views/app/stockSeccion/store/useStockPorSeccion';
 import { obtenerProductos } from '@/services/ApiPhpService';
 import { TablaSecciones, TablaStock1, TableColumn } from '@/types';
-import TablaExpandible from './TablaExpandible';
 import ModalInforme from '../../informes/_components/ModalInforme';
 import BusquedaRubros from './BusquedaRubros';
+import TablaExpandible from '@/frontend-resourses/components/Tables/TablaExpandible';
+import { TableUtils } from '@/frontend-resourses/components/Tables/TableUtils';
 
 interface TablaSeccionRubroProps {
   data: TablaSecciones[];
@@ -36,30 +37,39 @@ export default function TablaSeccionRubro({
     clearRubrosSeleccionados,
     clearSeccionesSeleccionadas,
      buscado, modoNavegacion, idsCoincidentes, indiceSeleccionado 
-    
-
   } = useStockPorSeccion();
+  type ExtendedColumn<T = any> = {
+    key: keyof T;
+    label?: string;
+    renderCell?: (item: T) => React.ReactNode;
+    cellProps?: (item: T) => React.HTMLAttributes<HTMLElement>;
+    withCellProps?: boolean; // 👈 nueva prop opcional
+  };
 
-  const COLUMNS: TableColumn<TablaSecciones>[] = [
-    {
-      label: 'Codigo',
-      renderCell: (item: TablaSecciones) => item.seccion, // Renderiza los rubros como una lista de elementos JSX
-    },
-    {
-      label: 'Seccion',
-      renderCell: (item: TablaSecciones) => item.nseccion, // Esto es válido porque `item.nseccion` es un string
-    },
-  ];
+  type seccionRubros = {
+    seccion: string;
+    nseccion: string;
+  };
 
+
+
+    const SeccionRubrosColumns: Array<ExtendedColumn<seccionRubros>> = [
+      { key: "seccion", label: "Codigo"},
+      { key: "nseccion", label: "Seccion" },
+    ];
+  
+    const COLUMNS = TableUtils.generateTableColumns<seccionRubros>(
+      SeccionRubrosColumns.map((column) => ({
+        ...column
+      }))
+    );
+  
   const customTheme = {
     Table: `
       grid-template-columns: minmax(30px, 110px) minmax(40px, 500px);
       border-radius: 12px;
       width: 36rem;
       max-height: 500px; /* Altura máxima de la tabla */
-      overflow-y: scroll; /* Habilitar scroll vertical */
-      scrollbar-width: thin;
-      scroll-behavior: smooth;
       border: 1px solid black;
       font-variant-numeric: tabular-nums;
       @media (min-width: 1280px) and (max-width: 1380px) {
@@ -77,7 +87,7 @@ export default function TablaSeccionRubro({
     `,
 
     Cell: `
-      padding: 8px;
+      padding: 8px; // esto quiero conservar
       border-right: 1px solid #ccc;
   
       &:last-of-type {
@@ -126,9 +136,6 @@ export default function TablaSeccionRubro({
       setStatus('idle');
     },
   });
-
-  // console.log(parseFloat(stockRenderizado[0].productos[0].depositos[0].talles[2].stock));
-  // console.log(stockRenderizado);
 
   useEffect(() => {
     // Si rubrosSeleccionados tiene contenido, habilitar el botón de confirmar
