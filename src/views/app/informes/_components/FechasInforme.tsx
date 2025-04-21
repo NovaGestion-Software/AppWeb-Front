@@ -33,22 +33,28 @@ export default function FechasInforme({
   showPresets = true,
   setFocus,
 }: FechasInformeProps) {
+
   dayjs.locale('es');
+  const [isLoading, setIsLoading] = useState(true);
+  // setea del primero del mes a la fecha del dia actual como estado inicial.
   const defaultDate = {
     from: dayjs().startOf('month'),
     to: dayjs(),
   };
   const [dateRange, setDateRange] = useState<DateRange>(defaultDate);
-  const disabledFutureDates = (current: dayjs.Dayjs) => current && current > dayjs().endOf('day');
 
+  // desahbilitar dias posteriores a la fecha
+  const disabledFutureDates = (current: dayjs.Dayjs) => current && current > dayjs().endOf('day');
+ 
+  // referencia al input
   const rangePickerRef = useRef<any>(null);
 
-  // BRANCH INFORME
+  // BRANCH INFORME -- esto tiene que ser props
   const { status, setFechas } = useVentasHoraStore();
 
-  // BRANCH MAIN
-  const [isLoading, setIsLoading] = useState(true);
 
+
+  // Rangos de fechas
   const rangePresets: { label: string; value: [dayjs.Dayjs, dayjs.Dayjs] }[] = [
     {
       label: 'Ayer',
@@ -88,7 +94,9 @@ export default function FechasInforme({
     },
   ];
 
+  // Simula estado de carga
   useEffect(() => {
+    // evita que el input se rompa al cargar los estilos.
     const timer = setTimeout(() => {
       setIsLoading(false);
     }, 1000);
@@ -98,38 +106,46 @@ export default function FechasInforme({
 
   // shorcut
   useEffect(() => {
+    // seteo los inputs de basandome en la clase.
     const inputs = document.querySelectorAll('.ant-picker input');
-
+    // funciones
+    // seleciconar el texto del input.
     const selectAllText = (input: HTMLInputElement) => {
       if (input) input.select();
     };
-    const handleProcessedData = () => {
+    // deseleccionar el texto del input
+    const deselectText = (input: HTMLInputElement) => {
+      if (input) {
+        input.setSelectionRange(0, 0); // Deselecciona el texto
+      }
+    };
+    // quitar foco al input 
+    const handleRemoveFocus = () => {
       inputs.forEach((input) => {
         if (document.activeElement === input) {
           (input as HTMLInputElement).blur();
         }
       });
     };
-    const deselectText = (input: HTMLInputElement) => {
-      if (input) {
-        input.setSelectionRange(0, 0); // Deselecciona el texto
-      }
-    };
+    
 
     const handleKeyDown = (e: Event) => {
-      const keyboardEvent = e as KeyboardEvent; // Hacemos un type assertion aquí
+      const keyboardEvent = e as KeyboardEvent; 
+      // solo si estan los dos inputs de este componente
       if (inputs.length === 2) {
+        // solo si esta activado el inputs[0]
+        // se pasa el focus al inputs[1]
         if (document.activeElement === inputs[0] && keyboardEvent.key === 'Enter') {
           keyboardEvent.preventDefault();
           (inputs[1] as HTMLInputElement).focus();
           return;
         }
 
-        if (keyboardEvent.key === 'Enter' && document.activeElement === inputs[1]) {
+        if (document.activeElement === inputs[1] && keyboardEvent.key === 'Enter' ) {
           keyboardEvent.preventDefault();
           handleData();
           deselectText(inputs[1] as HTMLInputElement);
-          handleProcessedData();
+          handleRemoveFocus();
         }
 
         // Nuevo atajo: Escape para volver al primer input

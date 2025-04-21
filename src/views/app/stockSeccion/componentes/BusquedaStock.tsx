@@ -41,33 +41,8 @@ export default function BusquedaStock() {
     }
   };
 
-  // seteador del disabled
-  useEffect(() => {
-    setIsDisabled(codigoBusqueda.length === 0 && textoBusqueda.length === 0);
-  }, [codigoBusqueda, textoBusqueda]);
 
-  // Reseteo de buscado cuando no hay texto de búsqueda
-  useEffect(() => {
-    if (codigoBusqueda.length <= 0 && textoBusqueda.length <= 0) {
-      setBuscado(false);
-    }
-  }, [idsCoincidentes]);
-
-  // busqueda .
-  useEffect(() => {
-    if (!productos) return;
-    const productosFiltrados = buscarCoincidencias(productos, filtros);
-    const resultadosAgrupados = agruparPorKey(productosFiltrados, "codigo");
-    extraerIds(resultadosAgrupados, "codigo", setIdsCoincidentes);
-  }, [codigoBusqueda, textoBusqueda, productos]);
-
-  const handleSiguienteClick = () => {
-    if (idsCoincidentes.length > 0) {
-      const nuevoIndice = ((indiceSeleccionado ?? 0) + 1) % idsCoincidentes.length;
-      setIndiceSeleccionado(nuevoIndice);
-    }
-  };
-
+  // inicia la busqueda
   const handleSearch = () => {
     // si al hacer click hay indCoincidentes, entonces se hace la busqueda.
     // si al hacer click no hay idsCoincidentes, se setea en falso.
@@ -79,11 +54,20 @@ export default function BusquedaStock() {
     }
   };
 
-  // Se utiliza handleButton para que si la busqueda ya esta iniciada se avance al siguiente elemento.
-  const handleButton = () => {
+  // navegacion en resultados con click.
+  const handleNextResult = () => {
+    if (idsCoincidentes.length > 0) {
+      const nuevoIndice = ((indiceSeleccionado ?? 0) + 1) % idsCoincidentes.length;
+      setIndiceSeleccionado(nuevoIndice);
+    }
+  };
+
+  // boton de renderizado. Dispara la funcion segun el estado de buscado
+  const handleActionButtonClick = () => {
+    // Se utiliza handleActionButtonClick para comprobar si la busqueda ya esta iniciada, y si lo esta se avance al siguiente elemento.
     if (buscado) {
       setNavegandoCoincidentes(true);
-      handleSiguienteClick();
+      handleNextResult();
     } else {
       handleSearch();
     }
@@ -159,6 +143,7 @@ export default function BusquedaStock() {
     } 
   };
 
+  // limpiar busqueda
   const handleClean = async () => {
     const result = await showAlert({
       title: "¿Estás seguro?",
@@ -178,7 +163,25 @@ export default function BusquedaStock() {
       setTextoBusqueda("");
     }
   };
+  // seteador del disabled
+  useEffect(() => {
+    setIsDisabled(codigoBusqueda.length === 0 && textoBusqueda.length === 0);
+  }, [codigoBusqueda, textoBusqueda]);
 
+  // Reseteo de buscado cuando no hay texto de búsqueda
+  useEffect(() => {
+    if (codigoBusqueda.length <= 0 && textoBusqueda.length <= 0) {
+      setBuscado(false);
+    }
+  }, [idsCoincidentes]);
+
+  // busqueda .
+  useEffect(() => {
+    if (!productos) return;
+    const productosFiltrados = buscarCoincidencias(productos, filtros);
+    const resultadosAgrupados = agruparPorKey(productosFiltrados, "codigo");
+    extraerIds(resultadosAgrupados, "codigo", setIdsCoincidentes);
+  }, [codigoBusqueda, textoBusqueda, productos]);
   // input 1: key: string, label: string, value: valorBusqueda, placeholder: string,
   // input 2: value: valorBusqueda, placeholder: string.
   // onChange: compartido
@@ -235,7 +238,7 @@ export default function BusquedaStock() {
         }
         color="blue"
         size="xs"
-        onClick={handleButton}
+        onClick={handleActionButtonClick}
         disabled={isDisabled}
       />
 
