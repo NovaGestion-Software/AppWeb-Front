@@ -7,9 +7,13 @@ import FlexibleInputField from "@/Components/ui/Inputs/FlexibleInputs";
 import ActionButton from "@/Components/ui/Buttons/ActionButton";
 import showAlert from "@/utils/showAlert";
 import { FiAlertTriangle } from "react-icons/fi";
+import { useBusqueda } from "@/frontend-resourses/components/Tables/ejemplo/TablaDefault/Hooks/useBusqueda";
 
 export default function BusquedaStock() {
   const [codigoBusqueda, setCodigoBusqueda] = useState<string>("");
+  // texto de busqueda tiene que aceptar el texto o el codigo, pensar en que sea un solo parametro a la vez
+  // sino la funcion de busqueda tiene que tener en cuenta si tengo uno o varios parametros de busqueda.
+  // Porque? Porque ahora espera un parametro y no puedo usarla para filtrar el valor del input del codigo y de marca o descripcion
   const [textoBusqueda, setTextoBusqueda] = useState<string>("");
   const [isDisabled, setIsDisabled] = useState(true);
 
@@ -47,57 +51,33 @@ export default function BusquedaStock() {
     setProductos,
   } = useStockPorSeccion();
 
+  // seteador del disabled
   useEffect(() => {
     setIsDisabled(codigoBusqueda.length === 0 && textoBusqueda.length === 0);
   }, [codigoBusqueda, textoBusqueda]);
 
+  // Reseteo de buscado cuando no hay texto de búsqueda
   useEffect(() => {
     if (codigoBusqueda.length <= 0 && textoBusqueda.length <= 0) {
       setBuscado(false);
     }
   }, [idsCoincidentes]);
 
+  const { buscarCoincidencias, agruparPorKey, extraerIds } = useBusqueda();
   useEffect(() => {
     if (!productos) return;
+    // un parametro seria el array de productos
+    // el segundo parametro seria las key de los items de productos que se van a usar para la busqueda
+    // el otro parametro seria el codigoBusqueda y el textoBusqueda
 
-    // 1. Filtramos productos válidos y que coincidan con la búsqueda
-    const productosFiltrados = productos
-      .filter(
-        (producto: any) =>
-          producto && producto.codigo && producto.descripcion && producto.nmarca
-      )
-      .filter((producto: any) => {
-        const matchesCodigo = producto.codigo.includes(codigoBusqueda);
-        const matchesTexto =
-          producto.descripcion
-            .toLowerCase()
-            .includes(textoBusqueda.toLowerCase()) ||
-          producto.nmarca.toLowerCase().includes(textoBusqueda.toLowerCase());
-        return matchesCodigo && matchesTexto;
-      });
-
-    // 2. Agrupamos por código y seleccionamos solo el PRIMER ítem de cada grupo
-    const gruposPorCodigo: Record<string, any[]> = {};
-    productosFiltrados.forEach((producto) => {
-      if (!gruposPorCodigo[producto.codigo]) {
-        gruposPorCodigo[producto.codigo] = [];
-      }
-      gruposPorCodigo[producto.codigo].push(producto);
-    });
-
-    // 3. Obtenemos el primer ítem de cada grupo (código único)
-    const productosUnicos = Object.values(gruposPorCodigo).map(
-      (grupo) => grupo[0]
-    );
-
-    // 4. Extraemos los códigos para la selección
-    const ids = productosUnicos.map((producto) => producto.codigo);
-
-    setIdsCoincidentes(ids);
-    if (navegandoCoincidentes && idsCoincidentes.length > 0) {
-      setIndiceSeleccionado(0);
-    }
+    const productosFiltrados = buscarCoincidencias(productos, textoBusqueda, ["codigo", "descripcion", "nmarca"]);
+    console.log("productosFiltrados", productosFiltrados);
+    console.log("textobusqueda", textoBusqueda);
+    const resultadosAgrupados = agruparPorKey(productosFiltrados, "codigo");
+   // console.log("resultados agrupados", resultadosAgrupados);
+    extraerIds(resultadosAgrupados, "codigo", setIdsCoincidentes);
   }, [codigoBusqueda, textoBusqueda, productos, navegandoCoincidentes]);
+
   const handleSiguienteClick = () => {
     if (idsCoincidentes.length > 0) {
       const nuevoIndice = ((indiceSeleccionado ?? 0) + 1) % idsCoincidentes.length;
@@ -106,6 +86,9 @@ export default function BusquedaStock() {
   };
 
   const handleSearch = () => {
+    // si al hacer click hay indCoincidentes, entonces se hace la busqueda.
+    // si al hacer click no hay idsCoincidentes, se setea en falso.
+    // funciona para no tener que deshabilitar el boton y desactivar el click.
     if (idsCoincidentes.length > 0) {
       setBuscado(true);
     } else {
@@ -113,9 +96,10 @@ export default function BusquedaStock() {
     }
   };
 
+  // Se utiliza handleButton para que si la busqueda ya esta iniciada se avance al siguiente elemento.
   const handleButton = () => {
     if (buscado) {
-      setNavegandoCoincidentes(true); // Habilitar la navegación entre idsCoincidentes
+      setNavegandoCoincidentes(true);
       handleSiguienteClick();
     } else {
       handleSearch();
@@ -128,6 +112,7 @@ export default function BusquedaStock() {
       event.preventDefault();
       if (!codigoBusqueda && !textoBusqueda) return;
 
+      console.log("indiceGlobal", indiceGlobal);
       // Siempre activar modo búsqueda al presionar Enter
       setModoNavegacion("busqueda");
       setNavegandoCoincidentes(true);
@@ -149,12 +134,7 @@ export default function BusquedaStock() {
       }
     }
 
-    if (!buscado) {
-      // poner indice global en cero cuando buscado es falso.
-      // si hago que indice global acepte null, voy a poder modificarlo en null cuando ese en falso asi no esta seleccionado ningun elemento.
-      // setIndiceGlobal(null); tiene que ser lo que coincida con currentHorario de tablainforme.
-      setIndiceGlobal(0);
-    } else if (event.key === "Escape") {
+    if (event.key === "Escape") {
       event.preventDefault();
       setCodigoBusqueda("");
       setTextoBusqueda("");
@@ -166,11 +146,7 @@ export default function BusquedaStock() {
       const direction = event.key === "ArrowDown" ? 1 : -1;
       // Obtener el índice actual en el array completo
       let currentIndex = 0;
-      if (
-        buscado &&
-        modoNavegacion === "busqueda" &&
-        idsCoincidentes.length > 0
-      ) {
+      if (buscado && modoNavegacion === "busqueda" && idsCoincidentes.length > 0) {
         // Si estamos en modo búsqueda, usar el ID actual para encontrar la posición global
         const currentId = indiceSeleccionado !== null ? idsCoincidentes[indiceSeleccionado] : undefined;
         currentIndex = productos.findIndex((p) => p.codigo === currentId);
@@ -185,6 +161,8 @@ export default function BusquedaStock() {
       if (newIndex >= productos.length) newIndex = 0;
 
       setIndiceGlobal(newIndex);
+      console.log("indiceGlobal new index", newIndex);
+      console.log("indiceGlobal", indiceGlobal);
       setModoNavegacion("normal");
 
       // Si el nuevo elemento está en los resultados de búsqueda, actualizar último índice
@@ -274,8 +252,7 @@ export default function BusquedaStock() {
       <ActionButton
         icon={
           // Si hay texto de búsqueda (código o texto)
-          codigoBusqueda.trim().length > 0 ||
-          textoBusqueda.trim().length > 0 ? (
+          codigoBusqueda.trim().length > 0 || textoBusqueda.trim().length > 0 ? (
             // Verificamos si hay coincidencias
             idsCoincidentes.length > 0 ? (
               buscado ? (
@@ -296,13 +273,7 @@ export default function BusquedaStock() {
         disabled={isDisabled}
       />
 
-      <ActionButton
-        icon={<IoTrash size={15} />}
-        color="red"
-        size="xs"
-        onClick={handleClean}
-        disabled={isDisabled}
-      />
+      <ActionButton icon={<IoTrash size={15} />} color="red" size="xs" onClick={handleClean} disabled={isDisabled} />
     </div>
   );
 }
