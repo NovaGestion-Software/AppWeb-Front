@@ -9,7 +9,7 @@ export const useFiltros = () => {
     stockRenderizado,
   } = useStockPorSeccion();
 
-  // aplicar filtros puede devolver dos resultados?
+
   // ResultadoFiltro devuelve el resultado de los filtros por stock y por tipo que interactuan con la original.
   // ResultadoOrdenamiento devuelve el resultado en base a lo renderizado en la
   //  tabla, productos.

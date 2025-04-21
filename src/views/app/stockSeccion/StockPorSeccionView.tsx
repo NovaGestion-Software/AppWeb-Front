@@ -16,6 +16,8 @@ import TablaStock from "./componentes/TablaStock";
 import ActionButton from "@/Components/ui/Buttons/ActionButton";
 import { useFiltros } from "./hooks/useFiltros";
 import { formatPrice } from "./utils/formatPrice";
+import showAlert from "@/frontend-resourses/utils/showAlert";
+import { IoTrash } from "react-icons/io5";
 
 export default function StockPorSeccionView() {
   const [showMarcasModal, setShowMarcasModal] = useState(false);
@@ -43,7 +45,18 @@ export default function StockPorSeccionView() {
     setCheckboxSeleccionados,
     setStatus,
     productos,
-    status
+    status,
+    setBuscado,
+    setIdsCoincidentes,
+    setTablaStock,
+    setStockRenderizado,
+    setSeccionesSeleccionadas,
+    setRubrosSeleccionados,
+    setSeccionesToFetch,
+    setRubrosToFetch,
+    setTemporadasDisponibles,
+    setTemporadasSeleccionadas,
+    setFooter,
   } = useStockPorSeccion();
 
   // TABLA PARA RUBROS
@@ -108,9 +121,6 @@ export default function StockPorSeccionView() {
     else { setStatus("success")} 
   }, [status, setStatus, tablaStock]);
 
-// tabla stock tiene los datos actuales, los datos actuales se pasan por datos agrupados y se setean en stock renderizado.
-// la pregunta es que pasa si agrego mas datos, a tablastock, se vuelve a hacer la peticion y se setea stock renderizado con los nuevos datos? pero se puede conservar los anteriores no?
-// ya tenemos en la store rubrostofetch que serian los que ya fueron llamados.
 
   // Tabla stock serian los datos originales del endpoint
   // Stock Renderizado es el resultado de la funcion agrupar por stock
@@ -127,6 +137,42 @@ export default function StockPorSeccionView() {
   // Si el filtro es talles o articulos se hace sobre Stock renderizado.
 
   // La busqueda tiene que ser sobre los elementos de la tabla, es decir Productos.
+
+   const handleClean = async () => {
+      const result = await showAlert({
+        title: "¿Estás seguro?",
+        text: "Todo el progreso se perderá",
+        icon: "warning",
+        showConfirmButton: true,
+        showCancelButton: true,
+        confirmButtonText: "Sí, limpiar todo",
+        cancelButtonText: "Cancelar",
+      });
+  
+      if (result.isConfirmed) {
+        setBuscado(false);
+        setIdsCoincidentes([]);
+        setTablaStock([]);
+        setProductos([]);
+        setStockRenderizado([]);
+        setSeccionesSeleccionadas({});
+        setSeccionesToFetch({});
+        setRubrosSeleccionados([]);
+        setRubrosToFetch([]);
+        setStatus("idle");
+        setFooter(false);
+        setCheckboxSeleccionados("grupo1", null);
+        setCheckboxSeleccionados("grupo2", null);
+        setCheckboxSeleccionados("grupo3", null);
+        setCheckboxSeleccionados("grupo4", null);
+        setMarcasDisponibles([]);
+        setMarcasSeleccionadas([]);
+        setTemporadasDisponibles([]);
+        setTemporadasSeleccionadas([]);
+        setDepositosDisponibles([]);
+        setDepositosSeleccionados([]);
+      }
+    };
   return (
     <div className="w-full h-lvh border border-red-950  ">
       <ViewTitle title={"Stock por Sección"} /> 
@@ -152,16 +198,17 @@ export default function StockPorSeccionView() {
           <OrdenarPorCheckbox />
         </div>
         {/** EXPORTORTAR A EXCEEL E IMPRIMIR. */}
-        <div className=" mt-3 mb-1 rounded-lg col-span-2  w-fit h-10 items-center  bg-white
-        col-start-8 2xl:col-span-2 2xl:col-start-7 2xl:left-10 2xl:relative 2xl:px-4">
+        <div className=" mt-3 mb-1 rounded-lg col-span-3 flex   w-fit h-10 items-center  bg-white 
+        col-start-8 2xl:col-span-3 2xl:col-start-7 2xl:left-10 2xl:relative 2xl:px-4">
           <HerramientasComponent
             data={productos}
             isProcessing={!isProcessing}
             datosParaFooter={datosRubros}
             modalSucursales={false}
             disabled={status === "idle"}
-
           />
+           <ActionButton icon={<IoTrash size={15} />} color="red" size="xs" onClick={handleClean} disabled={status === "idle"} />
+
         </div>
 
         {/**CON STOCK, TODOS, NEGATIVOS - CONTADO, LISTA 2, LISTA 3 */}

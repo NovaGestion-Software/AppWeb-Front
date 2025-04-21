@@ -7,22 +7,17 @@ import FlexibleInputField from "@/Components/ui/Inputs/FlexibleInputs";
 import ActionButton from "@/Components/ui/Buttons/ActionButton";
 import showAlert from "@/utils/showAlert";
 import { FiAlertTriangle } from "react-icons/fi";
-import { useBusqueda } from "@/frontend-resourses/components/Tables/ejemplo/TablaDefault/Hooks/useBusqueda";
+import { FiltrosBusqueda, useBusqueda } from "@/frontend-resourses/components/Tables/TablaDefault/Hooks/useBusqueda";
 
 export default function BusquedaStock() {
   const [codigoBusqueda, setCodigoBusqueda] = useState<string>("");
-  // texto de busqueda tiene que aceptar el texto o el codigo, pensar en que sea un solo parametro a la vez
-  // sino la funcion de busqueda tiene que tener en cuenta si tengo uno o varios parametros de busqueda.
-  // Porque? Porque ahora espera un parametro y no puedo usarla para filtrar el valor del input del codigo y de marca o descripcion
   const [textoBusqueda, setTextoBusqueda] = useState<string>("");
   const [isDisabled, setIsDisabled] = useState(true);
-
   const {
     status,
     productos,
     buscado,
     setBuscado,
-    navegandoCoincidentes,
     setNavegandoCoincidentes,
     setIndiceGlobal,
     modoNavegacion,
@@ -33,23 +28,18 @@ export default function BusquedaStock() {
     setIndiceSeleccionado,
     idsCoincidentes,
     setIdsCoincidentes,
-    setTablaStock,
-    setStockRenderizado,
-    setSeccionesSeleccionadas,
-    setRubrosSeleccionados,
-    setSeccionesToFetch,
-    setRubrosToFetch,
-    setStatus,
-    setCheckboxSeleccionados,
-    setMarcasDisponibles,
-    setMarcasSeleccionadas,
-    setTemporadasDisponibles,
-    setTemporadasSeleccionadas,
-    setDepositosDisponibles,
-    setDepositosSeleccionados,
-    setFooter,
-    setProductos,
   } = useStockPorSeccion();
+  const { buscarCoincidencias, agruparPorKey, extraerIds } = useBusqueda();
+  const filtros: FiltrosBusqueda = {
+    codigo: {
+      valor: codigoBusqueda,
+      keys: ["codigo"]
+    },
+    texto: {
+      valor: textoBusqueda,
+      keys: ["descripcion", "nmarca"]
+    }
+  };
 
   // seteador del disabled
   useEffect(() => {
@@ -63,20 +53,13 @@ export default function BusquedaStock() {
     }
   }, [idsCoincidentes]);
 
-  const { buscarCoincidencias, agruparPorKey, extraerIds } = useBusqueda();
+  // busqueda .
   useEffect(() => {
     if (!productos) return;
-    // un parametro seria el array de productos
-    // el segundo parametro seria las key de los items de productos que se van a usar para la busqueda
-    // el otro parametro seria el codigoBusqueda y el textoBusqueda
-
-    const productosFiltrados = buscarCoincidencias(productos, textoBusqueda, ["codigo", "descripcion", "nmarca"]);
-    console.log("productosFiltrados", productosFiltrados);
-    console.log("textobusqueda", textoBusqueda);
+    const productosFiltrados = buscarCoincidencias(productos, filtros);
     const resultadosAgrupados = agruparPorKey(productosFiltrados, "codigo");
-   // console.log("resultados agrupados", resultadosAgrupados);
     extraerIds(resultadosAgrupados, "codigo", setIdsCoincidentes);
-  }, [codigoBusqueda, textoBusqueda, productos, navegandoCoincidentes]);
+  }, [codigoBusqueda, textoBusqueda, productos]);
 
   const handleSiguienteClick = () => {
     if (idsCoincidentes.length > 0) {
@@ -133,15 +116,7 @@ export default function BusquedaStock() {
         }
       }
     }
-
-    if (event.key === "Escape") {
-      event.preventDefault();
-      setCodigoBusqueda("");
-      setTextoBusqueda("");
-      setBuscado(false);
-      setModoNavegacion("normal");
-      setNavegandoCoincidentes(false);
-    } else if (["ArrowDown", "ArrowUp"].includes(event.key)) {
+ if (["ArrowDown", "ArrowUp"].includes(event.key)) {
       event.preventDefault();
       const direction = event.key === "ArrowDown" ? 1 : -1;
       // Obtener el índice actual en el array completo
@@ -161,8 +136,6 @@ export default function BusquedaStock() {
       if (newIndex >= productos.length) newIndex = 0;
 
       setIndiceGlobal(newIndex);
-      console.log("indiceGlobal new index", newIndex);
-      console.log("indiceGlobal", indiceGlobal);
       setModoNavegacion("normal");
 
       // Si el nuevo elemento está en los resultados de búsqueda, actualizar último índice
@@ -174,6 +147,16 @@ export default function BusquedaStock() {
         }
       }
     }
+    
+    else if (event.key === "Escape") {
+      event.preventDefault();
+      setCodigoBusqueda("");
+      setTextoBusqueda("");
+      setBuscado(false);
+      setModoNavegacion("normal");
+      setNavegandoCoincidentes(false);
+      
+    } 
   };
 
   const handleClean = async () => {
@@ -191,30 +174,14 @@ export default function BusquedaStock() {
       setBuscado(false);
       setIndiceSeleccionado(0);
       setIdsCoincidentes([]);
-      setTablaStock([]);
-      setProductos([]);
-      setStockRenderizado([]);
-      setSeccionesSeleccionadas({});
-      setSeccionesToFetch({});
-      setRubrosSeleccionados([]);
-      setRubrosToFetch([]);
-      setStatus("idle");
-      setFooter(false);
       setCodigoBusqueda("");
       setTextoBusqueda("");
-
-      setCheckboxSeleccionados("grupo1", null);
-      setCheckboxSeleccionados("grupo2", null);
-      setCheckboxSeleccionados("grupo3", null);
-      setCheckboxSeleccionados("grupo4", null);
-      setMarcasDisponibles([]);
-      setMarcasSeleccionadas([]);
-      setTemporadasDisponibles([]);
-      setTemporadasSeleccionadas([]);
-      setDepositosDisponibles([]);
-      setDepositosSeleccionados([]);
     }
   };
+
+  // input 1: key: string, label: string, value: valorBusqueda, placeholder: string,
+  // input 2: value: valorBusqueda, placeholder: string.
+  // onChange: compartido
 
   return (
     <div className="flex gap-1 items-center border py-1.5 px-2 rounded-lg bg-slate-50">
@@ -249,8 +216,7 @@ export default function BusquedaStock() {
         onKeyDown={handleKeyDown}
       />
 
-      <ActionButton
-        icon={
+      <ActionButton icon={
           // Si hay texto de búsqueda (código o texto)
           codigoBusqueda.trim().length > 0 || textoBusqueda.trim().length > 0 ? (
             // Verificamos si hay coincidencias
