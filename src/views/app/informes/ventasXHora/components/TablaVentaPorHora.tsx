@@ -1,7 +1,7 @@
 import { CSSProperties, useEffect, useMemo } from "react";
 import { useVentasHoraStore } from "@/store/useVentasHoraStore";
 import { VentaPorHora } from "@/types";
-import TablaInforme from "@/frontend-resourses/components/Tables/TablaInforme";
+import TablaInforme from "@/frontend-resourses/components/Tables/TablaDefault/TablaInforme";
 import { TableUtils } from "@/frontend-resourses/components/Tables/TableUtils";
 
 // Definicion de estructura de columnas

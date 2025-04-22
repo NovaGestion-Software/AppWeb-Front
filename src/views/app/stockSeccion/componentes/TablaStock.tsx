@@ -6,7 +6,7 @@ import {
   TablaStocks,
   TableColumn,
 } from "@/types";
-import TablaInforme from "@/frontend-resourses/components/Tables/TablaInforme";
+import TablaInforme from "@/frontend-resourses/components/Tables/TablaDefault/TablaInforme";
 import { TableUtils } from "@/frontend-resourses/components/Tables/TableUtils";
 
 export default function TablaStock() {
@@ -300,8 +300,6 @@ export default function TablaStock() {
         datosParaTabla={productos}
         procesado={false}
         estilos={customTheme}
-        footer={true}
-        datosFooter={datosFooter}
         status={status}
         hayFuncionBusqueda={true}
         idsCoincidentes={idsCoincidentes}
@@ -311,8 +309,10 @@ export default function TablaStock() {
         setUltimoIndiceBusqueda={setUltimoIndiceBusqueda}
         indiceGlobal={indiceGlobal}
         objetcColumns={productosColumns}
-        footerWidth={widthBase}
         columnasGrid={columnasGrid}
+        footer={true}
+        datosFooter={datosFooter}
+        footerWidth={widthBase}
         footerWidth1440px={width1440px}
         footerWidth1536px={width1536px}
       />
