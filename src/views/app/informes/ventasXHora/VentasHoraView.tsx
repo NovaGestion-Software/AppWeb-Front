@@ -14,7 +14,7 @@ import FechasInforme from "../_components/FechasInforme";
 import HerramientasComponent from "./components/HerramientasComponent";
 import TablaVentaPorHora from "./components/TablaVentaPorHora";
 import showAlert from "@/utils/showAlert";
-import FiltroModal from "@/frontend-resourses/components/Modales/FiltrosModal";
+import ModalFiltro from "@/frontend-resourses/components/Modales/ModalFiltro";
 import ActionButton from "@/frontend-resourses/components/Buttons/ActionButton";
 import GraficoConZoom from "@/frontend-resourses/components/Charts/GraficoConZoom";
 
@@ -387,7 +387,7 @@ export default function VentasHoraView() {
               disabled={false}
               modalSucursales={false}
             />
-            {/* <FiltroModal<DepositoModal>
+            {/* <ModalFiltro<DepositoModal>
                     title="Depósitos"
                     showModal={showDepositosModal}
                     setShowModal={setShowDepositosModal}
@@ -401,7 +401,7 @@ export default function VentasHoraView() {
                     disabled2={status === "idle"}
                     
                   /> */}
-            <FiltroModal
+            <ModalFiltro
               title="Sucursales"
               renderItem={renderSucursalesItem}
               showModal={showModalSucursales}
