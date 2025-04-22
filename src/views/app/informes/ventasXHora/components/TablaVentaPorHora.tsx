@@ -1,7 +1,7 @@
-import { CSSProperties, useEffect, useMemo } from "react";
+import { CSSProperties, useEffect } from "react";
 import { useVentasHoraStore } from "@/store/useVentasHoraStore";
 import { VentaPorHora } from "@/types";
-import TablaInforme from "@/frontend-resourses/components/Tables/TablaDefault/TablaInforme";
+import TablaInforme from "@/frontend-resourses/components/Tables/TablaDefault/TablaDefault";
 import { TableUtils } from "@/frontend-resourses/components/Tables/TableUtils";
 
 // Definicion de estructura de columnas
@@ -22,7 +22,10 @@ type ExtendedColumn<T = any> = {
   label?: string;
   renderCell?: (item: T) => React.ReactNode;
   cellProps?: (item: T) => React.HTMLAttributes<HTMLElement>;
-  withCellProps?: boolean; // 👈 nueva prop opcional
+  withCellProps?: boolean;
+  minWidth?: string;
+  maxWidth?: string;
+  resaltar?: boolean;
 };
 
 type VentaXHoraCType = {
@@ -54,8 +57,16 @@ export default function TablaVentaPorHora({
   useEffect(() => {
     // Para evitar console.log (solo para deployar en vercel)
   }, [isProcessing]);
-
-  const columnasGrid = "minmax(90px, 120px) minmax(100px, 100px) minmax(80px, 80px) minmax(80px, 80px) minmax(80px, 80px) minmax(50px, 180px) minmax(50px, 80px)";
+  const VentaXHoraColumns: Array<ExtendedColumn<VentaXHoraCType>> = [
+    { key: "hora", label: "Hora", minWidth: "90", maxWidth: "120", },
+    { key: "nOperaciones", label: "N. Opera", withCellProps: true, resaltar: true, minWidth: "100", maxWidth: "100"},
+    { key: "porcentajeOperaciones", label: "%", withCellProps: true, minWidth: "80", maxWidth: "80"},
+    { key: "pares", label: "Pares", withCellProps: true , resaltar: true, minWidth: "80", maxWidth: "80"},
+    { key: "porcentajePares", label: "%", withCellProps: true , minWidth: "80", maxWidth: "80"},
+    { key: "importe", label: "Importes $", withCellProps: true, resaltar:true, minWidth: "120", maxWidth: "180" },
+    { key: "porcentajeImporte", label: "%", withCellProps: true, minWidth: "50", maxWidth: "80" },
+  ];
+  const columnasGrid = TableUtils.applyWidthColumns(VentaXHoraColumns);
   const widthBase = "40rem";
   const width1440px = "43rem";
   const width1536px = "42rem";
@@ -65,19 +76,10 @@ export default function TablaVentaPorHora({
     width: widthBase,
     width1440px: width1440px,
     width1536px: width1536px,
-    withFooter: false,
     maxHeight: "600px",
   });
 
-  const VentaXHoraColumns: Array<ExtendedColumn<VentaXHoraCType>> = [
-    { key: "hora", label: "Hora" },
-    { key: "nOperaciones", label: "N. Opera", withCellProps: true },
-    { key: "porcentajeOperaciones", label: "%", withCellProps: true },
-    { key: "pares", label: "Pares", withCellProps: true },
-    { key: "porcentajePares", label: "%", withCellProps: true },
-    { key: "importe", label: "Importes $", withCellProps: true },
-    { key: "porcentajeImporte", label: "%", withCellProps: true },
-  ];
+
 
   const COLUMNS = TableUtils.generateTableColumns<VentaXHoraCType>(
     VentaXHoraColumns.map((column) => ({
@@ -151,7 +153,7 @@ export default function TablaVentaPorHora({
         datosFooter={datosFooter}
         procesado={isProcessing}
         status={status}
-        objetcColumns={VentaXHoraColumns}
+        objectColumns={VentaXHoraColumns}
         footerWidth={widthBase}
         footerWidth1440px={width1440px}
         footerWidth1536px={width1536px}

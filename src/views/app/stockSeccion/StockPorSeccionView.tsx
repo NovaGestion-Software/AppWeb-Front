@@ -9,7 +9,7 @@ import OrdenarPorCheckbox from "./componentes/OrdernarPorCheckbox";
 import FiltroPorStock from "./componentes/FiltroPorStock";
 import FiltrarPorTipo from "./componentes/FiltrarPorTipo";
 import FiltrarSegunLista from "./componentes/FiltrarSegunLista";
-import FiltroModal from "@/frontend-resourses/components/Modales/FiltrosModal";
+import ModalFiltro from "@/frontend-resourses/components/Modales/ModalFiltro";
 import BusquedaStock from "./componentes/BusquedaStock";
 import TablaSeccionRubro from "./componentes/TablaSeccionRubro";
 import TablaStock from "./componentes/TablaStock";
@@ -255,7 +255,7 @@ export default function StockPorSeccionView() {
         setShowRubrosModal={setShowRubrosModal}
       />
       {/** MODAL DE FILTRO  DEPOSITOS */}
-      <FiltroModal<DepositoModal>
+      <ModalFiltro<DepositoModal>
         title="Depósitos"
         showModal={showDepositosModal}
         setShowModal={setShowDepositosModal}
@@ -270,7 +270,7 @@ export default function StockPorSeccionView() {
         
       />
       {/** MODAL DE FILTRO MARCAS */}
-      <FiltroModal<MarcaModal>
+      <ModalFiltro<MarcaModal>
         title="Marcas"
         showModal={showMarcasModal}
         setShowModal={setShowMarcasModal}

@@ -3,10 +3,8 @@ import { useStockPorSeccion } from "@/views/app/stockSeccion/store/useStockPorSe
 import {
   MarcaModal,
   ProductoAgrupado,
-  TablaStocks,
-  TableColumn,
 } from "@/types";
-import TablaInforme from "@/frontend-resourses/components/Tables/TablaDefault/TablaInforme";
+import TablaInforme from "@/frontend-resourses/components/Tables/TablaDefault/TablaDefault";
 import { TableUtils } from "@/frontend-resourses/components/Tables/TableUtils";
 
 export default function TablaStock() {
@@ -46,9 +44,10 @@ export default function TablaStock() {
   type ExtendedColumn<T> = {
     key: keyof T;
     label: string;
-    minWidth?: string | number;
-    maxWidth?: string | number;
+    minWidth?: string;
+    maxWidth?: string ;
     renderCell?: (item: T) => React.ReactNode;
+    resaltar?: boolean;
   };
 
   type ProductosCType = {
@@ -68,7 +67,7 @@ export default function TablaStock() {
     total: string;
   };
   const productosColumns: Array<ExtendedColumn<ProductosCType>> = [
-    { key: "codigo", label: "Código", minWidth: "80px", maxWidth: "100px" },
+    { key: "codigo", label: "Código", minWidth: "80px", maxWidth: "100px", resaltar: true },
     { key: "talle", label: "Talle", minWidth: "50px", maxWidth: "70px" },
     {
       key: "descripcion",
@@ -83,10 +82,11 @@ export default function TablaStock() {
       label: deposito.deposito,
       minWidth: "70px",
       maxWidth: "90px",
+      resaltar: true,
       renderCell: (item: ProductosCType) =>
         item.stockPorDeposito?.[deposito.deposito] ?? "",
     })),
-    { key: "total", label: "Total", minWidth: "80px", maxWidth: "100px" },
+    { key: "total", label: "Total", minWidth: "80px", maxWidth: "100px" , resaltar: true},
   ];
 
   const COLUMNS = TableUtils.generateTableColumns<ProductosCType>(
@@ -97,22 +97,13 @@ export default function TablaStock() {
     }))
   );
 
-  const columnasGrid = `
-  minmax(80px, 100px)
-  minmax(50px, 70px)
-  minmax(200px, 300px)
-  minmax(100px, 150px)
-  minmax(90px, 150px)
-  ${"minmax(70px, 90px)".repeat(depositosDisponibles.length || 0)}
-  minmax(80px, 100px)
-`;
+  const columnasGrid = TableUtils.applyWidthColumns(productosColumns);
 
   const customTheme = TableUtils.generateTableTheme({
     columns: columnasGrid,
     width: widthBase,
     width1440px: width1440px,
     width1536px: width1536px,
-    withFooter: false,
     maxHeight: "380px",
   });
 
@@ -308,7 +299,8 @@ export default function TablaStock() {
         modoNavegacion={modoNavegacion}
         setUltimoIndiceBusqueda={setUltimoIndiceBusqueda}
         indiceGlobal={indiceGlobal}
-        objetcColumns={productosColumns}
+        objectColumns={productosColumns}
+        footerWidth={widthBase}
         columnasGrid={columnasGrid}
         footer={true}
         datosFooter={datosFooter}
