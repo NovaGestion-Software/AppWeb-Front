@@ -1,10 +1,7 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useStockPorSeccion } from "@/views/app/stockSeccion/store/useStockPorSeccion";
-import {
-  MarcaModal,
-  ProductoAgrupado,
-} from "@/types";
-import TablaInforme from "@/frontend-resourses/components/Tables/TablaDefault/TablaDefault";
+import { MarcaModal, ProductoAgrupado } from "@/types";
+import TablaDefault from "@/frontend-resourses/components/Tables/TablaDefault/TablaDefault";
 import { TableUtils } from "@/frontend-resourses/components/Tables/TableUtils";
 
 export default function TablaStock() {
@@ -32,6 +29,9 @@ export default function TablaStock() {
   const widthBase = "71.2rem";
   const width1440px = "60.3rem";
   const width1536px = "71.3rem";
+  const height = "26.25rem";
+  const height1440px = "27.5rem";
+  const height1536px = "38.125rem";
   const depositos = obtenerDepositos(tablaStock);
   let cantidadItems = productos.length;
   let totalGeneral = 0;
@@ -45,7 +45,7 @@ export default function TablaStock() {
     key: keyof T;
     label: string;
     minWidth?: string;
-    maxWidth?: string ;
+    maxWidth?: string;
     renderCell?: (item: T) => React.ReactNode;
     resaltar?: boolean;
   };
@@ -67,45 +67,56 @@ export default function TablaStock() {
     total: string;
   };
   const productosColumns: Array<ExtendedColumn<ProductosCType>> = [
-    { key: "codigo", label: "Código", minWidth: "80px", maxWidth: "100px", resaltar: true },
-    { key: "talle", label: "Talle", minWidth: "50px", maxWidth: "70px" },
+    {
+      key: "codigo",
+      label: "Código",
+      minWidth: "80",
+      maxWidth: "100",
+    },
+    { key: "talle", label: "Talle", minWidth: "50", maxWidth: "70" },
     {
       key: "descripcion",
       label: "Descripción",
-      minWidth: "200px",
-      maxWidth: "300px",
+      minWidth: "200",
+      maxWidth: "300",
     },
-    { key: "nmarca", label: "Marca", minWidth: "100px", maxWidth: "150px" },
-    { key: "precio", label: "Precio", minWidth: "90px", maxWidth: "150px" },
+    { key: "nmarca", label: "Marca", minWidth: "100", maxWidth: "150" },
+    { key: "precio", label: "Precio", minWidth: "90", maxWidth: "150" },
     ...depositos.map((deposito) => ({
       key: deposito.deposito as keyof ProductosCType,
       label: deposito.deposito,
-      minWidth: "70px",
-      maxWidth: "90px",
+      minWidth: "70",
+      maxWidth: "90",
       resaltar: true,
       renderCell: (item: ProductosCType) =>
         item.stockPorDeposito?.[deposito.deposito] ?? "",
     })),
-    { key: "total", label: "Total", minWidth: "80px", maxWidth: "100px" , resaltar: true},
+    {
+      key: "total",
+      label: "Total",
+      minWidth: "80",
+      maxWidth: "100",
+      resaltar: true,
+    },
   ];
 
-  const COLUMNS = TableUtils.generateTableColumns<ProductosCType>(
-    productosColumns.map((column) => ({
-      ...column,
-      minWidth: column.minWidth?.toString(),
-      maxWidth: column.maxWidth?.toString(),
-    }))
-  );
+  // const COLUMNS = TableUtils.generateTableColumns<ProductosCType>(
+  //   productosColumns.map((column) => ({
+  //     ...column,
+  //     minWidth: column.minWidth?.toString(),
+  //     maxWidth: column.maxWidth?.toString(),
+  //   }))
+  // );
 
-  const columnasGrid = TableUtils.applyWidthColumns(productosColumns);
+  // const columnasGrid = TableUtils.applyWidthColumns(productosColumns);
 
-  const customTheme = TableUtils.generateTableTheme({
-    columns: columnasGrid,
-    width: widthBase,
-    width1440px: width1440px,
-    width1536px: width1536px,
-    maxHeight: "380px",
-  });
+  // // const customTheme = TableUtils.generateTableTheme({
+  // //   columns: columnasGrid,
+  // //   width: widthBase,
+  // //   width1440px: width1440px,
+  // //   width1536px: width1536px,
+  // //   maxHeight: "380px",
+  // // });
 
   // Este use Effect funciona cuando los datos de tablaStock cambian
   // Lo toma y crea datosAgrupados con lo que setea el StockRenderizado
@@ -119,10 +130,7 @@ export default function TablaStock() {
   productos.forEach((producto) => {
     // Verifica si la marca del producto está entre las seleccionadas
     if (
-      marcasSeleccionadas.some(
-        (marcaModal) => marcaModal.marca === producto.marca
-      )
-    ) {
+      marcasSeleccionadas.some( (marcaModal) => marcaModal.marca === producto.marca)) {
       depositosSeleccionados.forEach(({ deposito }) => {
         const valor = parseFloat(producto.stockPorDeposito[deposito] ?? "0");
         const totalActual = totalesPorDeposito[deposito] ?? 0;
@@ -280,34 +288,58 @@ export default function TablaStock() {
       nmarca: nmarcaKey.toUpperCase(),
     })).sort((a, b) => a.nmarca.localeCompare(b.nmarca));
   }
+  type SelectData = {
+    id: number;
+    hora: string;
+    nOperaciones: number;
+    porcentajeOperaciones: string;
+    importe: string;
+    porcentajeImporte: string;
+    pares: number;
+    porcentajePares: string;
+  };
+  
+  const [seleccionado, setSeleccionado] = useState<SelectData | null>(null);
+  useEffect(() => {
+    console.log('seleccionado desde tabla stock', seleccionado);
+  }, [seleccionado]);
 
+  // props de tabla.
+  const propsTablaStock = {
+    datosParaTabla: productos,
+    objectColumns: productosColumns,
+    objectStyles: {
+      width: widthBase,
+      width1440px: width1440px,
+      width1536px: width1536px,
+      height: height,
+      height1440px: height1440px,
+      height1536px: height1536px, 
+    },
+    objectSelection: {
+      seleccionado,
+      setSeleccionado,
+    }
+    ,
+    objectFooter: {
+      footer: true,
+      datosFooter: datosFooter,
+      footerHeight: "h-8",
+    },
+    searchFunction: {
+      hayFuncionBusqueda: true,
+      idsCoincidentes: idsCoincidentes,
+      indiceSeleccionado: indiceSeleccionado ?? undefined,
+      buscado: buscado,
+      modoNavegacion: modoNavegacion,
+      setUltimoIndiceBusqueda: setUltimoIndiceBusqueda,
+      indiceGlobal: indiceGlobal,
+    },
+  };
+ 
   return (
-    <div
-      className="flex flex-col w-fit 
-     overflow-hidden rounded shadow-md   "
-    >
-      <TablaInforme
-        columnas={COLUMNS}
-        datosParaTabla={productos}
-        procesado={false}
-        estilos={customTheme}
-        status={status}
-        hayFuncionBusqueda={true}
-        idsCoincidentes={idsCoincidentes}
-        indiceSeleccionado={indiceSeleccionado ?? undefined}
-        buscado={buscado}
-        modoNavegacion={modoNavegacion}
-        setUltimoIndiceBusqueda={setUltimoIndiceBusqueda}
-        indiceGlobal={indiceGlobal}
-        objectColumns={productosColumns}
-        footerWidth={widthBase}
-        columnasGrid={columnasGrid}
-        footer={true}
-        datosFooter={datosFooter}
-        footerWidth={widthBase}
-        footerWidth1440px={width1440px}
-        footerWidth1536px={width1536px}
-      />
+    <div className="flex flex-col w-fit bg-white h-[41rem] border border-black overflow-hidden rounded-md shadow-md ">
+      <TablaDefault props={propsTablaStock} />
     </div>
   );
 }
