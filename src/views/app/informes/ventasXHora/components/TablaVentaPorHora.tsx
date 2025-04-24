@@ -1,16 +1,15 @@
-import { CSSProperties, useEffect, useState } from "react";
+import {  useEffect } from "react";
 import { useVentasHoraStore } from "@/store/useVentasHoraStore";
 import { HighlightMap, VentaPorHora } from "@/types";
 import TablaDefault from "@/frontend-resourses/components/Tables/TablaDefault/TablaDefault";
-import { TableUtils } from "@/frontend-resourses/components/Tables/TableUtils";
 import { extraerMaxIds } from "@/frontend-resourses/components/Tables/TablaDefault/Utils/utils";
 
 // Definicion de estructura de columnas
-interface TableColumn<T> {
-  label: string;
-  renderCell: (item: T) => JSX.Element | number | string;
-  cellProps?: (item: T) => any;
-}
+// interface TableColumn<T> {
+//   label: string;
+//   renderCell: (item: T) => JSX.Element | number | string;
+//   cellProps?: (item: T) => any;
+// }
 
 interface TablaVentaPorHoraProps {
   dataParaTabla: VentaPorHora[];
@@ -33,7 +32,7 @@ type VentaXHoraCType = {
   id: string | number;
   hora: string;
   nOperaciones: number | string;
-  porcentajeOperaciones: number | string;
+  porcentajeNOperaciones: number | string;
   pares: number | string;
   porcentajePares: number | string;
   importe: string | number;
@@ -59,7 +58,7 @@ export default function TablaVentaPorHora({
       maxWidth: "100",
     },
     {
-      key: "porcentajeOperaciones",
+      key: "porcentajeNOperaciones",
       label: "%",
       withCellProps: true,
       minWidth: "80",
@@ -108,7 +107,7 @@ export default function TablaVentaPorHora({
 
   // Elementos a resaltar  relacionados
   const highlightMap: HighlightMap<VentaXHoraCType, GrupoCustom> = {
-    nOperaciones: ["nOperaciones", "porcentajeOperaciones"],
+    nOperaciones: ["nOperaciones", "porcentajeNOperaciones"],
     importe: ["importe", "porcentajeImporte"],
     pares: ["pares", "porcentajePares"],
   };

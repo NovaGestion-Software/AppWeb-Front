@@ -2,18 +2,49 @@ import { useEffect, useState } from "react";
 import { useStockPorSeccion } from "@/views/app/stockSeccion/store/useStockPorSeccion";
 import { MarcaModal, ProductoAgrupado } from "@/types";
 import TablaDefault from "@/frontend-resourses/components/Tables/TablaDefault/TablaDefault";
-import { TableUtils } from "@/frontend-resourses/components/Tables/TableUtils";
+type ExtendedColumn<T> = {
+  key: keyof T;
+  label: string;
+  minWidth?: string;
+  maxWidth?: string;
+  renderCell?: (item: T) => React.ReactNode;
+  resaltar?: boolean;
+};
 
+type ProductosCType = {
+  id: number;
+  codigo: string;
+  talle: string;
+  descripcion: string;
+  marca: string;
+  nmarca: string;
+  precios: {
+    contado: string;
+    lista2: string;
+    lista3: string;
+  };
+  precio: string;
+  stockPorDeposito: { [deposito: string]: string };
+  total: string;
+};
+type SelectData = {
+  id: number;
+  hora: string;
+  nOperaciones: number;
+  porcentajeOperaciones: string;
+  importe: string;
+  porcentajeImporte: string;
+  pares: number;
+  porcentajePares: string;
+};
 export default function TablaStock() {
   // store
   const {
     tablaStock,
-    status,
     productos,
     setStockRenderizado,
     indiceSeleccionado,
     idsCoincidentes,
-    depositosDisponibles,
     depositosSeleccionados,
     marcasSeleccionadas,
     setMarcasDisponibles,
@@ -40,32 +71,9 @@ export default function TablaStock() {
   const datosFooter: { [key: string]: string } = {
     id: cantidadItems.toString(),
   };
+  const [seleccionado, setSeleccionado] = useState<SelectData | null>(null);
 
-  type ExtendedColumn<T> = {
-    key: keyof T;
-    label: string;
-    minWidth?: string;
-    maxWidth?: string;
-    renderCell?: (item: T) => React.ReactNode;
-    resaltar?: boolean;
-  };
 
-  type ProductosCType = {
-    id: number;
-    codigo: string;
-    talle: string;
-    descripcion: string;
-    marca: string;
-    nmarca: string;
-    precios: {
-      contado: string;
-      lista2: string;
-      lista3: string;
-    };
-    precio: string;
-    stockPorDeposito: { [deposito: string]: string };
-    total: string;
-  };
   const productosColumns: Array<ExtendedColumn<ProductosCType>> = [
     {
       key: "codigo",
@@ -96,7 +104,7 @@ export default function TablaStock() {
       label: "Total",
       minWidth: "80",
       maxWidth: "100",
-      resaltar: true,
+      resaltar: false,
     },
   ];
 
@@ -288,18 +296,8 @@ export default function TablaStock() {
       nmarca: nmarcaKey.toUpperCase(),
     })).sort((a, b) => a.nmarca.localeCompare(b.nmarca));
   }
-  type SelectData = {
-    id: number;
-    hora: string;
-    nOperaciones: number;
-    porcentajeOperaciones: string;
-    importe: string;
-    porcentajeImporte: string;
-    pares: number;
-    porcentajePares: string;
-  };
-  
-  const [seleccionado, setSeleccionado] = useState<SelectData | null>(null);
+ 
+  // ver seleccion.
   useEffect(() => {
     console.log('seleccionado desde tabla stock', seleccionado);
   }, [seleccionado]);

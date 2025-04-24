@@ -98,7 +98,7 @@ export interface VentaPorHora {
   id: number;
   hora: string;
   nOperaciones: number | string;
-  porcentajeOperaciones: number | string;
+  porcentajeNOperaciones: number | string;
   importe: string;
   porcentajeImporte: number | string;
   pares: number | string;
