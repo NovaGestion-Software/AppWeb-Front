@@ -48,20 +48,20 @@ export default function TablaVentaPorHora({
   const { status } = useVentasHoraStore();
 
   const VentaXHoraColumns: Array<ExtendedColumn<VentaXHoraCType>> = [
-    { key: "hora", label: "Hora", minWidth: "90", maxWidth: "120" },
+    { key: "hora", label: "Hora", minWidth: "100", maxWidth: "120" },
     {
       key: "nOperaciones",
       label: "N. Opera",
       withCellProps: true,
       resaltar: true,
-      minWidth: "100",
+      minWidth: "40",
       maxWidth: "100",
     },
     {
       key: "porcentajeNOperaciones",
       label: "%",
       withCellProps: true,
-      minWidth: "80",
+      minWidth: "40",
       maxWidth: "80",
     },
     {
@@ -69,14 +69,14 @@ export default function TablaVentaPorHora({
       label: "Pares",
       withCellProps: true,
       resaltar: true,
-      minWidth: "80",
+      minWidth: "60",
       maxWidth: "80",
     },
     {
       key: "porcentajePares",
       label: "%",
       withCellProps: true,
-      minWidth: "80",
+      minWidth: "40",
       maxWidth: "80",
     },
     {
@@ -84,14 +84,14 @@ export default function TablaVentaPorHora({
       label: "Importes $",
       withCellProps: true,
       resaltar: true,
-      minWidth: "120",
+      minWidth: "110",
       maxWidth: "180",
     },
     {
       key: "porcentajeImporte",
       label: "%",
       withCellProps: true,
-      minWidth: "50",
+      minWidth: "40",
       maxWidth: "80",
     },
   ];
@@ -99,6 +99,11 @@ export default function TablaVentaPorHora({
   const widthBase = "40rem";
   const width1440px = "43rem";
   const width1536px = "42rem";
+  const heightBase = "34rem";
+  const height1440px = "34rem";
+  const height1536px = "34.2rem";
+  
+  
 
   // SI hay funcion de resaltar a los de maximos valores:
   // Elementos seleccionados
@@ -134,8 +139,16 @@ export default function TablaVentaPorHora({
     status: status,
     objectStyles: {
       width: widthBase,
-      width1440px: width1440px,
-      width1536px: width1536px,
+      height: heightBase,
+      rowClass: "max-height: 10px;",
+      width1440: {
+        width1440px: width1440px,
+        height1440px: height1440px,
+      },
+      width1536: {
+        height1536px: height1536px,
+        width1536px: width1536px,
+      },
     },
     objectFooter: {
       footer: footer,

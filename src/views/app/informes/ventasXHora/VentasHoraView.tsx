@@ -2,10 +2,14 @@ import { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useVentasHoraStore } from "@/store/useVentasHoraStore";
 import { obtenerVentasHora } from "@/services/ApiPhpService";
-import { ApiResponse, FechasRango, Sucursal, VentaPorHora } from "@/types";
+import { ApiResponse, FechasRango, VentaPorHora } from "@/types";
 import { formatearNumero } from "@/utils";
 import ViewTitle from "@/Components/ui/Labels/ViewTitle";
-import FechasInforme from "../_components/FechasInforme";
+import dayjs from "dayjs";
+
+
+
+
 import HerramientasComponent from "./components/HerramientasComponent";
 import TablaVentaPorHora from "./components/TablaVentaPorHora";
 import showAlert from "@/utils/showAlert";
@@ -18,13 +22,10 @@ import {
   extraerItemsDeIndice,
   agruparPorIndice,
   crearDataParaTablaModular,
-  capitalize,
   obtenerValorMaximoConIndice
-} from "./Utils";
-
-
-
-
+} from "@/frontend-resourses/utils/dataManipulation";
+import { Destacados } from "@/frontend-resourses/components/Complementos/Destacados";
+import { ListaFiltrosAplicados } from "@/frontend-resourses/components/Complementos/ListaFiltrosAplicados";
 
 type ConfigKeys = {
   filtroKey: string;
@@ -33,8 +34,6 @@ type ConfigKeys = {
   sumaKeys: string[];
   convertir: string[];
 };
-
-
 type ColumnaTabla = {
   key: string; // Clave interna, ej: "importe"
   label: string; // Clave en el objeto final, ej: "importeFormateado"
@@ -42,7 +41,6 @@ type ColumnaTabla = {
   totalKey?: string; // A cuál total se relaciona
   parseNumber?: boolean; // Si hay que parsear antes de hacer % (como "importe" con punto)
 };
-
 type ConfigTabla = {
   agrupadorKey: string; // ej: "hora"
   columnas: ColumnaTabla[];
@@ -53,7 +51,7 @@ export default function VentasHoraView() {
   const [footer, setFooter] = useState<boolean>(false);
   const [foco, setFoco] = useState<boolean>(false);
   const [showModalSucursales, setShowModalSucursales] = useState(false);
-
+  //store
   const {
     status,
     fechas,
@@ -70,9 +68,7 @@ export default function VentasHoraView() {
     clearSucursalesSeleccionadas,
   } = useVentasHoraStore();
   // extrae horarios para indice.
-  const horariosnew = ventasPorHora
-    ? extraerItemsDeIndice(ventasPorHora, "info", "horaini")
-    : [];
+  const horariosnew = ventasPorHora ? extraerItemsDeIndice(ventasPorHora, "info", "horaini") : [];
 
   // funcion agrupar por horario, te suma los totales en base a sumKey
   const config: ConfigKeys = {
@@ -82,6 +78,7 @@ export default function VentasHoraView() {
     sumaKeys: ["importe", "cantidad", "pares"],
     convertir: ["importe"],
   };
+
   const configTabla: ConfigTabla = {
     agrupadorKey: "hora",
     columnas: [
@@ -111,7 +108,7 @@ export default function VentasHoraView() {
     sucursalesSeleccionadas,
     horariosnew,
     config,
-    formatearNumero // función para dejar el importe con puntos/comas
+    formatearNumero 
   );
   // crea datos en estructura de tabla.
   const filasGenericas = crearDataParaTablaModular(datos, totales, configTabla);
@@ -238,6 +235,17 @@ export default function VentasHoraView() {
     setFoco(true);
   };
 
+  // seteo de destacados.
+  const indiceString = `${dayjs(fechas.from).format("DD/MM/YYYY")} - ${dayjs(fechas.to).format("DD/MM/YYYY")}`;
+  const destacadosObject = {
+    indice: indiceString,
+    destacados: [
+      { label: "Mayor Importe $", valor: maxImporteFormateado },
+      { label: "Horario", valor: maxImporteValor.indice },
+    ],  
+  };
+ 
+ 
   return (
     <div className="h-screen ">
       <ViewTitle title={"Ventas por Hora"} />
@@ -301,46 +309,11 @@ export default function VentasHoraView() {
           {isProcessing && (
             <div className="col-span-5 2xl:col-start-2  flex flex-col items-center justify-evenly 2xl:justify-evenly 2xl:items-center transition-all duration-500 ease-out">
               {/* Lista Sucursales */}
-              <div className="col-start-1 col-span-5 row-start-1 w-fit h-fit py-2 px-4 bg-white rounded-lg font-semibold shadow-md space-y-2">
-                <ul
-                  className={`grid gap-x-4 ${
-                    sucursalesDisponibles.length > 3
-                      ? "grid-cols-3"
-                      : "grid-cols-1" // Si hay más de 3 sucursales, divide en 3 columnas
-                  } grid-rows-auto list-disc list-inside text-xs 2xl:text-base 2xl:p-2`}
-                >
-                  {sucursalesDisponibles.map((sucursal, index) => (
-                    <li
-                      key={index}
-                      className={`${
-                        sucursalesSeleccionadas.includes(sucursal)
-                          ? "text-green-600" // Estilo para sucursales seleccionadas
-                          : "text-gray-400 line-through" // Estilo para sucursales no seleccionadas
-                      }`}
-                    >
-                      {sucursal}
-                    </li>
-                  ))}
-                </ul>
-              </div>
+           <ListaFiltrosAplicados itemsDisponibles={sucursalesDisponibles} itemsSeleccionados={sucursalesSeleccionadas} />
 
               {/* Información de ventas */}
-              <div className="flex flex-col w-fit 2xl:w-[25rem] 2xl:text-lg bg-white rounded-lg py-1 px-3">
-                <div className="flex gap-4">
-                  <p className="text-blue-500 font-semibold">
-                    Mayores Ventas:{" "}
-                  </p>
-                  <span className="text-green-600 font-bold ">
-                    {maxImporteValor.indice}
-                  </span>
-                </div>
-                <div className="flex gap-5">
-                  <p className="text-blue-500 font-semibold">Mayor Importe: </p>
-                  <p className=" text-green-600 font-bold ">
-                    {"$" + maxImporteFormateado}
-                  </p>
-                </div>
-              </div>
+              <Destacados {...destacadosObject} />
+
 
               {/* Gráfico */}
               <div className="w-full">
@@ -356,7 +329,7 @@ export default function VentasHoraView() {
           )}
 
           <div
-            className={`flex bg-white h-[46rem] rounded-md border-gray-300
+            className={`flex bg-white h-[36.8rem] rounded-md border-gray-300
                shadow shadow-gray-600 w-fit overflow-hidden ml-5 transition-all duration-500 ease-out  ${
                  isProcessing
                    ? "col-start-6 col-span-2 2xl:col-start-7 transform"

@@ -104,7 +104,7 @@ export default function TablaStock() {
       label: "Total",
       minWidth: "80",
       maxWidth: "100",
-      resaltar: false,
+      resaltar: true,
     },
   ];
 
