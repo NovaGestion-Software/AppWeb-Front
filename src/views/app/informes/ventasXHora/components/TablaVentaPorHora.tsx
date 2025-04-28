@@ -1,5 +1,5 @@
 import {  useEffect } from "react";
-import { useVentasHoraStore } from "@/store/useVentasHoraStore";
+import { useVentasHoraStore } from "@/views/app/informes/ventasXHora/store/useVentasHoraStore";
 import { HighlightMap, VentaPorHora } from "@/types";
 import TablaDefault from "@/frontend-resourses/components/Tables/TablaDefault/TablaDefault";
 import { extraerMaxIds } from "@/frontend-resourses/components/Tables/TablaDefault/Utils/utils";
@@ -30,7 +30,7 @@ type ExtendedColumn<T = any> = {
 
 type VentaXHoraCType = {
   id: string | number;
-  hora: string;
+  horaini: string;
   nOperaciones: number | string;
   porcentajeNOperaciones: number | string;
   pares: number | string;
@@ -48,7 +48,7 @@ export default function TablaVentaPorHora({
   const { status } = useVentasHoraStore();
 
   const VentaXHoraColumns: Array<ExtendedColumn<VentaXHoraCType>> = [
-    { key: "hora", label: "Hora", minWidth: "100", maxWidth: "120" },
+    { key: "horaini", label: "Hora", minWidth: "100", maxWidth: "120" },
     {
       key: "nOperaciones",
       label: "N. Opera",

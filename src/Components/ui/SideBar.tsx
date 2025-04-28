@@ -10,7 +10,7 @@ import Cookies from 'js-cookie';
 import { GrDocumentTime } from 'react-icons/gr';
 import { BiBarChartSquare } from 'react-icons/bi';
 import { FaBoxesPacking } from 'react-icons/fa6';
-import { useVentasHoraStore } from '@/store/useVentasHoraStore';
+import { useVentasHoraStore } from '@/views/app/informes/ventasXHora/store/useVentasHoraStore';
 
 interface SubMenuItem {
   title: string;

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useVentasHoraStore } from "@/store/useVentasHoraStore";
+import { useVentasHoraStore } from "@/views/app/informes/ventasXHora/store/useVentasHoraStore";
 import { DatePicker, ConfigProvider } from "antd";
 import { FechasRango } from "@/types";
 import { RiPlayCircleFill, RiCloseCircleFill } from "@remixicon/react";

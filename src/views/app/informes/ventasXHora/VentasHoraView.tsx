@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { useVentasHoraStore } from "@/store/useVentasHoraStore";
+import { useVentasHoraStore } from "@/views/app/informes/ventasXHora/store/useVentasHoraStore";
 import { obtenerVentasHora } from "@/services/ApiPhpService";
 import { ApiResponse, FechasRango, VentaPorHora } from "@/types";
 import { formatearNumero } from "@/utils";
@@ -111,8 +111,6 @@ export default function VentasHoraView() {
     formatearNumero 
   );
 
-  console.log('AD, VxH', ventasPorHora)
-  console.log('AD', datos)
   // crea datos en estructura de tabla.
   const filasGenericas = crearDataParaTablaModular(datos, totales, configTabla);
   // seteo de filas segun VentaPorHora
@@ -127,8 +125,6 @@ export default function VentasHoraView() {
     porcentajePares: fila.porcentajePares as string,
   }));
 
-  console.log('FL', filasGenericas)
-  console.log('F', filas)
 
   // llamado a fetch
   const { mutate } = useMutation<ApiResponse, Error, FechasRango>({
@@ -250,7 +246,10 @@ export default function VentasHoraView() {
       { label: "Horario", valor: maxImporteValor.indice },
     ],  
   };
- 
+   const configuracionGrafico = [
+     { label: 'horaini', key: 'horaini' },
+     { label: 'nOperaciones', key: 'nOperaciones' },
+   ];
  
   return (
     <div className="h-screen ">
@@ -325,10 +324,11 @@ export default function VentasHoraView() {
               <div className="w-full">
                 <GraficoConZoom
                   datosParaGraficos={filas}
-                  index="horaini2"
+                  index="horaini"
                   widthGraficoModal="w-[60rem]"
-                  categorias={["Operaciones"]}
+                  categorias={["nOperaciones"]}
                   tituloModal="N° Operaciones por Hora"
+                  keysMap={configuracionGrafico}
                 />
               </div>
             </div>

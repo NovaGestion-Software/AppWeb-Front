@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { useVentasHoraStore } from '@/store/useVentasHoraStore';
+import { useVentasHoraStore } from '@/views/app/informes/ventasXHora/store/useVentasHoraStore';
 import { RiStore3Fill } from '@remixicon/react';
 import ActionButton from '@/Components/ui/Buttons/ActionButton';
 import ModalInforme from '../../_components/ModalInforme';
