@@ -80,7 +80,7 @@ export default function VentasHoraView() {
   };
 
   const configTabla: ConfigTabla = {
-    agrupadorKey: "hora",
+    agrupadorKey: "horaini",
     columnas: [
       {
         key: "cantidad",
@@ -110,12 +110,15 @@ export default function VentasHoraView() {
     config,
     formatearNumero 
   );
+
+  console.log('AD, VxH', ventasPorHora)
+  console.log('AD', datos)
   // crea datos en estructura de tabla.
   const filasGenericas = crearDataParaTablaModular(datos, totales, configTabla);
   // seteo de filas segun VentaPorHora
   const filas: VentaPorHora[] = filasGenericas.map((fila) => ({
     id: fila.id as number,
-    hora: fila.hora as string,
+    horaini: fila.horaini as string,
     nOperaciones: fila.nOperaciones as number,
     porcentajeNOperaciones: fila.porcentajeNOperaciones as string,
     importe: fila.importe as string,
@@ -123,6 +126,9 @@ export default function VentasHoraView() {
     pares: fila.pares as number,
     porcentajePares: fila.porcentajePares as string,
   }));
+
+  console.log('FL', filasGenericas)
+  console.log('F', filas)
 
   // llamado a fetch
   const { mutate } = useMutation<ApiResponse, Error, FechasRango>({
@@ -158,7 +164,7 @@ export default function VentasHoraView() {
   });
 
   // esto es para setar los highLight
-  const maxImporteValor = obtenerValorMaximoConIndice(filas, "importe", "hora");
+  const maxImporteValor = obtenerValorMaximoConIndice(filas, "importe", "horaini");
   const maxImporteFormateado = formatearNumero(maxImporteValor.maxValue);
 
   // formateo con miles y centavos para el footer
@@ -319,7 +325,7 @@ export default function VentasHoraView() {
               <div className="w-full">
                 <GraficoConZoom
                   datosParaGraficos={filas}
-                  index="horas"
+                  index="horaini2"
                   widthGraficoModal="w-[60rem]"
                   categorias={["Operaciones"]}
                   tituloModal="N° Operaciones por Hora"

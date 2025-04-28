@@ -96,7 +96,7 @@ export type FechasRango = {
 
 export interface VentaPorHora {
   id: number;
-  hora: string;
+  horaini: string;
   nOperaciones: number | string;
   porcentajeNOperaciones: number | string;
   importe: string;
