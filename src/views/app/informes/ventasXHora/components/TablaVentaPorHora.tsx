@@ -96,19 +96,19 @@ export default function TablaVentaPorHora({
     },
   ];
   // 2.Padre
-  const widthBase = "40rem";
-  const width1440px = "43rem";
-  const width1536px = "42rem";
+  const widthBase = "66rem";
+  const width1440px = "66rem";
+  const width1536px = "66rem";
   const heightBase = "34rem";
   const height1440px = "34rem";
-  const height1536px = "34.2rem";
+  const height1536px = ".2rem";
   
   
 
   // SI hay funcion de resaltar a los de maximos valores:
   // Elementos seleccionados
   type GrupoCustom = "nOperaciones" | "importe" | "pares";
-  const seleecionados: GrupoCustom[] = ["nOperaciones", "importe", "pares"];
+  const seleccionados: GrupoCustom[] = ["nOperaciones", "importe", "pares"];
 
   // Elementos a resaltar  relacionados
   const highlightMap: HighlightMap<VentaXHoraCType, GrupoCustom> = {
@@ -120,7 +120,7 @@ export default function TablaVentaPorHora({
   // extraer ids.
   const maxIds = extraerMaxIds<VentaXHoraCType, GrupoCustom>(
     dataParaTabla,
-    seleecionados
+    seleccionados
   );
 
   const maxIdsFunction = {
@@ -138,20 +138,25 @@ export default function TablaVentaPorHora({
     estaProcesado: isProcessing,
     status: status,
     objectStyles: {
+      columnasNumber: [2,3,4,5,6,7],
+      heightContainer: "38rem",
       width: widthBase,
       height: heightBase,
       rowClass: "max-height: 10px;",
       width1440: {
         width1440px: width1440px,
         height1440px: height1440px,
+        heightContainer1440px: "38rem",
       },
       width1536: {
         height1536px: height1536px,
         width1536px: width1536px,
+        heightContainer1536px: "38rem",
+
       },
     },
     objectFooter: {
-      footer: footer,
+      footer: true,
       datosFooter: datosFooter,
      footerHeight: "h-8",
 

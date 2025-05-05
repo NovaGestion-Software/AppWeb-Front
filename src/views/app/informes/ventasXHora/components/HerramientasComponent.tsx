@@ -1,6 +1,5 @@
 import { useCallback } from 'react';
 import * as XLSX from 'xlsx';
-import ModalSucursales from './ModalSucursales';
 import HerramientasInforme from '../../_components/HerramientasInforme';
 
 interface HerramientasComponentProps {
@@ -9,7 +8,7 @@ interface HerramientasComponentProps {
   isProcessing: boolean;
   modalSucursales?: boolean;
   disabled?: boolean;
-
+  handleClean ?: () => void; // Función opcional para limpiar
 }
 
 export default function HerramientasComponent({
@@ -18,6 +17,7 @@ export default function HerramientasComponent({
   isProcessing,
   modalSucursales = true,
   disabled,
+  handleClean,
 }: HerramientasComponentProps) {
   // Aseguramos que datosTotales tenga un ID
   const datosTotales = datosParaFooter
@@ -85,9 +85,9 @@ export default function HerramientasComponent({
         handlePrint={handlePrint}
         disabled1={disabled}
         disabled2={disabled}
+        handleClean={handleClean}
         
         >
-        {modalSucursales && <ModalSucursales isProcessing={isProcessing} />}
       </HerramientasInforme>
     </>
   );

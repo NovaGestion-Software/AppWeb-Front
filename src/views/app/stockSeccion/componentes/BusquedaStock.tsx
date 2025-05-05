@@ -10,26 +10,35 @@ import { FiAlertTriangle } from "react-icons/fi";
 import { FiltrosBusqueda, useBusqueda } from "@/frontend-resourses/components/Tables/TablaDefault/Hooks/useBusqueda";
 
 export default function BusquedaStock() {
+  // valores de busqueda
   const [codigoBusqueda, setCodigoBusqueda] = useState<string>("");
   const [textoBusqueda, setTextoBusqueda] = useState<string>("");
+// estado para deshabilitar 
   const [isDisabled, setIsDisabled] = useState(true);
+  // store
   const {
+    // estado
     status,
+    // datos
     productos,
+    // busqueda
     buscado,
+    indiceSeleccionado,
+    modoNavegacion,
+    indiceGlobal,
+    idsCoincidentes,
     setBuscado,
     setNavegandoCoincidentes,
     setIndiceGlobal,
-    modoNavegacion,
-    indiceGlobal,
     setModoNavegacion,
     setUltimoIndiceBusqueda,
-    indiceSeleccionado,
     setIndiceSeleccionado,
-    idsCoincidentes,
     setIdsCoincidentes,
   } = useStockPorSeccion();
+  // funciones de busqueda
   const { buscarCoincidencias, agruparPorKey, extraerIds } = useBusqueda();
+  
+  // objeto valores de busqueda
   const filtros: FiltrosBusqueda = {
     codigo: {
       valor: codigoBusqueda,
@@ -41,16 +50,38 @@ export default function BusquedaStock() {
     }
   };
 
+    // seteador del disabled
+    useEffect(() => {
+      setIsDisabled(codigoBusqueda.length === 0 && textoBusqueda.length === 0);
+    }, [codigoBusqueda, textoBusqueda]);
+  
+    // Reseteo de buscado cuando no hay texto de búsqueda
+    useEffect(() => {
+      if (codigoBusqueda.length <= 0 && textoBusqueda.length <= 0) {
+        setBuscado(false);
+      }
+    }, [idsCoincidentes]);
+  
+    // busqueda .
+    useEffect(() => {
+      if (!productos) return;
+      const productosFiltrados = buscarCoincidencias(productos, filtros);
+      const resultadosAgrupados = agruparPorKey(productosFiltrados, "codigo");
+      extraerIds(resultadosAgrupados, "codigo", setIdsCoincidentes);
+    }, [codigoBusqueda, textoBusqueda, productos]);
+    // input 1: key: string, label: string, value: valorBusqueda, placeholder: string,
+    // input 2: value: valorBusqueda, placeholder: string.
+    // onChange: compartido
 
   // inicia la busqueda
   const handleSearch = () => {
     // si al hacer click hay indCoincidentes, entonces se hace la busqueda.
-    // si al hacer click no hay idsCoincidentes, se setea en falso.
-    // funciona para no tener que deshabilitar el boton y desactivar el click.
+    // si al hacer click no hay idsCoincidentes, se setea en falso:
+    //    Es decir que cuando este buscando pero no haya coincidencias resetea buscado.
+    // funciona para no tener que deshabilitar el boton y desactivar el click
+    // el usuario entra en modo busqueda.
     if (idsCoincidentes.length > 0) {
       setBuscado(true);
-    } else {
-      setBuscado(false);
     }
   };
 
@@ -163,28 +194,7 @@ export default function BusquedaStock() {
       setTextoBusqueda("");
     }
   };
-  // seteador del disabled
-  useEffect(() => {
-    setIsDisabled(codigoBusqueda.length === 0 && textoBusqueda.length === 0);
-  }, [codigoBusqueda, textoBusqueda]);
 
-  // Reseteo de buscado cuando no hay texto de búsqueda
-  useEffect(() => {
-    if (codigoBusqueda.length <= 0 && textoBusqueda.length <= 0) {
-      setBuscado(false);
-    }
-  }, [idsCoincidentes]);
-
-  // busqueda .
-  useEffect(() => {
-    if (!productos) return;
-    const productosFiltrados = buscarCoincidencias(productos, filtros);
-    const resultadosAgrupados = agruparPorKey(productosFiltrados, "codigo");
-    extraerIds(resultadosAgrupados, "codigo", setIdsCoincidentes);
-  }, [codigoBusqueda, textoBusqueda, productos]);
-  // input 1: key: string, label: string, value: valorBusqueda, placeholder: string,
-  // input 2: value: valorBusqueda, placeholder: string.
-  // onChange: compartido
 
   return (
     <div className="flex gap-1 items-center border py-1.5 px-2 rounded-lg bg-slate-50">
@@ -194,7 +204,7 @@ export default function BusquedaStock() {
         value={codigoBusqueda || ""}
         placeholder="Código"
         labelWidth="3rem"
-        labelClassName="text-start w-12 text-sm "
+        labelClassName={`text-start w-12 text-sm  s ${buscado && 'text-green-500'} `}
         inputClassName="w-24 text-xs"
         containerWidth="w-[12rem]"
         disabled={status === "idle"}

@@ -159,20 +159,34 @@ export interface Deposito {
   talles: Talle[];
 }
 
+export interface FiltroModal {
+  [key: string]: string;
+}
 // DEPOSITO MODAL
-export interface DepositoModal {
+export interface DepositoModal extends FiltroModal {
   deposito: string;
   ndeposito: string;
 }
-// DEPOSITO MODAL
-export interface MarcaModal {
+
+export interface MarcaModal extends FiltroModal {
   marca: string;
   nmarca: string;
 }
-export interface SucursalesModal {
-  marsucursal: string;
+
+
+export interface SucursalesModal extends FiltroModal {
+  sucursal: string;
   nsucursal: string;
 }
+// grupo de checkbox filtro
+export interface CheckboxState {
+  grupo1: string | null; // Talles o Artículos
+  grupo2: string | null; // Stock (Con Stock, Todos, Negativos)
+  grupo3: string | null; // Listas (CONTADO, LISTA 2, LISTA 3)
+  grupo4: string | null; // Ordenar (Código, Marca, Descripción)
+  [key: string]: string | null;
+}
+
 
 export interface Producto {
   codigo: string;

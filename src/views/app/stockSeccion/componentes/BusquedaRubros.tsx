@@ -1,116 +1,121 @@
-import { useEffect, useRef, useState } from "react";
-import { useStockPorSeccion } from "../store/useStockPorSeccion";
-import showAlert from "@/utils/showAlert";
-import FlexibleInputField from "@/Components/ui/Inputs/FlexibleInputs";
-import ActionButton from "@/Components/ui/Buttons/ActionButton";
-import { TbArrowBigRightLinesFilled } from "react-icons/tb";
-import { BiSearch } from "react-icons/bi";
-import { FiAlertTriangle } from "react-icons/fi";
-import { IoTrash } from "react-icons/io5";
-import { FiltrosBusqueda, useBusqueda } from "@/frontend-resourses/components/Tables/TablaDefault/Hooks/useBusqueda";
+import { useEffect, useRef, useState } from 'react';
+import { useStockPorSeccion } from '../store/useStockPorSeccion';
+import showAlert from '@/utils/showAlert';
+import FlexibleInputField from '@/Components/ui/Inputs/FlexibleInputs';
+import ActionButton from '@/Components/ui/Buttons/ActionButton';
+import { TbArrowBigRightLinesFilled } from 'react-icons/tb';
+import { BiSearch } from 'react-icons/bi';
+import { FiAlertTriangle } from 'react-icons/fi';
+import { IoTrash } from 'react-icons/io5';
+import { FiltrosBusqueda, useBusqueda } from '@/frontend-resourses/components/Tables/TablaDefault/Hooks/useBusqueda';
 
 export default function BusquedaRubros() {
+  // tooltip de shortcuts
   const [showHint, setShowHint] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const [textoBusqueda, setTextoBusqueda] = useState<string>("");
-  const [isDisabled, setIsDisabled] = useState(true);  
-  const buscadoTextoAnterior = useRef<string>("");
+  // texto del input de busqueda
+  const [textoBusqueda, setTextoBusqueda] = useState<string>('');
+  // useRef el texto buscado
+  const buscadoTextoAnterior = useRef<string>('');
+  // estado para deshabilitar
+  const [isDisabled, setIsDisabled] = useState(true);
 
-// La busqueda se realiza en el useEffect con el texto a medida que va escribiendo.
-// Cuando el usuario escribe en el input una busqueda que no va a tener coincidencia ya se le avisa con el boton
-// Al realizar la busqueda con el enter o el click lo que se activa es la navegacion
-  
-// en los estilos de la tabla puedo hacer que eliminamos el border derecho de la tabla pero a los ultimos elementos de las row le sumamos un borde black a la derecha.
-  // a la tabla le falta paginacion.
-  const {
-    idsCoincidentes,
-    setBuscado,
-    setIdsCoincidentes,
-    setIndiceSeleccionado,
-    setNavegandoCoincidentes,
-    setModoNavegacion,
-    setUltimoIndiceBusqueda,
-    indiceSeleccionado,
-    buscado,
-    setIndiceGlobal,
+  // store
+  const { 
+    // datos
     datosRubros,
-  } = useStockPorSeccion();
+    // busqueda
+    buscado,
+    idsCoincidentes,
+    indiceSeleccionado, 
+    setBuscado, 
+    setIndiceGlobal, 
+    setIdsCoincidentes, 
+    setIndiceSeleccionado, 
+    setUltimoIndiceBusqueda, 
+    setNavegandoCoincidentes, 
+    setModoNavegacion, 
+   } =
+    useStockPorSeccion();
+  // La busqueda se realiza en el useEffect con el texto a medida que va escribiendo.
+  // Cuando el usuario escribe en el input una busqueda que no va a tener coincidencia ya se le avisa con el boton
+  // Al realizar la busqueda con el enter o el click lo que se activa es la navegacion
+  const { buscarCoincidenciasAnidadas, extraerIds } = useBusqueda();
+
+  // objeto valores de busqueda
+  const filtros: FiltrosBusqueda = {
+    rubro: { valor: textoBusqueda, keys: ['nrubro'] },
+  };
 
 
-  // deshabilitar el boton de busqueda si no hay texto. ✓
+  // rubros no activa el expandItem cuando se realiza la primera busqueda
+  // despues de haber buscado y borrado.
+  // deshabilitar el boton de busqueda si no hay texto. 
   useEffect(() => {
     setIsDisabled(textoBusqueda.length === 0);
   }, [textoBusqueda]);
 
-  const {buscarCoincidenciasAnidadas, extraerIds} = useBusqueda();
-  const filtros: FiltrosBusqueda = {
-  rubro: { valor: textoBusqueda, keys: ["nrubro"] }
-};
-  //Busqueda de coincidencias en Rubros. ✓
+  //Busqueda de coincidencias en Rubros. 
   useEffect(() => {
     if (!datosRubros || datosRubros.length === 0 || !textoBusqueda.trim()) {
       setIdsCoincidentes([]);
       return;
     }
     const rubrosFiltrados = buscarCoincidenciasAnidadas(datosRubros, filtros, {
-      keySubItems: "rubros",
-      keyIdentificador: "seccion",
+      keySubItems: 'rubros',
+      keyIdentificador: 'seccion',
     });
-    const nuevosIds = extraerIds(rubrosFiltrados, 'rubro', setIdsCoincidentes)
+    const nuevosIds = extraerIds(rubrosFiltrados, 'rubro', setIdsCoincidentes);
 
     // Solo si es una nueva búsqueda (no navegación)
-    if ( textoBusqueda !== buscadoTextoAnterior.current &&  nuevosIds.length > 0) {
+    if (textoBusqueda !== buscadoTextoAnterior.current && nuevosIds.length > 0) {
       setIndiceSeleccionado(0);
       const primerRubro = rubrosFiltrados[0];
       if (primerRubro) {
-        setIndiceGlobal(datosRubros.findIndex((s) => s.seccion === primerRubro.parentId) );
+        setIndiceGlobal(datosRubros.findIndex((s) => s.seccion === primerRubro.parentId));
       }
     }
   }, [textoBusqueda, datosRubros]);
 
-
-
   const handleSearch = () => {
     const textoLimpio = textoBusqueda.trim();
     buscadoTextoAnterior.current = textoLimpio;
- if(!buscado){
-  setBuscado(true);
-  setModoNavegacion("busqueda");
-  setNavegandoCoincidentes(true);
-  
-  setShowHint(true);
-  // Ocultar hint después de 3 segundos
-  setTimeout(() => setShowHint(false), 2000);
+    if (!buscado) {
+      setBuscado(true);
+      setModoNavegacion('busqueda');
+      setNavegandoCoincidentes(true);
 
-  // Si hay coincidencias, navegar al primer resultado
-  if (idsCoincidentes.length > 0) {
-    setIndiceSeleccionado(0);
-    setUltimoIndiceBusqueda(0);
-  }
- }
- else {
-  setShowHint(true);
-  // Ocultar hint después de 3 segundos
-  setTimeout(() => setShowHint(false), 3000);
- }
+      setShowHint(true);
+      // Ocultar hint después de 3 segundos
+      setTimeout(() => setShowHint(false), 2000);
+
+      // Si hay coincidencias, navegar al primer resultado
+      if (idsCoincidentes.length > 0) {
+        setIndiceSeleccionado(0);
+        setUltimoIndiceBusqueda(0);
+      }
+    } else {
+      setShowHint(true);
+      // Ocultar hint después de 3 segundos
+      setTimeout(() => setShowHint(false), 3000);
+    }
   };
 
   const handleActionButtonClick = () => {
     // Si no hay búsqueda activa o el texto cambió => nueva búsqueda
     if (!buscado || textoBusqueda.trim() !== buscadoTextoAnterior.current) {
       handleSearch();
-    } 
+    }
     // Si ya hay búsqueda activa => navegar al siguiente
     else {
       handleNextResult();
     }
   };
-  
 
   const handleNextResult = () => {
     // Solo funciona si hay una búsqueda activa con resultados
     if (buscado && idsCoincidentes.length > 0) {
-      const nuevoIndice = (indiceSeleccionado === null || indiceSeleccionado === idsCoincidentes.length - 1) ? 0 : indiceSeleccionado + 1;
+      const nuevoIndice = indiceSeleccionado === null || indiceSeleccionado === idsCoincidentes.length - 1 ? 0 : indiceSeleccionado + 1;
       setIndiceSeleccionado(nuevoIndice);
       setUltimoIndiceBusqueda(nuevoIndice);
     }
@@ -118,19 +123,19 @@ export default function BusquedaRubros() {
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     switch (event.key) {
-      case "Enter": {
+      case 'Enter': {
         event.preventDefault();
         handleSearch();
         break;
       }
 
-      case "F4": {
+      case 'F4': {
         event.preventDefault();
-     handleNextResult();
+        handleNextResult();
         break;
       }
 
-      case "Escape": {
+      case 'Escape': {
         event.preventDefault();
         resetBusqueda();
         break;
@@ -146,28 +151,27 @@ export default function BusquedaRubros() {
     setBuscado(false);
     setIdsCoincidentes([]);
     setIndiceSeleccionado(null);
-    setModoNavegacion("normal");
+    setModoNavegacion('normal');
     setNavegandoCoincidentes(false);
     setUltimoIndiceBusqueda(null);
   };
 
   const handleClean = async () => {
     const result = await showAlert({
-      title: "¿Estás seguro?",
-      text: "Todo el progreso se perderá",
-      icon: "warning",
+      title: '¿Estás seguro?',
+      text: 'Todo el progreso se perderá',
+      icon: 'warning',
       showConfirmButton: true,
       showCancelButton: true,
-      confirmButtonText: "Sí, limpiar todo",
-      cancelButtonText: "Cancelar",
+      confirmButtonText: 'Sí, limpiar todo',
+      cancelButtonText: 'Cancelar',
     });
 
     if (result.isConfirmed) {
       setBuscado(false);
       setIndiceSeleccionado(0);
       setIdsCoincidentes([]);
-      setTextoBusqueda("");
-      
+      setTextoBusqueda('');
     }
   };
 
@@ -186,13 +190,13 @@ export default function BusquedaRubros() {
   return (
     <div className="flex gap-4 items-center border py-1.5 px-2 rounded-lg bg-slate-50 border-gray-300">
       <FlexibleInputField
-        value={textoBusqueda || ""}
+        value={textoBusqueda || ''}
         placeholder="Descripción o Marca"
         inputClassName="w-52 text-xs"
         disabled={false}
         containerWidth="w-56 "
         onChange={(value) => {
-          if (typeof value === "string") {
+          if (typeof value === 'string') {
             setTextoBusqueda(value);
           }
         }}
@@ -227,13 +231,7 @@ export default function BusquedaRubros() {
         disabled={isDisabled}
       />
 
-      <ActionButton
-        icon={<IoTrash size={15} />}
-        color="red"
-        size="xs"
-        onClick={handleClean}
-        disabled={isDisabled}
-      />
+      <ActionButton icon={<IoTrash size={15} />} color="red" size="xs" onClick={handleClean} disabled={isDisabled} />
 
       {buscado && idsCoincidentes.length > 0 && (
         <span className="text-xs text-black px-2">

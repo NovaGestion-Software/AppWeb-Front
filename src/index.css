@@ -87,6 +87,10 @@ html {
   }
 }
 
+.noneScroll{
+  scrollbar-width: none;
+}
+
 /* Estilos generales para el contenedor con scroll */
 .scrollbar-custom {
   overflow-y: auto; /* La barra de desplazamiento solo se muestra si es necesario */

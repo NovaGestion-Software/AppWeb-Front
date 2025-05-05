@@ -48,33 +48,33 @@ export async function obtenerRubrosDisponibles() {
   }
 }
 
-export async function obtenerStock(rubros: string[]) {
-  const entorno = localStorage.getItem("_ce") || "development";  
-  try {
-    const baseSeleccionada = entorno === "development" ? "apinovades" : "apinova"
-    const url = `/${baseSeleccionada}/generico/obtenerStock.php`;
-    console.log('url stock', url)
+// export async function obtenerStock(rubros: string[]) {
+//   const entorno = localStorage.getItem("_ce") || "development";  
+//   try {
+//     const baseSeleccionada = entorno === "development" ? "apinovades" : "apinova"
+//     const url = `/${baseSeleccionada}/generico/obtenerStock.php`;
+//     console.log('url stock1', url)
 
-    const datos = {
-      _e: empresa,
-      _m: 'prod',
-      _r: 'JSON',
-      _j: rubros,
-    };
+//     const datos = {
+//       _e: empresa,
+//       _m: 'prod',
+//       _r: 'JSON',
+//       _j: rubros,
+//     };
 
-    // console.log(datos);
+//     // console.log(datos);
 
-    const { data } = await apiPhp(url, {
-      method: 'POST',
-      data: datos,
-    });
+//     const { data } = await apiPhp(url, {
+//       method: 'POST',
+//       data: datos,
+//     });
 
-    return data;
-  } catch (error) {
-    if (isAxiosError(error) && error.response) throw new Error(error.response.data.error);
-    console.log(error);
-  }
-}
+//     return data;
+//   } catch (error) {
+//     if (isAxiosError(error) && error.response) throw new Error(error.response.data.error);
+//     console.log(error);
+//   }
+// }
 export async function obtenerProductos(secciones: string[], rubros: string[]) {
   // obtener productos funciona solo con apinovades
   // pero funciona con homo y con prod
@@ -83,7 +83,7 @@ export async function obtenerProductos(secciones: string[], rubros: string[]) {
   try {
     const baseSeleccionada = entorno === "development" ? "apinovades" : "apinova"
     const url = `/${baseSeleccionada}/generico/obtenerProducto.php?_i={"_e":"${empresa}","_s":"08","_m":"${homologacion}"}`;
-    console.log('url stock', url)
+    console.log('url stock2', url)
 
     const datos = { secciones, rubros };
     // console.log(datos);

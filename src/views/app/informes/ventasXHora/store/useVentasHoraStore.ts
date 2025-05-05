@@ -1,4 +1,4 @@
-import { FechasRango, Status, Sucursal } from '@/types';
+import { FechasRango, Status, Sucursal, SucursalesModal } from '@/types';
 import dayjs from 'dayjs';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
@@ -11,13 +11,14 @@ const defaultDate = {
 type VentasHoraProps = {
   fechas: FechasRango;
   ventasPorHora: Sucursal[] | null;
-  sucursalesSeleccionadas: string[];
-  sucursalesDisponibles: string[];
+  // HACER TIPO Y EXTENDERLO DE FILTROMODAL
+  sucursalesSeleccionadas: SucursalesModal[];
+  sucursalesDisponibles: SucursalesModal[];
+  setSucursalesSeleccionadas: (sucursales: SucursalesModal[]) => void;
+  setSucursalesDisponibles: (sucursales: SucursalesModal[]) => void;
   status: Status;
   setVentasPorHora: (data: Sucursal[]) => void;
   setFechas: (data: FechasRango) => void;
-  setSucursalesSeleccionadas: (sucursales: string[]) => void;
-  setSucursalesDisponibles: (sucursales: string[]) => void;
   setStatus: (status: Status) => void;
   clearVentasPorHora: () => void;
   clearSucursalesSeleccionadas: () => void;
