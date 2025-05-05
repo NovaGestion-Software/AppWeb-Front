@@ -237,4 +237,4 @@ _Info necesaria_: keys de data para mostrar en grafico.
 
 ##### Ventas Por Hora Diagrama
 
-![Diagrama de flujo](/public/img/Diagramas/VentasPorHora.png)
+![Diagrama de flujo](/public/img/Diagramas/mermaid-diagram-2025-05-05-155911.svg)
