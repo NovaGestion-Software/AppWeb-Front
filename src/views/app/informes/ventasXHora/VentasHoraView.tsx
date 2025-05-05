@@ -154,7 +154,7 @@ export default function VentasHoraView() {
     porcentajePares: fila.porcentajePares as string,
   }));
 
-  // esto es para setar los highLight
+  // esto es para setar los highLight 
   // obtiene la fila que tiene el mayor importe y su indice (horario)
   const destacados = obtenerValorMaximoConIndice(filas, 'importe', 'horaini');
   const maxImporteFormateado = formatearNumero(destacados.maxValue);
@@ -275,7 +275,8 @@ export default function VentasHoraView() {
            2xl:col-span-2 2xl:col-start-8"
           >
             <ActionButton text="Sucursales" onClick={() => setShowModalSucursales(true)} disabled={false} color="blue" size="xs" />{' '}
-            <HerramientasComponent data={filas} isProcessing={procesado} datosParaFooter={datosParaFooter} disabled={false} modalSucursales={false} handleClean={handleClearData} />
+            <HerramientasComponent data={filas} isProcessing={procesado} 
+            datosParaFooter={datosParaFooter} disabled={false} modalSucursales={false} handleClean={handleClearData} />
             <ModalFiltro<SucursalesModal>
               title="Sucursales"
               renderItem={renderSucursalesItem}
@@ -324,133 +325,3 @@ export default function VentasHoraView() {
     </div>
   );
 }
-// SACAR FOOTER SI NO HAY DATOS SELECCIONADOS PARA MOSTRARSE
-// useEffect(() => {
-//   if (dataParaTabla?.length) {
-//     setFooter(true);
-//   } else {
-//     setFooter(false);
-//   }
-// }, [sucursalesSeleccionadas]);
-
-// props: data, sucursalesSeleccionadas (filtro), itemsDeIndice (horario), keys de agrupacion.
-// const agruparPorHorario = (
-//   data: Sucursal[] | null,
-//   sucursalesSeleccionadas: string[] | null
-// ) => {
-//   const resultado: Record<string,  { importe: string; cantidad: number; pares: number }> = {};
-
-//   let totalImporte = 0;
-//   let totalOperaciones = 0;
-//   let totalPares = 0;
-
-//   if (!sucursalesSeleccionadas || sucursalesSeleccionadas.length === 0) {
-//     // console.log('No se seleccionaron sucursales');
-//     return {
-//       datosAgrupados: resultado,
-//       totalImporte, // Número sin formatear
-//       totalOperaciones, // Número sin formatear
-//       totalPares, // Número sin formatear
-//     };
-//   }
-
-//   // 2️⃣ Inicializamos el resultado con todos los horarios posibles, incluso vacíos
-//   indiceTabla.forEach((horario) => {
-//     resultado[horario] = { importe: "0", cantidad: 0, pares: 0 }; // Aseguramos que todos los horarios tengan un valor inicial
-//   });
-
-//   // 3️⃣ Procesamos las sucursales seleccionadas y agrupamos por horario
-//   data?.filter((sucursal) => sucursalesSeleccionadas.includes(sucursal.nsucursal))
-//     .forEach((sucursal) => {
-//       sucursal.info.forEach((intervalo) => {
-//         const horario = intervalo.horaini.trim(); // Aseguramos que el horario esté bien formateado
-
-//         // Solo actualizamos el horario si ya existe en el resultado
-//         if (resultado[horario]) {
-//           // Convertimos el importe correctamente respetando los decimales
-//           const importeNumerico = parseFloat(intervalo.importe) || 0;
-
-//           // Sumar correctamente sin perder decimales
-//           totalImporte += importeNumerico;
-//           totalImporte = parseFloat(totalImporte.toFixed(2));
-
-//           // Actualizamos el importe en el resultado sin perder precisión
-//           let importeActual = parseFloat(resultado[horario].importe) || 0;
-//           importeActual = parseFloat(importeActual.toFixed(2));
-//           let nuevoImporte = importeActual + importeNumerico;
-//           resultado[horario].importe = nuevoImporte.toString(); // Guardamos como string sin formatear aún
-
-//           // Sumar otros valores
-//           resultado[horario].cantidad += intervalo.cantidad;
-//           resultado[horario].pares += intervalo.pares || 0;
-
-//           // Sumar a los totales globales
-//           totalOperaciones += intervalo.cantidad;
-//           totalPares += intervalo.pares || 0;
-//         }
-//       });
-//     });
-
-//   // **Formateamos los importes en el resultado antes de devolverlos**
-//   for (const horario in resultado) {
-//     resultado[horario].importe = formatearNumero(
-//       parseFloat(resultado[horario].importe)
-//     );
-//   }
-
-//   return {
-//     datosAgrupados: resultado,
-//     totalImporte, // Número con 2 decimales
-//     totalOperaciones, // Número entero
-//     totalPares, // Número entero
-//   };
-// };
-
-// const crearDataParaTabla = ({
-//   datosAgrupados,
-//   totalImporte,
-//   totalOperaciones,
-//   totalPares,
-// }: { datosAgrupados: DatosAgrupados } & Totales) => {
-
-//   const entries = Object.entries(datosAgrupados).sort((a, b) =>
-//     a[0].localeCompare(b[0])
-//   );
-//   // console.log(entries);
-//   return entries.map(([horario, datos], index) => {
-//     const importeNumerico = parseFloat(datos.importe.replace(/\./g, ""));
-
-//     // console.log(`Importe: ${importeNumerico}`)
-//     // console.log(horario);
-//     return {
-//       id: index + 1,
-//       hora: horario,
-//       nOperaciones: datos.cantidad,
-//       porcentajeOperaciones:
-//         totalOperaciones > 0
-//           ? ((datos.cantidad / totalOperaciones) * 100).toFixed(2)
-//           : 0,
-//       importe: datos.importe,
-//       porcentajeImporte:
-//         totalImporte > 0
-//           ? ((importeNumerico / totalImporte) * 100).toFixed(2)
-//           : 0,
-//       pares: datos.pares,
-//       porcentajePares:
-//         totalPares > 0 ? ((datos.pares / totalPares) * 100).toFixed(2) : 0,
-//     };
-//   });
-// };
-
-// IMPLEMENTACION DE FUNCIONES
-// const { datosAgrupados, totalImporte, totalOperaciones, totalPares } = agruparPorHorario(ventasPorHora, sucursalesSeleccionadas);
-// console.log('datos agrupados', datosAgrupados)
-
-// // console.log(datosAgrupados);
-// const dataParaTabla = crearDataParaTabla({
-//   datosAgrupados,
-//   totalImporte,
-//   totalOperaciones,
-//   totalPares,
-// });
-// console.log('totales', totalImporte, totalOperaciones, totalPares)

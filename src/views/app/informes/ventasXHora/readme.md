@@ -121,6 +121,14 @@ Fn que corre en un useEffect para extraer y setear items que van a usarse para f
             setItemsSeleccionados: setSucursalesSeleccionadas,
 **Retorna**: Setea sucursales disponibles y seleccionadas para filtro.
 
+### extraerMaxIds =
+Encuentra el id de la tabla que corresponde a los valores maximos.
+Es utilizada en props.
+#### Parametros: 
+            data: dataParaTabla,
+            group: ["nOperaciones", "importe", "pares"],
+        
+**Retorna**: maxIds.
 
 
 ### handleFetchData =
