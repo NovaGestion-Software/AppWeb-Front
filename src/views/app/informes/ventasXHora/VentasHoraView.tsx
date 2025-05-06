@@ -42,6 +42,7 @@ type ConfigTabla = {
 export default function VentasHoraView() {
   const [procesado, setProcesado] = useState<boolean>(false);
   const [footer, setFooter] = useState<boolean>(false);
+  console.log(footer)
   const [foco, setFoco] = useState<boolean>(false);
   const [showModalSucursales, setShowModalSucursales] = useState(false);
   //store

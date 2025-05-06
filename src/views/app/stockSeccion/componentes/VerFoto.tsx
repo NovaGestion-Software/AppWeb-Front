@@ -1,15 +1,12 @@
 import ActionButton from '@/Components/ui/Buttons/ActionButton';
 import { BiZoomIn } from 'react-icons/bi';
 import { useState } from 'react';
-import { useStockPorSeccion } from '@/views/app/stockSeccion/store/useStockPorSeccion';
 import CheckboxInput from '@/Components/ui/Inputs/Checkbox';
 
 export default function VerFoto() {
   const [verFotoCheckbox, setVerFotoCheckbox] = useState(false);
-  const { clearRubrosFetch, clearSeccionesFetch } = useStockPorSeccion();
   const handleClearStore = () => {
-    clearRubrosFetch();
-    clearSeccionesFetch();
+  console.log('verfoto')
   };
   return (
     <div className=" flex gap-2 w-60 border rounded-lg p-2 bg-slate-400">

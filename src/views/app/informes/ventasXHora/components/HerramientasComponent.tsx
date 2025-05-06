@@ -15,7 +15,6 @@ export default function HerramientasComponent({
   data,
   datosParaFooter,
   isProcessing,
-  modalSucursales = true,
   disabled,
   handleClean,
 }: HerramientasComponentProps) {

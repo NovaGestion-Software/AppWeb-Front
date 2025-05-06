@@ -1,12 +1,8 @@
 import {
   CheckboxState,
-  DepositoModal,
-  FiltroModal,
-  MarcaModal,
   Precios,
   ProductoAgrupado,
 } from "@/types";
-import { useStockPorSeccion } from "@/views/app/stockSeccion/store/useStockPorSeccion";
 import { formatPrice } from "../utils/formatPrice";
 
 // props use filtros
