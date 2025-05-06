@@ -51,15 +51,15 @@ export default function TablaStock() {
   } = useStockPorSeccion();
   //depositos utiliza stock renderizado
   const widthBase =   productos.length > 0 ?'58rem' : "40rem";
-  const height = '27rem';
+  const height =  productos.length < 10 ? 'auto': '27rem';
   const heightContainerBase = "27rem";
 
   const width1440px =  productos.length > 0 ?'60.3rem' : "40rem";
-  const height1440px = '37rem';
+  const height1440px =  productos.length < 10 ? 'auto': '37rem';
   const heightContainer1440 = "37rem";
   
   const width1536px = productos.length > 0 ? '71.3rem' : '54.3rem';
-  const height1536px = '34rem';
+  const height1536px = productos.length < 10 ?  "auto":'34rem' ;
   const heightContainer1536 = "34rem";
   
   // este componente
