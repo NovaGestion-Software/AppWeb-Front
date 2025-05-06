@@ -50,12 +50,23 @@ export default function TablaStock() {
     indiceGlobal,
   } = useStockPorSeccion();
   //depositos utiliza stock renderizado
-  const widthBase = '71.2rem';
-  const width1440px = '60.3rem';
-  const width1536px = '71.3rem';
-  const height = '26.25rem';
-  const height1440px = '27.5rem';
-  const height1536px = '38.125rem';
+  const widthBase =   productos.length > 0 ?'58rem' : "40rem";
+  const height = '27rem';
+  const heightContainerBase = "27rem";
+
+  const width1440px =  productos.length > 0 ?'60.3rem' : "40rem";
+  const height1440px = '37rem';
+  const heightContainer1440 = "37rem";
+  
+  const width1536px = productos.length > 0 ? '71.3rem' : '54.3rem';
+  const height1536px = '34rem';
+  const heightContainer1536 = "34rem";
+  
+  // este componente
+  const heightContainerTabla = '30rem';
+  const heightContainerTabla1440 = '40rem';
+  const heightContainerTabla1536 = '37rem';
+
   const depositos = obtenerDepositos(tablaStock);
   let cantidadItems = productos.length;
   let totalGeneral = 0;
@@ -267,18 +278,21 @@ export default function TablaStock() {
     objectColumns: productosColumns,
     objectStyles: {
       width: widthBase,
-      height: '37rem',
-      heightContainer: '38rem',
-      columnasNumber: [5,6,7,8,9],
+      height: height,
+      heightContainer: heightContainerBase,
+      columnasNumber: [5, 6, 7, 8, 9],
+      addCellClass: 'max-height: 30px;',
       viewport1440: {
         width1440px: width1440px,
         height1440px: height1440px,
-        heightContainer1440px: height1440px,
+        heightContainer1440px: heightContainer1440,
+        addCellClass1440px: 'max-height: 40px;',
+
       },
       viewport1536: {
         width1536px: width1536px,
-        height1536px: height1536px ,
-        heightContainer1536px: height1536px,
+        height1536px: height1536px,
+        heightContainer1536px: heightContainer1536,
       },
     },
     objectSelection: {
@@ -286,7 +300,7 @@ export default function TablaStock() {
       setSeleccionado,
     },
     objectFooter: {
-      footer: false,
+      footer: true,
       datosFooter: datosFooter,
       footerHeight: 'h-8',
     },
@@ -300,9 +314,26 @@ export default function TablaStock() {
       indiceGlobal: indiceGlobal,
     },
   };
+  const styleContainer = `
+  #container {
+    height: ${heightContainerTabla};
+  }
 
+  @media (min-width: 1440px) {
+    #container {
+      height: ${heightContainerTabla1440};
+    }
+  }
+
+  @media (min-width: 1536px) {
+    #container {
+      height: ${heightContainerTabla1536};
+    }
+  }
+`;
   return (
-    <div className="flex flex-col w-fit bg-white h-[41rem] border border-black overflow-hidden rounded-md shadow-md ">
+    <div id="container" className="flex flex-col w-fit bg-white  border border-black overflow-hidden rounded-md shadow-md ">
+      <style>{styleContainer}</style>
       <TablaDefault props={propsTablaStock} />
     </div>
   );

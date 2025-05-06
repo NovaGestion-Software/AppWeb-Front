@@ -1,6 +1,7 @@
 import { obtenerProductos } from "@/services/ApiPhpService";
 import { useMutation } from "@tanstack/react-query";
-import { Data, idItemsEnData } from "../componentes/TablaSeccionRubro";
+import { Data } from "../componentes/TablaSeccionRubro";
+import { idItemsEnData } from "../utils/manipulacion";
 
 export function useObtenerProductos({
   rubrosTraidos,

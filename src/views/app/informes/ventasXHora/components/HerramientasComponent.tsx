@@ -83,8 +83,9 @@ export default function HerramientasComponent({
         isProcessing={isProcessing}
         handleExportExcel={handleExportExcel}
         handlePrint={handlePrint}
-        disabled1={disabled}
-        disabled2={disabled}
+        disabledExportExcel={disabled}
+        disabledPrint={disabled}
+        disabledClean={disabled}
         handleClean={handleClean}
         
         >

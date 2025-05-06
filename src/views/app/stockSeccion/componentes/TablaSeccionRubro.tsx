@@ -1,16 +1,14 @@
-import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
-import { useMutation } from '@tanstack/react-query';
+import { Dispatch, SetStateAction, useEffect,  useState } from 'react';
 import { useStockPorSeccion } from '@/views/app/stockSeccion/store/useStockPorSeccion';
-import { obtenerProductos } from '@/services/ApiPhpService';
-import { TablaSecciones, TablaStock1, TableColumn } from '@/types';
+import { TablaSecciones } from '@/types';
 import ModalBase from '@/frontend-resourses/components/Modales/ModalBase';
 import BusquedaRubros from './BusquedaRubros';
 import TablaExpandible from '@/frontend-resourses/components/Tables/TablaExpandible';
 import { ExtendedColumn } from '@/frontend-resourses/components/Tables/types';
 import { useObtenerProductos } from '../hooks/useObtenerProductos';
 import showAlert from '@/frontend-resourses/utils/showAlert';
-import { ActionButton } from '@/frontend-resourses/components';
 import CheckboxInput from '@/frontend-resourses/components/Inputs/Checkbox';
+import { areArraysEqual, buscarEnArray, FiltrarItemsTraidos } from '../utils/manipulacion';
 
 interface TablaSeccionRubroProps {
   data: TablaSecciones[];
@@ -33,7 +31,6 @@ export default function TablaSeccionRubro({ data, showRubrosModal, setShowRubros
   const subItemKeyProperty = 'rubro'; // Nombre que identifica la clave única de los subítems
   const subItemLabelProperty = 'nrubro'; // Nombre que identifica la etiqueta de los subítems
   const itemKey = 'seccion';
-
   const {
     datosRubros,
     setStatus,
@@ -62,6 +59,14 @@ export default function TablaSeccionRubro({ data, showRubrosModal, setShowRubros
     indiceSeleccionado,
   } = useStockPorSeccion();
 
+  // setear funciones extras de check
+  const [updateInstruction, setUpdateInstruction] = useState<null | {
+    type: 'selectAll' | 'selectAllPending' | 'clearAll' | 'custom';
+    payload: string[]; }>(null);
+
+  // todos los rubros
+  const allRubros = datosRubros.flatMap((item) => item.rubros.map((rubroItem) => rubroItem.rubro));
+
   // hace falta un cartel que avise que hay rubros que no se trajeron
   // por ahora tiene que ser de no hay informacion sobre el rubro
   // despues con las respuestas diferentes del backend se puede ampliar el mensaje a si no hay info o fue un problema de conexion.
@@ -70,20 +75,17 @@ export default function TablaSeccionRubro({ data, showRubrosModal, setShowRubros
 
   // columnas
   const SeccionRubrosColumns: Array<ExtendedColumn<seccionRubros>> = [
-    { key: 'seccion', label: 'Codigo', minWidth: '80', maxWidth: '110' },
-    { key: 'nseccion', label: 'Seccion', minWidth: '80', maxWidth: '400' },
+    { key: 'seccion', label: 'Codigo', minWidth: '80', maxWidth: '150' },
+    { key: 'nseccion', label: 'Seccion', minWidth: '80', maxWidth: '490' },
   ];
   const seccionesKeys = Object.keys(seccionesSeleccionadas ?? {}).filter((key) => seccionesSeleccionadas?.[key] === true);
   const seccionesTraidasKeys = Object.keys(seccionesSeleccionadas ?? {}).filter((key) => seccionesSeleccionadas?.[key] === true);
 
   // Filtrar Elementos Traidos de los seleccionados para pedir.
   const rubrosParaTraer = FiltrarItemsTraidos(rubrosSeleccionados, rubrosTraidos);
-  const seccionesParaTraer = FiltrarItemsTraidos(seccionesKeys, seccionesTraidasKeys);
-  console.log('seccionesParaTraer - filtro', seccionesParaTraer);
 
-  console.log('seccionesTraidasKeys', seccionesTraidasKeys);
-  console.log('seccionesKeys', seccionesKeys);
-  // fetch
+  const seccionesParaTraer = FiltrarItemsTraidos(seccionesKeys, seccionesTraidasKeys);
+  // fetch tabla stock
   const { mutate } = useObtenerProductos({
     rubrosTraidos,
     setRubrosPendientes,
@@ -124,36 +126,48 @@ export default function TablaSeccionRubro({ data, showRubrosModal, setShowRubros
   }, [rubrosSeleccionados, rubrosTraidos]);
 
   // cerrar modal y limpiar rubros y secciones
-  const handleCloseModal = () => {
+  function handleCloseModal() {
     clearRubrosSeleccionados();
     clearSeccionesSeleccionadas();
     setShowRubrosModal(false);
-  };
-  const handleModalConfirm = () => {
+  }
+  function handleModalConfirm() {
     mutate();
     setShowRubrosModal(false);
-  };
-  const [shouldUpdateSelection, setShouldUpdateSelection] = useState(false); 
-  const checkAllPending = () => {
-    // Verificamos si todos los rubros están seleccionados
-    const isChecked = rubrosSeleccionados.length !== rubrosPendientes.length;
+  }
 
-    if (isChecked) {
-      // Si el checkbox está marcado, seleccionamos todos los rubros
-      setShouldUpdateSelection(true);  // Activa la actualización en el hijo
-    } else {
-      // Si el checkbox está desmarcado, deseleccionamos todos los rubros
-      setShouldUpdateSelection(true);  // Activa la actualización en el hijo
-    }
-  };
+  // funcion para checkear rubros pendientes
+  function checkAllPending() {
+    const isChecked = rubrosSeleccionados.length === rubrosPendientesData.length;
+    console.log('pendientes', rubrosPendientes);
+    setUpdateInstruction({
+      type: isChecked ? 'clearAll' : 'selectAllPending',
+      payload: isChecked ? [] : rubrosPendientes,
+    });
+  }
+  // funcion para checkear todos
+  function checkAll() {
+    const isChecked = rubrosSeleccionados.length === allRubros.length;
+    console.log('rubros', rubrosSeleccionados);
+
+    setUpdateInstruction({
+      type: isChecked ? 'clearAll' : 'selectAll',
+      payload: isChecked ? [] : allRubros,
+    });
+  }
 
   const propsTablaRubros = {
     datosParaTabla: data,
     objectColumns: SeccionRubrosColumns,
     objectStyles: {
-      heightContainer: 'h-[30rem] xl:h-[18rem]',
+      addCellClass: "max-height: 45px;",
+      width: "40rem",
+      heightContainer: 'h-[28rem] 2xl:h-[27rem]',
       height: 'auto',
-      addTableClass: 'scrollbar-width: none;',
+      viewport1536: {
+        width: '60rem',
+        addCellClass1536px: "max-height: 80px;",
+      }
     },
     expandableTable: {
       subItemsProperty: subItemsProperty,
@@ -167,9 +181,8 @@ export default function TablaSeccionRubro({ data, showRubrosModal, setShowRubros
       itemKey: itemKey,
       subItemPending: rubrosPendientes,
       extraCheck: rubrosPendientes,
-      shouldUpdateSelection: shouldUpdateSelection,
-      setShouldUpdateSelection: setShouldUpdateSelection,
-      
+      updateInstruction: updateInstruction,
+      setUpdateInstruction: setUpdateInstruction,
     },
     searchFunction: {
       hayFuncionBusqueda: true,
@@ -218,7 +231,6 @@ export default function TablaSeccionRubro({ data, showRubrosModal, setShowRubros
   // agrandar para acomodar el boton
   // mas espacio a la tabla y al header.
 
-
   return (
     <ModalBase
       show={showRubrosModal}
@@ -228,84 +240,28 @@ export default function TablaSeccionRubro({ data, showRubrosModal, setShowRubros
       buttons={true}
       disabled={isConfirmEnabled}
       disabled2={isCancelEnabled}
-      classModal="bottom-56 w-3/5 h-1/4 2xl:bottom-0 2xl:w-fit 2xl:h-fit"
+      classModal="bottom-56  w-[50rem] h-1/4 2xl:bottom-0 2xl:w-fit 2xl:h-fit"
     >
-      <div className="bg-black p-1">
-        <CheckboxInput
-          onChange={checkAllPending} // Llamamos a la función sin pasar argumentos
-          checked={rubrosSeleccionados.length === rubrosPendientesData.length} // Si todos los rubros están seleccionados, el checkbox será marcado
-          disabled={rubrosPendientesData.length === 0} // Deshabilitamos si no hay datos disponibles
-        />
-      </div>
-      <div className="flex flex-col gap-8  2xl:w-fit  p-2  overflow-hidden  h-auto  mx-auto">
+      <div className="flex flex-col gap-4  w-[45rem] px-4
+       p-2  overflow-hidden  h-auto  mx-auto">
         <BusquedaRubros />
 
-        <div>
-          <div></div>
+        <div className="flex gap-2 items-center ">
+          <CheckboxInput
+            label="Seleccionar Todos los Pendientes"
+            onChange={checkAllPending} // Llamamos a la función sin pasar argumentos
+            checked={rubrosSeleccionados.length === rubrosPendientesData.length} // Si todos los rubros están seleccionados, el checkbox será marcado
+            disabled={rubrosPendientesData.length === 0} // Deshabilitamos si no hay datos disponibles
+          />
+          <CheckboxInput
+            label="Seleccionar Todos"
+            onChange={checkAll} // Llamamos a la función sin pasar argumentos
+            checked={rubrosSeleccionados.length === allRubros.length} // Si todos los rubros están seleccionados, el checkbox será marcado
+            disabled={false} // Deshabilitamos si no hay datos disponibles
+          />
         </div>
         <TablaExpandible props={propsTablaRubros} />
       </div>
     </ModalBase>
   );
-}
-
-// fn obtener faltantes y presentes en data.
-export function idItemsEnData<T extends Record<string, any>>(rubrosSeleccionados: string[], data: T[], key: keyof T): { faltantes: string[]; presentes: string[] } {
-  const valoresEnData = new Set(data.map((item) => String(item[key])));
-
-  const faltantes = new Set<string>();
-  const presentes = new Set<string>();
-
-  for (const valor of rubrosSeleccionados) {
-    if (valoresEnData.has(valor)) {
-      presentes.add(valor);
-    } else {
-      faltantes.add(valor);
-    }
-  }
-
-  return {
-    faltantes: Array.from(faltantes),
-    presentes: Array.from(presentes),
-  };
-}
-
-// fn para no pedir items ya traidos
-export function FiltrarItemsTraidos(itemsSeleccionados: string[], itemsTraidos: string[]): string[] {
-  // Si no hay rubros traídos, devolvemos todos los seleccionados como pendientes
-  if (!itemsTraidos || itemsTraidos.length === 0) {
-    return itemsSeleccionados;
-  }
-
-  // Filtramos los items seleccionados que NO están en los items traídos
-  const resultado = itemsSeleccionados.filter((item) => !itemsTraidos.includes(item));
-
-  return resultado;
-}
-
-// fn para buscar y extraer nombre e id de los rubros en base a un array de ids.
-interface Item {
-  [key: string]: string; // Esto permitirá tener cualquier clave con un valor de tipo string
-}
-export function buscarEnArray(
-  ItemsParaBuscar: string[], // Array con los rubros a buscar
-  data: any[], // Datos a buscar dentro
-  contenedorKey: string, // Clave para acceder a la lista de rubros dentro de cada sección
-  itemProp1Key: string, // Clave que indica el ID (ej. rubro, pelota)
-  itemProp2Key: string // Clave que indica el nombre (ej. nrubro, npelota)
-) {
-  return data.flatMap((contenedor) =>
-    contenedor[contenedorKey] // Accede a la lista dinámica de rubros usando la clave rubrosKey
-      .filter((item: Item) => ItemsParaBuscar.includes(item[itemProp1Key])) // Filtra los rubros que coinciden con el array rubrosParaBuscar
-      .map((item: Item) => ({
-        id: item[itemProp1Key], // Obtiene el ID usando rubroKey
-        nombre: item[itemProp2Key], // Obtiene el nombre usando nombreKey
-      }))
-  );
-}
-
-// Función para comparar si dos arrays son iguales (independientemente del orden)
-export function areArraysEqual(array1: any[], array2: any[]) {
-  if (array1.length !== array2.length) return false;
-  return array1.every((item) => array2.includes(item));
 }

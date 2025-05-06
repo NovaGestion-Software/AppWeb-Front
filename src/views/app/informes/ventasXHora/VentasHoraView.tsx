@@ -18,6 +18,7 @@ import RangeDatesInput from '@/frontend-resourses/components/Inputs/RangeDatesIn
 import { extraerItems, extraerItemsDeIndice, agruparPorIndice, crearDataParaTablaModular, obtenerValorMaximoConIndice } from '@/frontend-resourses/utils/dataManipulation';
 import { Destacados } from '@/frontend-resourses/components/Complementos/Destacados';
 import { ListaFiltrosAplicados } from '@/frontend-resourses/components/Complementos/ListaFiltrosAplicados';
+import { FaStoreAlt } from 'react-icons/fa';
 
 type ConfigKeys = {
   filtroKey: string;
@@ -154,7 +155,7 @@ export default function VentasHoraView() {
     porcentajePares: fila.porcentajePares as string,
   }));
 
-  // esto es para setar los highLight 
+  // esto es para setar los highLight
   // obtiene la fila que tiene el mayor importe y su indice (horario)
   const destacados = obtenerValorMaximoConIndice(filas, 'importe', 'horaini');
   const maxImporteFormateado = formatearNumero(destacados.maxValue);
@@ -254,9 +255,12 @@ export default function VentasHoraView() {
 
       <div className="flex flex-col h-fit mx-4">
         {/** BOTONERA */}
-        <div className="grid grid-cols-12 grid-rows-1 h-11 px-4 gap-4 mt-2 mb-1 rounded">
-          {/**ingresar fechas y Botones de procesado */}
-          <div className="col-start-1 col-span-6 2xl:col-span-4 2xl:col-start-3 ">
+        <div className="grid grid-cols-12 grid-rows-1 h-12 2xl:h-14 gap-4 ml-4 mt-2 mb-1 rounded">
+          {/**RangeDates Input */}
+          <div
+            className="col-start-1 col-span-6 h-10  w-fit px-4 bg-white rounded-lg 
+           2xl:col-span-4 2xl:col-start-2 2xl:relative 2xl:right-5 2xl:h-14 "
+          >
             <RangeDatesInput
               conBotones={true}
               textoBotones={{ fetch: 'Procesar', clear: 'Borrar' }}
@@ -271,12 +275,12 @@ export default function VentasHoraView() {
 
           {/**modales y funcionabilidades */}
           <div
-            className="flex gap-1 items-center justify-center h-10 bg-white rounded-lg col-span-3 col-start-8
-           2xl:col-span-2 2xl:col-start-8"
+            className="flex gap-6 items-center justify-center h-10 w-fit px-4 left-11 relative bg-white
+             rounded-lg col-span-3 col-start-9 overflow-hidden
+             2xl:h-14 2xl:col-span-2 2xl:col-start-10 2xl:left-4 "
           >
-            <ActionButton text="Sucursales" onClick={() => setShowModalSucursales(true)} disabled={false} color="blue" size="xs" />{' '}
-            <HerramientasComponent data={filas} isProcessing={procesado} 
-            datosParaFooter={datosParaFooter} disabled={false} modalSucursales={false} handleClean={handleClearData} />
+            <ActionButton text="Sucursales" icon={<FaStoreAlt size={15} />} addClassName="2xl:h-8" onClick={() => setShowModalSucursales(true)} disabled={!procesado} color="blue" size="xs" />{' '}
+            <HerramientasComponent data={filas} isProcessing={procesado} datosParaFooter={datosParaFooter} disabled={!procesado} modalSucursales={false} handleClean={handleClearData} />
             <ModalFiltro<SucursalesModal>
               title="Sucursales"
               renderItem={renderSucursalesItem}
@@ -293,12 +297,18 @@ export default function VentasHoraView() {
           </div>
         </div>
 
+        {/**SUCURSALES Y DESTACADOS */}
         <div
-          className="grid grid-cols-12 gap-2 ml-4 2xl:h-[48rem]
+          className="grid  grid-cols-12 gap-4 ml-4 2xl:h-[45rem]
          2xl:ml-0 2xl:mt-5 overflow-hidden"
         >
           {procesado && (
-            <div className="col-span-5 2xl:col-start-2  flex flex-col items-center justify-evenly 2xl:justify-evenly 2xl:items-center transition-all duration-500 ease-out">
+            <div
+              className="col-span-5 2xl:col-start-2  
+            flex flex-col items-center justify-evenly 
+            2xl:justify-center 2xl:gap-6 2xl:items-center 
+            transition-all duration-500 ease-out"
+            >
               {/* Lista Sucursales */}
               <ListaFiltrosAplicados itemsDisponibles={sucursalesDisponiblesStr} itemsSeleccionados={sucursalesSeleccionadasStr} />
 
@@ -312,13 +322,13 @@ export default function VentasHoraView() {
             </div>
           )}
 
+          {/** Tabla */}
           <div
-            className={`flex bg-white  rounded-md border-gray-300
-               shadow shadow-gray-600  overflow-hidden ml-5 transition-all duration-500 ease-out  ${
-                 procesado ? 'col-start-6 col-span-5 2xl:col-start-7 transform' : ' col-start-3 2xl:col-start-4 transform translate-x-0'
-               }`}
+            className={`flex bg-white  rounded-md w-fit h-fit 
+               shadow shadow-gray-600  overflow-hidden  transition-all duration-500 ease-out  
+               ${procesado ? 'col-start-6 col-span-7 2xl:col-start-7 ' : ' col-start-6 col-span-7  2xl:col-start-7 '}`}
           >
-            <TablaVentaPorHora isProcessing={procesado} dataParaTabla={filas} datosFooter={datosParaFooter} footer={true} />
+            <TablaVentaPorHora isProcessing={procesado} dataParaTabla={filas} datosFooter={datosParaFooter} />
           </div>
         </div>
       </div>

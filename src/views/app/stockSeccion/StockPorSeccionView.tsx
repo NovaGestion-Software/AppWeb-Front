@@ -96,8 +96,8 @@ export default function StockPorSeccionView() {
       setDatosRubros(rubrosDis.data);
     }
   }, [rubrosDis]);
+  
   // SET FILTROS DE CHECKBOXS
-
   useEffect(() => {
     if (stockRenderizado.length > 0) {
       setCheckboxSeleccionados('grupo1', 'Talles');
@@ -193,15 +193,15 @@ export default function StockPorSeccionView() {
   };
 
   useEffect(() => {
-    if (rubrosPendientes?.length > 0) {
+    if (rubrosPendientes?.length > 0 ) {
       handleError();
     }
-  }, [rubrosPendientes]);
+  }, [rubrosPendientes, ]);
   return (
-    <div className="w-full h-lvh border border-red-950  ">
+    <div className="w-full h-lvh   ">
       <ViewTitle title={'Stock por Sección'} />
       {/** HERRAMIENTAS DE LA VISTA */}
-      <div className="grid grid-cols-10 grid-rows-2 px-2 py-2 border border-red-950 bg-white">
+      <div className="grid grid-cols-10 grid-rows-2 px-2 py-2">
         {/**BOTONES SHOW MODAL DEPOSITOS Y RUBROS - ORDENAR POR CHECKBOXS( CODIGO , MARCA Y DESCRIPCION )*/}
         <div className="flex gap-6 items-center mt-3 mb-1 w-fit h-10 bg-white px-3 rounded-lg col-start-3 col-span-5 2xl:col-span-3 2xl:col-start-4 ">
           <ActionButton text="Depósitos" onClick={() => setShowDepositosModal(true)} disabled={status === 'idle'} color="blue" size="xs" />
@@ -211,8 +211,9 @@ export default function StockPorSeccionView() {
         </div>
         {/** EXPORTORTAR A EXCEEL E IMPRIMIR. */}
         <div
-          className=" mt-3 mb-1 rounded-lg col-span-3 flex   w-fit h-10 items-center  bg-white 
-        col-start-8 2xl:col-span-3 2xl:col-start-7 2xl:left-10 2xl:relative 2xl:px-4"
+          className=" mt-3 mb-1 rounded-lg col-span-3 flex 
+            w-fit h-10 px-2 items-center  bg-white 
+        col-start-8 2xl:col-span-3 2xl:col-start-8 2xl:relative 2xl:px-4"
         >
           <HerramientasComponent data={productos} handleClean={handleClean}  isProcessing={!isProcessing} modalSucursales={false} disabled={status === 'idle'} />
         
@@ -240,16 +241,19 @@ export default function StockPorSeccionView() {
         {/**INPUTS BUSCAR - BOTONES SHOW MODAL TEMPORADAS Y MARCAS */}
         <div
           className="flex gap-3 my-1 items-center w-fit 
-        row-start-2 border px-1 rounded-lg bg-white col-start-3
-         col-span-7 2xl:col-span-5 2xl:px-4 2xl:col-start-4"
+        row-start-2 border px-2 rounded-lg bg-white col-start-3
+         col-span-7 2xl:col-span-5 2xl:px-4 2xl:col-start-4  "
         >
           <BusquedaStock />
-          <ActionButton text="Marcas" color="blue" disabled={status === 'idle'} onClick={() => setShowMarcasModal(true)} size="xs" />
+          <ActionButton text="Marcas" color="blue" 
+          disabled={status === 'idle'} 
+          onClick={() => setShowMarcasModal(true)} size="xs" />
         </div>
       </div>
+
       {/**TABLA STOCK */}
       <div className="grid grid-cols-12  px-4 py-2">      
-        <div className="flex items-center justify-center col-span-full">
+        <div className="flex items-start gap-4 justify-center col-span-full">
           {/** LISTA */}
        <ListaItemsPedidos
         rubrosPendientesData={rubrosPendientesData}
@@ -258,6 +262,9 @@ export default function StockPorSeccionView() {
           <TablaStock />
         </div>
       </div>
+
+      {/** MODALES */}
+
       {/** TABLA RUBROS */}
       <TablaSeccionRubro data={datosRubros} showRubrosModal={showRubrosModal} setShowRubrosModal={setShowRubrosModal} />
       {/** MODAL DE FILTRO  DEPOSITOS */}

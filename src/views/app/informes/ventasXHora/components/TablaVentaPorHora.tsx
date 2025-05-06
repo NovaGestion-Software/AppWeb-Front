@@ -14,7 +14,6 @@ import { extraerMaxIds } from "@/frontend-resourses/components/Tables/TablaDefau
 interface TablaVentaPorHoraProps {
   dataParaTabla: VentaPorHora[];
   isProcessing: boolean;
-  footer: boolean;
   datosFooter?: {};
 }
 type ExtendedColumn<T = any> = {
@@ -42,13 +41,12 @@ type VentaXHoraCType = {
 export default function TablaVentaPorHora({
   dataParaTabla,
   isProcessing,
-  footer,
   datosFooter,
 }: TablaVentaPorHoraProps) {
   const { status } = useVentasHoraStore();
 
   const VentaXHoraColumns: Array<ExtendedColumn<VentaXHoraCType>> = [
-    { key: "horaini", label: "Hora", minWidth: "100", maxWidth: "120" },
+    { key: "horaini", label: "Hora", minWidth: "90", maxWidth: "120" },
     {
       key: "nOperaciones",
       label: "N. Opera",
@@ -61,7 +59,7 @@ export default function TablaVentaPorHora({
       key: "porcentajeNOperaciones",
       label: "%",
       withCellProps: true,
-      minWidth: "40",
+      minWidth: "50",
       maxWidth: "80",
     },
     {
@@ -69,14 +67,14 @@ export default function TablaVentaPorHora({
       label: "Pares",
       withCellProps: true,
       resaltar: true,
-      minWidth: "60",
+      minWidth: "50",
       maxWidth: "80",
     },
     {
       key: "porcentajePares",
       label: "%",
       withCellProps: true,
-      minWidth: "40",
+      minWidth: "50",
       maxWidth: "80",
     },
     {
@@ -91,17 +89,27 @@ export default function TablaVentaPorHora({
       key: "porcentajeImporte",
       label: "%",
       withCellProps: true,
-      minWidth: "40",
+      minWidth: "50",
       maxWidth: "80",
     },
   ];
   // 2.Padre
-  const widthBase = "66rem";
-  const width1440px = "66rem";
-  const width1536px = "66rem";
-  const heightBase = "34rem";
-  const height1440px = "34rem";
-  const height1536px = ".2rem";
+  const widthBase = "40rem";
+  const heightBase = "35rem";
+  const heightContainerBase = "35rem";
+  
+  const height1440px = "45rem";
+  const width1440px = "44rem";
+  const heightContainer1440 = "45rem";
+
+  const width1536px = "44rem";
+  const height1536px = "40rem";
+  const heightContainer1536 = "40rem";
+
+  // este componente
+  const heightContainerTabla = "38rem";
+  const heightContainerTabla1440 = "48rem";
+  const heightContainerTabla1536 = "44rem";
   
   
 
@@ -139,44 +147,53 @@ export default function TablaVentaPorHora({
     status: status,
     objectStyles: {
       columnasNumber: [2,3,4,5,6,7],
-      heightContainer: "38rem",
+      heightContainer: heightContainerBase,
       width: widthBase,
       height: heightBase,
-      rowClass: "max-height: 10px;",
-      width1440: {
+      addCellClass: "max-height: 30px;",
+      viewport1440: {
         width1440px: width1440px,
         height1440px: height1440px,
-        heightContainer1440px: "38rem",
+        heightContainer1440px: heightContainer1440,
+        addCellClass1440px: "max-height: 40px;",
+
       },
-      width1536: {
+      viewport1536: {
         height1536px: height1536px,
         width1536px: width1536px,
-        heightContainer1536px: "38rem",
+        heightContainer1536px: heightContainer1536,
 
       },
     },
     objectFooter: {
-      footer: true,
+      footer: isProcessing,
       datosFooter: datosFooter,
      footerHeight: "h-8",
 
     },
     maxIdsFunction: maxIdsFunction,
   }
-//   <TablaDefault<VentaXHoraCType>
-//   objectColumns={}
-//   datosParaTabla={}
-//   width={widthBase}
-//   width1440px={width1440px}
-//   width1536px={width1536px}
-//   maxIdsFunction={}
-//   footer={}
-//   datosFooter={datosFooter}
-//   procesado={isProcessing}
-//   status={status}
-// />
+  const styleContainer = `
+  #container {
+    height: ${heightContainerTabla};
+  }
+
+  @media (min-width: 1440px) {
+    #container {
+      height: ${heightContainerTabla1440};
+    }
+  }
+
+  @media (min-width: 1536px) {
+    #container {
+      height: ${heightContainerTabla1536};
+    }
+  }
+`;
+
   return (
-    <div>
+    <div className={` w-full xl:w-fit`} id="container">
+      <style>{styleContainer}</style>
     <TablaDefault props={propsTablaVentaPorHora} />
     </div>
   );
