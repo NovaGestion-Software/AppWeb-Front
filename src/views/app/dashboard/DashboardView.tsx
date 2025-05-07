@@ -2,7 +2,7 @@ import { useState } from 'react';
 import CardsComponent from './components/features/cards/CardsComponent';
 import GraficoVentas from './components/features/graphic/GraficoVentas';
 import GraficoTorta from './components/features/donut/GraficoTorta';
-import ViewTitle from '@/Components/ui/Labels/ViewTitle';
+import ViewTitle from '@/frontend-resourses/components/Labels/ViewTitle';
 
 export default function DashboardView() {
   const [handleRefetch, setHandleRefetch] = useState(false);
@@ -10,7 +10,6 @@ export default function DashboardView() {
   return (
     <>
       <ViewTitle
-        type="title"
         title={'Dashboard'}
         showRefreshButton={true}
         setHandleRefetch={setHandleRefetch}

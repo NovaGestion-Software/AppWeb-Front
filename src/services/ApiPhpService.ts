@@ -10,15 +10,28 @@ export async function obtenerVentasHora(fechas: FechasRango) {
   // funciona con ambos entornos y con homologacion en prod
   const homologacion = localStorage.getItem("homologacion") || "homo"; // o valor default
   const entorno = localStorage.getItem("_ce") || "development";        // o valor default
-  console.log('homologacion', homologacion);
-  console.log('entorno', entorno);
   try {
     // console.log('fechas seteadas en funcion', fechas);
-    // console.log(empresa);
     const { from, to } = fechas;
     const baseSeleccionada = entorno === "development" ? "apinovades" : "apinova"
     const url = `/${baseSeleccionada}/generico/obtenerVentasHora.php?_i={"_e":"${empresa}","_m":"${homologacion}","_fi":"${from}","_ff":"${to}"}`;
-console.log('url', url)
+    const { data } = await apiPhp(url);
+    return data;
+  } catch (error) {
+    if (isAxiosError(error) && error.response) throw new Error(error.response.data.error);
+    console.log(error);
+  }
+}
+
+export async function obtenerVentasPorSucursal(fechas: FechasRango) {
+  // funciona con ambos entornos y con homologacion en prod
+  const homologacion = localStorage.getItem("homologacion") || "homo"; // o valor default
+  const entorno = localStorage.getItem("_ce") || "development";        // o valor default
+  try {
+    // console.log('fechas seteadas en funcion', fechas);
+    const { from, to } = fechas;
+    const baseSeleccionada = entorno === "development" ? "apinovades" : "apinova"
+    const url = `/${baseSeleccionada}/generico/obtenerVentasHora.php?_i={"_e":"${empresa}","_m":"${homologacion}","_fi":"${from}","_ff":"${to}"}`;
     const { data } = await apiPhp(url);
     return data;
   } catch (error) {

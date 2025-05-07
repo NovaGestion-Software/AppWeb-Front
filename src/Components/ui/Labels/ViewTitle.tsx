@@ -33,7 +33,9 @@ export default function ViewTitle({
 
   return (
     <div
-      className={`flex items-center ${height} w-full px-10 gap-2 ${bgColor} border-[#2973B2] shadow-lg 2xl:px-12 ${className}`}
+      className={`flex items-center ${height}
+       w-full px-10 gap-2 ${bgColor} 
+       border-[#2973B2] shadow-lg 2xl:px-12 ${className}`}
     >
       <h1 className={`${textSize} text-white tracking-wide font-roboto`}>{title}</h1>
 

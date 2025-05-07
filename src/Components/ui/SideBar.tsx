@@ -86,8 +86,14 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
               href: '/informes/ventas-hora',
               icon: <GrDocumentTime />,
             },
+            {
+              title: 'Ventas por Sección',
+              href: '/informes/ventas-seccion',
+              icon: <GrDocumentTime />,
+            },
           ],
         },
+        
       ],
     },
   ];

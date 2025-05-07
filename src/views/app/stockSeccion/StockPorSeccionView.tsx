@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { DepositoModal, MarcaModal, } from '@/types';
 import { useStockPorSeccion } from '@/views/app/stockSeccion/store/useStockPorSeccion';
 import { obtenerRubrosDisponibles } from '@/services/ApiPhpService';
-import ViewTitle from '@/Components/ui/Labels/ViewTitle';
+import ViewTitle from '@/frontend-resourses/components/Labels/ViewTitle';
 import HerramientasComponent from '../informes/ventasXHora/components/HerramientasComponent';
 import OrdenarPorCheckbox from './componentes/OrdernarPorCheckbox';
 import FiltroPorStock from './componentes/FiltroPorStock';
@@ -215,7 +215,7 @@ export default function StockPorSeccionView() {
             w-fit h-10 px-2 items-center  bg-white 
         col-start-8 2xl:col-span-3 2xl:col-start-8 2xl:relative 2xl:px-4"
         >
-          <HerramientasComponent data={productos} handleClean={handleClean}  isProcessing={!isProcessing} modalSucursales={false} disabled={status === 'idle'} />
+          <HerramientasComponent data={productos} handleClean={handleClean}  estaProcesado={!isProcessing} modalSucursales={false} disabled={status === 'idle'} />
         
         </div>
 

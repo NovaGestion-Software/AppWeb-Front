@@ -51,8 +51,8 @@ export default function TablaStock() {
   } = useStockPorSeccion();
   //depositos utiliza stock renderizado
   const widthBase =   productos.length > 0 ?'58rem' : "40rem";
-  const height =  productos.length < 10 ? 'auto': '27rem';
-  const heightContainerBase = "27rem";
+  const height =  productos.length < 10 ? 'auto': '23rem';
+  const heightContainerBase = "23rem";
 
   const width1440px =  productos.length > 0 ?'60.3rem' : "40rem";
   const height1440px =  productos.length < 10 ? 'auto': '37rem';
@@ -63,7 +63,7 @@ export default function TablaStock() {
   const heightContainer1536 = "34rem";
   
   // este componente
-  const heightContainerTabla = '30rem';
+  const heightContainerTabla = '25.6rem';
   const heightContainerTabla1440 = '40rem';
   const heightContainerTabla1536 = '37rem';
 
@@ -332,7 +332,8 @@ export default function TablaStock() {
   }
 `;
   return (
-    <div id="container" className="flex flex-col w-fit bg-white  border border-black overflow-hidden rounded-md shadow-md ">
+    <div id="container" className="flex flex-col w-fit bg-white 
+     border border-black overflow-hidden rounded-md shadow-md ">
       <style>{styleContainer}</style>
       <TablaDefault props={propsTablaStock} />
     </div>

@@ -4,7 +4,7 @@ import { useVentasHoraStore } from '@/views/app/informes/ventasXHora/store/useVe
 import { obtenerVentasHora } from '@/services/ApiPhpService';
 import { ApiResponse, FechasRango, SucursalesModal, VentaPorHora } from '@/types';
 import { formatearNumero } from '@/utils';
-import ViewTitle from '@/Components/ui/Labels/ViewTitle';
+import ViewTitle from '@/frontend-resourses/components/Labels/ViewTitle';
 import dayjs from 'dayjs';
 
 import HerramientasComponent from './components/HerramientasComponent';
@@ -20,7 +20,7 @@ import { Destacados } from '@/frontend-resourses/components/Complementos/Destaca
 import { ListaFiltrosAplicados } from '@/frontend-resourses/components/Complementos/ListaFiltrosAplicados';
 import { FaStoreAlt } from 'react-icons/fa';
 
-type ConfigKeys = {
+export type ConfigKeys = {
   filtroKey: string;
   agrupadorKey: string;
   innerArrayKey: string;
@@ -34,32 +34,37 @@ type ColumnaTabla = {
   totalKey?: string; // A cuál total se relaciona
   parseNumber?: boolean; // Si hay que parsear antes de hacer % (como "importe" con punto)
 };
-type ConfigTabla = {
+export type ConfigTabla = {
   agrupadorKey: string; // ej: "hora"
   columnas: ColumnaTabla[];
 };
 
 export default function VentasHoraView() {
   const [procesado, setProcesado] = useState<boolean>(false);
-  const [footer, setFooter] = useState<boolean>(false);
-  console.log(footer)
+  // prueba de _ para deploy
+  const [_footer, setFooter] = useState<boolean>(false);
   const [foco, setFoco] = useState<boolean>(false);
   const [showModalSucursales, setShowModalSucursales] = useState(false);
+
   //store
   const {
+    // estados
     status,
+    setStatus,
+    // dates
     fechas,
     setFechas,
+    // filtros
     sucursalesSeleccionadas,
     sucursalesDisponibles,
-    ventasPorHora,
-    setVentasPorHora,
     setSucursalesSeleccionadas,
     setSucursalesDisponibles,
-    setStatus,
-    clearVentasPorHora,
-    clearSucursalesDisponibles,
     clearSucursalesSeleccionadas,
+    clearSucursalesDisponibles,
+    // datos
+    ventasPorHora,
+    setVentasPorHora,
+    clearVentasPorHora,
   } = useVentasHoraStore();
 
   // llamado a fetch
@@ -116,7 +121,7 @@ export default function VentasHoraView() {
     convertir: ['importe'],
   };
   const { datos, totales } = agruparPorIndice(ventasPorHora, sucursalesSeleccionadasStr, indiceTabla, config, formatearNumero);
-
+  console.log('ventas horas', datos);
   // crea datos en estructura de tabla.
   const configTabla: ConfigTabla = {
     agrupadorKey: 'horaini',
@@ -277,39 +282,25 @@ export default function VentasHoraView() {
           {/**modales y funcionabilidades */}
           <div
             className="flex gap-6 items-center justify-center h-10 w-fit px-4 left-11 relative bg-white
-             rounded-lg col-span-3 col-start-9 overflow-hidden
+             rounded-lg col-span-3 col-start-9 
              2xl:h-14 2xl:col-span-2 2xl:col-start-10 2xl:left-4 "
           >
             <ActionButton text="Sucursales" icon={<FaStoreAlt size={15} />} addClassName="2xl:h-8" onClick={() => setShowModalSucursales(true)} disabled={!procesado} color="blue" size="xs" />{' '}
-            <HerramientasComponent data={filas} isProcessing={procesado} datosParaFooter={datosParaFooter} disabled={!procesado} modalSucursales={false} handleClean={handleClearData} />
-            <ModalFiltro<SucursalesModal>
-              title="Sucursales"
-              renderItem={renderSucursalesItem}
-              showModal={showModalSucursales}
-              setShowModal={setShowModalSucursales}
-              datos={sucursalesDisponibles}
-              disabled2={false}
-              disabled={false}
-              itemsDisponibles={sucursalesDisponibles}
-              itemsSeleccionados={sucursalesSeleccionadas}
-              setItemsDisponibles={setSucursalesDisponibles}
-              setItemsSeleccionados={setSucursalesSeleccionadas}
-            />
+            <HerramientasComponent data={filas} estaProcesado={procesado} datosParaFooter={datosParaFooter} disabled={!procesado} modalSucursales={false} handleClean={handleClearData} />
           </div>
         </div>
 
-        {/**SUCURSALES Y DESTACADOS */}
+        {/**SUCURSALES, DESTACADOS Y TABLA*/}
         <div
           className="grid  grid-cols-12 gap-4 ml-4 2xl:h-[45rem]
          2xl:ml-0 2xl:mt-5 overflow-hidden"
         >
           {procesado && (
             <div
-              className="col-span-5 2xl:col-start-2  
+              className="col-span-5 gap-2 2xl:col-start-2  
             flex flex-col items-center justify-evenly 
             2xl:justify-center 2xl:gap-6 2xl:items-center 
-            transition-all duration-500 ease-out"
-            >
+            transition-all duration-500 ease-out">
               {/* Lista Sucursales */}
               <ListaFiltrosAplicados itemsDisponibles={sucursalesDisponiblesStr} itemsSeleccionados={sucursalesSeleccionadasStr} />
 
@@ -317,9 +308,12 @@ export default function VentasHoraView() {
               <Destacados {...destacadosObject} />
 
               {/* Gráfico */}
-              <div className="w-full">
-                <GraficoConZoom datosParaGraficos={filas} index="horaini" widthGraficoModal="w-[60rem]" categorias={['nOperaciones']} tituloModal="N° Operaciones por Hora" keysMap={configuracionGrafico} />
-              </div>
+                <GraficoConZoom datosParaGraficos={filas} index="horaini"
+                className='w-[29rem] h-72' 
+                widthGraficoModal="w-[64rem] h-[28rem]" 
+                categorias={['nOperaciones']} 
+                tituloModal="N° Operaciones por Hora" 
+                keysMap={configuracionGrafico} />
             </div>
           )}
 
@@ -333,6 +327,23 @@ export default function VentasHoraView() {
           </div>
         </div>
       </div>
+
+      {/** Modales */}
+      <ModalFiltro<SucursalesModal>
+        title="Sucursales"
+        renderItem={renderSucursalesItem}
+        showModal={showModalSucursales}
+        setShowModal={setShowModalSucursales}
+        datos={sucursalesDisponibles}
+        disabled2={false}
+        disabled={false}
+        itemsDisponibles={sucursalesDisponibles}
+        itemsSeleccionados={sucursalesSeleccionadas}
+        setItemsDisponibles={setSucursalesDisponibles}
+        setItemsSeleccionados={setSucursalesSeleccionadas}
+        addIconClassName=" text-white w-14 h-12 m-0 flex items-center justify-center "
+        iconReact={<FaStoreAlt size={25} />}
+      />
     </div>
   );
 }

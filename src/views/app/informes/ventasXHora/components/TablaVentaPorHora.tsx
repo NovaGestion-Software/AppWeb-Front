@@ -52,7 +52,7 @@ export default function TablaVentaPorHora({
       label: "N. Opera",
       withCellProps: true,
       resaltar: true,
-      minWidth: "40",
+      minWidth: "50",
       maxWidth: "100",
     },
     {
@@ -95,8 +95,8 @@ export default function TablaVentaPorHora({
   ];
   // 2.Padre
   const widthBase = "40rem";
-  const heightBase = "35rem";
-  const heightContainerBase = "35rem";
+  const heightBase = "31rem";
+  const heightContainerBase = "31rem";
   
   const height1440px = "45rem";
   const width1440px = "44rem";
@@ -107,7 +107,7 @@ export default function TablaVentaPorHora({
   const heightContainer1536 = "40rem";
 
   // este componente
-  const heightContainerTabla = "38rem";
+  const heightContainerTabla = "33.6rem";
   const heightContainerTabla1440 = "48rem";
   const heightContainerTabla1536 = "44rem";
   

@@ -5,7 +5,7 @@ import HerramientasInforme from '../../_components/HerramientasInforme';
 interface HerramientasComponentProps {
   data: Record<string, any>[]; // Ahora acepta cualquier estructura de datos
   datosParaFooter?: Record<string, any>; // Opcional
-  isProcessing: boolean;
+  estaProcesado: boolean;
   modalSucursales?: boolean;
   disabled?: boolean;
   handleClean ?: () => void; // Función opcional para limpiar
@@ -14,7 +14,7 @@ interface HerramientasComponentProps {
 export default function HerramientasComponent({
   data,
   datosParaFooter,
-  isProcessing,
+  estaProcesado,
   disabled,
   handleClean,
 }: HerramientasComponentProps) {
@@ -75,18 +75,21 @@ export default function HerramientasComponent({
     setTimeout(() => printWindow.print(), 500);
   }, []);
 
+  const handleClearData = handleClean || (() => {
+    console.log('clear');
+  });
+
   return (
     <>
       <HerramientasInforme
         data={data}
-        isProcessing={isProcessing}
+        estaProcesado={estaProcesado}
         handleExportExcel={handleExportExcel}
         handlePrint={handlePrint}
         disabledExportExcel={disabled}
         disabledPrint={disabled}
         disabledClean={disabled}
-        handleClean={handleClean}
-        
+        handleClean={handleClearData}
         >
       </HerramientasInforme>
     </>

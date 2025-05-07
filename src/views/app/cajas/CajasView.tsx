@@ -5,7 +5,7 @@ import { SucursalCaja } from '@/types';
 import CardComponent from './components/features/cards/CardComponent';
 import CajasList from './components/features/list/CajasList';
 import TablaCaja from './components/features/table/TablaCaja';
-import ViewTitle from '@/Components/ui/Labels/ViewTitle';
+import ViewTitle from '@/frontend-resourses/components/Labels/ViewTitle';
 
 export default function CajasView() {
   const [handleRefetch, setHandleRefetch] = useState(false);

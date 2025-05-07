@@ -81,6 +81,17 @@ export type Sucursal = {
   nsucursal: string;
   info: SucursalInfo[];
 };
+export type InfoVentasPorSeccion = {
+  seccion: string;
+  nseccion: string;
+  importe: string;
+};
+
+export type ResVentasPorSeccion = {
+  sucursal: string;
+  nsucursal: string;
+  info: InfoVentasPorSeccion[];
+};
 
 export type ApiResponse = {
   status: string;

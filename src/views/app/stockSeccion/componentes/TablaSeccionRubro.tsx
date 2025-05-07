@@ -75,8 +75,8 @@ export default function TablaSeccionRubro({ data, showRubrosModal, setShowRubros
 
   // columnas
   const SeccionRubrosColumns: Array<ExtendedColumn<seccionRubros>> = [
-    { key: 'seccion', label: 'Codigo', minWidth: '80', maxWidth: '150' },
-    { key: 'nseccion', label: 'Seccion', minWidth: '80', maxWidth: '490' },
+    { key: 'seccion', label: 'Codigo', minWidth: '90', maxWidth: '160' },
+    { key: 'nseccion', label: 'Seccion', minWidth: '80', maxWidth: '520' },
   ];
   const seccionesKeys = Object.keys(seccionesSeleccionadas ?? {}).filter((key) => seccionesSeleccionadas?.[key] === true);
   const seccionesTraidasKeys = Object.keys(seccionesSeleccionadas ?? {}).filter((key) => seccionesSeleccionadas?.[key] === true);
@@ -161,8 +161,8 @@ export default function TablaSeccionRubro({ data, showRubrosModal, setShowRubros
     objectColumns: SeccionRubrosColumns,
     objectStyles: {
       addCellClass: "max-height: 45px;",
-      width: "40rem",
-      heightContainer: 'h-[28rem] 2xl:h-[27rem]',
+      width: "42rem",
+      heightContainer: 'h-[28rem] 2xl:h-[30rem] rounded-md',
       height: 'auto',
       viewport1536: {
         width: '60rem',
@@ -240,10 +240,10 @@ export default function TablaSeccionRubro({ data, showRubrosModal, setShowRubros
       buttons={true}
       disabled={isConfirmEnabled}
       disabled2={isCancelEnabled}
-      classModal="bottom-56  w-[50rem] h-1/4 2xl:bottom-0 2xl:w-fit 2xl:h-fit"
+      classModal=" w-[50rem] h-[35rem] 2xl:bottom-0 2xl:w-fit 2xl:h-fit"
     >
       <div className="flex flex-col gap-4  w-[45rem] px-4
-       p-2  overflow-hidden  h-auto  mx-auto">
+       p-2  overflow-hidden  h-[29rem] 2xl:h-[38rem] mx-auto">
         <BusquedaRubros />
 
         <div className="flex gap-2 items-center ">
