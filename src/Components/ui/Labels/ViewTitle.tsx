@@ -1,5 +1,5 @@
 import { Dispatch } from 'react';
-import RefreshButton from '../Buttons/RefreshButton';
+import RefreshButton from '../../../frontend-resourses/components/Buttons/RefreshButton';
 
 interface ViewTitleProps {
   type?: 'title' | 'subtitle';

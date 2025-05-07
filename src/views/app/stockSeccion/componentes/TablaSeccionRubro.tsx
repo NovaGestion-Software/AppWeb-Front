@@ -46,6 +46,7 @@ export default function TablaSeccionRubro({ data, showRubrosModal, setShowRubros
     setRubrosTraidosData,
 
     setSeccionesTraidas,
+    tablaStock,
     setTablaStock,
     setRubrosTraidos,
     setRubrosPendientes,
@@ -92,6 +93,7 @@ export default function TablaSeccionRubro({ data, showRubrosModal, setShowRubros
     setRubrosTraidos,
     setSeccionesTraidas,
     setFooter,
+    tablaStock,
     setTablaStock,
     setStatus,
     seccionesParaTraer,

@@ -179,13 +179,21 @@ export default function VentasHoraView() {
     ],
   };
   // FOOTER TABLA 1
-  const datosParaFooter = {
+  const datosParaFooter = procesado ? {
     hora: '',
     nOperaciones: totales.cantidad,
     porcentajeOperaciones: '',
     pares: totales.pares,
     porcentajePares: '',
     importe: totalImporteFormateado,
+    porcentajeImporte: '',
+  } : {
+    hora: '',
+    nOperaciones: '',
+    porcentajeOperaciones: '',
+    pares: '',
+    porcentajePares: '',
+    importe: '',
     porcentajeImporte: '',
   };
 

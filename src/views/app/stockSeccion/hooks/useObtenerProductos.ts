@@ -9,6 +9,7 @@ export function useObtenerProductos({
   setRubrosTraidos,
   setSeccionesTraidas,
   setFooter,
+  tablaStock,
   setTablaStock,
   setStatus,
   seccionesParaTraer,
@@ -25,6 +26,7 @@ export function useObtenerProductos({
   seccionesParaTraer: string[];
   rubrosParaTraer: string[];
   handleError: () => void;
+  tablaStock: any[],
 
 }) {
   return useMutation({
@@ -49,7 +51,7 @@ export function useObtenerProductos({
         setRubrosTraidos([...new Set([...rubrosTraidos, ...presentes])]);
         setSeccionesTraidas(seccionesParaTraer ?? {});
         setFooter(true);
-        setTablaStock(arrayDeRubros);
+        setTablaStock([...tablaStock, ...arrayDeRubros]);
         setStatus("success");
       }
   

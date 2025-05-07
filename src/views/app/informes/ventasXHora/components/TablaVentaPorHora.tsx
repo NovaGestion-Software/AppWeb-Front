@@ -166,7 +166,7 @@ export default function TablaVentaPorHora({
       },
     },
     objectFooter: {
-      footer: isProcessing,
+      footer: true,
       datosFooter: datosFooter,
      footerHeight: "h-8",
 
