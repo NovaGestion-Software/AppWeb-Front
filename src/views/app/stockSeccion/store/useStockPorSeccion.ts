@@ -211,6 +211,7 @@ export const useStockPorSeccion = create<StockPorSeccionProps>()(
         }),
       indiceBusqueda: 0,
       indiceGlobal: 0,
+      //limpiar
       resetStore: () =>
         set((_state) => ({
           buscado: false,

@@ -93,24 +93,6 @@ export default function TablaVentaPorHora({
       maxWidth: "80",
     },
   ];
-  // 2.Padre
-  const widthBase = "40rem";
-  const heightBase = "31rem";
-  const heightContainerBase = "31rem";
-  
-  const height1440px = "45rem";
-  const width1440px = "44rem";
-  const heightContainer1440 = "45rem";
-
-  const width1536px = "44rem";
-  const height1536px = "40rem";
-  const heightContainer1536 = "40rem";
-
-  // este componente
-  const heightContainerTabla = "33.6rem";
-  const heightContainerTabla1440 = "48rem";
-  const heightContainerTabla1536 = "44rem";
-  
   
 
   // SI hay funcion de resaltar a los de maximos valores:
@@ -147,21 +129,15 @@ export default function TablaVentaPorHora({
     status: status,
     objectStyles: {
       columnasNumber: [2,3,4,5,6,7],
-      heightContainer: heightContainerBase,
-      width: widthBase,
-      height: heightBase,
-      addCellClass: "max-height: 30px;",
+      heightContainer: "30rem",
       viewport1440: {
-        width1440px: width1440px,
-        height1440px: height1440px,
-        heightContainer1440px: heightContainer1440,
-        addCellClass1440px: "max-height: 40px;",
+        heightContainer1440px: "45rem",
+        addCellClass1440px: "padding: 7.8px;"
 
       },
       viewport1536: {
-        height1536px: height1536px,
-        width1536px: width1536px,
-        heightContainer1536px: heightContainer1536,
+        heightContainer1536px: "40rem",
+        addCellClass1536px: "padding: 4px;"
 
       },
     },
@@ -173,27 +149,10 @@ export default function TablaVentaPorHora({
     },
     maxIdsFunction: maxIdsFunction,
   }
-  const styleContainer = `
-  #container {
-    height: ${heightContainerTabla};
-  }
 
-  @media (min-width: 1440px) {
-    #container {
-      height: ${heightContainerTabla1440};
-    }
-  }
-
-  @media (min-width: 1536px) {
-    #container {
-      height: ${heightContainerTabla1536};
-    }
-  }
-`;
 
   return (
-    <div className={` w-full xl:w-fit`} id="container">
-      <style>{styleContainer}</style>
+    <div className={` w-fit bg-white p-1`} id="container">
     <TablaDefault props={propsTablaVentaPorHora} />
     </div>
   );

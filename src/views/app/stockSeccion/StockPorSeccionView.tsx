@@ -17,6 +17,7 @@ import ActionButton from '@/Components/ui/Buttons/ActionButton';
 import { useFiltros } from './hooks/useFiltros';
 import showAlert from '@/frontend-resourses/utils/showAlert';
 import ListaItemsPedidos from './componentes/ListaItemsPedidos';
+import { FaWarehouse } from "react-icons/fa6";
 
 export default function StockPorSeccionView() {
   // show modals de filtros
@@ -127,6 +128,7 @@ export default function StockPorSeccionView() {
     );
   };
 
+  console.log('rubros', datosRubros)
   // CAMBIO DE ESTADO
   useEffect(() => {
     if (tablaStock?.length === 0) {
@@ -204,7 +206,8 @@ export default function StockPorSeccionView() {
       <div className="grid grid-cols-10 grid-rows-2 px-2 py-2">
         {/**BOTONES SHOW MODAL DEPOSITOS Y RUBROS - ORDENAR POR CHECKBOXS( CODIGO , MARCA Y DESCRIPCION )*/}
         <div className="flex gap-6 items-center mt-3 mb-1 w-fit h-10 bg-white px-3 rounded-lg col-start-3 col-span-5 2xl:col-span-3 2xl:col-start-4 ">
-          <ActionButton text="Depósitos" onClick={() => setShowDepositosModal(true)} disabled={status === 'idle'} color="blue" size="xs" />
+          <ActionButton text="Depósitos" onClick={() => setShowDepositosModal(true)}
+           disabled={status === 'idle'} color="blue" size="xs"  icon={<FaWarehouse size={15} />} />
           <ActionButton text="Rubros" onClick={() => setShowRubrosModal(true)} disabled={false} color="blue" size="xs" />
           {/** GRUPO 4 - FUNCION PARA RE ORDENAR*/}
           <OrdenarPorCheckbox />
@@ -280,6 +283,8 @@ export default function StockPorSeccionView() {
         renderItem={renderDepositoItem}
         disabled={status === 'idle'}
         disabled2={status === 'idle'}
+           addIconClassName=" text-white w-14 h-12 m-0 flex items-center justify-center "
+        iconReact={<FaWarehouse size={28} />}
       />
       {/** MODAL DE FILTRO MARCAS */}
       <ModalFiltro<MarcaModal>

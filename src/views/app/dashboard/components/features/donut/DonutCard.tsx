@@ -1,18 +1,18 @@
 import { DonutChart, Legend } from '@tremor/react';
 
 type DonutCardProps = {
-  fecha: string;
-  titulo: string;
-  total: string;
+  fecha?: string;
+  titulo?: string;
+  label?: string;
   data: { name: string; valor: number }[];
   categories: string[];
-  fetching: boolean;
+  fetching?: boolean;
 };
 
 export default function DonutCard({
   fecha,
   titulo,
-  total,
+  label,
   data,
   categories,
   fetching,
@@ -34,22 +34,31 @@ export default function DonutCard({
         </div>
       ) : (
         <>
-          <div className="flex justify-center items-start 2xl:items-center  2xl:my-1 2xl:mb-2  gap-1">
-            {titulo && fecha ? (
+        {/**titulo */}
+          <div className="flex 
+          justify-center items-start 2xl:items-center  2xl:my-1 2xl:mb-2  gap-1">
+            {titulo && fecha && (
               <>
                 <p>{titulo} </p>
                 <p className="font-semibold"> {fecha}</p>
               </>
-            ) : (
-              ''
+            )}
+               {titulo && !fecha && (
+              <>
+                <p>{titulo} </p>
+              </>
             )}
           </div>
+          {/**body */}
           <div className="flex flex-col flex-wrap items-center gap-6  justify-start">
             <DonutChart
-              label={total}
+              label={label}
               data={data}
+              showLabel={false}
               category="valor"
               index="name"
+              variant='donut'
+              showAnimation={true}
               valueFormatter={valueFormatter}
               colors={['blue', 'cyan', 'indigo', 'violet', 'fuchsia', 'red', 'green', 'yellow']}
               className=""
@@ -58,6 +67,7 @@ export default function DonutCard({
               categories={categories}
               colors={['blue', 'cyan', 'indigo', 'violet', 'fuchsia', 'red', 'green', 'yellow']}
               className=""
+
             />
           </div>
         </>

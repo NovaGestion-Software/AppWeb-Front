@@ -63,7 +63,7 @@ export default function TablaStock() {
   const heightContainer1536 = "34rem";
   
   // este componente
-  const heightContainerTabla = '25.6rem';
+  const heightContainerTabla = '100%';
   const heightContainerTabla1440 = '40rem';
   const heightContainerTabla1536 = '37rem';
 
@@ -277,9 +277,7 @@ export default function TablaStock() {
     datosParaTabla: productos,
     objectColumns: productosColumns,
     objectStyles: {
-      width: widthBase,
-      height: height,
-      heightContainer: heightContainerBase,
+      heightContainer: "23rem",
       columnasNumber: [5, 6, 7, 8, 9],
       addCellClass: 'max-height: 30px;',
       viewport1440: {
@@ -314,27 +312,10 @@ export default function TablaStock() {
       indiceGlobal: indiceGlobal,
     },
   };
-  const styleContainer = `
-  #container {
-    height: ${heightContainerTabla};
-  }
 
-  @media (min-width: 1440px) {
-    #container {
-      height: ${heightContainerTabla1440};
-    }
-  }
-
-  @media (min-width: 1536px) {
-    #container {
-      height: ${heightContainerTabla1536};
-    }
-  }
-`;
   return (
-    <div id="container" className="flex flex-col w-fit bg-white 
-     border border-black overflow-hidden rounded-md shadow-md ">
-      <style>{styleContainer}</style>
+    <div id="container" className="flex flex-col w-fit bg-white p-1
+    overflow-hidden rounded-md shadow-md border border-red-500">
       <TablaDefault props={propsTablaStock} />
     </div>
   );

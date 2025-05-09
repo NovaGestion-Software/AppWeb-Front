@@ -12,6 +12,7 @@ export async function obtenerVentasHora(fechas: FechasRango) {
   const entorno = localStorage.getItem("_ce") || "development";        // o valor default
   try {
     // console.log('fechas seteadas en funcion', fechas);
+    console.log('empresa', empresa)
     const { from, to } = fechas;
     const baseSeleccionada = entorno === "development" ? "apinovades" : "apinova"
     const url = `/${baseSeleccionada}/generico/obtenerVentasHora.php?_i={"_e":"${empresa}","_m":"${homologacion}","_fi":"${from}","_ff":"${to}"}`;

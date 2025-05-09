@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import { useStockPorSeccion } from '@/views/app/stockSeccion/store/useStockPorSeccion';
 import showAlert from '@/utils/showAlert';
 import ActionButton from '@/Components/ui/Buttons/ActionButton';
 import FlexibleInputField from '@/Components/ui/Inputs/FlexibleInputs';
@@ -8,58 +7,53 @@ import { BiSearch } from 'react-icons/bi';
 import { FiAlertTriangle } from 'react-icons/fi';
 import { IoTrash } from 'react-icons/io5';
 import { FiltrosBusqueda, useBusqueda } from '@/frontend-resourses/components/Tables/TablaDefault/Hooks/useBusqueda';
+import { useVentasPorSeccionStore } from '../useVentasPorSeccionStore';
 
-export default function BusquedaStock() {
-  
+export default function BusquedaSecciones({ className }: { className?: string }) {
   // funciones de busqueda
-  const { buscarCoincidencias, agruparPorKey, extraerIds } = useBusqueda();
-    // store
-    const {
-      // estado
-      status,
-      // datos
-      productos,
-      // busqueda
-      buscado,
-      setBuscado,
-      
-      indiceSeleccionado,
-      setIndiceSeleccionado,
-      modoNavegacion,
-      setModoNavegacion,
-      indiceGlobal,
-      setIndiceGlobal,
-      idsCoincidentes,
-      setIdsCoincidentes,
-      //navegacion
-      setNavegandoCoincidentes,
-      setUltimoIndiceBusqueda,
-    } = useStockPorSeccion();
-  
-  
+  const { buscarCoincidencias, extraerIds } = useBusqueda();
+  // store
+  const {
+    // estado
+    status,
+    // datos
+    secciones,
+    // busqueda
+    buscado,
+    setBuscado,
+
+    indiceSeleccionado,
+    setIndiceSeleccionado,
+    modoNavegacion,
+    setModoNavegacion,
+    indiceGlobal,
+    setIndiceGlobal,
+    idsCoincidentes,
+    setIdsCoincidentes,
+    //navegacion
+    setNavegandoCoincidentes,
+    setUltimoIndiceBusqueda,
+  } = useVentasPorSeccionStore();
   // valores de busqueda
   const [codigoBusqueda, setCodigoBusqueda] = useState<string>('');
   const [textoBusqueda, setTextoBusqueda] = useState<string>('');
   // tooltip de shortcuts
-  const [showHint, setShowHint] = useState(false);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
-
+  //   const [showHint, setShowHint] = useState(false);
+  //   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   // estado para deshabilitar
   const [isDisabled, setIsDisabled] = useState(true);
-
-
-  // puede ser  una prop?
-  // objeto valores de busqueda 
+  // objeto valores de busqueda
   const filtros: FiltrosBusqueda = {
     codigo: {
       valor: codigoBusqueda,
-      keys: ['codigo'],
+      keys: ['seccion'],
     },
     texto: {
       valor: textoBusqueda,
-      keys: ['descripcion', 'nmarca'],
+      keys: ['nseccion'],
     },
   };
+
 
   // seteador del disabled
   useEffect(() => {
@@ -75,16 +69,11 @@ export default function BusquedaStock() {
 
   // busqueda .
   useEffect(() => {
-    if (!productos) return;
-    const productosFiltrados = buscarCoincidencias(productos, filtros);
-    const resultadosAgrupados = agruparPorKey(productosFiltrados, 'codigo');
-    extraerIds(resultadosAgrupados, 'codigo', setIdsCoincidentes);
-  }, [codigoBusqueda, textoBusqueda, productos]);
-  // input 1: key: string, label: string, value: valorBusqueda, placeholder: string,
-  // input 2: value: valorBusqueda, placeholder: string.
-  // onChange: compartido
+    if (!secciones) return;
+    const productosFiltrados = buscarCoincidencias(secciones, filtros);
+    extraerIds(productosFiltrados, 'seccion', setIdsCoincidentes);
+  }, [codigoBusqueda, textoBusqueda, secciones]);
 
-  // inicia la busqueda
   const handleSearch = () => {
     // si al hacer click hay indCoincidentes, entonces se hace la busqueda.
     // si al hacer click no hay idsCoincidentes, se setea en falso:
@@ -98,7 +87,9 @@ export default function BusquedaStock() {
 
   // navegacion en resultados con click.
   const handleNextResult = () => {
+    console.log('ids coidnciden2412412412tes,', idsCoincidentes)
     if (idsCoincidentes.length > 0) {
+      console.log('asdasdasd')
       const nuevoIndice = ((indiceSeleccionado ?? 0) + 1) % idsCoincidentes.length;
       setIndiceSeleccionado(nuevoIndice);
     }
@@ -121,7 +112,6 @@ export default function BusquedaStock() {
       event.preventDefault();
       if (!codigoBusqueda && !textoBusqueda) return;
 
-      console.log('indiceGlobal', indiceGlobal);
       // Siempre activar modo búsqueda al presionar Enter
       setModoNavegacion('busqueda');
       setNavegandoCoincidentes(true);
@@ -130,7 +120,8 @@ export default function BusquedaStock() {
         // Primera búsqueda
         setBuscado(true);
         if (idsCoincidentes.length > 0) {
-          setIndiceSeleccionado(0);
+            console.log('frst', indiceSeleccionado)
+            setIndiceSeleccionado(0);
           setUltimoIndiceBusqueda(0);
         }
       } else {
@@ -142,6 +133,9 @@ export default function BusquedaStock() {
         }
       }
     }
+
+    // lugar donde tenes que usar secciones por productos, se podra pasar por props?
+
     if (['ArrowDown', 'ArrowUp'].includes(event.key)) {
       event.preventDefault();
       const direction = event.key === 'ArrowDown' ? 1 : -1;
@@ -150,7 +144,7 @@ export default function BusquedaStock() {
       if (buscado && modoNavegacion === 'busqueda' && idsCoincidentes.length > 0) {
         // Si estamos en modo búsqueda, usar el ID actual para encontrar la posición global
         const currentId = indiceSeleccionado !== null ? idsCoincidentes[indiceSeleccionado] : undefined;
-        currentIndex = productos.findIndex((p) => p.codigo === currentId);
+        currentIndex = secciones.findIndex((p) => p.codigo === currentId);
       } else {
         // Si estamos en modo normal, usar el índice global directamente
         currentIndex = indiceGlobal;
@@ -158,15 +152,15 @@ export default function BusquedaStock() {
 
       // Calcular nuevo índice
       let newIndex = currentIndex + direction;
-      if (newIndex < 0) newIndex = productos.length - 1;
-      if (newIndex >= productos.length) newIndex = 0;
+      if (newIndex < 0) newIndex = secciones.length - 1;
+      if (newIndex >= secciones.length) newIndex = 0;
 
       setIndiceGlobal(newIndex);
       setModoNavegacion('normal');
 
       // Si el nuevo elemento está en los resultados de búsqueda, actualizar último índice
       if (buscado) {
-        const newId = productos[newIndex]?.codigo;
+        const newId = secciones[newIndex]?.codigo;
         const matchIndex = idsCoincidentes.findIndex((id) => id === newId);
         if (matchIndex >= 0) {
           setUltimoIndiceBusqueda(matchIndex);
@@ -203,8 +197,15 @@ export default function BusquedaStock() {
     }
   };
 
+  // de store necesito :
+  // buscado, setBuscado,
+  // indiceSeleccionado,  setIndiceSeleccionado,
+  // modoNavegacion, setModoNavegacion,
+  //  indiceGlobal, setIndiceGloabl,
+  // IdsCoincidentes, setIdsCoincidentes,
+  // setNavegacionCoincidentes, setUltimoIndiceBusqueda
   return (
-    <div className="flex gap-1 items-center border py-1.5 px-2 rounded-lg bg-slate-50">
+    <div className={`${className} flex gap-1 items-center border py-1.5 px-2 rounded-lg bg-slate-50`}>
       <FlexibleInputField
         key={'codigo'}
         label="Buscar:"
@@ -214,7 +215,7 @@ export default function BusquedaStock() {
         labelClassName={`text-start w-12 text-sm  s ${buscado && 'text-green-500'} `}
         inputClassName="w-24 text-xs"
         containerWidth="w-[12rem]"
-        disabled={status === 'idle'}
+        disabled={false}
         onChange={(value) => {
           if (typeof value === 'string') {
             setCodigoBusqueda(value);
@@ -226,7 +227,7 @@ export default function BusquedaStock() {
         value={textoBusqueda || ''}
         placeholder="Descripción o Marca"
         inputClassName="w-52 text-xs"
-        disabled={status === 'idle'}
+        disabled={false}
         containerWidth="w-56 "
         onChange={(value) => {
           if (typeof value === 'string') {
@@ -257,7 +258,7 @@ export default function BusquedaStock() {
         color="blue"
         size="xs"
         onClick={handleActionButtonClick}
-        disabled={isDisabled}
+        disabled={false}
       />
 
       <ActionButton icon={<IoTrash size={15} />} color="red" size="xs" onClick={handleClean} disabled={isDisabled} />

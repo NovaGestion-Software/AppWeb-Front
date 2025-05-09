@@ -158,11 +158,12 @@ export default function TablaSeccionRubro({ data, showRubrosModal, setShowRubros
     });
   }
 
+  console.log('data', data)
   const propsTablaRubros = {
     datosParaTabla: data,
     objectColumns: SeccionRubrosColumns,
     objectStyles: {
-      addCellClass: "max-height: 45px;",
+      addCellClass: "max-height: 45px; padding: 4px 8px 4px 8px;",
       width: "42rem",
       heightContainer: 'h-[28rem] 2xl:h-[30rem] rounded-md',
       height: 'auto',
@@ -172,6 +173,7 @@ export default function TablaSeccionRubro({ data, showRubrosModal, setShowRubros
       }
     },
     expandableTable: {
+      checkboxItem: true,
       subItemsProperty: subItemsProperty,
       subItemKeyProperty: subItemKeyProperty,
       subItemLabelProperty: subItemLabelProperty,
