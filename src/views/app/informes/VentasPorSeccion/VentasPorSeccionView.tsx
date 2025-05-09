@@ -20,14 +20,11 @@ export default function VentasPorSeccionView() {
   const {
     // status de la vista
     status,
-    setStatus,
     // parametros de fetch
-    fechas,
     setFechas,
     // data.data
     ventasPorSeccion,
     setVentasPorSeccion,
-    secciones,
     setSecciones,
     // filtros
     sucursalesSeleccionadas,
@@ -83,7 +80,7 @@ export default function VentasPorSeccionView() {
   //     },
   //   });
   // simula llamado a fetch
-  async function handleFetchData(dates: FechasRango): Promise<void> {
+  async function handleFetchData(_dates: FechasRango): Promise<void> {
     try {
       //  console.log('fechas en handle', dates)
       setVentasPorSeccion(dataDefault);

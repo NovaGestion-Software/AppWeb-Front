@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import showAlert from '@/utils/showAlert';
 import ActionButton from '@/Components/ui/Buttons/ActionButton';
 import FlexibleInputField from '@/Components/ui/Inputs/FlexibleInputs';
@@ -15,7 +15,6 @@ export default function BusquedaSecciones({ className }: { className?: string })
   // store
   const {
     // estado
-    status,
     // datos
     secciones,
     // busqueda

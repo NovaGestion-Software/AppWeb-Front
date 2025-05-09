@@ -50,9 +50,9 @@ export default function TablaStock() {
     indiceGlobal,
   } = useStockPorSeccion();
   //depositos utiliza stock renderizado
-  const widthBase =   productos.length > 0 ?'58rem' : "40rem";
-  const height =  productos.length < 10 ? 'auto': '23rem';
-  const heightContainerBase = "23rem";
+  // const widthBase =   productos.length > 0 ?'58rem' : "40rem";
+  // const height =  productos.length < 10 ? 'auto': '23rem';
+  // const heightContainerBase = "23rem";
 
   const width1440px =  productos.length > 0 ?'60.3rem' : "40rem";
   const height1440px =  productos.length < 10 ? 'auto': '37rem';
@@ -62,10 +62,7 @@ export default function TablaStock() {
   const height1536px = productos.length < 10 ?  "auto":'34rem' ;
   const heightContainer1536 = "34rem";
   
-  // este componente
-  const heightContainerTabla = '100%';
-  const heightContainerTabla1440 = '40rem';
-  const heightContainerTabla1536 = '37rem';
+
 
   const depositos = obtenerDepositos(tablaStock);
   let cantidadItems = productos.length;

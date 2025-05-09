@@ -29,7 +29,7 @@ export function transformarTipos<T extends Record<string, any>>(data: T[], tipos
 }
 
 export default function GraficoDeTorta({ className }: { className: string }) {
-  const { status, fechas, ventasPorSeccion, secciones } = useVentasPorSeccionStore();
+  const { fechas, ventasPorSeccion, secciones } = useVentasPorSeccionStore();
   let procesado = false;
   const [seccionesDisponibles, setSeccionesDisponibles] = useState<any[]>([]);
 
@@ -49,10 +49,7 @@ export default function GraficoDeTorta({ className }: { className: string }) {
   }
 
   const categorias = seccionesDisponibles.map((item) => item.name);
-  const fechasStr = String(fechas.from);
   const dataParaGrafico = transformarTipos(seccionesDisponibles, { valor: 'number' }) as DonutData[];
-  let title = `De ${fechas.from} a ${fechas.to}`;
-  console.log('data',dataParaGrafico)
 
   return (
     <div className={`${className} h-[20rem]`}>

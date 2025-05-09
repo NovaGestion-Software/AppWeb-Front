@@ -1,4 +1,4 @@
-import { FechasRango, ResVentasPorSeccion, Status, SucursalesModal } from '@/types';
+import { FechasRango, Status, SucursalesModal } from '@/types';
 import dayjs from 'dayjs';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';

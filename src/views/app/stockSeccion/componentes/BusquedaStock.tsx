@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect,  useState } from 'react';
 import { useStockPorSeccion } from '@/views/app/stockSeccion/store/useStockPorSeccion';
 import showAlert from '@/utils/showAlert';
 import ActionButton from '@/Components/ui/Buttons/ActionButton';
@@ -41,8 +41,8 @@ export default function BusquedaStock() {
   const [codigoBusqueda, setCodigoBusqueda] = useState<string>('');
   const [textoBusqueda, setTextoBusqueda] = useState<string>('');
   // tooltip de shortcuts
-  const [showHint, setShowHint] = useState(false);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  // const [showHint, setShowHint] = useState(false);
+  // const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // estado para deshabilitar
   const [isDisabled, setIsDisabled] = useState(true);

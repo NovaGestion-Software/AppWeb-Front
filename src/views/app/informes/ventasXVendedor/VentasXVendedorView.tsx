@@ -1,7 +1,5 @@
-import TablaExpandible from '@/frontend-resourses/components/Tables/TablaExpandible';
 import { useState } from 'react';
-import { dataVentaPorVendedor, VentaPorVendedor, VentaPorVendedorColumns } from './data';
-import { ExtendedColumn } from '@/frontend-resourses/components/Tables/types';
+import { dataVentaPorVendedor} from './data';
 import { ViewTitle } from '@/frontend-resourses/components';
 import RangeDatesInput from '@/frontend-resourses/components/Inputs/RangeDatesInput';
 import { FechasRango } from '@/types';
@@ -15,20 +13,14 @@ export default function VentasXVendedorView() {
   const {
     // status de la vista
     status,
-    setStatus,
     // parametros de fetch
-    fechas,
     setFechas,
     // data.data
     ventasPorVendedor,
     setVentasPorVendedor,
-    secciones,
-    setSecciones,
     // filtros
     sucursalesSeleccionadas,
-    setSucursalesSeleccionadas,
     sucursalesDisponibles,
-    setSucursalesDisponibles,
   } = useVentasPorVendedorStore();
   const [estaProcesado, setEstaProcesado] = useState(false);
   // Formateo a array de strings
@@ -36,7 +28,7 @@ export default function VentasXVendedorView() {
   const sucursalesSeleccionadasStr = sucursalesSeleccionadas.map((s) => s.nsucursal);
 
   // simula llamado a fetch
-  async function handleFetchData(dates: FechasRango): Promise<void> {
+  async function handleFetchData(_dates: FechasRango): Promise<void> {
     try {
       //  console.log('fechas en handle', dates)
       setVentasPorVendedor(dataVentaPorVendedor);
@@ -53,7 +45,6 @@ export default function VentasXVendedorView() {
     setEstaProcesado(false);
   };
 
-  console.log('ventasvendedor', ventasPorVendedor);
   //constate prueba para botonera de herramientas
   const exampleData: Record<string, any>[] = [
     { id: 1, nombre: 'Lucas', edad: 30 },

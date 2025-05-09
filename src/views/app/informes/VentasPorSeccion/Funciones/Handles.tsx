@@ -1,6 +1,6 @@
 import { FechasRango } from '@/types';
 
-export async function handleFetchData(dates: FechasRango): Promise<void> {
+export async function handleFetchData(_dates: FechasRango): Promise<void> {
   try {
     //  console.log('fechas en handle', dates)
     //   mutate(dates);

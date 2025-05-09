@@ -1,8 +1,6 @@
 import { TablaDefault } from '@/frontend-resourses/components';
-import { useBusqueda } from '@/frontend-resourses/components/Tables/TablaDefault/Hooks/useBusqueda';
 import { ExtendedColumn } from '@/frontend-resourses/components/Tables/types';
 import { useVentasPorSeccionStore } from '../useVentasPorSeccionStore';
-import { useEffect } from 'react';
 
 export type VentaPorSeccionType = {
   id: string | number;
@@ -20,21 +18,17 @@ interface TablaVentaPorHoraProps {
 }
 export function TablaVentaPorSeccion({ data, estaProcesado, datosFooter, className }: TablaVentaPorHoraProps) {
   // estilos
-  const heightContainerBase = '28rem';
 
   const height1440px = '28rem';
   const heightContainer1440 = '35rem';
 
-  const width1536px = '34rem';
-  const height1536px = '28rem';
-  const heightContainer1536 = '39rem';
 
   // // este componente
   // const heightContainerTabla = "38rem";
   // const heightContainerTabla1440 = "48rem";
   // const heightContainerTabla1536 = "44rem";
 
-  const { idsCoincidentes, indiceSeleccionado, buscado, modoNavegacion, setUltimoIndiceBusqueda, indiceGlobal } = useVentasPorSeccionStore();
+  const { idsCoincidentes, indiceSeleccionado, buscado, modoNavegacion, indiceGlobal } = useVentasPorSeccionStore();
 
   // columnas
   const VentaXSeccionColumns: Array<ExtendedColumn<VentaPorSeccionType>> = [
