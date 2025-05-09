@@ -16,7 +16,6 @@ export default function VentasXVendedorView() {
     // parametros de fetch
     setFechas,
     // data.data
-    ventasPorVendedor,
     setVentasPorVendedor,
     // filtros
     sucursalesSeleccionadas,

@@ -29,7 +29,7 @@ export function transformarTipos<T extends Record<string, any>>(data: T[], tipos
 }
 
 export default function GraficoDeTorta({ className }: { className: string }) {
-  const { fechas, ventasPorSeccion, secciones } = useVentasPorSeccionStore();
+  const { ventasPorSeccion, secciones } = useVentasPorSeccionStore();
   let procesado = false;
   const [seccionesDisponibles, setSeccionesDisponibles] = useState<any[]>([]);
 
