@@ -1,12 +1,12 @@
 import { useEffect,  useState } from 'react';
 import { useStockPorSeccion } from '@/views/app/stockSeccion/store/useStockPorSeccion';
-import showAlert from '@/utils/showAlert';
+//import showAlert from '@/utils/showAlert';
 import ActionButton from '@/Components/ui/Buttons/ActionButton';
 import FlexibleInputField from '@/Components/ui/Inputs/FlexibleInputs';
 import { TbArrowBigRightLinesFilled } from 'react-icons/tb';
 import { BiSearch } from 'react-icons/bi';
 import { FiAlertTriangle } from 'react-icons/fi';
-import { IoTrash } from 'react-icons/io5';
+// import { IoTrash } from 'react-icons/io5';
 import { FiltrosBusqueda, useBusqueda } from '@/frontend-resourses/components/Tables/TablaDefault/Hooks/useBusqueda';
 
 export default function BusquedaStock({className}: {className?: string;}) {
@@ -183,25 +183,25 @@ export default function BusquedaStock({className}: {className?: string;}) {
   };
 
   // limpiar busqueda
-  const handleClean = async () => {
-    const result = await showAlert({
-      title: '¿Estás seguro?',
-      text: 'Todo el progreso se perderá',
-      icon: 'warning',
-      showConfirmButton: true,
-      showCancelButton: true,
-      confirmButtonText: 'Sí, limpiar todo',
-      cancelButtonText: 'Cancelar',
-    });
+  // const handleClean = async () => {
+  //   const result = await showAlert({
+  //     title: '¿Estás seguro?',
+  //     text: 'Todo el progreso se perderá',
+  //     icon: 'warning',
+  //     showConfirmButton: true,
+  //     showCancelButton: true,
+  //     confirmButtonText: 'Sí, limpiar todo',
+  //     cancelButtonText: 'Cancelar',
+  //   });
 
-    if (result.isConfirmed) {
-      setBuscado(false);
-      setIndiceSeleccionado(0);
-      setIdsCoincidentes([]);
-      setCodigoBusqueda('');
-      setTextoBusqueda('');
-    }
-  };
+  //   if (result.isConfirmed) {
+  //     setBuscado(false);
+  //     setIndiceSeleccionado(0);
+  //     setIdsCoincidentes([]);
+  //     setCodigoBusqueda('');
+  //     setTextoBusqueda('');
+  //   }
+  // };
 
   return (
     <div className={`${className} flex gap-2 items-center border py-1.5 px-3 rounded-md`}>

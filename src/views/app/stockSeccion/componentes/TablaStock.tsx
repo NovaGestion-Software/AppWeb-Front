@@ -54,13 +54,13 @@ export default function TablaStock() {
   // const height =  productos.length < 10 ? 'auto': '23rem';
   // const heightContainerBase = "23rem";
 
-  const width1440px =  productos.length > 0 ?'60.3rem' : "40rem";
-  const height1440px =  productos.length < 10 ? 'auto': '37rem';
-  const heightContainer1440 = "37rem";
+  // const width1440px =  productos.length > 0 ?'60.3rem' : "40rem";
+  // const height1440px =  productos.length < 10 ? 'auto': '37rem';
+  // const heightContainer1440 = "37rem";
   
   const width1536px = productos.length > 0 ? '71.3rem' : '54.3rem';
   const height1536px = productos.length < 10 ?  "auto":'34rem' ;
-  const heightContainer1536 = "34rem";
+  // const heightContainer1536 = "34rem";
   
 
 

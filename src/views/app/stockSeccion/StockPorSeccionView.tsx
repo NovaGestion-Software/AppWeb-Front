@@ -5,15 +5,10 @@ import { useStockPorSeccion } from "@/views/app/stockSeccion/store/useStockPorSe
 import { obtenerRubrosDisponibles } from "@/services/ApiPhpService";
 import ViewTitle from "@/frontend-resourses/components/Labels/ViewTitle";
 import HerramientasComponent from "../informes/ventasXHora/components/HerramientasComponent";
-import OrdenarPorCheckbox from "./componentes/OrdernarPorCheckbox";
-import FiltroPorStock from "./componentes/FiltroPorStock";
-import FiltrarPorTipo from "./componentes/FiltrarPorTipo";
-import FiltrarSegunLista from "./componentes/FiltrarSegunLista";
 import ModalFiltro from "@/frontend-resourses/components/Modales/ModalFiltro";
 import BusquedaStock from "./componentes/BusquedaStock";
 import TablaSeccionRubro from "./componentes/TablaSeccionRubro";
 import TablaStock from "./componentes/TablaStock";
-import ActionButton from "@/Components/ui/Buttons/ActionButton";
 import { useFiltros } from "./hooks/useFiltros";
 import showAlert from "@/frontend-resourses/utils/showAlert";
 import ListaItemsPedidos from "./componentes/ListaItemsPedidos";
