@@ -19,6 +19,7 @@ export default {
         v1280: '1280px',
         v1440: '1440px',
         v1536: '1536px',
+        v1920: '1920px',
       },
       
       colors: {

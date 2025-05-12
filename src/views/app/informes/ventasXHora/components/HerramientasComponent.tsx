@@ -9,6 +9,7 @@ interface HerramientasComponentProps {
   modalSucursales?: boolean;
   disabled?: boolean;
   handleClean ?: () => void; // Función opcional para limpiar
+  className?: string;
 }
 
 export default function HerramientasComponent({
@@ -17,6 +18,7 @@ export default function HerramientasComponent({
   estaProcesado,
   disabled,
   handleClean,
+  className
 }: HerramientasComponentProps) {
   // Aseguramos que datosTotales tenga un ID
   const datosTotales = datosParaFooter
@@ -80,7 +82,7 @@ export default function HerramientasComponent({
   });
 
   return (
-    <>
+    <div className={`${className}`}>
       <HerramientasInforme
         data={data}
         estaProcesado={estaProcesado}
@@ -92,6 +94,6 @@ export default function HerramientasComponent({
         handleClean={handleClearData}
         >
       </HerramientasInforme>
-    </>
+    </div>
   );
 }

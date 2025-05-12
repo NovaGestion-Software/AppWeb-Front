@@ -1,8 +1,8 @@
-import DonutCard from '@/views/app/dashboard/components/features/donut/DonutCard';
-import { useVentasPorSeccionStore } from '../useVentasPorSeccionStore';
-import { extraerItems } from '@/frontend-resourses/utils/dataManipulation';
-import { useEffect, useState } from 'react';
-type TipoTransformacion = 'string' | 'number' | 'boolean';
+import DonutCard from "@/views/app/dashboard/components/features/donut/DonutCard";
+import { useVentasPorSeccionStore } from "../useVentasPorSeccionStore";
+import { extraerItems } from "@/frontend-resourses/utils/dataManipulation";
+import { useEffect, useState } from "react";
+type TipoTransformacion = "string" | "number" | "boolean";
 
 export function transformarTipos<T extends Record<string, any>>(data: T[], tipos: Record<keyof T, TipoTransformacion>): Record<string, any>[] {
   return data.map((item) => {
@@ -12,12 +12,12 @@ export function transformarTipos<T extends Record<string, any>>(data: T[], tipos
       const tipo = tipos[key as keyof T];
       const valor = item[key];
 
-      if (tipo === 'number') {
+      if (tipo === "number") {
         // Si es string con coma decimal, convertir correctamente
-        nuevoItem[key] = typeof valor === 'string' ? parseFloat(valor.replace(/\./g, '').replace(',', '.')) : Number(valor);
-      } else if (tipo === 'boolean') {
-        nuevoItem[key] = valor === 'true' || valor === true ? true : false;
-      } else if (tipo === 'string') {
+        nuevoItem[key] = typeof valor === "string" ? parseFloat(valor.replace(/\./g, "").replace(",", ".")) : Number(valor);
+      } else if (tipo === "boolean") {
+        nuevoItem[key] = valor === "true" || valor === true ? true : false;
+      } else if (tipo === "string") {
         nuevoItem[key] = String(valor);
       } else {
         nuevoItem[key] = valor;
@@ -37,8 +37,8 @@ export default function GraficoDeTorta({ className }: { className: string }) {
     extraerItems({
       data: secciones,
       itemsKeysGroup: {
-        name: 'nseccion',
-        valor: 'importe',
+        name: "nseccion",
+        valor: "importe",
       },
       setItemsDisponibles: setSeccionesDisponibles,
     });
@@ -49,13 +49,11 @@ export default function GraficoDeTorta({ className }: { className: string }) {
   }
 
   const categorias = seccionesDisponibles.map((item) => item.name);
-  const dataParaGrafico = transformarTipos(seccionesDisponibles, { valor: 'number' }) as DonutData[];
+  const dataParaGrafico = transformarTipos(seccionesDisponibles, { valor: "number" }) as DonutData[];
 
   return (
     <div className={`${className} h-[20rem]`}>
-      <DonutCard titulo={`Secciones`} label={''}
-       data={dataParaGrafico} categories={categorias} 
-       fetching={procesado} />
+      <DonutCard titulo={`Secciones`} label={""} data={dataParaGrafico} categories={categorias} fetching={procesado} />
     </div>
   );
 }

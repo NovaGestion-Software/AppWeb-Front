@@ -1,23 +1,25 @@
-import { useEffect, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { DepositoModal, MarcaModal, } from '@/types';
-import { useStockPorSeccion } from '@/views/app/stockSeccion/store/useStockPorSeccion';
-import { obtenerRubrosDisponibles } from '@/services/ApiPhpService';
-import ViewTitle from '@/frontend-resourses/components/Labels/ViewTitle';
-import HerramientasComponent from '../informes/ventasXHora/components/HerramientasComponent';
-import OrdenarPorCheckbox from './componentes/OrdernarPorCheckbox';
-import FiltroPorStock from './componentes/FiltroPorStock';
-import FiltrarPorTipo from './componentes/FiltrarPorTipo';
-import FiltrarSegunLista from './componentes/FiltrarSegunLista';
-import ModalFiltro from '@/frontend-resourses/components/Modales/ModalFiltro';
-import BusquedaStock from './componentes/BusquedaStock';
-import TablaSeccionRubro from './componentes/TablaSeccionRubro';
-import TablaStock from './componentes/TablaStock';
-import ActionButton from '@/Components/ui/Buttons/ActionButton';
-import { useFiltros } from './hooks/useFiltros';
-import showAlert from '@/frontend-resourses/utils/showAlert';
-import ListaItemsPedidos from './componentes/ListaItemsPedidos';
+import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { DepositoModal, MarcaModal } from "@/types";
+import { useStockPorSeccion } from "@/views/app/stockSeccion/store/useStockPorSeccion";
+import { obtenerRubrosDisponibles } from "@/services/ApiPhpService";
+import ViewTitle from "@/frontend-resourses/components/Labels/ViewTitle";
+import HerramientasComponent from "../informes/ventasXHora/components/HerramientasComponent";
+import OrdenarPorCheckbox from "./componentes/OrdernarPorCheckbox";
+import FiltroPorStock from "./componentes/FiltroPorStock";
+import FiltrarPorTipo from "./componentes/FiltrarPorTipo";
+import FiltrarSegunLista from "./componentes/FiltrarSegunLista";
+import ModalFiltro from "@/frontend-resourses/components/Modales/ModalFiltro";
+import BusquedaStock from "./componentes/BusquedaStock";
+import TablaSeccionRubro from "./componentes/TablaSeccionRubro";
+import TablaStock from "./componentes/TablaStock";
+import ActionButton from "@/Components/ui/Buttons/ActionButton";
+import { useFiltros } from "./hooks/useFiltros";
+import showAlert from "@/frontend-resourses/utils/showAlert";
+import ListaItemsPedidos from "./componentes/ListaItemsPedidos";
 import { FaWarehouse } from "react-icons/fa6";
+import ShowModalButtons from "./componentes/ShowModalButtons";
+import GrupoInputsRadio from "./componentes/GrupoInputsRadio";
 
 export default function StockPorSeccionView() {
   // show modals de filtros
@@ -68,24 +70,24 @@ export default function StockPorSeccionView() {
     },
     filtradoSimple: {
       itemsDisponibles: marcasFiltrosSeleccionados,
-      key: 'nmarca',
+      key: "nmarca",
     },
     filtradoComplejo: {
       itemsDisponibles: depositosFiltroDisponibles,
-      claveDepositos: 'stockPorDeposito',
+      claveDepositos: "stockPorDeposito",
       itemsSeleccionados: depositosFiltroSeleccionados,
     },
-    listaPrecios: { grupo: checkboxSeleccionados?.grupo3 || 'CONTADO' },
+    listaPrecios: { grupo: checkboxSeleccionados?.grupo3 || "CONTADO" },
   };
   // criterios de ordenamiento
   const criterios = [
-    { case: 'Codigo', key: 'codigo', type: 'number' },
-    { case: 'Marca', key: 'nmarca', type: 'string' },
-    { case: 'Descripcion', key: 'descripcion', type: 'string' },
+    { case: "Codigo", key: "codigo", type: "number" },
+    { case: "Marca", key: "nmarca", type: "string" },
+    { case: "Descripcion", key: "descripcion", type: "string" },
   ];
   // fetch TABLA PARA RUBROS
   const { data: rubrosDis } = useQuery({
-    queryKey: ['rubros-seccion'],
+    queryKey: ["rubros-seccion"],
     queryFn: obtenerRubrosDisponibles,
     refetchOnWindowFocus: false,
     staleTime: 1000 * 60 * 5, // Datos frescos por 5 minutos
@@ -97,14 +99,14 @@ export default function StockPorSeccionView() {
       setDatosRubros(rubrosDis.data);
     }
   }, [rubrosDis]);
-  
+
   // SET FILTROS DE CHECKBOXS
   useEffect(() => {
     if (stockRenderizado.length > 0) {
-      setCheckboxSeleccionados('grupo1', 'Talles');
-      setCheckboxSeleccionados('grupo2', 'Todos');
-      setCheckboxSeleccionados('grupo3', 'CONTADO');
-      setCheckboxSeleccionados('grupo4', 'Descripcion'); // Asegúrate de que este valor sea válido
+      setCheckboxSeleccionados("grupo1", "Talles");
+      setCheckboxSeleccionados("grupo2", "Todos");
+      setCheckboxSeleccionados("grupo3", "CONTADO");
+      setCheckboxSeleccionados("grupo4", "Descripcion"); // Asegúrate de que este valor sea válido
     }
   }, [stockRenderizado, setCheckboxSeleccionados]);
 
@@ -123,18 +125,18 @@ export default function StockPorSeccionView() {
   const renderDepositoItem = (item: DepositoModal) => {
     return (
       <>
-        {item.deposito} - {item.ndeposito}{' '}
+        {item.deposito} - {item.ndeposito}{" "}
       </>
     );
   };
 
-  console.log('rubros', datosRubros)
+  console.log("rubros", datosRubros);
   // CAMBIO DE ESTADO
   useEffect(() => {
     if (tablaStock?.length === 0) {
-      setStatus('idle');
+      setStatus("idle");
     } else {
-      setStatus('success');
+      setStatus("success");
     }
   }, [status, setStatus, tablaStock]);
   // Tabla stock serian los datos originales del endpoint
@@ -155,13 +157,13 @@ export default function StockPorSeccionView() {
 
   const handleClean = async () => {
     const result = await showAlert({
-      title: '¿Estás seguro?',
-      text: 'Todo el progreso se perderá',
-      icon: 'warning',
+      title: "¿Estás seguro?",
+      text: "Todo el progreso se perderá",
+      icon: "warning",
       showConfirmButton: true,
       showCancelButton: true,
-      confirmButtonText: 'Sí, limpiar todo',
-      cancelButtonText: 'Cancelar',
+      confirmButtonText: "Sí, limpiar todo",
+      cancelButtonText: "Cancelar",
     });
 
     if (result.isConfirmed) {
@@ -170,98 +172,94 @@ export default function StockPorSeccionView() {
   };
 
   //Funcion para mostrar cartel de error si no hay rubros traidos.
-  // parece que rubros pendientes esta a destiempo porque utilizxa una variable que se setea antes de que se muestre el error 
+  // parece que rubros pendientes esta a destiempo porque utilizxa una variable que se setea antes de que se muestre el error
   // y toma los datos atrasados.
   // hacer modos de prueba de cuando data viene vacio y cuando data viene con un item pero menos de 5  o cuando viene con mas
   const handleError = () => {
     if (rubrosPendientes?.length > 0) {
       showAlert({
-        title: 'Upps!',
-        text: `Los siguientes rubros no se han podido traer: ${rubrosPendientesData.map((rubro) =>{
+        title: "Upps!",
+        text: `Los siguientes rubros no se han podido traer: ${rubrosPendientesData.map((rubro) => {
           return rubro.nombre;
         })}.`,
-        icon: 'info',
+        icon: "info",
         timer: 3000,
       });
     }
     if (rubrosPendientes?.length > 5) {
       showAlert({
-        title: 'Upps!',
+        title: "Upps!",
         text: `Hay rubros que no se han podido traer.`,
-        icon: 'info',
+        icon: "info",
         timer: 3000,
       });
     }
   };
 
   useEffect(() => {
-    if (rubrosPendientes?.length > 0 ) {
+    if (rubrosPendientes?.length > 0) {
       handleError();
     }
-  }, [rubrosPendientes, ]);
+  }, [rubrosPendientes]);
+
+  const propsShowModales = {
+    propsShowModal: {
+      setShowRubros: setShowRubrosModal,
+      setShowMarcas: setShowMarcasModal,
+      setShowDepositos: setShowDepositosModal,
+    },
+    status: status,
+  };
   return (
     <div className="w-full h-lvh   ">
-      <ViewTitle title={'Stock por Sección'} />
+      <ViewTitle title={"Stock por Sección"} />
       {/** HERRAMIENTAS DE LA VISTA */}
-      <div className="grid grid-cols-10 grid-rows-2 px-2 py-2">
-        {/**BOTONES SHOW MODAL DEPOSITOS Y RUBROS - ORDENAR POR CHECKBOXS( CODIGO , MARCA Y DESCRIPCION )*/}
-        <div className="flex gap-6 items-center mt-3 mb-1 w-fit h-10 bg-white px-3 rounded-lg col-start-3 col-span-5 2xl:col-span-3 2xl:col-start-4 ">
-          <ActionButton text="Depósitos" onClick={() => setShowDepositosModal(true)}
-           disabled={status === 'idle'} color="blue" size="xs"  icon={<FaWarehouse size={15} />} />
-          <ActionButton text="Rubros" onClick={() => setShowRubrosModal(true)} disabled={false} color="blue" size="xs" />
-          {/** GRUPO 4 - FUNCION PARA RE ORDENAR*/}
-          <OrdenarPorCheckbox />
-        </div>
-        {/** EXPORTORTAR A EXCEEL E IMPRIMIR. */}
-        <div
-          className=" mt-3 mb-1 rounded-lg col-span-3 flex 
-            w-fit h-10 px-2 items-center  bg-white 
-        col-start-8 2xl:col-span-3 2xl:col-start-8 2xl:relative 2xl:px-4"
-        >
-          <HerramientasComponent data={productos} handleClean={handleClean}  estaProcesado={!isProcessing} modalSucursales={false} disabled={status === 'idle'} />
-        
-        </div>
+      <div className="grid grid-cols-10 grid-rows-2 gap-y-2  px-8 pt-2 pb-0">
+        {/**Inputs Radio */}
+        <GrupoInputsRadio
+          className="justify-between              
+               col-start-2 col-span-9 row-span-1  row-start-1 
+               v1440:justify-start   v1440:gap-8
+               v1536:col-start-2 v1536:gap-12 v1536:col-span-9
+               v1920:col-start-3 v1920:gap-6  " />
 
-        {/**CON STOCK, TODOS, NEGATIVOS - CONTADO, LISTA 2, LISTA 3 */}
-        <div
-          className="flex gap-2 my-1 items-center rounded-lg 
-        col-start-3 col-span-8 row-span-1  2xl:col-span- 2xl:col-start-4"
-        >
-          {/**GRUPO 1 */}
-          <div className="border p-1 bg-white rounded-lg">
-            <FiltrarPorTipo />
-          </div>
-          {/** GRUPO 2 */}
-          <div className="border p-1 bg-white rounded-lg">
-            <FiltroPorStock />
-          </div>
-          {/**GRUPO 3 -  */}
-          <div className="border p-1 bg-white rounded-lg">
-            <FiltrarSegunLista />
-          </div>
-        </div>
-
-        {/**INPUTS BUSCAR - BOTONES SHOW MODAL TEMPORADAS Y MARCAS */}
-        <div
-          className="flex gap-3 my-1 items-center w-fit 
-        row-start-2 border px-2 rounded-lg bg-white col-start-3
-         col-span-7 2xl:col-span-5 2xl:px-4 2xl:col-start-4  "
-        >
-          <BusquedaStock />
-          <ActionButton text="Marcas" color="blue" 
-          disabled={status === 'idle'} 
-          onClick={() => setShowMarcasModal(true)} size="xs" />
-        </div>
+        {/**SHOW DEPOSITOS, RUBROS Y MARCAS*/}
+        <ShowModalButtons
+          props={propsShowModales}
+          className="flex gap-6 items-center w-fit h-10
+         bg-white px-3 rounded-lg  
+           col-start-2 col-span-5 row-start-2 
+            v1536:col-start-2 
+            v1920:col-start-3 v1920:relative v1920:right-8
+            "
+        />
+        {/**Inputs Busqueda*/}
+        <BusquedaStock
+          className=" w-fit bg-white relative right-2.5
+        col-start-5 row-start-2 col-span-5 
+        v1440:right-8
+        v1536:px-4 v1536:col-start-5 v1536:right-12
+        v1920:col-start-5 "
+        />
+        <HerramientasComponent
+          className=" flex  w-fit h-10 px-2 relative left-12 items-center bg-white  rounded-lg
+                      col-start-9 col-span-2 row-start-2
+                      v1440:-left-3
+                      v1536:col-span-3 v1536:col-start-8 v1536:left-24
+                      v1920:col-start-8 v1920:-left-6"
+          data={productos}
+          handleClean={handleClean}
+          estaProcesado={!isProcessing}
+          modalSucursales={false}
+          disabled={status === "idle"}
+        />
       </div>
 
       {/**TABLA STOCK */}
-      <div className="grid grid-cols-12  px-4 py-2">      
-        <div className="flex items-start gap-4 justify-center col-span-full">
+      <div className="grid grid-cols-10  px-8 py-2">
+        <div className="flex items-start gap-2 justify-center col-span-full">
           {/** LISTA */}
-       <ListaItemsPedidos
-        rubrosPendientesData={rubrosPendientesData}
-        rubrosTraidosData={rubrosTraidosData}
-    />
+          <ListaItemsPedidos className="h-1/2" rubrosPendientesData={rubrosPendientesData} rubrosTraidosData={rubrosTraidosData} />
           <TablaStock />
         </div>
       </div>
@@ -281,9 +279,9 @@ export default function StockPorSeccionView() {
         setItemsDisponibles={setDepositosDisponibles}
         setItemsSeleccionados={setDepositosSeleccionados}
         renderItem={renderDepositoItem}
-        disabled={status === 'idle'}
-        disabled2={status === 'idle'}
-           addIconClassName=" text-white w-14 h-12 m-0 flex items-center justify-center "
+        disabled={status === "idle"}
+        disabled2={status === "idle"}
+        addIconClassName=" text-white w-14 h-12 m-0 flex items-center justify-center "
         iconReact={<FaWarehouse size={28} />}
       />
       {/** MODAL DE FILTRO MARCAS */}
@@ -297,8 +295,8 @@ export default function StockPorSeccionView() {
         setItemsDisponibles={setMarcasDisponibles}
         setItemsSeleccionados={setMarcasSeleccionadas}
         renderItem={renderMarcaItem}
-        disabled={status === 'idle'}
-        disabled2={status === 'idle'}
+        disabled={status === "idle"}
+        disabled2={status === "idle"}
       />
     </div>
   );

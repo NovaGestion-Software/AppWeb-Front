@@ -1,8 +1,10 @@
-export default function ItemsPedidos(props: { rubrosPendientesData: any[]; rubrosTraidosData: any[] }) {
+export default function ItemsPedidos(props: { rubrosPendientesData: any[]; rubrosTraidosData: any[]; className?: string }) {
   const rubrosPendientesData = props.rubrosPendientesData;
   const rubrosTraidosData = props.rubrosTraidosData;
+  const className = props.className;
+  
   return (
-    <div className="bg-white w-auto min-w-56 max-h-56 min-h-36 overflow-auto  text-xs py-1 px-2 m-1 rounded-lg shadow-md">
+    <div className={`${className} bg-white w-auto min-w-56  overflow-auto  text-xs py-1 px-2 m-1 rounded-lg shadow-md`}>
       {rubrosTraidosData?.length > 0 && (
         <ul>
           {rubrosTraidosData.map((rubro) => (

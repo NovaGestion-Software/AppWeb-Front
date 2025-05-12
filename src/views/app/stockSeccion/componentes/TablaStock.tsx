@@ -274,20 +274,19 @@ export default function TablaStock() {
     datosParaTabla: productos,
     objectColumns: productosColumns,
     objectStyles: {
-      heightContainer: "23rem",
+      heightContainer: "28rem",
       columnasNumber: [5, 6, 7, 8, 9],
       addCellClass: 'max-height: 30px;',
       viewport1440: {
-        width1440px: width1440px,
-        height1440px: height1440px,
-        heightContainer1440px: heightContainer1440,
-        addCellClass1440px: 'max-height: 40px;',
-
+        heightContainer1440px: "42rem",
+        addCellClass1440px: 'min-height: 30px;',
       },
       viewport1536: {
+        addCellClass1536px: 'min-height: 35px;',
+
         width1536px: width1536px,
         height1536px: height1536px,
-        heightContainer1536px: heightContainer1536,
+        heightContainer1536px: "40rem",
       },
     },
     objectSelection: {
@@ -312,7 +311,7 @@ export default function TablaStock() {
 
   return (
     <div id="container" className="flex flex-col w-fit bg-white p-1
-    overflow-hidden rounded-md shadow-md border border-red-500">
+    overflow-hidden rounded-md shadow-md">
       <TablaDefault props={propsTablaStock} />
     </div>
   );

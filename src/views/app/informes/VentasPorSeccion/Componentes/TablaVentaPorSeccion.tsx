@@ -32,7 +32,8 @@ export function TablaVentaPorSeccion({ data, estaProcesado, datosFooter, classNa
 
   // columnas
   const VentaXSeccionColumns: Array<ExtendedColumn<VentaPorSeccionType>> = [
-    { key: 'seccion', label: 'Sección', minWidth: '90', maxWidth: '120', resaltar: true },
+    { key: 'seccion', label: 'Sección', minWidth: '90', 
+      maxWidth: '120', resaltar: true },
     { key: 'nseccion', label: 'Detalle', minWidth: '180', maxWidth: '240' },
     {
       key: 'importe',
@@ -63,8 +64,8 @@ export function TablaVentaPorSeccion({ data, estaProcesado, datosFooter, classNa
     status: estaProcesado,
     objectStyles: {
       columnasNumber: [3, 4],
-      heightContainer: "27rem",
-      widthContainer: '33rem',
+      heightContainer: "26.4rem",
+      widthContainer: '35.5rem',
       addCellClass: 'max-height: 45px; padding: 4px 8px 4px 8px;',
       withoutPadding: true,
       viewport1440: {

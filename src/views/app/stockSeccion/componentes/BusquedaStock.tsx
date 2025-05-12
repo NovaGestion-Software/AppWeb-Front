@@ -9,7 +9,7 @@ import { FiAlertTriangle } from 'react-icons/fi';
 import { IoTrash } from 'react-icons/io5';
 import { FiltrosBusqueda, useBusqueda } from '@/frontend-resourses/components/Tables/TablaDefault/Hooks/useBusqueda';
 
-export default function BusquedaStock() {
+export default function BusquedaStock({className}: {className?: string;}) {
   
   // funciones de busqueda
   const { buscarCoincidencias, agruparPorKey, extraerIds } = useBusqueda();
@@ -204,7 +204,7 @@ export default function BusquedaStock() {
   };
 
   return (
-    <div className="flex gap-1 items-center border py-1.5 px-2 rounded-lg bg-slate-50">
+    <div className={`${className} flex gap-2 items-center border py-1.5 px-3 rounded-md`}>
       <FlexibleInputField
         key={'codigo'}
         label="Buscar:"
@@ -260,7 +260,8 @@ export default function BusquedaStock() {
         disabled={isDisabled}
       />
 
-      <ActionButton icon={<IoTrash size={15} />} color="red" size="xs" onClick={handleClean} disabled={isDisabled} />
+      {/* <ActionButton icon={<IoTrash size={15} />} color="red" size="xs" onClick={handleClean}
+       disabled={isDisabled} /> */}
     </div>
   );
 }
