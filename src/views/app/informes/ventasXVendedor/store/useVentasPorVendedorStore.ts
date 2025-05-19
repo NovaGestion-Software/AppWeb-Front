@@ -1,8 +1,9 @@
-import { FechasRango, Status, SucursalesModal } from '@/types';
+import { SucursalesModal } from '@/types';
 import dayjs from 'dayjs';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import { VentaPorVendedorColumns } from '../data';
+import { Status,FechasRango, } from '@/frontend-resourses/components/types';
 
 const defaultDate = {
   from: dayjs().startOf('month'),

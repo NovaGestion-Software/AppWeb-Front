@@ -3,7 +3,7 @@ import { AreaChart } from '@tremor/react';
 import { useQuery } from '@tanstack/react-query';
 import { obtenerDashboardGrafico } from '@/services/AppService';
 import SkChart from './SkChart';
-import ViewTitle from '@/Components/ui/Labels/ViewTitle';
+import ViewTitle from '@/frontend-resourses/components/Labels/ViewTitle';
 
 interface ChartDataItem {
   date: string; // Propiedad específica
@@ -148,7 +148,7 @@ export default function GraficoVentas({ handleRefetch, setHandleRefetch }: Grafi
       ) : (
         <div className="flex w-full justify-center">
           <div className="w-full bg-white transition-shadow duration-300 hover:shadow-lg hover:shadow-gray-400 rounded-md">
-            <ViewTitle type="subtitle" title="Ventas Anuales" className="rounded-t-md" />
+            <ViewTitle title="Ventas Anuales"  />
             {/* <p className="text-2xl text-tremor-content-strong font-semibold">{data.titulo}</p> */}
             <div className="p-5">
               <AreaChart

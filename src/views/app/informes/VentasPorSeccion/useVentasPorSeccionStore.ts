@@ -1,4 +1,5 @@
-import { FechasRango, ResVentasPorSeccion, Status, SucursalesModal } from '@/types';
+import { Status } from '@/frontend-resourses/components/types';
+import { FechasRango, ResVentasPorSeccion,  SucursalesModal } from '@/types';
 import dayjs from 'dayjs';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
@@ -52,6 +53,7 @@ type VentasPorSeccionProps = {
   idsCoincidentes: (string | number)[];
   setIndiceSeleccionado: (indice: number | null) => void;
   setIdsCoincidentes: (ids: (string | number)[]) => void;
+   resetStore: () => void;
 };
 
 export const useVentasPorSeccionStore = create<VentasPorSeccionProps>()(
@@ -105,6 +107,18 @@ export const useVentasPorSeccionStore = create<VentasPorSeccionProps>()(
       // Funciones para actualizar los estados
       setIndiceSeleccionado: (indice) => set({ indiceSeleccionado: indice }),
       setIdsCoincidentes: (ids) => set({ idsCoincidentes: ids }),
+      //limpiar
+      resetStore: () =>
+        set((_state) => ({
+          buscado: false,
+          idsCoincidentes: [],
+          ventasPorSeccion: [],
+          secciones: [],
+          sucursalesDisponibles: [],
+          sucursalesSeleccionadas: [],
+          status: 'idle',
+    
+        })),
     }),
     {
       name: 'ventas-seccion-storage',

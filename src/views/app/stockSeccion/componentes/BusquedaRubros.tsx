@@ -7,7 +7,7 @@ import { TbArrowBigRightLinesFilled } from 'react-icons/tb';
 import { BiSearch } from 'react-icons/bi';
 import { FiAlertTriangle } from 'react-icons/fi';
 import { IoTrash } from 'react-icons/io5';
-import { FiltrosBusqueda, useBusqueda } from '@/frontend-resourses/components/Tables/TablaDefault/Hooks/useBusqueda';
+import { FiltrosBusqueda, useBusqueda } from '@/frontend-resourses/components/Tables/Hooks/useBusqueda';
 
 export default function BusquedaRubros() {
   // tooltip de shortcuts

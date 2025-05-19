@@ -1,14 +1,14 @@
-import { Dispatch, SetStateAction, useEffect,  useState } from 'react';
-import { useStockPorSeccion } from '@/views/app/stockSeccion/store/useStockPorSeccion';
-import { TablaSecciones } from '@/types';
-import ModalBase from '@/frontend-resourses/components/Modales/ModalBase';
-import BusquedaRubros from './BusquedaRubros';
-import TablaExpandible from '@/frontend-resourses/components/Tables/TablaExpandible';
-import { ExtendedColumn } from '@/frontend-resourses/components/Tables/types';
-import { useObtenerProductos } from '../hooks/useObtenerProductos';
-import showAlert from '@/frontend-resourses/utils/showAlert';
-import CheckboxInput from '@/frontend-resourses/components/Inputs/Checkbox';
-import { areArraysEqual, buscarEnArray, FiltrarItemsTraidos } from '../utils/manipulacion';
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { useStockPorSeccion } from "@/views/app/stockSeccion/store/useStockPorSeccion";
+import { TablaSecciones } from "@/types";
+import ModalBase from "@/frontend-resourses/components/Modales/ModalBase";
+import TablaExpandible from "@/frontend-resourses/components/Tables/TablaExpansible/TablaExpandible";
+import { ExtendedColumn } from "@/frontend-resourses/components/Tables/types";
+import { useObtenerProductos } from "../hooks/useObtenerProductos";
+import showAlert from "@/frontend-resourses/utils/showAlert";
+import CheckboxInput from "@/frontend-resourses/components/Inputs/Checkbox";
+import { areArraysEqual, buscarEnArray, FiltrarItemsTraidos } from "@/frontend-resourses/utils/dataManipulation";
+import BusquedaInputs from "@/frontend-resourses/components/Tables/Busqueda/BusquedaInputs";
 
 interface TablaSeccionRubroProps {
   data: TablaSecciones[];
@@ -27,10 +27,10 @@ type seccionRubros = {
 export default function TablaSeccionRubro({ data, showRubrosModal, setShowRubrosModal }: TablaSeccionRubroProps) {
   const [isConfirmEnabled, setIsConfirmEnabled] = useState(false); // habilitar botón confirmar
   const [isCancelEnabled, setIsCancelEnabled] = useState(false); // habilitar botón cancelar
-  const subItemsProperty = 'rubros'; // Nombre que contiene los subítems
-  const subItemKeyProperty = 'rubro'; // Nombre que identifica la clave única de los subítems
-  const subItemLabelProperty = 'nrubro'; // Nombre que identifica la etiqueta de los subítems
-  const itemKey = 'seccion';
+  const subItemsProperty = "rubros"; // Nombre que contiene los subítems
+  const subItemKeyProperty = "rubro"; // Nombre que identifica la clave única de los subítems
+  const subItemLabelProperty = "nrubro"; // Nombre que identifica la etiqueta de los subítems
+  const itemKey = "seccion";
   const {
     datosRubros,
     setStatus,
@@ -41,6 +41,17 @@ export default function TablaSeccionRubro({ data, showRubrosModal, setShowRubros
     seccionesTraidas,
     rubrosPendientes,
     rubrosPendientesData,
+
+    //
+    setBuscado,
+    indiceGlobal,
+    setIndiceGlobal,
+    setIdsCoincidentes,
+    setIndiceSeleccionado,
+    ultimoIndiceBusqueda,
+    setUltimoIndiceBusqueda,
+    setNavegandoCoincidentes,
+    setModoNavegacion,
 
     setRubrosPendientesData,
     setRubrosTraidosData,
@@ -59,11 +70,39 @@ export default function TablaSeccionRubro({ data, showRubrosModal, setShowRubros
     idsCoincidentes,
     indiceSeleccionado,
   } = useStockPorSeccion();
+    const propsBusqueda = {
+    data: datosRubros,
+    // busqueda
+    buscado,
+    setBuscado,
+    idsCoincidentes,
+    indiceSeleccionado,
+    setIndiceGlobal,
+    setIdsCoincidentes,
+    setIndiceSeleccionado,
+    ultimoIndiceBusqueda,
+    setUltimoIndiceBusqueda,
+    setNavegandoCoincidentes,
+    setModoNavegacion,
+    indiceGlobal,
+    modoBusqueda: 'anidadas' as 'anidadas',
+    inputsLength: 1,
+    mostrarResultados: true,
+    keysBusqueda: {
+      subItemsProperty: subItemsProperty,
+      subItemKeyProperty: subItemKeyProperty,
+      subItemLabelProperty: subItemLabelProperty,
+      itemKey: itemKey,
+      busquedaKeyText: ["nrubro"],
+      textLabelProperty: "Rubro",
+    },
+  };
 
   // setear funciones extras de check
   const [updateInstruction, setUpdateInstruction] = useState<null | {
-    type: 'selectAll' | 'selectAllPending' | 'clearAll' | 'custom';
-    payload: string[]; }>(null);
+    type: "selectAll" | "selectAllPending" | "clearAll" | "custom";
+    payload: string[];
+  }>(null);
 
   // todos los rubros
   const allRubros = datosRubros.flatMap((item) => item.rubros.map((rubroItem) => rubroItem.rubro));
@@ -76,8 +115,8 @@ export default function TablaSeccionRubro({ data, showRubrosModal, setShowRubros
 
   // columnas
   const SeccionRubrosColumns: Array<ExtendedColumn<seccionRubros>> = [
-    { key: 'seccion', label: 'Codigo', minWidth: '90', maxWidth: '160' },
-    { key: 'nseccion', label: 'Seccion', minWidth: '80', maxWidth: '520' },
+    { key: "seccion", label: "Codigo", minWidth: "90", maxWidth: "160" },
+    { key: "nseccion", label: "Seccion", minWidth: "80", maxWidth: "520" },
   ];
   const seccionesKeys = Object.keys(seccionesSeleccionadas ?? {}).filter((key) => seccionesSeleccionadas?.[key] === true);
   const seccionesTraidasKeys = Object.keys(seccionesSeleccionadas ?? {}).filter((key) => seccionesSeleccionadas?.[key] === true);
@@ -102,9 +141,9 @@ export default function TablaSeccionRubro({ data, showRubrosModal, setShowRubros
   });
   function handleError() {
     showAlert({
-      title: 'Upps!',
+      title: "Upps!",
       text: `No se encontraron datos para mostrar.`,
-      icon: 'info',
+      icon: "info",
       timer: 3000,
     });
   }
@@ -141,36 +180,36 @@ export default function TablaSeccionRubro({ data, showRubrosModal, setShowRubros
   // funcion para checkear rubros pendientes
   function checkAllPending() {
     const isChecked = rubrosSeleccionados.length === rubrosPendientesData.length;
-    console.log('pendientes', rubrosPendientes);
+    console.log("pendientes", rubrosPendientes);
     setUpdateInstruction({
-      type: isChecked ? 'clearAll' : 'selectAllPending',
+      type: isChecked ? "clearAll" : "selectAllPending",
       payload: isChecked ? [] : rubrosPendientes,
     });
   }
   // funcion para checkear todos
   function checkAll() {
     const isChecked = rubrosSeleccionados.length === allRubros.length;
-    console.log('rubros', rubrosSeleccionados);
+    console.log("rubros", rubrosSeleccionados);
 
     setUpdateInstruction({
-      type: isChecked ? 'clearAll' : 'selectAll',
+      type: isChecked ? "clearAll" : "selectAll",
       payload: isChecked ? [] : allRubros,
     });
   }
 
-  console.log('data', data)
   const propsTablaRubros = {
     datosParaTabla: data,
     objectColumns: SeccionRubrosColumns,
     objectStyles: {
+      cursorPointer: true,
       addCellClass: "max-height: 45px; padding: 4px 8px 4px 8px;",
       width: "42rem",
-      heightContainer: 'h-[28rem] 2xl:h-[30rem] rounded-md',
-      height: 'auto',
+      heightContainer: "h-[28rem] 2xl:h-[30rem] rounded-md",
+      height: "auto",
       viewport1536: {
-        width: '60rem',
+        width: "60rem",
         addCellClass1536px: "max-height: 80px;",
-      }
+      },
     },
     expandableTable: {
       checkboxItem: true,
@@ -198,8 +237,8 @@ export default function TablaSeccionRubro({ data, showRubrosModal, setShowRubros
   };
   // Función que busca los elementos en la estructura de datos dinámica.
   useEffect(() => {
-    const nuevosPendientes = buscarEnArray(rubrosPendientes, datosRubros, 'rubros', 'rubro', 'nrubro');
-    const traidos = buscarEnArray(rubrosTraidos, datosRubros, 'rubros', 'rubro', 'nrubro');
+    const nuevosPendientes = buscarEnArray(rubrosPendientes, datosRubros, "rubros", "rubro", "nrubro");
+    const traidos = buscarEnArray(rubrosTraidos, datosRubros, "rubros", "rubro", "nrubro");
 
     const traidosIDs = new Set(traidos.map((item) => item.id));
 
@@ -246,9 +285,11 @@ export default function TablaSeccionRubro({ data, showRubrosModal, setShowRubros
       disabled2={isCancelEnabled}
       classModal=" w-[50rem] h-[35rem] 2xl:bottom-0 2xl:w-fit 2xl:h-fit"
     >
-      <div className="flex flex-col gap-4  w-[45rem] px-4
-       p-2  overflow-hidden  h-[29rem] 2xl:h-[38rem] mx-auto">
-        <BusquedaRubros />
+      <div
+        className="flex flex-col gap-4  w-[45rem] px-4
+       p-2  overflow-hidden  h-[29rem] 2xl:h-[38rem] mx-auto"
+      >
+        <BusquedaInputs props={propsBusqueda} className="py-1  w-fit" />
 
         <div className="flex gap-2 items-center ">
           <CheckboxInput

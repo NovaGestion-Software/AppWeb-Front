@@ -228,7 +228,8 @@ export const dataDefault = [
   },
 ];
 
-
+// informe cobranza
+// informe morosidad
 export const dataMetodoPago = [
   {
       "id": 1,

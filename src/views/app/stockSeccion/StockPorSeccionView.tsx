@@ -6,7 +6,6 @@ import { obtenerRubrosDisponibles } from "@/services/ApiPhpService";
 import ViewTitle from "@/frontend-resourses/components/Labels/ViewTitle";
 import HerramientasComponent from "../informes/ventasXHora/components/HerramientasComponent";
 import ModalFiltro from "@/frontend-resourses/components/Modales/ModalFiltro";
-import BusquedaStock from "./componentes/BusquedaStock";
 import TablaSeccionRubro from "./componentes/TablaSeccionRubro";
 import TablaStock from "./componentes/TablaStock";
 import { useFiltros } from "./hooks/useFiltros";
@@ -15,6 +14,7 @@ import ListaItemsPedidos from "./componentes/ListaItemsPedidos";
 import { FaWarehouse } from "react-icons/fa6";
 import ShowModalButtons from "./componentes/ShowModalButtons";
 import GrupoInputsRadio from "./componentes/GrupoInputsRadio";
+import BusquedaInputs from "@/frontend-resourses/components/Tables/Busqueda/BusquedaInputs";
 
 export default function StockPorSeccionView() {
   // show modals de filtros
@@ -50,6 +50,19 @@ export default function StockPorSeccionView() {
     productos,
     status,
     resetStore,
+
+    buscado,
+    setBuscado,
+    idsCoincidentes,
+    indiceSeleccionado,
+    indiceGlobal,
+    ultimoIndiceBusqueda,
+    setIndiceGlobal,
+    setIdsCoincidentes,
+    setIndiceSeleccionado,
+    setUltimoIndiceBusqueda,
+    setNavegandoCoincidentes,
+    setModoNavegacion,
   } = useStockPorSeccion();
 
   // seteo de arrays para filtros.
@@ -125,7 +138,6 @@ export default function StockPorSeccionView() {
     );
   };
 
-  console.log("rubros", datosRubros);
   // CAMBIO DE ESTADO
   useEffect(() => {
     if (tablaStock?.length === 0) {
@@ -205,6 +217,32 @@ export default function StockPorSeccionView() {
     },
     status: status,
   };
+  const propsBusqueda = {
+    data: productos,
+    // busqueda
+    buscado,
+    setBuscado,
+    idsCoincidentes,
+    indiceSeleccionado,
+    setIndiceGlobal,
+    setIdsCoincidentes,
+    setIndiceSeleccionado,
+    ultimoIndiceBusqueda,
+    setUltimoIndiceBusqueda,
+    setNavegandoCoincidentes,
+    indiceGlobal,
+    setModoNavegacion,
+    inputsLength: 2,
+    modoBusqueda: "simple" as "simple",
+    keysBusqueda: {
+      itemKey: "codigo",
+      busquedaKeyText: ["descripcion", "nmarca"],
+      busquedaKeyCode: ["codigo"],
+      textLabelProperty: "Descripción o Marca",
+      codeLabelProperty: "Codigo",
+    },
+  };
+
   return (
     <div className="w-full h-lvh   ">
       <ViewTitle title={"Stock por Sección"} />
@@ -216,32 +254,36 @@ export default function StockPorSeccionView() {
                col-start-2 col-span-9 row-span-1  row-start-1 
                v1440:justify-start   v1440:gap-8
                v1536:col-start-2 v1536:gap-12 v1536:col-span-9
-               v1920:col-start-3 v1920:gap-6  " />
+               v1920:col-start-3 v1920:gap-6  "
+        />
 
         {/**SHOW DEPOSITOS, RUBROS Y MARCAS*/}
         <ShowModalButtons
           props={propsShowModales}
           className="flex gap-6 items-center w-fit h-10
-         bg-white px-3 rounded-lg  
-           col-start-2 col-span-5 row-start-2 
-            v1536:col-start-2 
-            v1920:col-start-3 v1920:relative v1920:right-8
-            "
+                    bg-white px-3 rounded-lg  
+                      col-start-2 col-span-5 row-start-2 
+                      v1536:col-start-2 v1536:relative right-8  
+                      v1920:col-start-2 v1920:-right-12 "
         />
         {/**Inputs Busqueda*/}
-        <BusquedaStock
+        {/* <BusquedaStock
+        
+        /> */}
+        <BusquedaInputs
+          props={propsBusqueda}
           className=" w-fit bg-white relative right-2.5
-        col-start-5 row-start-2 col-span-5 
-        v1440:right-8
-        v1536:px-4 v1536:col-start-5 v1536:right-12
-        v1920:col-start-5 "
+                      col-start-5 row-start-2 col-span-5 
+                      v1440:right-8
+                      v1536:px-4 v1536:col-start-5 v1536:right-12
+                      v1920:col-start-5 "
         />
         <HerramientasComponent
           className=" flex  w-fit h-10 px-2 relative left-12 items-center bg-white  rounded-lg
                       col-start-9 col-span-2 row-start-2
                       v1440:-left-3
                       v1536:col-span-3 v1536:col-start-8 v1536:left-24
-                      v1920:col-start-8 v1920:-left-6"
+                      v1920:col-start-8 v1920:-left-6 v1920:px-4  "
           data={productos}
           handleClean={handleClean}
           estaProcesado={!isProcessing}
@@ -254,7 +296,9 @@ export default function StockPorSeccionView() {
       <div className="grid grid-cols-10  px-8 py-2">
         <div className="flex items-start gap-2 justify-center col-span-full">
           {/** LISTA */}
-          <ListaItemsPedidos className="h-1/2" rubrosPendientesData={rubrosPendientesData} rubrosTraidosData={rubrosTraidosData} />
+          <ListaItemsPedidos titulo="Rubros" className="h-1/2" 
+          rubrosPendientesData={rubrosPendientesData}
+           rubrosTraidosData={rubrosTraidosData} />
           <TablaStock />
         </div>
       </div>

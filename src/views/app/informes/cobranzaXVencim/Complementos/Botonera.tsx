@@ -5,9 +5,9 @@ import { ActionButton } from '@/frontend-resourses/components';
 import ModalFiltro from '@/frontend-resourses/components/Modales/ModalFiltro';
 import { SucursalesModal } from '@/types';
 import { FaStoreAlt } from 'react-icons/fa';
-import { useVentasPorSeccionStore } from '../useVentasPorSeccionStore';
+import { useCobranzaPorVencimientoStore } from '../store/CobranzaPorVencimientoStore';
 
-interface BotoneraHerramientasProps {
+interface BotoneraProps {
   data: Record<string, any>[];
   className?: string;
   datosParaFooter?: Record<string, any>; // Opcional
@@ -16,7 +16,7 @@ interface BotoneraHerramientasProps {
   handleClean?: () => void; // Función opcional para limpiar
 }
 
-export default function BotoneraHerramientas({ data, datosParaFooter, estaProcesado, disabled, className, handleClean }: BotoneraHerramientasProps) {
+export default function Botonera({ data, datosParaFooter, estaProcesado, disabled, className, handleClean }: BotoneraProps) {
   const [showModalSucursales, setShowModalSucursales] = useState(false);
     const {
       // filtros
@@ -24,7 +24,7 @@ export default function BotoneraHerramientas({ data, datosParaFooter, estaProces
       setSucursalesSeleccionadas,
       sucursalesDisponibles,
       setSucursalesDisponibles,
-    } = useVentasPorSeccionStore();
+    } = useCobranzaPorVencimientoStore();
 
   const datosTotales = datosParaFooter
     ? { id: 1, hora: 'Totales', ...datosParaFooter } // Se añade un identificador único
@@ -101,7 +101,8 @@ export default function BotoneraHerramientas({ data, datosParaFooter, estaProces
       <ActionButton text="Sucursales" icon={<FaStoreAlt size={15} />}
        addClassName="h-7  rounded-md text-xs v1440:h-8 v1536:h-9 v1536:px-6 v1536:text-sm" onClick={() => setShowModalSucursales(true)} 
        disabled={!estaProcesado} color="blue"/>{' '}
-      <HerramientasInforme data={data} estaProcesado={estaProcesado} handleExportExcel={handleExportExcel} handlePrint={handlePrint} disabledPrint={disabled} disabledClean={disabled} handleClean={handleClearData} />
+      <HerramientasInforme 
+      data={data} estaProcesado={estaProcesado} handleExportExcel={handleExportExcel} handlePrint={handlePrint} disabledPrint={disabled} disabledClean={disabled} handleClean={handleClearData} />
       <ModalFiltro<SucursalesModal>
         title="Sucursales"
         renderItem={renderSucursalesItem}
@@ -116,7 +117,6 @@ export default function BotoneraHerramientas({ data, datosParaFooter, estaProces
         setItemsSeleccionados={setSucursalesSeleccionadas}
         iconReact={<FaStoreAlt size={25} />}
         addIconClassName=" text-white w-14 h-12 m-0 flex items-center justify-center "
-
       />
     </div>
   );

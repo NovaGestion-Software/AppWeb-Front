@@ -118,16 +118,7 @@ export interface VentaPorHora {
   //   totalOperaciones: number | string;
   //   totalPares: number | string;
 }
-export type HighlightMap<T, G extends string = string> = Record<
-  G,
-  (keyof T)[]
->;
-export type MaxIdsFunctionTypes<T, G extends string = string> = {
-  highlightMap: HighlightMap<T, G>;
-  maxIds: Record<G, string | number | null>;
-};
 
-export type Status = 'error' | 'idle' | 'pending' | 'success' | null;
 
 export interface TablaStocks extends TableNode {
   codigo: string;
@@ -236,4 +227,11 @@ export interface ProductoAgrupado {
   precio: string;
   stockPorDeposito: { [depositoId: string]: string };
   total: string;
+}
+
+
+export interface TablaSecciones extends TableNode {
+  seccion: string;
+  nseccion: string;
+  rubros: { rubro: string; nrubro: string }[];
 }

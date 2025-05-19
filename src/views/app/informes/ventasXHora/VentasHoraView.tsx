@@ -291,9 +291,10 @@ export default function VentasHoraView() {
           <div
             className="flex gap-6 items-center justify-center h-10 w-fit px-4 left-11 relative bg-white
              rounded-lg col-span-3 col-start-9 
-             2xl:h-14 2xl:col-span-2 2xl:col-start-10 2xl:left-4 "
+             v1536:h-14 v1536:col-span-2 v1536:col-start-9 v1536:left-4 "
           >
-            <ActionButton text="Sucursales" icon={<FaStoreAlt size={15} />} addClassName="2xl:h-8" onClick={() => setShowModalSucursales(true)} disabled={!procesado} color="blue" size="xs" />{' '}
+            <ActionButton text="Sucursales" icon={<FaStoreAlt size={15} />} 
+             addClassName="h-7  rounded-md text-xs v1440:h-8 v1536:h-9 v1536:px-6 v1536:text-sm"  onClick={() => setShowModalSucursales(true)} disabled={!procesado} color="blue" size="xs" />{' '}
             <HerramientasComponent data={filas} estaProcesado={procesado} datosParaFooter={datosParaFooter} disabled={!procesado} modalSucursales={false} handleClean={handleClearData} />
           </div>
         </div>
@@ -310,7 +311,10 @@ export default function VentasHoraView() {
             2xl:justify-center 2xl:gap-6 2xl:items-center 
             transition-all duration-500 ease-out">
               {/* Lista Sucursales */}
-              <ListaFiltrosAplicados itemsDisponibles={sucursalesDisponiblesStr} itemsSeleccionados={sucursalesSeleccionadasStr} />
+              <ListaFiltrosAplicados
+              className='w-[29rem] v1440:w-[32rem] v1536:w-[36rem] '
+               itemsDisponibles={sucursalesDisponiblesStr} 
+               itemsSeleccionados={sucursalesSeleccionadasStr} />
 
               {/* Información de ventas */}
               <Destacados {...destacadosObject} />

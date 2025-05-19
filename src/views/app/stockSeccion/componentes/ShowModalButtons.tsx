@@ -1,4 +1,4 @@
-import ActionButton from "@/Components/ui/Buttons/ActionButton";
+import { ActionButton } from "@/frontend-resourses/components";
 import { Status } from "@/types";
 import { FaWarehouse } from "react-icons/fa";
 
@@ -21,9 +21,19 @@ export default function ShowModalButtons({ props, className }: { props: ShowModa
     <div
       className={`${className} `}
     >
-      <ActionButton text="Depósitos"  onClick={() => setShowDepositos(true)} disabled={status === "idle"} color="blue" size="xs" icon={<FaWarehouse size={15} />} />
-      <ActionButton text="Rubros"  onClick={() => setShowRubros(true)} disabled={false} color="blue" size="xs" />
-      <ActionButton text="Marcas"  color="blue" disabled={status === "idle"} onClick={() => setShowMarcas(true)} size="xs" />
+      <ActionButton text="Depósitos" 
+       onClick={() => setShowDepositos(true)}  
+       addClassName="h-7  rounded-md text-xs v1440:h-8 v1536:h-8 v1536:px-6 v1536:text-sm"
+       disabled={status === "idle"} 
+       color="blue" icon={<FaWarehouse size={15}  />} />
+
+      <ActionButton text="Rubros"  
+      onClick={() => setShowRubros(true)} disabled={false} color="blue"   
+      addClassName="h-7  rounded-md text-xs v1440:h-8 v1536:h-8 v1536:px-6 v1536:text-sm" />
+
+      <ActionButton text="Marcas"  color="blue" 
+      disabled={status === "idle"} onClick={() => setShowMarcas(true)}  
+      addClassName="h-7  rounded-md text-xs v1440:h-8 v1536:h-8 v1536:px-6 v1536:text-sm" />
     </div>
   );
 }

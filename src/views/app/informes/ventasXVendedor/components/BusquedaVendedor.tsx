@@ -6,7 +6,7 @@ import { TbArrowBigRightLinesFilled } from 'react-icons/tb';
 import { BiSearch } from 'react-icons/bi';
 import { FiAlertTriangle } from 'react-icons/fi';
 import { IoTrash } from 'react-icons/io5';
-import { FiltrosBusqueda, useBusqueda } from '@/frontend-resourses/components/Tables/TablaDefault/Hooks/useBusqueda';
+import { FiltrosBusqueda, useBusqueda } from '@/frontend-resourses/components/Tables/Hooks/useBusqueda';
 import { useVentasPorVendedorStore } from '../store/useVentasPorVendedorStore';
 
 export default function BusquedaVendedor({ className }: { className?: string }) {
@@ -19,6 +19,7 @@ export default function BusquedaVendedor({ className }: { className?: string }) 
 
   // useRef el texto buscado
   const buscadoTextoAnterior = useRef<string>('');
+  const buscadoCodigoAnterior = useRef<string>('');
   // estado para deshabilitar
   const [isDisabled, setIsDisabled] = useState(true);
 
@@ -28,9 +29,9 @@ export default function BusquedaVendedor({ className }: { className?: string }) 
     ventasPorVendedor,
     // busqueda
     buscado,
+    setBuscado,
     idsCoincidentes,
     indiceSeleccionado,
-    setBuscado,
     setIndiceGlobal,
     setIdsCoincidentes,
     setIndiceSeleccionado,
@@ -41,7 +42,7 @@ export default function BusquedaVendedor({ className }: { className?: string }) 
   // La busqueda se realiza en el useEffect con el texto a medida que va escribiendo.
   // Cuando el usuario escribe en el input una busqueda que no va a tener coincidencia ya se le avisa con el boton
   // Al realizar la busqueda con el enter o el click lo que se activa es la navegacion
-  const { buscarCoincidenciasAnidadas, extraerIds } = useBusqueda();
+  const { buscarCoincidenciasAnidadas, extraerIds ,buscarCoincidencias} = useBusqueda();
 
   // objeto valores de busqueda
   const filtros: FiltrosBusqueda = {
@@ -58,35 +59,42 @@ export default function BusquedaVendedor({ className }: { className?: string }) 
   // rubros no activa el expandItem cuando se realiza la primera busqueda
   // despues de haber buscado y borrado.
   // deshabilitar el boton de busqueda si no hay texto.
-  useEffect(() => {
-    setIsDisabled(textoBusqueda.length === 0);
-  }, [textoBusqueda]);
+useEffect(() => {
+  setIsDisabled(textoBusqueda.length === 0 && codigoBusqueda.length === 0);
+}, [textoBusqueda, codigoBusqueda]);
 
   //Busqueda de coincidencias en Rubros.
   useEffect(() => {
-    if (!ventasPorVendedor || ventasPorVendedor.length === 0 || !textoBusqueda.trim()) {
-      setIdsCoincidentes([]);
-      return;
-    }
-    const rubrosFiltrados = buscarCoincidenciasAnidadas(ventasPorVendedor, filtros, {
+  if (!ventasPorVendedor || ventasPorVendedor.length === 0) {
+    setIdsCoincidentes([]);
+    return;
+  }
+    const vendedoresSubItemsFiltrados = buscarCoincidenciasAnidadas(ventasPorVendedor, filtros, {
       keySubItems: 'unidades',
       keyIdentificador: 'vendedorCodigo',
     });
-    const nuevosIds = extraerIds(rubrosFiltrados, 'vendedorNombre', setIdsCoincidentes);
+
+    const vendedoresFiltrados = buscarCoincidencias(ventasPorVendedor, filtros);
+    const nuevosIds = extraerIds(vendedoresFiltrados, 'vendedorCodigo', setIdsCoincidentes);
 
     // Solo si es una nueva búsqueda (no navegación)
-    if (textoBusqueda !== buscadoTextoAnterior.current && nuevosIds.length > 0) {
+    if (textoBusqueda !== buscadoTextoAnterior.current && nuevosIds.length > 0 ||
+      codigoBusqueda !== buscadoCodigoAnterior.current && nuevosIds.length > 0
+     ) {
       setIndiceSeleccionado(0);
-      const primerRubro = rubrosFiltrados[0];
+      const primerRubro = vendedoresFiltrados[0];
       if (primerRubro) {
         setIndiceGlobal(ventasPorVendedor.findIndex((s) => s.vendedorCodigo === primerRubro.parentId));
       }
     }
-  }, [textoBusqueda, ventasPorVendedor]);
+  }, [textoBusqueda, codigoBusqueda,ventasPorVendedor]);
+
 
   const handleSearch = () => {
     const textoLimpio = textoBusqueda.trim();
+    const codigoLimpio = codigoBusqueda.trim();
     buscadoTextoAnterior.current = textoLimpio;
+    buscadoCodigoAnterior.current = codigoLimpio;
     if (!buscado) {
       setBuscado(true);
       setModoNavegacion('busqueda');
@@ -122,7 +130,8 @@ export default function BusquedaVendedor({ className }: { className?: string }) 
   const handleNextResult = () => {
     // Solo funciona si hay una búsqueda activa con resultados
     if (buscado && idsCoincidentes.length > 0) {
-      const nuevoIndice = indiceSeleccionado === null || indiceSeleccionado === idsCoincidentes.length - 1 ? 0 : indiceSeleccionado + 1;
+      const nuevoIndice = indiceSeleccionado === null 
+      || indiceSeleccionado === idsCoincidentes.length - 1 ? 0 : indiceSeleccionado + 1;
       setIndiceSeleccionado(nuevoIndice);
       setUltimoIndiceBusqueda(nuevoIndice);
     }
@@ -197,12 +206,11 @@ export default function BusquedaVendedor({ className }: { className?: string }) 
   return (
     <div className={`${className} flex gap-4 items-center border py-1.5 px-2 rounded-lg bg-slate-50 border-gray-300`}>
       <FlexibleInputField
-        key={'codigo'}
         label="Buscar:"
         value={codigoBusqueda || ''}
         placeholder="Código"
         labelWidth="3rem"
-        labelClassName={`text-start w-12 text-sm  s ${buscado && 'text-green-500'} `}
+        labelClassName={`text-start w-12 text-sm  ${buscado && 'text-green-500'} `}
         inputClassName="w-24 text-xs"
         containerWidth="w-[12rem]"
         disabled={false}
@@ -234,7 +242,7 @@ export default function BusquedaVendedor({ className }: { className?: string }) 
       <ActionButton
         icon={
           // Si hay texto de búsqueda (texto)
-          textoBusqueda.trim().length > 0 ? (
+          textoBusqueda.trim().length > 0 || codigoBusqueda.trim().length > 0 ? (
             // Verificamos si hay coincidencias
             idsCoincidentes.length > 0 ? (
               buscado ? (
@@ -255,7 +263,6 @@ export default function BusquedaVendedor({ className }: { className?: string }) 
         disabled={isDisabled}
       />
 
-      <ActionButton icon={<IoTrash size={15} />} color="red" size="xs" onClick={handleClean} disabled={isDisabled} />
 
       {buscado && idsCoincidentes.length > 0 && (
         <span className="text-xs text-black px-2">

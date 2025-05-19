@@ -32,7 +32,6 @@ export type VentaPorVendedorColumns = {
   otrosCantidad: number;
   otrosImporte: number;
   unidades: UnidadVenta[];
-
 };
 
 export const dataVentaPorVendedor: VentaPorVendedorColumns[] = [
@@ -507,3 +506,5 @@ export const dataVentaPorVendedor: VentaPorVendedorColumns[] = [
     ],
   },
 ];
+
+

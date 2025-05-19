@@ -12,7 +12,7 @@ import { Dispatch, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { obtenerCajasSecciones } from '@/services/AppService';
 import SkeletonTablaCaja from './SkTable';
-import ViewTitle from '@/Components/ui/Labels/ViewTitle';
+import ViewTitle from '@/frontend-resourses/components/Labels/ViewTitle';
 
 type CajaSeccion = {
   seccion: string;
@@ -123,7 +123,7 @@ export default function TablaCaja({ handleRefetch, setHandleRefetch }: TablaCaja
         <SkeletonTablaCaja />
       ) : (
         <>
-          <ViewTitle type="subtitle" title="Venta por Sección" className="rounded-t-md" />
+          <ViewTitle title="Venta por Sección" />
           <div className="flex flex-col gap-2 bg-white h-fit w-full shadow-md rounded-b-md p-4">
             <Table className="overflow-auto border-2 border-gray-300 scrollbar-thin rounded-md">
               <TableHead className="">

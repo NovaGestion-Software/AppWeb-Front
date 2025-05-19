@@ -1,8 +1,14 @@
 import DonutCard from "@/views/app/dashboard/components/features/donut/DonutCard";
-import { useVentasPorSeccionStore } from "../useVentasPorSeccionStore";
 import { extraerItems } from "@/frontend-resourses/utils/dataManipulation";
 import { useEffect, useState } from "react";
+import { data } from "../ts/data";
 type TipoTransformacion = "string" | "number" | "boolean";
+
+ interface DonutData {
+    name: string;
+    valor: number;
+  }
+
 
 export function transformarTipos<T extends Record<string, any>>(data: T[], tipos: Record<keyof T, TipoTransformacion>): Record<string, any>[] {
   return data.map((item) => {
@@ -28,32 +34,31 @@ export function transformarTipos<T extends Record<string, any>>(data: T[], tipos
   });
 }
 
-export default function GraficoDeTorta({ className }: { className: string }) {
-  const {  secciones } = useVentasPorSeccionStore();
+export default function GraficoDeTorta({ className }: { className?: string }) {
   let procesado = false;
+  // secciones dispponibles son props que vienen de la store ?
   const [seccionesDisponibles, setSeccionesDisponibles] = useState<any[]>([]);
 
   useEffect(() => {
     extraerItems({
-      data: secciones,
+      data: data,
       itemsKeysGroup: {
-        name: "nseccion",
+        name: "concepto",
         valor: "importe",
       },
       setItemsDisponibles: setSeccionesDisponibles,
     });
-  }, [secciones]);
-  interface DonutData {
-    name: string;
-    valor: number;
-  }
+  }, [data]);
 
+ 
   const categorias = seccionesDisponibles.map((item) => item.name);
   const dataParaGrafico = transformarTipos(seccionesDisponibles, { valor: "number" }) as DonutData[];
 
   return (
-    <div className={`${className} h-[20rem]`}>
-      <DonutCard titulo={`Secciones`} label={""} data={dataParaGrafico} categories={categorias} fetching={procesado} />
+    <div className={`${className} noneScroll shadow-md  shadow-gray-600`}>
+      <DonutCard titulo={`Conceptos`} label={""} 
+      flexRow={true }
+      data={dataParaGrafico} categories={categorias} fetching={procesado} donutClassName="h-36 v1440:h-44 v1440:mt-4" />
     </div>
   );
 }

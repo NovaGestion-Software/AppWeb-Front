@@ -2,7 +2,7 @@ import { Dispatch, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { obtenerTortaCobranzasR } from '@/services/AppService';
 import DonutCard from './DonutCard';
-import ViewTitle from '@/Components/ui/Labels/ViewTitle';
+import ViewTitle from '@/frontend-resourses/components/Labels/ViewTitle';
 
 interface GraficoTortaProps {
   handleRefetch: boolean;
@@ -146,7 +146,7 @@ export default function GraficoTorta({ handleRefetch, setHandleRefetch }: Grafic
 
   return (
     <div className="mt-10">
-      <ViewTitle type="subtitle" title="Cobranza de Créditos" className="rounded-t-md" />
+      <ViewTitle  title="Cobranza de Créditos"/>
       <div className="flex flex-col w-full h-full px-12 py-6 bg-white rounded-b-md shadow-none transition-shadow duration-300 hover:shadow-lg hover:shadow-gray-400 ">
         <div className="flex flex-col gap-1 mb-5">
           <p className="text-slate-500 left-1">Distribución según Forma de Pago:</p>

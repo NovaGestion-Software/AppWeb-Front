@@ -15,16 +15,22 @@ interface HerramientasInformeProps<T> {
   disabledClean?: boolean;
 }
 
-export default function HerramientasInforme<T>({ data, estaProcesado, handleExportExcel, handlePrint,handleClean, disabledExportExcel, disabledPrint,disabledClean }: HerramientasInformeProps<T>) {
+export default function HerramientasInforme<T>({ data, handleExportExcel, handlePrint,handleClean, disabledExportExcel, disabledPrint,disabledClean }: HerramientasInformeProps<T>) {
   useEffect(() => {
     // Para evitar console.log (solo para deployar en vercel)
   }, [data]);
 
   return (
     <div className="flex items-center justify-center gap-6  h-10    w-fit rounded-lg ">
-      <ActionButton onClick={handleExportExcel} disabled={disabledExportExcel} size="xs" addClassName="rounded-md 2xl:h-8" color={estaProcesado ? 'green' : 'grayDeshab'} icon={<RiFileExcel2Fill size={20} />} />
-      <ActionButton onClick={handlePrint} disabled={disabledPrint} size="xs" addClassName="rounded-md 2xl:h-8" color={estaProcesado ? 'blue' : 'grayDeshab'} icon={<RiPrinterFill size={20} />} />
-      <ActionButton icon={<IoTrash size={18} />}  color={estaProcesado ? 'red' : 'grayDeshab'} addClassName="rounded-md 2xl:h-8 2xl:w-12" size="xs" onClick={handleClean || (() => {})} disabled={disabledClean} />
+      <ActionButton onClick={handleExportExcel} disabled={disabledExportExcel} 
+      addClassName="h-7  rounded-md text-xs v1440:h-8 v1536:h-9 v1536:px-6 v1536:text-sm" 
+      color="green" icon={<RiFileExcel2Fill className='h-4 w-4 v1536:h-6 v1536:w-6' />} />
+      <ActionButton onClick={handlePrint} disabled={disabledPrint} 
+      addClassName="h-7  rounded-md text-xs v1440:h-8 v1536:h-9 v1536:px-6 v1536:text-sm" 
+      color="blue" icon={<RiPrinterFill  className='h-4 w-4 v1536:h-6 v1536:w-6' />} />
+      <ActionButton icon={<IoTrash  className='h-4 w-4 v1536:h-6 v1536:w-6' />}  color="red" 
+      addClassName="h-7  rounded-md text-xs v1440:h-8 v1536:h-9 v1536:px-6 v1536:text-sm 2xl:w-12" 
+      onClick={handleClean || (() => {})} disabled={disabledClean} />
     </div>
   );
 }

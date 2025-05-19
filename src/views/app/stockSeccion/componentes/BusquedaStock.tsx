@@ -7,7 +7,7 @@ import { TbArrowBigRightLinesFilled } from 'react-icons/tb';
 import { BiSearch } from 'react-icons/bi';
 import { FiAlertTriangle } from 'react-icons/fi';
 // import { IoTrash } from 'react-icons/io5';
-import { FiltrosBusqueda, useBusqueda } from '@/frontend-resourses/components/Tables/TablaDefault/Hooks/useBusqueda';
+import { FiltrosBusqueda, useBusqueda } from '@/frontend-resourses/components/Tables/Hooks/useBusqueda';
 
 export default function BusquedaStock({className}: {className?: string;}) {
   
@@ -77,6 +77,7 @@ export default function BusquedaStock({className}: {className?: string;}) {
   useEffect(() => {
     if (!productos) return;
     const productosFiltrados = buscarCoincidencias(productos, filtros);
+
     const resultadosAgrupados = agruparPorKey(productosFiltrados, 'codigo');
     extraerIds(resultadosAgrupados, 'codigo', setIdsCoincidentes);
   }, [codigoBusqueda, textoBusqueda, productos]);
@@ -86,11 +87,6 @@ export default function BusquedaStock({className}: {className?: string;}) {
 
   // inicia la busqueda
   const handleSearch = () => {
-    // si al hacer click hay indCoincidentes, entonces se hace la busqueda.
-    // si al hacer click no hay idsCoincidentes, se setea en falso:
-    //    Es decir que cuando este buscando pero no haya coincidencias resetea buscado.
-    // funciona para no tener que deshabilitar el boton y desactivar el click
-    // el usuario entra en modo busqueda.
     if (idsCoincidentes.length > 0) {
       setBuscado(true);
     }

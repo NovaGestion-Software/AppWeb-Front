@@ -1,11 +1,12 @@
-import TablaExpandible from '@/frontend-resourses/components/Tables/TablaExpandible';
+import TablaExpandible from '@/frontend-resourses/components/Tables/TablaExpansible/TablaExpandible';
 import { dataVentaPorVendedor, VentaPorVendedorColumns } from '../data';
 import { ExtendedColumn } from '@/frontend-resourses/components/Tables/types';
+import { useVentasPorVendedorStore } from '../store/useVentasPorVendedorStore';
 
 export default function TablaVentasPorVendedor({className}: {  className?: string;}) {
   const SeccionRubrosColumns: Array<ExtendedColumn<VentaPorVendedorColumns>> = [
     { key: 'vendedorCodigo', label: 'Codigo', minWidth: '70', maxWidth: '100' },
-    { key: 'vendedorNombre', label: 'Seccion', minWidth: '130', maxWidth: '520' },
+    { key: 'vendedorNombre', label: 'Vendedor', minWidth: '130', maxWidth: '520' },
     { key: 'tipo', label: 'Unidad', minWidth: '90', maxWidth: '120' },
     { key: 'cantidad', label: 'Cantidad', minWidth: '80', maxWidth: '520' },
     { key: 'importe', label: 'Importe $', minWidth: '110', maxWidth: '520' },
@@ -21,14 +22,27 @@ export default function TablaVentasPorVendedor({className}: {  className?: strin
   const subItemKeyProperty = 'tipo'; // Nombre que identifica la clave única de los subítems
   const subItemLabelProperty = 'tipo'; // Nombre que identifica la etiqueta de los subítems
   const itemKey = 'vendedorCodigo';
+      const {
+      // status de la vista
+      idsCoincidentes,
+      // parametros de fetch
+      indiceSeleccionado,
+      // data.data
+      buscado,
+      // filtros
+      modoNavegacion,
+    } = useVentasPorVendedorStore();
   const propsTablaVXV = {
     datosParaTabla: dataVentaPorVendedor,
     objectColumns: SeccionRubrosColumns,
+    selectFn: true,
     objectStyles: {
+      cursorPointer: true,
       columnasNumber: [2,3,4,5,6,7],    
       addCellClass: 'max-height: 45px; padding: 4px 8px 4px 8px;',
       width: '42rem',
       heightContainer: 'h-[28rem] 2xl:h-[30rem] rounded-md',
+      addRowClass: "",
       height: 'auto',
       viewport1536: {
         width: '60rem',
@@ -45,14 +59,17 @@ export default function TablaVentasPorVendedor({className}: {  className?: strin
       // subItemsSeleccionados: rubrosSeleccionados,
       itemKey: itemKey,
     },
-    // searchFunction: {
-    //   hayFuncionBusqueda: true,
-    //   idsCoincidentes: idsCoincidentes,
-    //   indiceSeleccionado: indiceSeleccionado ?? undefined,
-    //   buscado: buscado,
-    //   modoNavegacion: modoNavegacion,
-    // },
+    searchFunction: {
+      hayFuncionBusqueda: true,
+      idsCoincidentes: idsCoincidentes,
+      indiceSeleccionado: indiceSeleccionado ?? undefined,
+      buscado: buscado,
+      modoNavegacion: modoNavegacion,
+      keyBusqueda: 'vendedorCodigo'
+    },
   };
+
+
   return(
     
   <div className={`${className}`}>

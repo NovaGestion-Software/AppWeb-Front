@@ -35,7 +35,7 @@ export default function MetodosPagoModal({  showRubrosModal, setShowRubrosModal 
           columnasNumber: [2,3],
           addCellClass: "max-height: 45px; padding: 4px 8px 4px 8px;",
           widthContainer: "30rem",
-          heightContainer: '8rem',
+          heightContainer: '9rem',
           viewport1536: {
             width: '60rem',
             addCellClass1536px: "max-height: 80px;",

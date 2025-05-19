@@ -74,6 +74,7 @@ export default function TablaStock() {
   };
   const [seleccionado, setSeleccionado] = useState<SelectData | null>(null);
 
+
   const productosColumns: Array<ExtendedColumn<ProductosCType>> = [
     {
       key: 'codigo',
@@ -264,16 +265,14 @@ export default function TablaStock() {
     })).sort((a, b) => a.nmarca.localeCompare(b.nmarca));
   }
 
-  // ver seleccion.
-  useEffect(() => {
-    console.log('seleccionado desde tabla stock', seleccionado);
-  }, [seleccionado]);
 
   // props de tabla.
   const propsTablaStock = {
     datosParaTabla: productos,
     objectColumns: productosColumns,
+    selectFn: true,
     objectStyles: {
+      cursorPointer: true,
       heightContainer: "28rem",
       columnasNumber: [5, 6, 7, 8, 9],
       addCellClass: 'max-height: 30px;',

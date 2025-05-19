@@ -1,6 +1,6 @@
-import { TablaDefault } from '@/frontend-resourses/components';
-import { ExtendedColumn } from '@/frontend-resourses/components/Tables/types';
-import { useVentasPorSeccionStore } from '../useVentasPorSeccionStore';
+import { TablaDefault } from "@/frontend-resourses/components";
+import { ExtendedColumn } from "@/frontend-resourses/components/Tables/types";
+import { useVentasPorSeccionStore } from "../useVentasPorSeccionStore";
 
 export type VentaPorSeccionType = {
   id: string | number;
@@ -16,12 +16,12 @@ interface TablaVentaPorHoraProps {
   datosFooter?: {};
   className?: string;
 }
-export function TablaVentaPorSeccion({ data, estaProcesado, datosFooter, className }: TablaVentaPorHoraProps) {
+export function TablaVentaPorSeccion({ data, 
+  estaProcesado, datosFooter, className }: 
+  TablaVentaPorHoraProps) {
   // estilos
 
-  const height1440px = '28rem';
-  const heightContainer1440 = '35rem';
-
+  const height1440px = "28rem";
 
   // // este componente
   // const heightContainerTabla = "38rem";
@@ -32,23 +32,22 @@ export function TablaVentaPorSeccion({ data, estaProcesado, datosFooter, classNa
 
   // columnas
   const VentaXSeccionColumns: Array<ExtendedColumn<VentaPorSeccionType>> = [
-    { key: 'seccion', label: 'Sección', minWidth: '90', 
-      maxWidth: '120', resaltar: true },
-    { key: 'nseccion', label: 'Detalle', minWidth: '180', maxWidth: '240' },
+    { key: "seccion", label: "Sección", minWidth: "90", maxWidth: "130", resaltar: true },
+    { key: "nseccion", label: "Detalle", minWidth: "180", maxWidth: "420" },
     {
-      key: 'importe',
-      label: 'Importes $',
+      key: "importe",
+      label: "Importes $",
       withCellProps: true,
       resaltar: true,
-      minWidth: '110',
-      maxWidth: '180',
+      minWidth: "110",
+      maxWidth: "230",
     },
     {
-      key: 'porcentajeImporte',
-      label: '%',
+      key: "porcentajeImporte",
+      label: "%",
       withCellProps: true,
-      minWidth: '50',
-      maxWidth: '80',
+      minWidth: "50",
+      maxWidth: "110",
     },
   ];
 
@@ -62,26 +61,32 @@ export function TablaVentaPorSeccion({ data, estaProcesado, datosFooter, classNa
     objectColumns: VentaXSeccionColumns,
     estaProcesado: estaProcesado,
     status: estaProcesado,
+    selectFn: true,
     objectStyles: {
       columnasNumber: [3, 4],
       heightContainer: "26.4rem",
-      widthContainer: '35.5rem',
-      addCellClass: 'max-height: 45px; padding: 4px 8px 4px 8px;',
+      widthContainer: "35.5rem",
+      addCellClass: "max-height: 45px; padding: 4px 8px 4px 8px;",
       withoutPadding: true,
       viewport1440: {
-        widthContainer1440px: "38rem",
+        widthContainer1440px: "41rem",
         height1440px: height1440px,
-        heightContainer1440px: heightContainer1440,
-        addCellClass1440px: 'max-height: 40px;',
+        heightContainer1440px: "38rem",
+        addCellClass1440px: "max-height: 40px;",
       },
       viewport1536: {
-        heightContainer1536px: "38rem",
+        heightContainer1536px: "36.8rem",
+        widthContainer1536px: "43.8rem",
+      },
+      viewport1920: {
+        widthContainer1920px: "55.5rem",
+        heightContainer1920px: "40.5rem"
       },
     },
     objectFooter: {
-      footer: estaProcesado,
+      footer: true,
       datosFooter: datosFooter,
-      footerHeight: 'h-8',
+      footerHeight: "h-8",
     },
     searchFunction: {
       hayFuncionBusqueda: true,
@@ -90,7 +95,7 @@ export function TablaVentaPorSeccion({ data, estaProcesado, datosFooter, classNa
       buscado: buscado,
       modoNavegacion: modoNavegacion,
       indiceGlobal: indiceGlobal,
-      keyBusqueda: "seccion"
+      keyBusqueda: "seccion",
     },
   };
   return (

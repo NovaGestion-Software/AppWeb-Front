@@ -5,9 +5,8 @@ import RangeDatesInput from '@/frontend-resourses/components/Inputs/RangeDatesIn
 import { FechasRango } from '@/types';
 import { useVentasPorVendedorStore } from './store/useVentasPorVendedorStore';
 import BotoneraHerramientas from '../VentasPorSeccion/Componentes/HerramientasButtons';
-import { ListaFiltrosAplicados } from '@/frontend-resourses/components/Complementos/ListaFiltrosAplicados';
 import TablaVentasPorVendedor from './components/TablaVentasVendedor';
-import BusquedaVendedor from './components/BusquedaVendedor';
+import BusquedaInputs from '@/frontend-resourses/components/Tables/Busqueda/BusquedaInputs';
 
 export default function VentasXVendedorView() {
   const {
@@ -20,6 +19,20 @@ export default function VentasXVendedorView() {
     // filtros
     sucursalesSeleccionadas,
     sucursalesDisponibles,
+
+
+        buscado,
+    setBuscado,
+    idsCoincidentes,
+    indiceSeleccionado,
+    setIndiceGlobal,
+    setIdsCoincidentes,
+    setIndiceSeleccionado,
+    ultimoIndiceBusqueda,
+    setUltimoIndiceBusqueda,
+    setNavegandoCoincidentes,
+    indiceGlobal,
+    setModoNavegacion,
   } = useVentasPorVendedorStore();
   const [estaProcesado, setEstaProcesado] = useState(false);
   // Formateo a array de strings
@@ -50,6 +63,32 @@ export default function VentasXVendedorView() {
     { id: 2, nombre: 'Sofía', activo: true },
     { id: 3, nombre: 'Tomás', notas: [10, 9, 8] },
   ];
+
+     const propsBusqueda = {
+    data: dataVentaPorVendedor,
+    // busqueda
+    buscado,
+    setBuscado,
+    idsCoincidentes,
+    indiceSeleccionado,
+    setIndiceGlobal,
+    setIdsCoincidentes,
+    setIndiceSeleccionado,
+    ultimoIndiceBusqueda,
+    setUltimoIndiceBusqueda,
+    setNavegandoCoincidentes,
+    indiceGlobal,
+    setModoNavegacion,
+    inputsLength: 2,
+    modoBusqueda: "simple" as "simple",
+    keysBusqueda: {
+      itemKey: "vendedorCodigo",
+      busquedaKeyText: ["vendedorNombre"],
+      busquedaKeyCode: ["vendedorCodigo"],
+      textLabelProperty: "Vendedor",
+      codeLabelProperty: "Codigo",
+    },
+  };
   return (
     <div className="min-h-screen ">
       <ViewTitle title="Ventas por Vendedor" />
@@ -81,12 +120,12 @@ export default function VentasXVendedorView() {
           handleClean={handleClearData}
         />
 
-        <BusquedaVendedor
-          className="col-start-1 row-start-2 col-span-5
+        <BusquedaInputs props={propsBusqueda}
+          className="bg-white col-start-1 row-start-2 col-span-5
                  v1440:w-[38rem] v1440:col-start-2  v1440:gap-4 "
         />
 
-        <ListaFiltrosAplicados className="col-start-1 col-span-5 row-start-12 v1440:mx-6 " itemsDisponibles={sucursalesDisponiblesStr} itemsSeleccionados={sucursalesSeleccionadasStr} />
+        {/* <ListaFiltrosAplicados className="col-start-1 col-span-5 row-start-12 v1440:mx-6 " itemsDisponibles={sucursalesDisponiblesStr} itemsSeleccionados={sucursalesSeleccionadasStr} /> */}
 
         <TablaVentasPorVendedor
           className="justify-start w-fit h-fit items-start rounded-lg bg-white p-1 overflow-hidden

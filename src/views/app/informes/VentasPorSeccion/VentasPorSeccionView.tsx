@@ -9,10 +9,10 @@ import { agruparPorIndice, ConfigKeys, crearDataParaTablaModular, extraerItems, 
 import { ConfigTabla } from "../ventasXHora/VentasHoraView";
 import { formatearNumero } from "@/utils";
 import { TablaVentaPorSeccion, VentaPorSeccionType } from "./Componentes/TablaVentaPorSeccion";
-import BusquedaSecciones from "./Componentes/BusquedaSecciones";
 import { ListaFiltrosAplicados } from "@/frontend-resourses/components/Complementos/ListaFiltrosAplicados";
 import GraficoDeTorta from "./Componentes/GraficoDeTorta";
 import MetodosPagoModal from "./Componentes/MetodosPagoModal";
+import BusquedaInputs from "@/frontend-resourses/components/Tables/Busqueda/BusquedaInputs";
 
 export default function VentasPorSeccionView() {
   const [showModal, setShowModal] = useState(false);
@@ -25,12 +25,27 @@ export default function VentasPorSeccionView() {
     // data.data
     ventasPorSeccion,
     setVentasPorSeccion,
+    //tabla
+    secciones,
     setSecciones,
     // filtros
     sucursalesSeleccionadas,
     setSucursalesSeleccionadas,
     sucursalesDisponibles,
     setSucursalesDisponibles,
+    buscado,
+    setBuscado,
+    idsCoincidentes,
+    indiceSeleccionado,
+    setIndiceGlobal,
+    setIdsCoincidentes,
+    setIndiceSeleccionado,
+    ultimoIndiceBusqueda,
+    setUltimoIndiceBusqueda,
+    setNavegandoCoincidentes,
+    indiceGlobal,
+    setModoNavegacion,
+    resetStore,
   } = useVentasPorSeccionStore();
   //const [foco, setFoco] = useState(false);
   // estado del informe
@@ -136,12 +151,12 @@ export default function VentasPorSeccionView() {
     importe: fila.importe as string,
     porcentajeImporte: fila.porcentajeImporte as string,
   }));
-  // SETEAR FILTROS.
+  // SETEAR Filas
   useEffect(() => {
     if (estaProcesado) {
       setSecciones(filas);
     }
-  }, [estaProcesado]);
+  }, [estaProcesado,sucursalesSeleccionadas]);
 
   // SETEAR FILTROS.
   useEffect(() => {
@@ -169,13 +184,35 @@ export default function VentasPorSeccionView() {
   const handleClearData = () => {
     setVentasPorSeccion([]);
     setEstaProcesado(false);
+    resetStore()
   };
   //console.log
-  useEffect(() => {
-    console.log("ventas por seccion", ventasPorSeccion);
-    console.log("ventas por datos", datos);
-    console.log("ventas por filasGenericas", filasGenericas);
-  }, [ventasPorSeccion, indiceTabla]);
+
+   const propsBusqueda = {
+    data: secciones,
+    // busqueda
+    buscado,
+    setBuscado,
+    idsCoincidentes,
+    indiceSeleccionado,
+    setIndiceGlobal,
+    setIdsCoincidentes,
+    setIndiceSeleccionado,
+    ultimoIndiceBusqueda,
+    setUltimoIndiceBusqueda,
+    setNavegandoCoincidentes,
+    indiceGlobal,
+    setModoNavegacion,
+    inputsLength: 2,
+    modoBusqueda: "simple" as "simple",
+    keysBusqueda: {
+      itemKey: "seccion",
+      busquedaKeyText: ["nseccion"],
+      busquedaKeyCode: ["seccion"],
+      textLabelProperty: "Seccion",
+      codeLabelProperty: "Codigo",
+    },
+  };
 
   return (
     <div className="min-h-screen ">
@@ -185,10 +222,13 @@ export default function VentasPorSeccionView() {
       <div
         className="h-screen w-auto ml-3 gap-4 p-4 pb-0 pr-0
       grid grid-cols-12 grid-rows-12 
-      v1440:grid-cols-11  " >
+      v1440:grid-cols-12  "
+      >
         <RangeDatesInput
-          className="col-span-6 col-start-1 w-[30rem] 
-          v1440:w-[38rem] v1440:col-start-2 v1440:py-6 bg-white p-2"
+          className="w-[30rem]  bg-white p-2
+          col-span-6 col-start-1 
+          v1440:w-full v1440:col-span-5 v1440:h-full v1440:col-start-1 v1440:py-6
+          v1920:col-start-2"
           textoBotones={{ fetch: "Procesar", clear: "Borrar" }}
           conBotones={true}
           estado={status}
@@ -199,50 +239,56 @@ export default function VentasPorSeccionView() {
         />
         <BotoneraHerramientas
           data={exampleData}
-          className="bg-white w-fit 
+          className="bg-white w-fit  
         col-span-3 col-start-9 
-        v1440:col-start-8 "
+        v1440:relative v1440:left-16 v1440:px-2 "
           disabled={false}
           estaProcesado={estaProcesado}
           handleClean={handleClearData}
         />
 
-        <BusquedaSecciones
-          className="col-start-1 row-start-2 col-span-5
-         v1440:w-[38rem] v1440:col-start-2  v1440:gap-4 "
+        <BusquedaInputs props={propsBusqueda}
+          className="bg-white col-start-1 row-start-2 col-span-5
+                    v1440:gap-6
+                    v1920:col-start-2 "
         />
 
-        <ActionButton 
-        onClick={() => setShowModal((prev) => !prev)} 
-        text="Condiciones de Pago" color="indigo" 
-        addClassName=" h-10 w-42 text-xs 
+        <ActionButton
+          onClick={() => setShowModal((prev) => !prev)}
+          text="Condiciones de Pago"
+          color="indigo"
+          addClassName=" h-10 w-42 text-xs 
         col-start-7 col-span-2 row-start-2 
-        v1440:mx-6" />
+        v1440:h-full v1440:text-lg
+        "
+        />
         <ListaFiltrosAplicados
-          className="h-full   w-full 
+          className="w-[30rem] v1440:w-[32rem] v1536:w-[36rem] 
           row-start-3 row-span-3 col-start-7 col-span-5
-          v1440:mx-6 "
+          v1920:col-start-8"
           itemsDisponibles={sucursalesDisponiblesStr}
           itemsSeleccionados={sucursalesSeleccionadasStr}
         />
 
         <GraficoDeTorta
-          className=" h-auto w-full bg-white p-2 rounded-lg shadow-md shadow-gray-600 
+          className=" h-auto w-full bg-white pb-2 overflow-auto pt-0  rounded-lg shadow-md shadow-gray-600 
           col-start-7 col-span-5 row-span-6 row-start-6 
-          v1440:h-[22rem]  v1440:w-[32rem] v1440:mx-6 
-          v1536:w-[36rem]"
+          v1440:row-span-6  v1440:col-span-5 v1440:col-start-7 
+          v1536:w-[36rem]
+          v1920:col-start-8"
         />
         <TablaVentaPorSeccion
           className=" w-full h-full p-1 rounded-lg bg-white overflow-hidden
           col-start-1 col-span-6 row-span-9 border border-black
-          v1440:col-start-2 "
-          data={filas}
+          v1440:col-start-1  v1440:row-start-3
+          v1920:col-start-2  "
+          data={secciones}
           datosFooter={datosParaFooter}
           estaProcesado={estaProcesado}
         />
-      </div>
-
       <MetodosPagoModal showRubrosModal={showModal} setShowRubrosModal={setShowModal} />
+
+      </div>
     </div>
   );
 }
