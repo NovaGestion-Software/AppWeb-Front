@@ -17,8 +17,8 @@ export default function VentasXVendedorView() {
     // data.data
     setVentasPorVendedor,
     // filtros
-    sucursalesSeleccionadas,
-    sucursalesDisponibles,
+    // sucursalesSeleccionadas,
+    // sucursalesDisponibles,
 
 
         buscado,
