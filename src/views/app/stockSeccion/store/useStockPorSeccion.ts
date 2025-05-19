@@ -1,5 +1,6 @@
 // import { TablaStock1, TablaStocks } from '@/types';
-import { CheckboxState, DepositoModal,  MarcaModal, ProductoAgrupado, Status, TablaSecciones } from '@/types';
+import { Status } from '@/frontend-resourses/components/types';
+import { CheckboxState, DepositoModal,  MarcaModal, ProductoAgrupado, TablaSecciones } from '@/types';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 

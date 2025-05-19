@@ -36,8 +36,8 @@ export default function VentasXVendedorView() {
   } = useVentasPorVendedorStore();
   const [estaProcesado, setEstaProcesado] = useState(false);
   // Formateo a array de strings
-  const sucursalesDisponiblesStr = sucursalesDisponibles.map((s) => s.nsucursal);
-  const sucursalesSeleccionadasStr = sucursalesSeleccionadas.map((s) => s.nsucursal);
+  // const sucursalesDisponiblesStr = sucursalesDisponibles.map((s) => s.nsucursal);
+  // const sucursalesSeleccionadasStr = sucursalesSeleccionadas.map((s) => s.nsucursal);
 
   // simula llamado a fetch
   async function handleFetchData(_dates: FechasRango): Promise<void> {

@@ -1,8 +1,9 @@
 import {  useEffect } from "react";
 import { useVentasHoraStore } from "@/views/app/informes/ventasXHora/store/useVentasHoraStore";
-import { HighlightMap, VentaPorHora } from "@/types";
+import { HighlightMap } from "@/frontend-resourses/components/Tables/types";
 import TablaDefault from "@/frontend-resourses/components/Tables/TablaDefault/TablaDefault";
 import { extraerMaxIds } from "@/frontend-resourses/components/Tables/TablaDefault/Utils/utils";
+import { VentaPorHora } from "@/types";
 
 // Definicion de estructura de columnas
 // interface TableColumn<T> {

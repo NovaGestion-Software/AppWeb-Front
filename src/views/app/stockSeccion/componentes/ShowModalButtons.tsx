@@ -1,5 +1,5 @@
 import { ActionButton } from "@/frontend-resourses/components";
-import { Status } from "@/types";
+import { Status } from "@/frontend-resourses/components/types";
 import { FaWarehouse } from "react-icons/fa";
 
 interface ShowModalButtonsProps {
