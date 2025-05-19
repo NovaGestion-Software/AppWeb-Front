@@ -1,21 +1,21 @@
 import TablaExpandible from '@/frontend-resourses/components/Tables/TablaExpansible/TablaExpandible';
-import { dataVentaPorVendedor, VentaPorVendedorColumns } from '../data';
+import { dataFooter, dataVentaPorVendedor, VentaPorVendedorColumns } from '../data';
 import { ExtendedColumn } from '@/frontend-resourses/components/Tables/types';
 import { useVentasPorVendedorStore } from '../store/useVentasPorVendedorStore';
 
 export default function TablaVentasPorVendedor({className}: {  className?: string;}) {
   const SeccionRubrosColumns: Array<ExtendedColumn<VentaPorVendedorColumns>> = [
     { key: 'vendedorCodigo', label: 'Codigo', minWidth: '70', maxWidth: '100' },
-    { key: 'vendedorNombre', label: 'Vendedor', minWidth: '130', maxWidth: '520' },
-    { key: 'tipo', label: 'Unidad', minWidth: '90', maxWidth: '120' },
-    { key: 'cantidad', label: 'Cantidad', minWidth: '80', maxWidth: '520' },
-    { key: 'importe', label: 'Importe $', minWidth: '110', maxWidth: '520' },
-    { key: 'contadoCantidad', label: 'Cant.Cdo', minWidth: '80', maxWidth: '520' },
-    { key: 'contadoImporte', label: 'Cdo $', minWidth: '120', maxWidth: '520' },
-    { key: 'cuentaCorrienteCantidad', label: 'Cant.CC', minWidth: '80', maxWidth: '520' },
-    { key: 'cuentaCorrienteImporte', label: 'CC $', minWidth: '120', maxWidth: '520' },
-    { key: 'otrosCantidad', label: 'Cant.Ot.', minWidth: '80', maxWidth: '520' },
-    { key: 'otrosImporte', label: 'Ot. $', minWidth: '120', maxWidth: '520' },
+    { key: 'vendedorNombre', label: 'Vendedor', minWidth: '130', maxWidth: '520', },
+    { key: 'tipo', label: 'Unidad', minWidth: '90', maxWidth: '120',  },
+    { key: 'cantidad', label: 'Cantidad', minWidth: '80', maxWidth: '520', resaltar: true, },
+    { key: 'importe', label: 'Importe $', minWidth: '110', maxWidth: '520', resaltar: true, },
+    { key: 'contadoCantidad', label: 'Cant.Cdo', minWidth: '80', maxWidth: '520' , resaltar: true,},
+    { key: 'contadoImporte', label: 'Cdo $', minWidth: '120', maxWidth: '520', resaltar: true, },
+    { key: 'cuentaCorrienteCantidad', label: 'Cant.CC', minWidth: '80', maxWidth: '520', resaltar: true, },
+    { key: 'cuentaCorrienteImporte', label: 'CC $', minWidth: '120', maxWidth: '520', resaltar: true, },
+    { key: 'otrosCantidad', label: 'Cant.Ot.', minWidth: '80', maxWidth: '520', resaltar: true, },
+    { key: 'otrosImporte', label: 'Ot. $', minWidth: '120', maxWidth: '520', resaltar: true, },
   ];
 
   const subItemsProperty = 'unidades'; // Nombre que contiene los subítems
@@ -67,6 +67,11 @@ export default function TablaVentasPorVendedor({className}: {  className?: strin
       modoNavegacion: modoNavegacion,
       keyBusqueda: 'vendedorCodigo'
     },
+    objectFooter: {
+      footer:true,
+      datosFooter: dataFooter,
+      footerHeight: "h-8"
+    }
   };
 
 
