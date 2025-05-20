@@ -70,7 +70,7 @@ export default function TablaSeccionRubro({ data, showRubrosModal, setShowRubros
     idsCoincidentes,
     indiceSeleccionado,
   } = useStockPorSeccion();
-    const propsBusqueda = {
+  const propsBusqueda = {
     data: datosRubros,
     // busqueda
     buscado,
@@ -85,7 +85,7 @@ export default function TablaSeccionRubro({ data, showRubrosModal, setShowRubros
     setNavegandoCoincidentes,
     setModoNavegacion,
     indiceGlobal,
-    modoBusqueda: 'anidadas' as 'anidadas',
+    modoBusqueda: "anidadas" as "anidadas",
     inputsLength: 1,
     mostrarResultados: true,
     keysBusqueda: {
@@ -168,9 +168,11 @@ export default function TablaSeccionRubro({ data, showRubrosModal, setShowRubros
 
   // cerrar modal y limpiar rubros y secciones
   function handleCloseModal() {
-    clearRubrosSeleccionados();
-    clearSeccionesSeleccionadas();
-    setShowRubrosModal(false);
+    if (!isCancelEnabled) {
+      clearRubrosSeleccionados();
+      clearSeccionesSeleccionadas();
+      setShowRubrosModal(false);
+    }
   }
   function handleModalConfirm() {
     mutate();
@@ -283,6 +285,7 @@ export default function TablaSeccionRubro({ data, showRubrosModal, setShowRubros
       buttons={true}
       disabled={isConfirmEnabled}
       disabled2={isCancelEnabled}
+      disableAutoClose={true}
       classModal=" w-[50rem] h-[35rem] 2xl:bottom-0 2xl:w-fit 2xl:h-fit"
     >
       <div

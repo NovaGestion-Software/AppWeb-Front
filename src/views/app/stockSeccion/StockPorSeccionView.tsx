@@ -126,6 +126,7 @@ export default function StockPorSeccionView() {
     // set Productos
     setProductos(datosOrdenados);
   }, [stockRenderizado, checkboxSeleccionados.grupo1, checkboxSeleccionados.grupo2, checkboxSeleccionados.grupo3, checkboxSeleccionados.grupo4, depositosSeleccionados, marcasSeleccionadas]);
+
   // RENDERIZADO DE ITEMS DE LOS MODALES
   const renderMarcaItem = (item: MarcaModal) => {
     return <>{item.nmarca}</>;
@@ -186,9 +187,13 @@ export default function StockPorSeccionView() {
     if (rubrosPendientes?.length > 0) {
       showAlert({
         title: "Upps!",
-        text: `Los siguientes rubros no se han podido traer: ${rubrosPendientesData.map((rubro) => {
-          return rubro.nombre;
-        })}.`,
+        html: `
+  <p>Los siguientes rubros no se han podido traer:</p>
+  <ul style="color: #f79c09;">
+    ${rubrosPendientesData.map((rubro) => `<li>${rubro.nombre}</li>`).join('')}
+  </ul>
+`
+,
         icon: "info",
         timer: 3000,
       });
@@ -203,11 +208,12 @@ export default function StockPorSeccionView() {
     }
   };
 
-  useEffect(() => {
-    if (rubrosPendientes?.length > 0) {
-      handleError();
-    }
-  }, [rubrosPendientes]);
+useEffect(() => {
+  if (rubrosPendientesData?.length > 0) {
+    handleError();
+  }
+}, [rubrosPendientesData]);
+
 
   const propsShowModales = {
     propsShowModal: {
