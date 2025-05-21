@@ -16,6 +16,7 @@ export async function obtenerVentasHora(fechas: FechasRango) {
     const { from, to } = fechas;
     const baseSeleccionada = entorno === "development" ? "apinovades" : "apinova"
     const url = `/${baseSeleccionada}/generico/obtenerVentasHora.php?_i={"_e":"${empresa}","_m":"${homologacion}","_fi":"${from}","_ff":"${to}"}`;
+    console.log('url', url)
     const { data } = await apiPhp(url);
     return data;
   } catch (error) {
