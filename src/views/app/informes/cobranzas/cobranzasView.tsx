@@ -4,7 +4,6 @@ import { useState } from "react";
 import { useCobranzasStore } from "./store/store";
 import { FechasRango } from "@/frontend-resourses/components/types";
 import Botonera from "./Componentes/Botonera";
-import GrupoInputsRadio from "../../stockSeccion/componentes/GrupoInputsRadio";
 import RadioGroupFiltro from "@/frontend-resourses/components/Inputs/RadioGroupFiltros";
 import Tabla from "./Componentes/Tabla";
 import { data } from "./ts/data";
@@ -16,14 +15,14 @@ export default function CobranzasView() {
     // data
     setCobranzas,
     // filtros
-    sucursalesDisponibles, sucursalesSeleccionadas,
-    setSucursalesDisponibles, setSucursalesSeleccionadas, 
+    // sucursalesDisponibles, sucursalesSeleccionadas,
+    // setSucursalesDisponibles, setSucursalesSeleccionadas, 
     checkboxSeleccionados, setCheckboxSeleccionados } = useCobranzasStore();
   const [estaProcesado, setEstaProcesado] = useState(false);
 
   // Formateo a array de strings
-  const sucursalesDisponiblesStr = sucursalesDisponibles.map((s) => s.sucursal);
-  const sucursalesSeleccionadasStr = sucursalesSeleccionadas.map((s) => s.sucursal);
+  // const sucursalesDisponiblesStr = sucursalesDisponibles.map((s) => s.sucursal);
+  // const sucursalesSeleccionadasStr = sucursalesSeleccionadas.map((s) => s.sucursal);
 
   async function handleFetchData(_dates: FechasRango): Promise<void> {
     try {

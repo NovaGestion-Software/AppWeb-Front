@@ -1,5 +1,5 @@
 import TablaExpandible from "@/frontend-resourses/components/Tables/TablaExpansible/TablaExpandible";
-import { dataFooter, VentaPorVendedorColumns } from "../data";
+import { VentaPorVendedorColumns } from "../data";
 import { ExtendedColumn } from "@/frontend-resourses/components/Tables/types";
 import { useVentasPorVendedorStore } from "../store/useVentasPorVendedorStore";
 
