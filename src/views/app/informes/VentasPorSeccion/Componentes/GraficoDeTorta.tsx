@@ -28,9 +28,8 @@ export function transformarTipos<T extends Record<string, any>>(data: T[], tipos
   });
 }
 
-export default function GraficoDeTorta({ className }: { className: string }) {
+export default function GraficoDeTorta({ className, estaProcesado }: { className: string, estaProcesado: boolean, }) {
   const {  secciones } = useVentasPorSeccionStore();
-  let procesado = false;
   const [seccionesDisponibles, setSeccionesDisponibles] = useState<any[]>([]);
 
   useEffect(() => {
@@ -53,7 +52,7 @@ export default function GraficoDeTorta({ className }: { className: string }) {
 
   return (
     <div className={`${className} h-[20rem]`}>
-      <DonutCard titulo={`Secciones`} label={""} data={dataParaGrafico} categories={categorias} fetching={procesado} />
+      <DonutCard titulo={`Secciones`} label={""} data={estaProcesado ? dataParaGrafico : []} categories={estaProcesado ? categorias : []} fetching={false} />
     </div>
   );
 }

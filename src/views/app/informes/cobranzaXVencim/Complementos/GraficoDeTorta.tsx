@@ -34,7 +34,7 @@ export function transformarTipos<T extends Record<string, any>>(data: T[], tipos
   });
 }
 
-export default function GraficoDeTorta({ className }: { className?: string }) {
+export default function GraficoDeTorta({ className, estaProcesado }: { className?: string, estaProcesado: boolean, }) {
   let procesado = false;
   // secciones dispponibles son props que vienen de la store ?
   const [seccionesDisponibles, setSeccionesDisponibles] = useState<any[]>([]);
@@ -58,7 +58,7 @@ export default function GraficoDeTorta({ className }: { className?: string }) {
     <div className={`${className} noneScroll shadow-md  shadow-gray-600`}>
       <DonutCard titulo={`Conceptos`} label={""} 
       flexRow={true }
-      data={dataParaGrafico} categories={categorias} fetching={procesado} donutClassName="h-36 v1440:h-44 v1440:mt-4" />
+      data={estaProcesado ? dataParaGrafico: []} categories={estaProcesado ? categorias: []} fetching={procesado} donutClassName="h-36 v1440:h-44 v1440:mt-4" />
     </div>
   );
 }

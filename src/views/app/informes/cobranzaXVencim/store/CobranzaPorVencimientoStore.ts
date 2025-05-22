@@ -3,6 +3,7 @@ import { FechasRango, SucursalesModal } from '@/types';
 import dayjs from 'dayjs';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
+import { DatosMora } from '../ts/data';
 
 const defaultDate = {
   from: dayjs().startOf('month'),
@@ -18,9 +19,9 @@ type CobranzasPorVencimientoProps = {
   status: Status;
   setStatus: (status: Status) => void;
   //data
-//   ventasPorVendedor: VentaPorVendedorColumns[] | null;
-//   setVentasPorVendedor: (data: VentaPorVendedorColumns[]) => void;
-//   clearVentasPorVendedor: () => void;
+  cobranzaPorVencimiento: DatosMora[];
+  setCobranzaPorVencimiento: (data: DatosMora[]) => void;
+  clearCobranzaPorVencimiento: () => void;
 
   //secciones:
 
@@ -48,9 +49,9 @@ export const useCobranzaPorVencimientoStore = create<CobranzasPorVencimientoProp
       status: 'idle',
       setStatus: (status) => set({ status }),
       //data
-    //   ventasPorVendedor: null,
-    //   setVentasPorVendedor: (data) => set({ ventasPorVendedor: data }),
-    //   clearVentasPorVendedor: () => set({ ventasPorVendedor: null }),
+      cobranzaPorVencimiento: [],
+      setCobranzaPorVencimiento: (data) => set({ cobranzaPorVencimiento: data }),
+      clearCobranzaPorVencimiento: () => set({ cobranzaPorVencimiento: [] }),
 
       // secciones
       secciones: [] as any[],

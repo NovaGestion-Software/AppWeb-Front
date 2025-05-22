@@ -182,10 +182,10 @@ export interface SucursalesModal extends FiltroModal {
 }
 // grupo de checkbox filtro
 export interface CheckboxState {
-  grupo1: string | null; // Talles o Artículos
-  grupo2: string | null; // Stock (Con Stock, Todos, Negativos)
-  grupo3: string | null; // Listas (CONTADO, LISTA 2, LISTA 3)
-  grupo4: string | null; // Ordenar (Código, Marca, Descripción)
+  grupo1: string | null;
+  grupo2: string | null;
+  grupo3: string | null; 
+  grupo4: string | null; 
   [key: string]: string | null;
 }
 

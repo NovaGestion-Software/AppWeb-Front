@@ -1,12 +1,12 @@
-import { SucursalesModal } from '@/types';
-import dayjs from 'dayjs';
-import { create } from 'zustand';
-import { createJSONStorage, persist } from 'zustand/middleware';
-import { VentaPorVendedorColumns } from '../data';
-import { Status,FechasRango, } from '@/frontend-resourses/components/types';
+import { SucursalesModal } from "@/types";
+import dayjs from "dayjs";
+import { create } from "zustand";
+import { createJSONStorage, persist } from "zustand/middleware";
+import { VentaPorVendedorColumns } from "../data";
+import { Status, FechasRango } from "@/frontend-resourses/components/types";
 
 const defaultDate = {
-  from: dayjs().startOf('month'),
+  from: dayjs().startOf("month"),
   to: dayjs(),
 };
 
@@ -19,12 +19,15 @@ type VentasPorVendedorProps = {
   status: Status;
   setStatus: (status: Status) => void;
   //data
-  ventasPorVendedor: VentaPorVendedorColumns[] | null;
+  ventasPorVendedor: VentaPorVendedorColumns[];
   setVentasPorVendedor: (data: VentaPorVendedorColumns[]) => void;
   clearVentasPorVendedor: () => void;
 
+    //data
+  ventasPorVendedorFooter: VentaPorVendedorColumns[];
+  setVentasPorVendedorFooter: (dataFooter: VentaPorVendedorColumns[]) => void;
+  clearVentasPorVendedorFooter: () => void;
   //secciones:
-
   secciones: any[];
   setSecciones: (data: any[]) => void;
 
@@ -40,9 +43,9 @@ type VentasPorVendedorProps = {
   setBuscado: (valor: boolean) => void;
   navegandoCoincidentes: boolean;
   setNavegandoCoincidentes: (valor: boolean) => void;
-  modoNavegacion: 'normal' | 'busqueda';
+  modoNavegacion: "normal" | "busqueda";
   ultimoIndiceBusqueda: number | null;
-  setModoNavegacion: (modo: 'normal' | 'busqueda') => void;
+  setModoNavegacion: (modo: "normal" | "busqueda") => void;
   setUltimoIndiceBusqueda: (index: number | null) => void;
 
   indiceBusqueda: number; // Índice para navegación en resultados (0 a idsCoincidentes.length - 1)
@@ -62,14 +65,19 @@ export const useVentasPorVendedorStore = create<VentasPorVendedorProps>()(
       //parametros
       fechas: { from: defaultDate.from, to: defaultDate.to },
       setFechas: (data) => set({ fechas: data }),
-      clearFechas: () => set({ fechas: { from: '', to: '' } }),
+      clearFechas: () => set({ fechas: { from: "", to: "" } }),
       // status
-      status: 'idle',
+      status: "idle",
       setStatus: (status) => set({ status }),
       //data
-      ventasPorVendedor: null,
+      ventasPorVendedor: [],
       setVentasPorVendedor: (data) => set({ ventasPorVendedor: data }),
-      clearVentasPorVendedor: () => set({ ventasPorVendedor: null }),
+      clearVentasPorVendedor: () => set({ ventasPorVendedor: [] }),
+
+      //Footer
+      ventasPorVendedorFooter: [],
+      setVentasPorVendedorFooter: (dataFooter) => set({ ventasPorVendedorFooter: dataFooter }),
+      clearVentasPorVendedorFooter: () => set({ ventasPorVendedorFooter: [] }),
 
       // secciones
       secciones: [] as any[],
@@ -90,13 +98,13 @@ export const useVentasPorVendedorStore = create<VentasPorVendedorProps>()(
       setNavegandoCoincidentes: (valor) =>
         set({
           navegandoCoincidentes: valor,
-          modoNavegacion: valor ? 'busqueda' : 'normal',
+          modoNavegacion: valor ? "busqueda" : "normal",
         }),
       indiceBusqueda: 0,
       indiceGlobal: 0,
       setIndiceBusqueda: (index) => set({ indiceBusqueda: index }),
       setIndiceGlobal: (index) => set({ indiceGlobal: index }),
-      modoNavegacion: 'normal',
+      modoNavegacion: "normal",
       ultimoIndiceBusqueda: 0, // Para recordar la posición en resultados de búsqueda
       setModoNavegacion: (modo) => set({ modoNavegacion: modo }),
       setUltimoIndiceBusqueda: (index) => set({ ultimoIndiceBusqueda: index }),
@@ -109,7 +117,7 @@ export const useVentasPorVendedorStore = create<VentasPorVendedorProps>()(
       setIdsCoincidentes: (ids) => set({ idsCoincidentes: ids }),
     }),
     {
-      name: 'ventas-vendedor-storage',
+      name: "ventas-vendedor-storage",
       storage: createJSONStorage(() => sessionStorage),
     }
   )

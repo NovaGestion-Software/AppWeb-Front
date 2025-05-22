@@ -3,6 +3,7 @@ import { FechasRango, SucursalesModal } from "@/types";
 import dayjs from "dayjs";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
+import { DatosTablaCobranza } from "../ts/data";
 
 const defaultDate = {
   from: dayjs().startOf("month"),
@@ -18,9 +19,9 @@ type CobranzasProps = {
   status: Status;
   setStatus: (status: Status) => void;
   //data
-  //   ventasPorVendedor: VentaPorVendedorColumns[] | null;
-  //   setVentasPorVendedor: (data: VentaPorVendedorColumns[]) => void;
-  //   clearVentasPorVendedor: () => void;
+    cobranzas: DatosTablaCobranza[] ;
+    setCobranzas: (data: DatosTablaCobranza[]) => void;
+    clearCobranzas: () => void;
 
   //secciones:
   secciones: any[];
@@ -50,9 +51,9 @@ export const useCobranzasStore = create<CobranzasProps>()(
       status: "idle",
       setStatus: (status) => set({ status }),
       //data
-      //   ventasPorVendedor: null,
-      //   setVentasPorVendedor: (data) => set({ ventasPorVendedor: data }),
-      //   clearVentasPorVendedor: () => set({ ventasPorVendedor: null }),
+        cobranzas: [],
+        setCobranzas: (data) => set({ cobranzas: data }),
+        clearCobranzas: () => set({ cobranzas: []}),
 
       // secciones
       secciones: [] as any[],

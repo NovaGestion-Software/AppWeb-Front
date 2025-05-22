@@ -1,12 +1,12 @@
-import { useState } from 'react';
-import { dataVentaPorVendedor} from './data';
-import { ViewTitle } from '@/frontend-resourses/components';
-import RangeDatesInput from '@/frontend-resourses/components/Inputs/RangeDatesInput';
-import { FechasRango } from '@/types';
-import { useVentasPorVendedorStore } from './store/useVentasPorVendedorStore';
-import BotoneraHerramientas from '../VentasPorSeccion/Componentes/HerramientasButtons';
-import TablaVentasPorVendedor from './components/TablaVentasVendedor';
-import BusquedaInputs from '@/frontend-resourses/components/Tables/Busqueda/BusquedaInputs';
+import { useState } from "react";
+import { dataFooter, dataVentaPorVendedor } from "./data";
+import { ViewTitle } from "@/frontend-resourses/components";
+import RangeDatesInput from "@/frontend-resourses/components/Inputs/RangeDatesInput";
+import { FechasRango } from "@/types";
+import { useVentasPorVendedorStore } from "./store/useVentasPorVendedorStore";
+import BotoneraHerramientas from "../VentasPorSeccion/Componentes/HerramientasButtons";
+import TablaVentasPorVendedor from "./components/TablaVentasVendedor";
+import BusquedaInputs from "@/frontend-resourses/components/Tables/Busqueda/BusquedaInputs";
 
 export default function VentasXVendedorView() {
   const {
@@ -14,14 +14,14 @@ export default function VentasXVendedorView() {
     status,
     // parametros de fetch
     setFechas,
-    // data.data
+    // data
     setVentasPorVendedor,
+    // footer
+    setVentasPorVendedorFooter,
     // filtros
     // sucursalesSeleccionadas,
     // sucursalesDisponibles,
-
-
-        buscado,
+    buscado,
     setBuscado,
     idsCoincidentes,
     indiceSeleccionado,
@@ -44,27 +44,29 @@ export default function VentasXVendedorView() {
     try {
       //  console.log('fechas en handle', dates)
       setVentasPorVendedor(dataVentaPorVendedor);
+      setVentasPorVendedorFooter(dataFooter);
       setEstaProcesado(true);
       //   mutate(dates);
     } catch (error) {
-      console.error('Error en la petición:', error);
-      alert('Error al obtener los datos');
+      console.error("Error en la petición:", error);
+      alert("Error al obtener los datos");
       //   setFoco(true);
     }
   }
   const handleClearData = () => {
     setVentasPorVendedor([]);
+    setVentasPorVendedorFooter([]);
     setEstaProcesado(false);
   };
 
   //constate prueba para botonera de herramientas
   const exampleData: Record<string, any>[] = [
-    { id: 1, nombre: 'Lucas', edad: 30 },
-    { id: 2, nombre: 'Sofía', activo: true },
-    { id: 3, nombre: 'Tomás', notas: [10, 9, 8] },
+    { id: 1, nombre: "Lucas", edad: 30 },
+    { id: 2, nombre: "Sofía", activo: true },
+    { id: 3, nombre: "Tomás", notas: [10, 9, 8] },
   ];
 
-     const propsBusqueda = {
+  const propsBusqueda = {
     data: dataVentaPorVendedor,
     // busqueda
     buscado,
@@ -100,7 +102,7 @@ export default function VentasXVendedorView() {
         <RangeDatesInput
           className="col-span-6 col-start-1 w-[30rem] 
           v1440:w-[38rem] v1440:col-start-2 v1440:py-6  bg-white p-2"
-          textoBotones={{ fetch: 'Procesar', clear: 'Borrar' }}
+          textoBotones={{ fetch: "Procesar", clear: "Borrar" }}
           conBotones={true}
           estado={status}
           setFechas={setFechas}
@@ -120,7 +122,8 @@ export default function VentasXVendedorView() {
           handleClean={handleClearData}
         />
 
-        <BusquedaInputs props={propsBusqueda}
+        <BusquedaInputs
+          props={propsBusqueda}
           className="bg-white col-start-1 row-start-2 col-span-5
                  v1440:w-[38rem] v1440:col-start-2  v1440:gap-4 "
         />

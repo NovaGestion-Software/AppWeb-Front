@@ -5,14 +5,23 @@ import { FechasRango } from "@/frontend-resourses/components/types";
 import { useEffect, useState } from "react";
 import Botonera from "./Complementos/Botonera";
 import TablaCxV from "./Complementos/Tabla";
-import {  dataFalsa } from "./ts/data";
+import { data, dataFalsa } from "./ts/data";
 import Totales from "./Complementos/Totales";
 import { ListaFiltrosAplicados } from "@/frontend-resourses/components/Complementos/ListaFiltrosAplicados";
 import { extraerItems } from "@/frontend-resourses/utils/dataManipulation";
 import GraficoDeTorta from "./Complementos/GraficoDeTorta";
 
 export default function CobranzaVencimView() {
-  const { status, setFechas, sucursalesDisponibles, sucursalesSeleccionadas, setSucursalesDisponibles, setSucursalesSeleccionadas } = useCobranzaPorVencimientoStore();
+  const {
+    status,
+    setFechas,
+    // data
+    setCobranzaPorVencimiento,
+    sucursalesDisponibles,
+    sucursalesSeleccionadas,
+    setSucursalesDisponibles,
+    setSucursalesSeleccionadas,
+  } = useCobranzaPorVencimientoStore();
   const [estaProcesado, setEstaProcesado] = useState(false);
 
   // Formateo a array de strings
@@ -37,7 +46,7 @@ export default function CobranzaVencimView() {
 
   async function handleFetchData(_dates: FechasRango): Promise<void> {
     try {
-      //  console.log('fechas en handle', dates)
+      setCobranzaPorVencimiento(data);
       setEstaProcesado(true);
       //   mutate(dates);
     } catch (error) {
@@ -47,6 +56,7 @@ export default function CobranzaVencimView() {
     }
   }
   const handleClearData = () => {
+    setCobranzaPorVencimiento([]);
     setEstaProcesado(false);
   };
   const exampleData: Record<string, any>[] = [
@@ -88,8 +98,8 @@ export default function CobranzaVencimView() {
         porcentaje: 32.67,
       },
       {
-        titulo: "Bonificado",
-        icono: "🎁",
+        titulo: "No Vencido",
+        icono: "🕝",
         valor: 0,
       },
     ],
@@ -128,8 +138,8 @@ export default function CobranzaVencimView() {
           className="bg-white w-fit p-2
                             col-span-3 col-start-9 
                             v1440:col-start-9 v1440:-ml-9
-                            v1536:col-start-8 v1536:-ml-6 "
-          disabled={false}
+                            v1536:col-start-8 v1536:-ml-6 v1536:px-4 "
+          disabled={!estaProcesado}
           estaProcesado={estaProcesado}
           handleClean={handleClearData}
         />
@@ -148,20 +158,24 @@ export default function CobranzaVencimView() {
         v1440:col-span-5 v1440:col-start-2
         v1440:row-start-4  v1440:row-span-5  
         v1536:row-start-5 v1536:row-span-6 "
-          principales={totalesProps.principales} extras={totalesProps.extras}
+          principales={estaProcesado ? totalesProps.principales : []}
+          extras={estaProcesado ? totalesProps.extras : []}
         />
         <ListaFiltrosAplicados
           className="col-span-4 row-start-5 rounded-lg row-span-3 h-full
           v1440:row-start-4
           v1536:row-start-5  "
-          itemsDisponibles={sucursalesDisponiblesStr}
-          itemsSeleccionados={sucursalesSeleccionadasStr}
+          itemsDisponibles={estaProcesado ? sucursalesDisponiblesStr : []}
+          itemsSeleccionados={estaProcesado ? sucursalesSeleccionadasStr : []}
         />
 
-        <GraficoDeTorta className="bg-white w-full rounded-lg  overflow-hidden h-full
+        <GraficoDeTorta
+          estaProcesado={estaProcesado}
+          className="bg-white w-full rounded-lg  overflow-hidden h-full
         row-start-8  row-span-4 col-span-4
         v1440:row-start-7
-        v1536:row-start-8" />
+        v1536:row-start-8"
+        />
       </div>
     </div>
   );

@@ -513,6 +513,7 @@ export const dataFooter: VentaPorVendedorColumns[] = [
     vendedorCodigo: '',
     vendedorNombre: '',
     tipo: '',
+    unidades: [],
     cantidad: 303.0,
     importe: 5340930.0,
     contadoCantidad: 116.39,
@@ -521,7 +522,6 @@ export const dataFooter: VentaPorVendedorColumns[] = [
     cuentaCorrienteImporte: 838900.0,
     otrosCantidad: 142.61,
     otrosImporte: 2615829.51,
-    unidades: []
   },
   
 ];

@@ -1,14 +1,13 @@
 import { TablaDefault } from "@/frontend-resourses/components";
 import { ExtendedColumn } from "@/frontend-resourses/components/Tables/types";
 import { useCobranzaPorVencimientoStore } from "../store/CobranzaPorVencimientoStore";
-import { data} from "../ts/data";
 
 interface TablaCxVProps {
   estaProcesado: boolean;
   className?: string;
 }
 export default function TablaCxV({ estaProcesado, className }: TablaCxVProps) {
-  const { status } = useCobranzaPorVencimientoStore();
+  const { status, cobranzaPorVencimiento } = useCobranzaPorVencimientoStore();
   const cobranzaVencimientoColumns: Array<ExtendedColumn<any>> = [
     { key: "concepto", label: "Concepto", minWidth: "120", maxWidth: "200" , resaltar:true,},
     { key: "importe", label: "Importe $", minWidth: "100", maxWidth: "520" },
@@ -22,7 +21,7 @@ export default function TablaCxV({ estaProcesado, className }: TablaCxVProps) {
   ];
 
   const propsTablaVentaPorSeccion = {
-    datosParaTabla: data,
+    datosParaTabla: estaProcesado ? cobranzaPorVencimiento : [],
     objectColumns: cobranzaVencimientoColumns,
     estaProcesado: estaProcesado,
     status: status,
@@ -42,15 +41,12 @@ export default function TablaCxV({ estaProcesado, className }: TablaCxVProps) {
         heightContainer1536px: "9rem",
         widthContainer1536px: "",
         addCellClass1536px: "max-height: 60px;",
-
       },
       viewport1920: {
         widthContainer1920px: "",
         heightContainer1920px: "",
       },
-    
     },
-    
   };
 
   return (

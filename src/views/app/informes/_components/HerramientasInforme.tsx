@@ -21,7 +21,7 @@ export default function HerramientasInforme<T>({ data, handleExportExcel, handle
   }, [data]);
 
   return (
-    <div className="flex items-center justify-center gap-6  h-10    w-fit rounded-lg ">
+    <div className="flex items-center justify-center gap-6 w-fit rounded-lg ">
       <ActionButton onClick={handleExportExcel} disabled={disabledExportExcel} 
       addClassName="h-7  rounded-md text-xs v1440:h-8 v1536:h-9 v1536:px-6 v1536:text-sm" 
       color="green" icon={<RiFileExcel2Fill className='h-4 w-4 v1536:h-6 v1536:w-6' />} />

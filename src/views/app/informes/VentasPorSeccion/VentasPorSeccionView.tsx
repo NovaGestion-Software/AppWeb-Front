@@ -156,7 +156,7 @@ export default function VentasPorSeccionView() {
     if (estaProcesado) {
       setSecciones(filas);
     }
-  }, [estaProcesado,sucursalesSeleccionadas]);
+  }, [estaProcesado, sucursalesSeleccionadas]);
 
   // SETEAR FILTROS.
   useEffect(() => {
@@ -184,11 +184,11 @@ export default function VentasPorSeccionView() {
   const handleClearData = () => {
     setVentasPorSeccion([]);
     setEstaProcesado(false);
-    resetStore()
+    resetStore();
   };
   //console.log
 
-   const propsBusqueda = {
+  const propsBusqueda = {
     data: secciones,
     // busqueda
     buscado,
@@ -236,18 +236,20 @@ export default function VentasPorSeccionView() {
           showPresets={true}
           onClearData={handleClearData}
           onFetchData={handleFetchData}
+          estaProcesado={estaProcesado}
         />
         <BotoneraHerramientas
           data={exampleData}
           className="bg-white w-fit  
-        col-span-3 col-start-9 
-        v1440:relative v1440:left-16 v1440:px-2 "
+          col-span-3 col-start-9 
+          v1440:px-2 "
           disabled={false}
           estaProcesado={estaProcesado}
           handleClean={handleClearData}
         />
 
-        <BusquedaInputs props={propsBusqueda}
+        <BusquedaInputs
+          props={propsBusqueda}
           className="bg-white col-start-1 row-start-2 col-span-5
                     v1440:gap-6
                     v1920:col-start-2 "
@@ -271,6 +273,7 @@ export default function VentasPorSeccionView() {
         />
 
         <GraficoDeTorta
+        estaProcesado={estaProcesado}
           className=" h-auto w-full bg-white pb-2 overflow-auto pt-0  rounded-lg shadow-md shadow-gray-600 
           col-start-7 col-span-5 row-span-6 row-start-6 
           v1440:row-span-6  v1440:col-span-5 v1440:col-start-7 
@@ -283,11 +286,10 @@ export default function VentasPorSeccionView() {
           v1440:col-start-1  v1440:row-start-3
           v1920:col-start-2  "
           data={secciones}
-          datosFooter={datosParaFooter}
+          datosFooter={estaProcesado ? datosParaFooter : {}}
           estaProcesado={estaProcesado}
         />
-      <MetodosPagoModal showRubrosModal={showModal} setShowRubrosModal={setShowModal} />
-
+        <MetodosPagoModal showRubrosModal={showModal} setShowRubrosModal={setShowModal} />
       </div>
     </div>
   );

@@ -95,6 +95,11 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
               icon: <BsPerson />,
             },
             {
+              title: "Cobranzas",
+              href: "/informes/cobranzas",
+              icon: <CiClock2 />,
+            },
+            {
               title: "Cobranzas por Vencimiento",
               href: "/informes/cobranza-vencim",
               icon: <CiClock2 />,

@@ -9,10 +9,10 @@ interface TablaProps {
 }
 
 export default function Tabla({ estaProcesado, className }: TablaProps) {
-  const { status } = useCobranzasStore();
+  const { status, cobranzas } = useCobranzasStore();
 
   const cobranzasColumns: Array<ExtendedColumn<any>> = [
-    { key: "fecha", label: "Fecha", minWidth: "90", maxWidth: "200", resaltar: true },
+    { key: "fecha", label: "Fecha", minWidth: "90", maxWidth: "200",  },
     { key: "cantidad", label: "Cant.", minWidth: "50", maxWidth: "520", resaltar: true },
     { key: "importeE", label: "Imp. Efe $", minWidth: "90", maxWidth: "120", resaltar: true },
     { key: "importeD", label: "Imp. Déb $", minWidth: "90", maxWidth: "520", resaltar: true },
@@ -29,7 +29,7 @@ export default function Tabla({ estaProcesado, className }: TablaProps) {
   ];
 
   const tablaProps = {
-    datosParaTabla: data,
+    datosParaTabla: cobranzas,
     objectColumns: cobranzasColumns,
     estaProcesado: estaProcesado,
     status: status,
@@ -42,28 +42,28 @@ export default function Tabla({ estaProcesado, className }: TablaProps) {
       withoutPadding: true,
       viewport1440: {
         widthContainer1440px: "",
-        heightContainer1440px: "",
+        heightContainer1440px: "43rem",
         addCellClass1440px: "max-height: 40px;",
       },
       viewport1536: {
-        heightContainer1536px: "9rem",
+        heightContainer1536px: "41rem",
         widthContainer1536px: "",
         addCellClass1536px: "max-height: 60px;",
       },
       viewport1920: {
         widthContainer1920px: "",
-        heightContainer1920px: "",
+        heightContainer1920px: "45rem",
       },
     },
     objectFooter:{
         footer: true,
-        footerHeight: "h-4",
-        datosFooter: data[9],
+        footerHeight: "h-8",
+        datosFooter: estaProcesado ? data[9] : [],
     }
   };
 
   return (
-    <div className={`${className} overflow-x-scroll`}>
+    <div className={`${className} `}>
       <TablaDefault props={tablaProps} />
     </div>
   );

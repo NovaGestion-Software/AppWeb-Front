@@ -97,12 +97,13 @@ export default function Botonera({ data, datosParaFooter, estaProcesado, disable
   };
 
   return (
-    <div className={`${className} flex items-center justify-center gap-4 px-1 py-1  rounded-lg 2xl:h-14`}>
+    <div className={`${className} flex items-center justify-center gap-4  rounded-lg `}>
       <ActionButton text="Sucursales" icon={<FaStoreAlt size={15} />}
        addClassName="h-7  rounded-md text-xs v1440:h-8 v1536:h-9 v1536:px-6 v1536:text-sm" onClick={() => setShowModalSucursales(true)} 
        disabled={!estaProcesado} color="blue"/>{' '}
       <HerramientasInforme 
-      data={data} estaProcesado={estaProcesado} handleExportExcel={handleExportExcel} handlePrint={handlePrint} disabledPrint={disabled} disabledClean={disabled} handleClean={handleClearData} />
+      data={data} estaProcesado={estaProcesado} handleExportExcel={handleExportExcel} 
+      handlePrint={handlePrint} disabledExportExcel={disabled}  disabledPrint={disabled} disabledClean={disabled} handleClean={handleClearData} />
       <ModalFiltro<SucursalesModal>
         title="Sucursales"
         renderItem={renderSucursalesItem}
