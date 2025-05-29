@@ -3,14 +3,14 @@
 @tailwind utilities;
 
 /* Para ocultar los botones de aumentar/disminuir en navegadores modernos */
-input[type='number']::-webkit-outer-spin-button,
-input[type='number']::-webkit-inner-spin-button {
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
 
 /* Para ocultar los botones en Firefox */
-input[type='number'] {
+input[type="number"] {
   -moz-appearance: textfield;
 }
 
@@ -87,7 +87,7 @@ html {
   }
 }
 
-.noneScroll{
+.noneScroll {
   scrollbar-width: none;
 }
 
@@ -125,31 +125,31 @@ html {
   background-color: #555; /* Color del "thumb" al pasar el ratón */
 }
 
-.grid12{
+.grid12 {
   display: grid;
-  grid-template-columns: repeat(14,5rem);
-  grid-template-rows: repeat(14,2rem);
+  grid-template-columns: repeat(14, 5rem);
+  grid-template-rows: repeat(14, 2rem);
 }
 
- @media (min-width: 1440px) {
-   .grid12{
-  display: grid;
-  grid-template-columns: repeat(16,4.750rem);
-  grid-template-rows: repeat(14,3.350rem);
+@media (min-width: 1440px) {
+  .grid12 {
+    display: grid;
+    grid-template-columns: repeat(16, 4.75rem);
+    grid-template-rows: repeat(14, 3.35rem);
+  }
 }
- @media (min-width: 1536px) {
-   .grid12{
-  display: grid;
-  grid-template-columns: repeat(16,5.150rem);
-  grid-template-rows: repeat(14,3.250rem);
-}
+@media (min-width: 1536px) {
+  .grid12 {
+    display: grid;
+    grid-template-columns: repeat(16, 5.15rem);
+    grid-template-rows: repeat(14, 3.25rem);
+  }
 }
 
- @media (min-width: 1920px) {
-   .grid12{
-  display: grid;
-  grid-template-columns: repeat(16,6.650rem);
-  grid-template-rows: repeat(16,3rem);
-}
-}
+@media (min-width: 1920px) {
+  .grid12 {
+    display: grid;
+    grid-template-columns: repeat(16, 6.65rem);
+    grid-template-rows: repeat(16, 3rem);
+  }
 }

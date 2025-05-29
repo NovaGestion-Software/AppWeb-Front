@@ -19,22 +19,20 @@ export default function ShowModalButtons({ props, className, estaProcesado }: { 
   const setShowPlanes = propsShowModal?.setShowPlanes;
 
   return (
-    <div
-      className={`${className} `}
-    >
+    <div className={`${className} `} >
       <ActionButton text="Sucursales" 
        onClick={() => setShowSucursales(true)}  
-       addClassName="h-5  rounded-md text-[0.500rem] v1440:h-8 v1536:h-8 v1536:px-6 v1536:text-sm"
+       addClassName="h-5  rounded-md text-xxs v1440:h-8 v1536:h-8 v1536:px-6 v1536:text-sm"
        disabled={!estaProcesado} 
        color="blue" icon={<FaWarehouse size={12}  />} />
 
       <ActionButton text="Planes"  
       onClick={() => setShowPlanes(true)} disabled={!estaProcesado} color="blue"  icon={<MdReceiptLong  size={12}  />}
-      addClassName="h-5  rounded-md text-[0.500rem]  v1440:h-8 v1536:h-8 v1536:px-6 v1536:text-sm" />
+      addClassName="h-5  rounded-md text-xxs  v1440:h-8 v1536:h-8 v1536:px-6 v1536:text-sm" />
 
       <ActionButton text="Clientes"  color="blue" 
       disabled={!estaProcesado} onClick={() => setShowClientes(true)}    icon={<BsPerson size={12}  />}
-      addClassName="h-5 rounded-md text-[0.500rem]  v1440:h-8 v1536:h-8 v1536:px-6 v1536:text-sm" />
+      addClassName="h-5 rounded-md text-xxs  v1440:h-8 v1536:h-8 v1536:px-6 v1536:text-sm" />
     </div>
   );
 }

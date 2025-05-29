@@ -1,4 +1,4 @@
-import {  ViewTitle } from "@/frontend-resourses/components";
+import { ViewTitle } from "@/frontend-resourses/components";
 import ShowModalButtons from "./Componentes/ShowModalButtons";
 import { useState } from "react";
 import { useMorosidadStore } from "./Store/store";
@@ -13,6 +13,10 @@ import Totales from "../cobranzaXVencim/Complementos/Totales";
 import RadioGroupFiltro from "@/frontend-resourses/components/Inputs/RadioGroupFiltros";
 import TotalesVert from "./Componentes/Totales";
 import ContadorCuotas from "./Componentes/ContadorCuotas";
+
+// Componente contenedor
+const Card = ({ children, className }: {children?: React.ReactNode, className?: string;}) => 
+<div className={`${className} bg-white p-1 rounded-lg overflow-hidden shadow-sm shadow-gray-600`}>{children}</div>;
 
 export default function MorosidadView() {
   const { status, setFechas, setFecha, checkboxSeleccionados, setCheckboxSeleccionados } = useMorosidadStore();
@@ -56,12 +60,12 @@ export default function MorosidadView() {
       {
         titulo: "Emitido",
         icono: "💰",
-        valor:  estaProcesado ?  13160073.0 : 0,
+        valor: estaProcesado ? 13160073.0 : 0,
       },
       {
         titulo: "Cobrado",
         icono: "💵",
-        valor:  estaProcesado ?  886042141203 : 0,
+        valor: estaProcesado ? 886042141203 : 0,
       },
       {
         titulo: "Mora Bruta",
@@ -98,7 +102,6 @@ export default function MorosidadView() {
     labelDateInput: true,
     labelDatePicker: "Fecha Recibos",
     setFecha: setFecha,
-
   };
   const propsRangePicker = {
     labelRangeInput: true,
@@ -106,6 +109,7 @@ export default function MorosidadView() {
     labelRangePicker2: "Vto Final",
     setFechas: setFechas,
   };
+
   return (
     <div className="min-h-screen">
       <ViewTitle title="Morosidad" />
@@ -139,17 +143,17 @@ export default function MorosidadView() {
           estaProcesado={estaProcesado}
           primarySource="range"
           variant="both"
-
         />
-        
-        <ShowModalButtons
-          estaProcesado={estaProcesado}
-          className="flex gap-3 bg-white w-fit
-           p-1 px-2 h-8 v1440:h-10 rounded-lg  items-center 
-         col-start-8 col-span-3 v1440:col-start-8 v1440:mt-3 row-start-1 
-         v1536:mt-0 v1536:h-14 v1536:col-start-9 "
-          props={propsShowModales}
-        />
+        <Card className="col-start-7 col-span-3  flex gap-3 w-fit
+           v1440:h-10 rounded-lg  items-center 
+          v1440:col-start-8 v1440:mt-3 row-start-1 
+         v1536:mt-0 v1536:h-14 v1536:col-start-9">
+          <ShowModalButtons
+            estaProcesado={estaProcesado}
+            className="flex gap-1 "
+            props={propsShowModales}
+          />
+        </Card>
 
         <Botonera
           className="bg-white w-fit p-1 px-2 h-8
@@ -161,15 +165,26 @@ export default function MorosidadView() {
           estaProcesado={estaProcesado}
           handleClean={handleClearData}
         />
-        <TablaLocalidad estaProcesado={estaProcesado} className="row-start-4 row-span-10 col-span-4 col-start-1 
-        v1440:col-span-5  v1440:col-start-1 v1920:row-span-12 v1920:row-start-4  " />
-        <TablaCategoria estaProcesado={estaProcesado} 
-        className="row-start-4 row-span-7 col-span-3 col-start-5
-        v1440:col-span-4 v1440:col-start-6  v1920:row-span-9 v1920:row-start-4" />
-        <TablaRango estaProcesado={estaProcesado} className="row-start-3 row-span-6 col-span-4 col-start-8
-        v1440:col-span-5 v1440:col-start-10 v1920:row-span-8  v1920:row-start-3" />
-        <TablaActividad estaProcesado={estaProcesado} className="row-start-9 row-span-5 col-span-4 col-start-8
-        v1440:col-span-5 v1440:col-start-10 v1920:row-start-11" />
+        <TablaLocalidad
+          estaProcesado={estaProcesado}
+          className="row-start-4 row-span-10 col-span-4 col-start-1 
+        v1440:col-span-5  v1440:col-start-1 v1920:row-span-12 v1920:row-start-4  "
+        />
+        <TablaCategoria
+          estaProcesado={estaProcesado}
+          className="row-start-4 row-span-7 col-span-3 col-start-5
+        v1440:col-span-4 v1440:col-start-6  v1920:row-span-9 v1920:row-start-4"
+        />
+        <TablaRango
+          estaProcesado={estaProcesado}
+          className="row-start-3 row-span-6 col-span-4 col-start-8
+        v1440:col-span-5 v1440:col-start-10 v1920:row-span-8  v1920:row-start-3"
+        />
+        <TablaActividad
+          estaProcesado={estaProcesado}
+          className="row-start-9 row-span-5 col-span-4 col-start-8
+        v1440:col-span-5 v1440:col-start-10 v1920:row-start-11"
+        />
 
         <Totales
           className="rounded-lg  col-start-5 col-span-3  
@@ -178,7 +193,7 @@ export default function MorosidadView() {
         v1440:row-start-11  v1440:row-span-3   
         v1536:col-start-6 v1920:row-start-13 v1536:pb-2 "
           // principales={estaProcesado ? totalesProps.principales : []}
-          extras={ totalesProps.extras}
+          extras={totalesProps.extras}
         />
 
         <RadioGroupFiltro
@@ -206,13 +221,19 @@ export default function MorosidadView() {
           labelClassName="text-[0.5rem] w-[5.4rem] v1440:text-xs v1440:w-[9rem]   "
           inputClassName="w-2.5 h-2.5 -mr-1 v1440:w-3 v1440:h-3 v1440:mr-1  "
         />
-        <ContadorCuotas disabled={!estaProcesado}  className="col-start-12 row-start-7 my-1
-        v1440:col-start-[16] v1440:col-span-1  v1920:col-start-[15] v1920:row-start-5" />
+        <ContadorCuotas
+          disabled={!estaProcesado}
+          className="col-start-12 row-start-7 my-1
+        v1440:col-start-[16] v1440:col-span-1  v1920:col-start-[15] v1920:row-start-5"
+        />
 
-        <TotalesVert className="row-start-8 col-start-12 row-span-6 p-1 
+        <TotalesVert
+          className="row-start-8 col-start-12 row-span-6 p-1 
         rounded-md shadow-md shadow-gray-600 w-[5.8rem] bg-white 
         v1440:col-start-[15] v1440:col-span-2 v1440:w-full v1440:row-span-4 
-        v1536:row-span-7 v1536:h-fit v1536:py-3 v1920:row-start-11 v1920:col-span-2 v1920:w-fit v1920:p-3 " items={totalesVertProps} />
+        v1536:row-span-7 v1536:h-fit v1536:py-3 v1920:row-start-11 v1920:col-span-2 v1920:w-fit v1920:p-3 "
+          items={totalesVertProps}
+        />
       </div>
     </div>
   );
