@@ -1,7 +1,6 @@
 import { useCallback } from 'react';
 import * as XLSX from 'xlsx';
 import HerramientasInforme from '../../_components/HerramientasInforme';
-import { Card } from '@/frontend-resourses/components/Cards/CardBase';
 
 interface HerramientasComponentProps {
   data: Record<string, any>[]; // Ahora acepta cualquier estructura de datos
@@ -83,7 +82,7 @@ export default function HerramientasComponent({
   });
 
   return (
-    <Card className={`${className} `}>
+    <div className={`${className}`}>
       <HerramientasInforme
         data={data}
         estaProcesado={estaProcesado}
@@ -95,6 +94,6 @@ export default function HerramientasComponent({
         handleClean={handleClearData}
         >
       </HerramientasInforme>
-    </Card>
+    </div>
   );
 }

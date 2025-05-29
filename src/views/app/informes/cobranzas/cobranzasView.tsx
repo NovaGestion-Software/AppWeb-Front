@@ -7,6 +7,7 @@ import Botonera from "./Componentes/Botonera";
 import RadioGroupFiltro from "@/frontend-resourses/components/Inputs/RadioGroupFiltros";
 import Tabla from "./Componentes/Tabla";
 import { data } from "./ts/data";
+import { Card } from "@/frontend-resourses/components/Cards/CardBase";
 
 export default function CobranzasView() {
   const {
@@ -59,33 +60,37 @@ export default function CobranzasView() {
           grid grid-cols-12 grid-rows-12 
           v1440:grid-cols-11"
       >
-        <RangeDatesInput
-          className="col-span-5 col-start-1 w-[30rem]  bg-white p-2 
-                    v1440:w-[32rem] v1440:col-start-1 v1440:col-span-4 v1440:py-6
-                    v1536:col-span-5 v1536:w-[33rem]"
-          textoBotones={{ fetch: "Procesar", clear: "Borrar" }}
-          conBotones={true}
-          estado={status}
-          showPresets={true}
-          rangeDatePicker={propsRangePicker}
-          onClearData={handleClearData}
-          onFetchData={handleFetchData}
-          estaProcesado={estaProcesado}
-          variant="range"
-          primarySource="range"
-        />
-
-        <RadioGroupFiltro
-          className="justify-center gap-3 p-2 h-10
-           col-span-4 col-start-6 row-start-1
-           v1440:py-6 v1440:col-start-5 v1440:ml-10  v1440:w-[25rem]
-           v1536:-ml-20 v1536:col-start-6 v1536:py-7"
-          grupo="grupo1"
-          opciones={["Todos", "Crédito", "Cta.Cte.", "Plan de Pago"]}
-          checkboxSeleccionados={checkboxSeleccionados}
-          setCheckboxSeleccionados={setCheckboxSeleccionados}
-          disabled={!estaProcesado}
-        />
+        <Card
+          className=" py-[0px] col-span-5 col-start-1 w-[30rem]
+                    v1440:w-[32rem] v1440:col-start-1 v1440:col-span-4 v1440:py-1
+                    v1536:col-span-5 v1536:w-[33rem] v1536:py-[0px] v1920:py-[2px] ">
+          <RangeDatesInput
+            textoBotones={{ fetch: "Procesar", clear: "Borrar" }}
+            conBotones={true}
+            estado={status}
+            showPresets={true}
+            rangeDatePicker={propsRangePicker}
+            onClearData={handleClearData}
+            onFetchData={handleFetchData}
+            estaProcesado={estaProcesado}
+            variant="range"
+            primarySource="range"
+          />
+        </Card>
+        <Card
+          className="p-2 h-10 py-2.5 col-span-4 col-start-6 row-start-1 
+          v1440:col-start-5 v1440:ml-10  v1440:w-[25rem] v1440:py-3.5  
+          v1536:-ml-20 v1536:col-start-6 v1536:py-[17px]  v1920:py-5"
+        >
+          <RadioGroupFiltro
+            className="justify-center gap-3 "
+            grupo="grupo1"
+            opciones={["Todos", "Crédito", "Cta.Cte.", "Plan de Pago"]}
+            checkboxSeleccionados={checkboxSeleccionados}
+            setCheckboxSeleccionados={setCheckboxSeleccionados}
+            disabled={!estaProcesado}
+          />
+        </Card>
 
         <Botonera
           data={exampleData}
