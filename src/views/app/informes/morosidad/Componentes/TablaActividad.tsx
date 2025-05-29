@@ -1,8 +1,7 @@
-import { ActionButton, TablaDefault } from "@/frontend-resourses/components";
+import { TablaDefault } from "@/frontend-resourses/components";
 import { ExtendedColumn } from "@/frontend-resourses/components/Tables/types";
 import { useMorosidadStore } from "../Store/store";
 import { dataTablaActividad } from "../ts/data";
-import { BotonesTabla } from "./BotonesTablas";
 interface TablaActividadProps {
   estaProcesado: boolean;
   className?: string;
