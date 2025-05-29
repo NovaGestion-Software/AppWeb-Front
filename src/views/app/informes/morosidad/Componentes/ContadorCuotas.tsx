@@ -12,7 +12,7 @@ export default function ContadorCuotas({ className, disabled }: { className?: st
     }
   };
   return (
-    <div className={`${className} `}>
+    <div className={`${className}`}>
       <FlexibleInputField
         arrows={true}
         label="Cuotas"
@@ -21,7 +21,7 @@ export default function ContadorCuotas({ className, disabled }: { className?: st
         value={value.toString()}
         onChange={handleChange}
         stacked={true}
-        containerClassName="bg-white p-2 rounded-lg relative -top-6 v1440:top-0 "
+        containerClassName="bg-white  shadow-sm shadow-gray-600  p-2 rounded-lg relative -top-6 v1440:top-0 "
         labelAlign="left"
         disabled={disabled}
         labelClassName="w-fit -mb-1 text-[0.625rem] relative"

@@ -1,4 +1,5 @@
 import { ActionButton } from "@/frontend-resourses/components";
+import { Card } from "@/frontend-resourses/components/Cards/CardBase";
 import { Status } from "@/frontend-resourses/components/types";
 import { FaWarehouse } from "react-icons/fa";
 
@@ -18,9 +19,7 @@ export default function ShowModalButtons({ props, className }: { props: ShowModa
   const setShowRubros = propsShowModal?.setShowRubros;
 
   return (
-    <div
-      className={`${className} `}
-    >
+    <Card className={`${className} `}>
       <ActionButton text="Depósitos" 
        onClick={() => setShowDepositos(true)}  
        addClassName="h-7  rounded-md text-xs v1440:h-8 v1536:h-8 v1536:px-6 v1536:text-sm"
@@ -34,6 +33,6 @@ export default function ShowModalButtons({ props, className }: { props: ShowModa
       <ActionButton text="Marcas"  color="blue" 
       disabled={status === "idle"} onClick={() => setShowMarcas(true)}  
       addClassName="h-7  rounded-md text-xs v1440:h-8 v1536:h-8 v1536:px-6 v1536:text-sm" />
-    </div>
+    </Card>
   );
 }

@@ -292,7 +292,7 @@ export default function TablaSeccionRubro({ data, showRubrosModal, setShowRubros
         className="flex flex-col gap-4  w-[45rem] px-4
        p-2  overflow-hidden  h-[29rem] 2xl:h-[38rem] mx-auto"
       >
-        <BusquedaInputs props={propsBusqueda} className="py-1  w-fit" />
+        <BusquedaInputs props={propsBusqueda} className="py-6 " />
 
         <div className="flex gap-2 items-center ">
           <CheckboxInput

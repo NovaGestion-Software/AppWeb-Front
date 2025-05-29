@@ -266,16 +266,11 @@ useEffect(() => {
         {/**SHOW DEPOSITOS, RUBROS Y MARCAS*/}
         <ShowModalButtons
           props={propsShowModales}
-          className="flex gap-6 items-center w-fit h-10
-                    bg-white px-3 rounded-lg  
+          className="flex gap-6 items-center h-10
                       col-start-2 col-span-5 row-start-2 
                       v1536:col-start-2 v1536:relative right-8  
                       v1920:col-start-2 v1920:-right-12 "
         />
-        {/**Inputs Busqueda*/}
-        {/* <BusquedaStock
-        
-        /> */}
         <BusquedaInputs
           props={propsBusqueda}
           className=" w-fit bg-white relative right-2.5
@@ -285,7 +280,7 @@ useEffect(() => {
                       v1920:col-start-5 "
         />
         <HerramientasComponent
-          className=" flex  w-fit h-10 px-2 relative left-12 items-center bg-white  rounded-lg
+          className=" flex  w-fit  py-1.5  relative left-12 items-center 
                       col-start-9 col-span-2 row-start-2
                       v1440:-left-3
                       v1536:col-span-3 v1536:col-start-8 v1536:left-24

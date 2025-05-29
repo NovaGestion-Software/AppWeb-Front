@@ -13,10 +13,7 @@ import Totales from "../cobranzaXVencim/Complementos/Totales";
 import RadioGroupFiltro from "@/frontend-resourses/components/Inputs/RadioGroupFiltros";
 import TotalesVert from "./Componentes/Totales";
 import ContadorCuotas from "./Componentes/ContadorCuotas";
-
-// Componente contenedor
-const Card = ({ children, className }: {children?: React.ReactNode, className?: string;}) => 
-<div className={`${className} bg-white p-1 rounded-lg overflow-hidden shadow-sm shadow-gray-600`}>{children}</div>;
+import { Card } from "@/frontend-resourses/components/Cards/CardBase";
 
 export default function MorosidadView() {
   const { status, setFechas, setFecha, checkboxSeleccionados, setCheckboxSeleccionados } = useMorosidadStore();
@@ -117,54 +114,55 @@ export default function MorosidadView() {
         className="v1440:h-auto w-auto  ml-4 p-2 gap-2  
         grid12  v1920:mx-8"
       >
-        <RadioGroupFiltro
-          className="text-[0.5rem] col-span-3 row-start-1 w-fit gap-0 px-2 items-center h-8
-          v1440:h-10 v1440:mt-3"
-          grupo="grupo1"
-          opciones={["Fecha Emisión", "Vencimiento"]}
-          checkboxSeleccionados={checkboxSeleccionados}
-          setCheckboxSeleccionados={setCheckboxSeleccionados}
-          disabled={estaProcesado}
-          labelClassName="text-[0.5rem] w-[4.5rem] v1440:text-[0.6rem] v1440:w-[5.5rem]    "
-          inputClassName="w-2.5 h-2.5"
-        />
-
-        <RangeDatesInput
-          className=" bg-white  col-start-1 col-span-7 w-fit px-1 
-          row-start-2   
-          v1440: v1440:col-start-1 v1440:mt-2 v1536:px-2  "
-          conBotones={true}
-          estado={status}
-          datePicker={propsDatePicker}
-          rangeDatePicker={propsRangePicker}
-          showPresets={true}
-          onClearData={handleClearData}
-          onFetchData={handleFetchData}
-          estaProcesado={estaProcesado}
-          primarySource="range"
-          variant="both"
-        />
-        <Card className="col-start-7 col-span-3  flex gap-3 w-fit
-           v1440:h-10 rounded-lg  items-center 
-          v1440:col-start-8 v1440:mt-3 row-start-1 
-         v1536:mt-0 v1536:h-14 v1536:col-start-9">
-          <ShowModalButtons
-            estaProcesado={estaProcesado}
-            className="flex gap-1 "
-            props={propsShowModales}
+        <Card
+          className="col-span-3 row-start-1 w-fit gap-0 px-2 items-center h-8
+          v1440:h-10 v1440:mt-3">
+          <RadioGroupFiltro
+            grupo="grupo1"
+            className="w-[] gap-"
+            opciones={["Fecha Emisión", "Vencimiento"]}
+            checkboxSeleccionados={checkboxSeleccionados}
+            setCheckboxSeleccionados={setCheckboxSeleccionados}
+            disabled={estaProcesado}
+            labelClassName=" w-fit mx-1 text-xxs v1440:w-[5.5rem]    "
+            inputClassName="w-2.5 h-2.5"
           />
         </Card>
 
-        <Botonera
-          className="bg-white w-fit p-1 px-2 h-8
-          col-span-3 col-start-11 
+        <Card
+          className=" col-start-1 col-span-7 row-start-2   
+          v1440: v1440:col-start-1 v1440:mt-2 v1536:px-2">
+          <RangeDatesInput
+            conBotones={true}
+            estado={status}
+            datePicker={propsDatePicker}
+            rangeDatePicker={propsRangePicker}
+            showPresets={true}
+            onClearData={handleClearData}
+            onFetchData={handleFetchData}
+            estaProcesado={estaProcesado}
+            primarySource="range"
+            variant="both"
+          />
+        </Card>
+
+        <Card
+          className="col-start-7 col-span-3  flex gap-3 w-fit
+           v1440:h-10 rounded-lg  items-center 
+          v1440:col-start-8 v1440:mt-3 row-start-1 
+         v1536:mt-0 v1536:h-14 v1536:col-start-9"
+        >
+          <ShowModalButtons estaProcesado={estaProcesado} className="flex gap-1 " props={propsShowModales} />
+        </Card>
+
+        <Card
+          className="col-span-3 col-start-11 
           v1440:col-start-[15] v1440:col-span-2 v1440:row-start-1  v1440:h-11 v1440:mt-2
-          v1536:col-start-[14] v1536:-ml-6 v1536:px-4 v1536:mt-0   "
-          data={exampleData}
-          disabled={!estaProcesado}
-          estaProcesado={estaProcesado}
-          handleClean={handleClearData}
-        />
+          v1536:col-start-[14] v1536:-ml-6 v1536:px-4 v1536:mt-0  "
+        >
+          <Botonera className=" " data={exampleData} disabled={!estaProcesado} estaProcesado={estaProcesado} handleClean={handleClearData} />
+        </Card>
+
         <TablaLocalidad
           estaProcesado={estaProcesado}
           className="row-start-4 row-span-10 col-span-4 col-start-1 
@@ -187,7 +185,7 @@ export default function MorosidadView() {
         />
 
         <Totales
-          className="rounded-lg  col-start-5 col-span-3  
+        className="rounded-lg  col-start-5 col-span-3  
         row-start-11 row-span-3 h-fit pb-1 w-fit
         v1440:col-span-4 v1440:col-start-6
         v1440:row-start-11  v1440:row-span-3   
@@ -196,43 +194,47 @@ export default function MorosidadView() {
           extras={totalesProps.extras}
         />
 
-        <RadioGroupFiltro
-          className="text-xs col-start-12  col-span-1 row-start-3  
-          row-span-2 h-fit flex-col w-fit p-2 justify-start
-          v1440:col-start-[15] v1440:col-span-2 "
-          grupo="grupo2"
-          opciones={["Todos", "Sólo Morosos"]}
-          checkboxSeleccionados={checkboxSeleccionados}
-          setCheckboxSeleccionados={setCheckboxSeleccionados}
-          disabled={!estaProcesado}
-          labelClassName="text-[0.5rem] w-[4.5rem]  v1440:text-xs v1440:w-[8rem] "
-          inputClassName="w-2.5 h-2.5 -mr-1 v1440:w-3 v1440:h-3 v1440:mr-1"
-        />
-        <RadioGroupFiltro
-          className="text-xs col-start-12 col-span-1 row-start-5 row-span-2
-            w-fit h-fit p-2 pr-0.5 flex-col 
-          justify-start
-          v1440:col-start-[15]  v1920:row-start-4 "
-          grupo="grupo3"
-          opciones={["% Mora Total", "Mora Seleccionado"]}
-          checkboxSeleccionados={checkboxSeleccionados}
-          setCheckboxSeleccionados={setCheckboxSeleccionados}
-          disabled={!estaProcesado}
-          labelClassName="text-[0.5rem] w-[5.4rem] v1440:text-xs v1440:w-[9rem]   "
-          inputClassName="w-2.5 h-2.5 -mr-1 v1440:w-3 v1440:h-3 v1440:mr-1  "
-        />
+        <Card
+          className="col-start-12  col-span-1 row-start-3 row-span-2 v1440:col-start-[15] v1440:col-span-2">
+          <RadioGroupFiltro
+            className=" flex-col justify-start  "
+            grupo="grupo2"
+            opciones={["Todos", "Sólo Morosos"]}
+            checkboxSeleccionados={checkboxSeleccionados}
+            setCheckboxSeleccionados={setCheckboxSeleccionados}
+            disabled={!estaProcesado}
+            labelClassName="text-xxs w-[5rem]  v1440:text-xs v1440:w-[8rem] "
+            inputClassName="w-2.5 h-2.5 -mr-1 v1440:w-3 v1440:h-3 v1440:mr-1"
+          />
+        </Card>
+
+        
+        <Card
+          className="col-start-12 col-span-1 row-start-4 row-span-2 mt-6 v1440:col-start-[15]  v1920:row-start-4 " >
+          <RadioGroupFiltro
+            className=" p-2 pr-0.5 flex-col justify-start "
+            grupo="grupo3"
+            opciones={["% Mora Total", "Mora Seleccionado"]}
+            checkboxSeleccionados={checkboxSeleccionados}
+            setCheckboxSeleccionados={setCheckboxSeleccionados}
+            disabled={!estaProcesado}
+            labelClassName="text-xxs w-[6rem] v1440:text-xs v1440:w-[9rem]   "
+            inputClassName="w-2.5 h-2.5 -mr-1 v1440:w-3 v1440:h-3 v1440:mr-1  "
+          />
+        </Card>
+
         <ContadorCuotas
-          disabled={!estaProcesado}
-          className="col-start-12 row-start-7 my-1
-        v1440:col-start-[16] v1440:col-span-1  v1920:col-start-[15] v1920:row-start-5"
+        disabled={!estaProcesado}
+        className="col-start-12 row-start-7 my-1
+        v1440:col-start-[16] v1440:col-span-1  v1920:col-start-[15] v1920:row-start-6"
         />
 
         <TotalesVert
-          className="row-start-8 col-start-12 row-span-6 p-1 
+        className="row-start-8 col-start-12 row-span-6 p-1 
         rounded-md shadow-md shadow-gray-600 w-[5.8rem] bg-white 
         v1440:col-start-[15] v1440:col-span-2 v1440:w-full v1440:row-span-4 
         v1536:row-span-7 v1536:h-fit v1536:py-3 v1920:row-start-11 v1920:col-span-2 v1920:w-fit v1920:p-3 "
-          items={totalesVertProps}
+        items={totalesVertProps}
         />
       </div>
     </div>
