@@ -160,7 +160,7 @@ export default function MorosidadView() {
           v1440:col-start-[15] v1440:col-span-2 v1440:row-start-1  v1440:h-11 v1440:mt-2
           v1536:col-start-[14] v1536:-ml-6 v1536:px-4 v1536:mt-0  "
         >
-          <Botonera className=" " data={exampleData} disabled={!estaProcesado} estaProcesado={estaProcesado} handleClean={handleClearData} />
+          <Botonera data={exampleData} disabled={!estaProcesado} estaProcesado={estaProcesado} handleClean={handleClearData} />
         </Card>
 
         <TablaLocalidad

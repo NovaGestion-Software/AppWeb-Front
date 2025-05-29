@@ -1,8 +1,4 @@
-import { useCallback } from "react";
 import HerramientasInforme from "../../_components/HerramientasInforme";
-import * as XLSX from "xlsx";
-
-
 interface BotoneraProps {
   data: Record<string, any>[];
   className?: string;
@@ -13,9 +9,6 @@ interface BotoneraProps {
 }
 
 export default function Botonera({ data, datosParaFooter, estaProcesado, disabled, className, handleClean }: BotoneraProps) {
-
-
-
 
   return (
     <div className={`${className}`}>
