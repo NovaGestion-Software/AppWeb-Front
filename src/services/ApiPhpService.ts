@@ -99,7 +99,7 @@ export async function obtenerProductos(secciones: string[], rubros: string[]) {
     const baseSeleccionada = entorno === "development" ? "apinovades" : "apinova"
     const url = `/${baseSeleccionada}/generico/obtenerProducto.php?_i={"_e":"${empresa}","_s":"08","_m":"${homologacion}"}`;
     console.log('url stock2', url)
-
+    
     const datos = { secciones, rubros };
     // console.log(datos);
     // Enviar las secciones y rubros en el cuerpo de la solicitud
@@ -107,6 +107,9 @@ export async function obtenerProductos(secciones: string[], rubros: string[]) {
       method: 'POST',
       data: datos,
     });
+
+    
+    console.log('url data', data)
 
     return data;
   } catch (error) {

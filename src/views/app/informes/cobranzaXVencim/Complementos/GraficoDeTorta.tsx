@@ -58,7 +58,9 @@ export default function GraficoDeTorta({ className, estaProcesado }: { className
     <div className={`${className} noneScroll shadow-md  shadow-gray-600`}>
       <DonutCard titulo={`Conceptos`} label={""} 
       flexRow={true }
-      data={estaProcesado ? dataParaGrafico: []} categories={estaProcesado ? categorias: []} fetching={procesado} donutClassName="h-36 v1440:h-44 v1440:mt-4" />
+      data={estaProcesado ? dataParaGrafico : []} 
+      categories={estaProcesado ? categorias: []} fetching={procesado}
+      donutClassName="h-36 v1440:h-44 v1440:mt-4" />
     </div>
   );
 }

@@ -1,24 +1,24 @@
-import { useEffect, useState } from 'react';
-import { useMutation } from '@tanstack/react-query';
-import { useVentasHoraStore } from '@/views/app/informes/ventasXHora/store/useVentasHoraStore';
-import { obtenerVentasHora } from '@/services/ApiPhpService';
-import { ApiResponse, FechasRango, SucursalesModal, VentaPorHora } from '@/types';
-import { formatearNumero } from '@/utils';
-import ViewTitle from '@/frontend-resourses/components/Labels/ViewTitle';
-import dayjs from 'dayjs';
+import { useEffect, useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+import { useVentasHoraStore } from "@/views/app/informes/ventasXHora/store/useVentasHoraStore";
+import { obtenerVentasHora } from "@/services/ApiPhpService";
+import { ApiResponse, FechasRango, SucursalesModal, VentaPorHora } from "@/types";
+import { formatearNumero } from "@/utils";
+import ViewTitle from "@/frontend-resourses/components/Labels/ViewTitle";
+import dayjs from "dayjs";
 
-import HerramientasComponent from './components/HerramientasComponent';
-import TablaVentaPorHora from './components/TablaVentaPorHora';
-import showAlert from '@/utils/showAlert';
-import ModalFiltro from '@/frontend-resourses/components/Modales/ModalFiltro';
-import ActionButton from '@/frontend-resourses/components/Buttons/ActionButton';
-import GraficoConZoom from '@/frontend-resourses/components/Charts/GraficoConZoom';
-import RangeDatesInput from '@/frontend-resourses/components/Inputs/RangeDatesInput';
+import HerramientasComponent from "./components/HerramientasComponent";
+import TablaVentaPorHora from "./components/TablaVentaPorHora";
+import showAlert from "@/utils/showAlert";
+import ModalFiltro from "@/frontend-resourses/components/Modales/ModalFiltro";
+import ActionButton from "@/frontend-resourses/components/Buttons/ActionButton";
+import GraficoConZoom from "@/frontend-resourses/components/Charts/GraficoConZoom";
+import RangeDatesInput from "@/frontend-resourses/components/Inputs/RangeDatesInput";
 
-import { extraerItems, extraerItemsDeIndice, agruparPorIndice, crearDataParaTablaModular, obtenerValorMaximoConIndice } from '@/frontend-resourses/utils/dataManipulation';
-import { Destacados } from '@/frontend-resourses/components/Complementos/Destacados';
-import { ListaFiltrosAplicados } from '@/frontend-resourses/components/Complementos/ListaFiltrosAplicados';
-import { FaStoreAlt } from 'react-icons/fa';
+import { extraerItems, extraerItemsDeIndice, agruparPorIndice, crearDataParaTablaModular, obtenerValorMaximoConIndice } from "@/frontend-resourses/utils/dataManipulation";
+import { Destacados } from "@/frontend-resourses/components/Complementos/Destacados";
+import { ListaFiltrosAplicados } from "@/frontend-resourses/components/Complementos/ListaFiltrosAplicados";
+import { FaStoreAlt } from "react-icons/fa";
 
 export type ConfigKeys = {
   filtroKey: string;
@@ -71,19 +71,19 @@ export default function VentasHoraView() {
   const { mutate } = useMutation<ApiResponse, Error, FechasRango>({
     mutationFn: () => obtenerVentasHora(fechas),
     onMutate: () => {
-      setStatus('pending');
+      setStatus("pending");
     },
     onError: (error) => {
-      console.error('Error al obtener los datos:', error);
-      setStatus('error');
+      console.error("Error al obtener los datos:", error);
+      setStatus("error");
     },
     onSuccess: (data) => {
       // console.log(data.data);
       if (data.data.length === 0) {
         showAlert({
-          text: 'El rango de fecha seleccionado no contiene información',
-          icon: 'error',
-          cancelButtonText: 'Cerrar',
+          text: "El rango de fecha seleccionado no contiene información",
+          icon: "error",
+          cancelButtonText: "Cerrar",
           showCancelButton: true,
           timer: 2200,
         });
@@ -93,10 +93,10 @@ export default function VentasHoraView() {
       // setSucursalesSeleccionadas(data.data.map((sucursal) => sucursal.nsucursal));
       // setProcesado(true);
       // setFooter(true);
-      setStatus('success');
+      setStatus("success");
     },
     onSettled: () => {
-      setStatus('idle');
+      setStatus("idle");
     },
   });
 
@@ -105,45 +105,45 @@ export default function VentasHoraView() {
   const sucursalesSeleccionadasStr = sucursalesSeleccionadas.map((s) => s.nsucursal);
   // configuracion grafico
   const configuracionGrafico = [
-    { label: 'horaini', key: 'horaini' },
-    { label: 'nOperaciones', key: 'nOperaciones' },
+    { label: "horaini", key: "horaini" },
+    { label: "nOperaciones", key: "nOperaciones" },
   ];
 
   // extrae horarios para indice.
-  const indiceTabla = ventasPorHora ? extraerItemsDeIndice(ventasPorHora, 'info', 'horaini') : [];
+  const indiceTabla = ventasPorHora ? extraerItemsDeIndice(ventasPorHora, "info", "horaini") : [];
 
   // funcion agrupar por horario, te suma los totales en base a sumKey
   const config: ConfigKeys = {
-    filtroKey: 'nsucursal',
-    agrupadorKey: 'horaini',
-    innerArrayKey: 'info',
-    sumaKeys: ['importe', 'cantidad', 'pares'],
-    convertir: ['importe'],
+    filtroKey: "nsucursal",
+    agrupadorKey: "horaini",
+    innerArrayKey: "info",
+    sumaKeys: ["importe", "cantidad", "pares"],
+    convertir: ["importe"],
   };
   const { datos, totales } = agruparPorIndice(ventasPorHora, sucursalesSeleccionadasStr, indiceTabla, config, formatearNumero);
-  console.log('ventas horas', datos);
+  console.log("ventas horas", datos);
   // crea datos en estructura de tabla.
   const configTabla: ConfigTabla = {
-    agrupadorKey: 'horaini',
+    agrupadorKey: "horaini",
     columnas: [
       {
-        key: 'cantidad',
-        label: 'nOperaciones',
+        key: "cantidad",
+        label: "nOperaciones",
         calcularPorcentaje: true,
-        totalKey: 'cantidad',
+        totalKey: "cantidad",
       },
       {
-        key: 'importe',
-        label: 'importe',
+        key: "importe",
+        label: "importe",
         calcularPorcentaje: true,
-        totalKey: 'importe',
+        totalKey: "importe",
         parseNumber: true,
       },
       {
-        key: 'pares',
-        label: 'pares',
+        key: "pares",
+        label: "pares",
         calcularPorcentaje: true,
-        totalKey: 'pares',
+        totalKey: "pares",
       },
     ],
   };
@@ -163,39 +163,41 @@ export default function VentasHoraView() {
 
   // esto es para setar los highLight
   // obtiene la fila que tiene el mayor importe y su indice (horario)
-  const destacados = obtenerValorMaximoConIndice(filas, 'importe', 'horaini');
+  const destacados = obtenerValorMaximoConIndice(filas, "importe", "horaini");
   const maxImporteFormateado = formatearNumero(destacados.maxValue);
 
   // formateo con miles y centavos del importe maximo para el footer
   const totalImporteFormateado = formatearNumero(totales.importe);
 
   // seteo de destacados.
-  const indiceString = `${dayjs(fechas.from).format('DD/MM/YYYY')} - ${dayjs(fechas.to).format('DD/MM/YYYY')}`;
+  const indiceString = `${dayjs(fechas.from).format("DD/MM/YYYY")} - ${dayjs(fechas.to).format("DD/MM/YYYY")}`;
   const destacadosObject = {
     indice: indiceString,
     destacados: [
-      { label: 'Mayor Importe $', valor: maxImporteFormateado },
-      { label: 'Horario', valor: destacados.indice },
+      { label: "Mayor Importe $", valor: maxImporteFormateado },
+      { label: "Horario", valor: destacados.indice },
     ],
   };
   // FOOTER TABLA 1
-  const datosParaFooter = procesado ? {
-    hora: '',
-    nOperaciones: totales.cantidad,
-    porcentajeOperaciones: '',
-    pares: totales.pares,
-    porcentajePares: '',
-    importe: totalImporteFormateado,
-    porcentajeImporte: '',
-  } : {
-    hora: '',
-    nOperaciones: '',
-    porcentajeOperaciones: '',
-    pares: '',
-    porcentajePares: '',
-    importe: '',
-    porcentajeImporte: '',
-  };
+  const datosParaFooter = procesado
+    ? {
+        hora: "",
+        nOperaciones: totales.cantidad,
+        porcentajeOperaciones: "",
+        pares: totales.pares,
+        porcentajePares: "",
+        importe: totalImporteFormateado,
+        porcentajeImporte: "",
+      }
+    : {
+        hora: "",
+        nOperaciones: "",
+        porcentajeOperaciones: "",
+        pares: "",
+        porcentajePares: "",
+        importe: "",
+        porcentajeImporte: "",
+      };
 
   // render sucursalesitems
   const renderSucursalesItem = (item: SucursalesModal) => {
@@ -212,7 +214,7 @@ export default function VentasHoraView() {
       setProcesado(true);
       extraerItems({
         data: ventasPorHora,
-        itemsKeysGroup: { nsucursal: 'nsucursal', sucursal: 'sucursal' },
+        itemsKeysGroup: { nsucursal: "nsucursal", sucursal: "sucursal" },
         itemsSeleccionados: sucursalesSeleccionadas,
         setItemsDisponibles: setSucursalesDisponibles,
         setItemsSeleccionados: setSucursalesSeleccionadas,
@@ -233,14 +235,14 @@ export default function VentasHoraView() {
   // USAR ESCAPE PARA VACIAR INFORME
   useEffect(() => {
     const handleEscapeKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && ventasPorHora) {
+      if (e.key === "Escape" && ventasPorHora) {
         handleClearData();
       }
     };
-    window.addEventListener('keydown', handleEscapeKey);
+    window.addEventListener("keydown", handleEscapeKey);
     // Limpiar el event listener cuando el componente se desmonte
     return () => {
-      window.removeEventListener('keydown', handleEscapeKey);
+      window.removeEventListener("keydown", handleEscapeKey);
     };
   }, [ventasPorHora]);
   // HANDLE FETCH
@@ -248,8 +250,8 @@ export default function VentasHoraView() {
     try {
       mutate(dates);
     } catch (error) {
-      console.error('Error en la petición:', error);
-      alert('Error al obtener los datos');
+      console.error("Error en la petición:", error);
+      alert("Error al obtener los datos");
       setFoco(true);
     }
   };
@@ -263,9 +265,12 @@ export default function VentasHoraView() {
     setFoco(true);
   };
 
+  const propsRangePicker = {
+    setFechas: setFechas,
+  };
   return (
     <div className="h-screen ">
-      <ViewTitle title={'Ventas por Hora'} />
+      <ViewTitle title={"Ventas por Hora"} />
 
       <div className="flex flex-col h-fit mx-4">
         {/** BOTONERA */}
@@ -277,10 +282,10 @@ export default function VentasHoraView() {
           >
             <RangeDatesInput
               conBotones={true}
-              textoBotones={{ fetch: 'Procesar', clear: 'Borrar' }}
+              textoBotones={{ fetch: "Procesar", clear: "Borrar" }}
               onFetchData={handleFetchData}
               onClearData={handleClearData}
-              setFechas={setFechas}
+              rangeDatePicker={propsRangePicker}
               estado={status}
               setFocus={foco}
               estaProcesado={procesado}
@@ -293,8 +298,15 @@ export default function VentasHoraView() {
              rounded-lg col-span-3 col-start-9 
              v1536:h-14 v1536:col-span-2 v1536:col-start-9 v1536:left-4 "
           >
-            <ActionButton text="Sucursales" icon={<FaStoreAlt size={15} />} 
-             addClassName="h-7  rounded-md text-xs v1440:h-8 v1536:h-9 v1536:px-6 v1536:text-sm"  onClick={() => setShowModalSucursales(true)} disabled={!procesado} color="blue" size="xs" />{' '}
+            <ActionButton
+              text="Sucursales"
+              icon={<FaStoreAlt size={15} />}
+              addClassName="h-7  rounded-md text-xs v1440:h-8 v1536:h-9 v1536:px-6 v1536:text-sm"
+              onClick={() => setShowModalSucursales(true)}
+              disabled={!procesado}
+              color="blue"
+              size="xs"
+            />{" "}
             <HerramientasComponent data={filas} estaProcesado={procesado} datosParaFooter={datosParaFooter} disabled={!procesado} modalSucursales={false} handleClean={handleClearData} />
           </div>
         </div>
@@ -309,23 +321,24 @@ export default function VentasHoraView() {
               className="col-span-5 gap-2 2xl:col-start-2  
             flex flex-col items-center justify-evenly 
             2xl:justify-center 2xl:gap-6 2xl:items-center 
-            transition-all duration-500 ease-out">
+            transition-all duration-500 ease-out"
+            >
               {/* Lista Sucursales */}
-              <ListaFiltrosAplicados
-              className='w-[29rem] v1440:w-[32rem] v1536:w-[36rem] '
-               itemsDisponibles={sucursalesDisponiblesStr} 
-               itemsSeleccionados={sucursalesSeleccionadasStr} />
+              <ListaFiltrosAplicados className="w-[29rem] v1440:w-[32rem] v1536:w-[36rem] " itemsDisponibles={sucursalesDisponiblesStr} itemsSeleccionados={sucursalesSeleccionadasStr} />
 
               {/* Información de ventas */}
               <Destacados {...destacadosObject} />
 
               {/* Gráfico */}
-                <GraficoConZoom datosParaGraficos={filas} index="horaini"
-                className=' w-[29rem] v1440:w-[32rem] v1536:w-[36rem]  h-72' 
-                widthGraficoModal="w-[64rem] h-[28rem]" 
-                categorias={['nOperaciones']} 
-                tituloModal="N° Operaciones por Hora" 
-                keysMap={configuracionGrafico} />
+              <GraficoConZoom
+                datosParaGraficos={filas}
+                index="horaini"
+                className=" w-[29rem] v1440:w-[32rem] v1536:w-[36rem]  h-72"
+                widthGraficoModal="w-[64rem] h-[28rem]"
+                categorias={["nOperaciones"]}
+                tituloModal="N° Operaciones por Hora"
+                keysMap={configuracionGrafico}
+              />
             </div>
           )}
 
@@ -333,7 +346,7 @@ export default function VentasHoraView() {
           <div
             className={`flex bg-white  rounded-md w-fit h-fit 
                shadow shadow-gray-600  overflow-hidden  transition-all duration-500 ease-out  
-               ${procesado ? 'col-start-6 col-span-7 2xl:col-start-7 ' : ' col-start-6 col-span-7  2xl:col-start-7 '}`}
+               ${procesado ? "col-start-6 col-span-7 2xl:col-start-7 " : " col-start-6 col-span-7  2xl:col-start-7 "}`}
           >
             <TablaVentaPorHora isProcessing={procesado} dataParaTabla={filas} datosFooter={datosParaFooter} />
           </div>

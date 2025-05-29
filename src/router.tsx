@@ -12,6 +12,7 @@ import Layout from './Components/ui/layouts/Layout';
 import StockPorSeccionView from './views/app/stockSeccion/StockPorSeccionView';
 import VentasPorSeccionView from './views/app/informes/VentasPorSeccion/VentasPorSeccionView';
 import CobranzasView from './views/app/informes/cobranzas/cobranzasView';
+import MorosidadView from './views/app/informes/morosidad/MorosidadView';
 
 export default function Router() {
   return (
@@ -27,6 +28,7 @@ export default function Router() {
             <Route path="/informes">
               <Route path="cobranza-vencim" element={<CobranzaVencimView />} />
               <Route path="cobranzas" element={<CobranzasView />} />
+              <Route path="morosidad" element={<MorosidadView />} />
               <Route path="ventas-vend" element={<VentasXVendedorView />} />
               <Route path="ventas-seccion" element={<VentasPorSeccionView />} />
               <Route path="ventas-hora" element={<VentasHoraView />} />

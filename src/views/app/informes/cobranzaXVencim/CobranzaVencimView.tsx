@@ -111,6 +111,9 @@ export default function CobranzaVencimView() {
       },
     ],
   };
+      const propsRangePicker = {
+    setFechas: setFechas,
+  };
 
   return (
     <div className="min-h-screen">
@@ -126,11 +129,13 @@ export default function CobranzaVencimView() {
           textoBotones={{ fetch: "Procesar", clear: "Borrar" }}
           conBotones={true}
           estado={status}
-          setFechas={setFechas}
+          rangeDatePicker={propsRangePicker}
           showPresets={true}
           onClearData={handleClearData}
           onFetchData={handleFetchData}
           estaProcesado={estaProcesado}
+          variant="range"
+          primarySource="range"
         />
 
         <Botonera

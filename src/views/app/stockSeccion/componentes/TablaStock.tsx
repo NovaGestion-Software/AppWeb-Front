@@ -271,6 +271,7 @@ export default function TablaStock() {
     datosParaTabla: productos,
     objectColumns: productosColumns,
     selectFn: true,
+    withTooltip: true,
     objectStyles: {
       cursorPointer: true,
       heightContainer: "28rem",

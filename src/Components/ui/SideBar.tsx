@@ -4,7 +4,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { MdOutlineAttachMoney, MdOutlineCategory } from "react-icons/md";
 import { FaArrowCircleLeft, FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { RiDashboardFill } from "react-icons/ri";
-import { CiClock2, CiLogout } from "react-icons/ci";
+import { CiCalendar, CiClock2, CiLogout } from "react-icons/ci";
 import { TiHome } from "react-icons/ti";
 import Cookies from "js-cookie";
 import { GrDocumentTime } from "react-icons/gr";
@@ -103,6 +103,11 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
               title: "Cobranzas por Vencimiento",
               href: "/informes/cobranza-vencim",
               icon: <CiClock2 />,
+            },
+            {
+              title: "Morosidad",
+              href: "/informes/morosidad",
+              icon: <CiCalendar />,
             },
           ],
     },

@@ -91,6 +91,10 @@ export default function VentasXVendedorView() {
       codeLabelProperty: "Codigo",
     },
   };
+
+  const propsRangePicker = {
+    setFechas: setFechas,
+  };
   return (
     <div className="min-h-screen ">
       <ViewTitle title="Ventas por Vendedor" />
@@ -105,11 +109,12 @@ export default function VentasXVendedorView() {
           textoBotones={{ fetch: "Procesar", clear: "Borrar" }}
           conBotones={true}
           estado={status}
-          setFechas={setFechas}
+          rangeDatePicker={propsRangePicker}
           showPresets={true}
           onClearData={handleClearData}
           onFetchData={handleFetchData}
           estaProcesado={estaProcesado}
+      
         />
 
         <BotoneraHerramientas

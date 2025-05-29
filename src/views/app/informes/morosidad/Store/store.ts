@@ -1,29 +1,33 @@
-import { CheckboxState, Status } from "@/frontend-resourses/components/types";
-import { FechasRango, SucursalesModal } from "@/types";
-import dayjs from "dayjs";
-import { create } from "zustand";
-import { createJSONStorage, persist } from "zustand/middleware";
-import { DatosTablaCobranza } from "../ts/data";
+import { CheckboxState, Status } from '@/frontend-resourses/components/types';
+import { FechasRango, SucursalesModal } from '@/types';
+import dayjs from 'dayjs';
+import { create } from 'zustand';
+import { createJSONStorage, persist } from 'zustand/middleware';
 
 const defaultDate = {
-  from: dayjs().startOf("month"),
+  from: dayjs().startOf('month'),
   to: dayjs(),
 };
 
-type CobranzasProps = {
-  // parametros
+type MorosidadProps = {
+  // parametros range picker
   fechas: FechasRango;
   clearFechas: () => void;
   setFechas: (data: FechasRango) => void;
+    // parametros date picker
+  fecha: FechasRango;
+  clearFecha: () => void;
+  setFecha: (data: FechasRango) => void;
   // status
   status: Status;
   setStatus: (status: Status) => void;
   //data
-    cobranzas: DatosTablaCobranza[] ;
-    setCobranzas: (data: DatosTablaCobranza[]) => void;
-    clearCobranzas: () => void;
+//   cobranzaPorVencimiento: DatosMora[];
+//   setCobranzaPorVencimiento: (data: DatosMora[]) => void;
+//   clearCobranzaPorVencimiento: () => void;
 
   //secciones:
+
   secciones: any[];
   setSecciones: (data: any[]) => void;
 
@@ -35,26 +39,30 @@ type CobranzasProps = {
   clearSucursalesSeleccionadas: () => void;
   clearSucursalesDisponibles: () => void;
 
-  // Inputs Radio Filtros
+    // Inputs Radio Filtros
   checkboxSeleccionados: CheckboxState;
   setCheckboxSeleccionados: (grupo: keyof CheckboxState, value: string | null) => void;
 
 };
 
-export const useCobranzasStore = create<CobranzasProps>()(
+export const useMorosidadStore = create<MorosidadProps>()(
   persist(
     (set) => ({
-      //parametros
+      //parametros range picker
       fechas: { from: defaultDate.from, to: defaultDate.to },
       setFechas: (data) => set({ fechas: data }),
-      clearFechas: () => set({ fechas: { from: "", to: "" } }),
+      clearFechas: () => set({ fechas: { from: '', to: '' } }),
+        //parametros date picker
+      fecha: { from: defaultDate.from, to: defaultDate.to },
+      setFecha: (data) => set({ fecha: data }),
+      clearFecha: () => set({ fecha: { from: '', to: '' } }),
       // status
-      status: "idle",
+      status: 'idle',
       setStatus: (status) => set({ status }),
       //data
-        cobranzas: [],
-        setCobranzas: (data) => set({ cobranzas: data }),
-        clearCobranzas: () => set({ cobranzas: []}),
+    //   cobranzaPorVencimiento: [],
+    //   setCobranzaPorVencimiento: (data) => set({ cobranzaPorVencimiento: data }),
+    //   clearCobranzaPorVencimiento: () => set({ cobranzaPorVencimiento: [] }),
 
       // secciones
       secciones: [] as any[],
@@ -68,7 +76,7 @@ export const useCobranzasStore = create<CobranzasProps>()(
       clearSucursalesSeleccionadas: () => set({ sucursalesSeleccionadas: [] }),
       clearSucursalesDisponibles: () => set({ sucursalesDisponibles: [] }),
 
-    // Inputs Radio Filtros
+       // Inputs Radio Filtros
       checkboxSeleccionados: {
         grupo1: 'Todos',
         grupo2: 'Todos',
@@ -83,8 +91,9 @@ export const useCobranzasStore = create<CobranzasProps>()(
           },
         })),
     }),
+
     {
-      name: "cobranzas-storage",
+      name: 'morosidad-storage',
       storage: createJSONStorage(() => sessionStorage),
     }
   )

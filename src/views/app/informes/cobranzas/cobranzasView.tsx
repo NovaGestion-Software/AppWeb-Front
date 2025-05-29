@@ -9,15 +9,18 @@ import Tabla from "./Componentes/Tabla";
 import { data } from "./ts/data";
 
 export default function CobranzasView() {
-  const { status, 
+  const {
+    status,
     // fechas
-    setFechas, 
+    setFechas,
     // data
     setCobranzas,
     // filtros
     // sucursalesDisponibles, sucursalesSeleccionadas,
-    // setSucursalesDisponibles, setSucursalesSeleccionadas, 
-    checkboxSeleccionados, setCheckboxSeleccionados } = useCobranzasStore();
+    // setSucursalesDisponibles, setSucursalesSeleccionadas,
+    checkboxSeleccionados,
+    setCheckboxSeleccionados,
+  } = useCobranzasStore();
   const [estaProcesado, setEstaProcesado] = useState(false);
 
   // Formateo a array de strings
@@ -26,7 +29,7 @@ export default function CobranzasView() {
 
   async function handleFetchData(_dates: FechasRango): Promise<void> {
     try {
-      setCobranzas(data)
+      setCobranzas(data);
       setEstaProcesado(true);
     } catch (error) {
       console.error("Error en la petición:", error);
@@ -35,7 +38,7 @@ export default function CobranzasView() {
   }
   const handleClearData = () => {
     setEstaProcesado(false);
-    setCobranzas([])
+    setCobranzas([]);
   };
 
   const exampleData: Record<string, any>[] = [
@@ -44,7 +47,10 @@ export default function CobranzasView() {
     { id: 3, nombre: "Tomás", notas: [10, 9, 8] },
   ];
 
-
+  const propsRangePicker = {
+    setFechas: setFechas,
+    rangeClassName: "v1536:w-56",
+  };
   return (
     <div className="min-h-screen">
       <ViewTitle title="Cobranzas" />
@@ -55,16 +61,18 @@ export default function CobranzasView() {
       >
         <RangeDatesInput
           className="col-span-5 col-start-1 w-[30rem]  bg-white p-2 
-                    v1440:w-[30rem] v1440:col-start-1 v1440:col-span-4 v1440:py-6
+                    v1440:w-[32rem] v1440:col-start-1 v1440:col-span-4 v1440:py-6
                     v1536:col-span-5 v1536:w-[33rem]"
           textoBotones={{ fetch: "Procesar", clear: "Borrar" }}
           conBotones={true}
           estado={status}
-          setFechas={setFechas}
           showPresets={true}
+          rangeDatePicker={propsRangePicker}
           onClearData={handleClearData}
           onFetchData={handleFetchData}
           estaProcesado={estaProcesado}
+          variant="range"
+          primarySource="range"
         />
 
         <RadioGroupFiltro
@@ -84,7 +92,7 @@ export default function CobranzasView() {
           className="bg-white w-fit h-10 p-2
                                     col-span-3 col-start-10  row-start-1
                                     v1440:col-start-9 v1440:col-span-3  v1440:py-6 v1440:ml-16  
-                                    v1536:col-start-9 v1536:-ml-6 v1536:py-7 " 
+                                    v1536:col-start-9 v1536:-ml-6 v1536:py-7 "
           disabled={!estaProcesado}
           estaProcesado={estaProcesado}
           handleClean={handleClearData}

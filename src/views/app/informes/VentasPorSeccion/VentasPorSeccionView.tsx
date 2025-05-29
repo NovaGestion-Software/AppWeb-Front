@@ -213,14 +213,17 @@ export default function VentasPorSeccionView() {
       codeLabelProperty: "Codigo",
     },
   };
-
+  
+    const propsRangePicker = {
+    setFechas: setFechas,
+  };
   return (
     <div className="min-h-screen ">
       {/** Titulo */}
       <ViewTitle title="Ventas por Sección" />
       {/** Body */}
       <div
-        className="h-screen w-auto ml-3 gap-4 p-4 pb-0 pr-0
+        className="h-screen  w-auto ml-3 gap-4 p-4 pb-2 pr-0
       grid grid-cols-12 grid-rows-12 
       v1440:grid-cols-12  "
       >
@@ -232,7 +235,7 @@ export default function VentasPorSeccionView() {
           textoBotones={{ fetch: "Procesar", clear: "Borrar" }}
           conBotones={true}
           estado={status}
-          setFechas={setFechas}
+          rangeDatePicker={propsRangePicker}
           showPresets={true}
           onClearData={handleClearData}
           onFetchData={handleFetchData}
