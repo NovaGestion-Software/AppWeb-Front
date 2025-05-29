@@ -4,7 +4,7 @@ import { useCallback, useEffect } from "react";
 import * as XLSX from "xlsx";
 import { IoTrash } from "react-icons/io5";
 
-interface HerramientasInformeProps<T> {
+interface HerramientasInformeProps<_T> {
   data: Record<string, any>[]; // ✅ Ahora acepta cualquier tipo de datos
   estaProcesado: boolean;
   handleExportExcel?: () => void;
