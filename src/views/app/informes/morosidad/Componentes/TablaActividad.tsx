@@ -66,7 +66,7 @@ export default function TablaActividad({ estaProcesado, className }: TablaActivi
     <div
       className={`w-full h-full
      flex flex-col gap-1  bg-white p-1 shadow-sm
-      shadow-gray-300 rounded-lg   ${className}`}
+      shadow-gray-600 rounded-lg   ${className}`}
     >
       <TablaDefault props={propsTabla} />
     </div>

@@ -2,6 +2,7 @@ import {TablaDefault } from "@/frontend-resourses/components";
 import { ExtendedColumn } from "@/frontend-resourses/components/Tables/types";
 import { useMorosidadStore } from "../Store/store";
 import { dataTablaLocalidad } from "../ts/data";
+import { Card } from "@/frontend-resourses/components/Cards/CardBase";
 interface TablaLocalidadProps {
   estaProcesado: boolean;
   className?: string;
@@ -60,12 +61,9 @@ export default function TablaLocalidad({ estaProcesado, className }: TablaLocali
   };
 
   return (
-    <div
-      className={`${className} w-full h-full
-     flex flex-col gap-1  bg-white p-1 pt-2 shadow-sm
-      shadow-gray-300 rounded-lg  `}
-    >
+    <Card
+      className={`${className} w-full h-full p-2`}>
       <TablaDefault props={propsTabla} />
-    </div>
+    </Card>
   );
 }

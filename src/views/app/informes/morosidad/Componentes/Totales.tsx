@@ -1,3 +1,4 @@
+import { Card } from '@/frontend-resourses/components/Cards/CardBase';
 import React from 'react';
 
 interface TotalItem {
@@ -15,7 +16,7 @@ interface TotalesVertProps {
 
 const TotalesVert: React.FC<TotalesVertProps> = ({ className, items }) => {
   return (
-    <div className={`${className} flex flex-col gap-2 items-center justify-center text-xs`}>
+    <Card className={`${className} flex flex-col gap-2 items-center justify-center pb-2 text-xs`}>
       {items.map((item, index) => (
         <div key={index} className="w-full">
           <span className={`font-semibold text-gray-900 px-1  text-[0.6rem] v1440:text-xs`}>
@@ -38,7 +39,7 @@ const TotalesVert: React.FC<TotalesVertProps> = ({ className, items }) => {
           )}
         </div>
       ))}
-    </div>
+    </Card>
   );
 };
 

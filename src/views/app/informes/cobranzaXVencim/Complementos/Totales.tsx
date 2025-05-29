@@ -1,3 +1,5 @@
+import { Card } from "@/frontend-resourses/components/Cards/CardBase";
+
 export interface TotalesItem {
   titulo: string;
   icono: string;
@@ -32,9 +34,9 @@ const TotalesItemBox = ({ titulo, icono, valor, mostrarPorcentaje = false, porce
 
 export default function Totales({ principales, extras, className = "" }: TotalesCobranzaProps) {
   return (
-    <div
-      className={`${className}  w-full noneScroll overflow-auto 
-    mx-auto rounded-xl shadow-md  shadow-gray-600  bg-white `}
+    <Card
+      className={`${className}  w-full noneScroll overflow-auto pt-0 px-0 
+    mx-auto `}
     >
       {/* Título */}
       <div
@@ -84,6 +86,6 @@ export default function Totales({ principales, extras, className = "" }: Totales
           ))}
         </div>
       )}
-    </div>
+    </Card>
   );
 }

@@ -90,21 +90,21 @@ export default function HerramientasInforme<T>({ data,
       <ActionButton
         onClick={handleExportExcel}
         disabled={disabledExportExcel}
-        addClassName="h-6   rounded-md text-xs v1440:h-8 v1536:h-9 v1536:px-6 v1536:text-sm"
+        addClassName="h-5   rounded-md text-xs v1440:h-8 v1536:h-9 v1536:px-6 v1536:text-sm"
         color="green"
-        icon={<RiFileExcel2Fill className="h-3 w-3 v1536:h-6 v1536:w-6" />}
+        icon={<RiFileExcel2Fill className="h-3 w-3 v1536:h-5 v1536:w-5" />}
       />
       <ActionButton
         onClick={handlePrint}
         disabled={disabledPrint}
-        addClassName="h-6  rounded-md text-xs v1440:h-8 v1536:h-9 v1536:px-6 v1536:text-sm"
+        addClassName="h-5  rounded-md text-xs v1440:h-8 v1536:h-9 v1536:px-6 v1536:text-sm"
         color="blue"
-        icon={<RiPrinterFill className="h-3 w-3 v1536:h-6 v1536:w-6" />}
+        icon={<RiPrinterFill className="h-3 w-3 v1536:h-5 v1536:w-5" />}
       />
       <ActionButton
-        icon={<IoTrash className="h-3 w-3 v1536:h-6 v1536:w-6" />}
+        icon={<IoTrash className="h-3 w-3 v1536:h-5 v1536:w-5" />}
         color="red"
-        addClassName="h-6  rounded-md text-xs v1440:h-8 v1536:h-9 v1536:px-6 v1536:text-sm 2xl:w-12"
+        addClassName="h-5  rounded-md text-xs v1440:h-8 v1536:h-9 v1536:px-6 v1536:text-sm 2xl:w-12"
         onClick={handleClean || (() => {})}
         disabled={disabledClean}
       />

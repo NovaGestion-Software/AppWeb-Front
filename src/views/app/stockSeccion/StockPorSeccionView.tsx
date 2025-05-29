@@ -267,7 +267,7 @@ useEffect(() => {
         <ShowModalButtons
           props={propsShowModales}
           className="flex gap-6 items-center h-10
-                      col-start-2 col-span-5 row-start-2 
+                      col-start-2 col-span-5 row-start-2  v1440:h-11
                       v1536:col-start-2 v1536:relative right-8  
                       v1920:col-start-2 v1920:-right-12 "
         />
@@ -276,14 +276,14 @@ useEffect(() => {
           className=" w-fit bg-white relative right-2.5
                       col-start-5 row-start-2 col-span-5 
                       v1440:right-8
-                      v1536:px-4 v1536:col-start-5 v1536:right-12
+                      v1536:px-4 v1536:h-11 v1536:col-start-5 v1536:right-12
                       v1920:col-start-5 "
         />
         <HerramientasComponent
-          className=" flex  w-fit  py-1.5  relative left-12 items-center 
+          className=" flex  w-fit  p-1.5  relative left-12 items-center bg-white rounded-lg shadow-sm shadow-gray-600
                       col-start-9 col-span-2 row-start-2
-                      v1440:-left-3
-                      v1536:col-span-3 v1536:col-start-8 v1536:left-24
+                       v1440:px-2 
+                      v1536:col-span-3 v1536:h-11 v1536:col-start-8 v1536:left-24
                       v1920:col-start-8 v1920:-left-6 v1920:px-4  "
           data={productos}
           handleClean={handleClean}

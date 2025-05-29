@@ -243,7 +243,7 @@ export default function VentasPorSeccionView() {
         />
         <BotoneraHerramientas
           data={exampleData}
-          className="bg-white w-fit  
+          className="bg-white w-fit  h-10 p-1
           col-span-3 col-start-9 
           v1440:px-2 "
           disabled={false}

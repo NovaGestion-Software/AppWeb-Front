@@ -60,8 +60,7 @@ export default function CobranzasView() {
           grid grid-cols-12 grid-rows-12 
           v1440:grid-cols-11"
       >
-        <Card
-          className=" py-[0px] col-span-5 col-start-1 w-[30rem]
+        <Card className=" py-[0px] col-span-5 col-start-1 w-[30rem]
                     v1440:w-[32rem] v1440:col-start-1 v1440:col-span-4 v1440:py-1
                     v1536:col-span-5 v1536:w-[33rem] v1536:py-[0px] v1920:py-[2px] ">
           <RangeDatesInput

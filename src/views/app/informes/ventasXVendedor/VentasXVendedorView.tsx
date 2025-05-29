@@ -119,7 +119,7 @@ export default function VentasXVendedorView() {
 
         <BotoneraHerramientas
           data={exampleData}
-          className="bg-white w-fit p-2
+          className="bg-white w-fit h-10 p-2
                 col-span-3 col-start-8 
                 v1440:col-start-8 "
           disabled={false}

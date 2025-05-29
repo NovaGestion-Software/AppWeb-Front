@@ -140,7 +140,7 @@ export default function CobranzaVencimView() {
 
         <Botonera
           data={exampleData}
-          className="bg-white w-fit p-2
+          className="bg-white w-fit h-10 py-1
                             col-span-3 col-start-9 
                             v1440:col-start-9 v1440:-ml-9
                             v1536:col-start-8 v1536:-ml-6 v1536:px-4 "
