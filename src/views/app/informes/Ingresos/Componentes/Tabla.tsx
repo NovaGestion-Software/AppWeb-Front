@@ -57,7 +57,7 @@ export default function Tabla({className}: {className?: string;}) {
     objectFooter:{
       footer: true,
       footerHeight: "h-7",
-      datosFooter: dataIngresosFooter[0]
+      datosFooter: estaProcesado ? dataIngresosFooter[0] : [] 
     }
   };
 
