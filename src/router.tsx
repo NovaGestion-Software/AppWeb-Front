@@ -14,6 +14,7 @@ import VentasPorSeccionView from './views/app/informes/VentasPorSeccion/VentasPo
 import CobranzasView from './views/app/informes/cobranzas/cobranzasView';
 import MorosidadView from './views/app/informes/morosidad/MorosidadView';
 import IngresosView from './views/app/informes/Ingresos/IngresosView';
+import CompClientOtrasSucView from './views/app/informes/CompClientOtrasSuc/CompClientOtrasSucView';
 
 export default function Router() {
   return (
@@ -35,6 +36,7 @@ export default function Router() {
               <Route path="ventas-hora" element={<VentasHoraView />} />
               
               <Route path="ingresos" element={<IngresosView />} />
+              <Route path="clientes-otras-suc" element={<CompClientOtrasSucView />} />
 
             </Route>
             <Route path="/stock-seccion" element={<StockPorSeccionView />} />
