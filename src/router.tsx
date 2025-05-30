@@ -13,6 +13,7 @@ import StockPorSeccionView from './views/app/stockSeccion/StockPorSeccionView';
 import VentasPorSeccionView from './views/app/informes/VentasPorSeccion/VentasPorSeccionView';
 import CobranzasView from './views/app/informes/cobranzas/cobranzasView';
 import MorosidadView from './views/app/informes/morosidad/MorosidadView';
+import IngresosView from './views/app/informes/Ingresos/IngresosView';
 
 export default function Router() {
   return (
@@ -32,6 +33,9 @@ export default function Router() {
               <Route path="ventas-vend" element={<VentasXVendedorView />} />
               <Route path="ventas-seccion" element={<VentasPorSeccionView />} />
               <Route path="ventas-hora" element={<VentasHoraView />} />
+              
+              <Route path="ingresos" element={<IngresosView />} />
+
             </Route>
             <Route path="/stock-seccion" element={<StockPorSeccionView />} />
             <Route path="/configuracion" element={<ConfigView />} />

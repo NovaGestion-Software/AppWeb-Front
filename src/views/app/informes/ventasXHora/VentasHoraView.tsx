@@ -324,7 +324,10 @@ export default function VentasHoraView() {
             transition-all duration-500 ease-out"
             >
               {/* Lista Sucursales */}
-              <ListaFiltrosAplicados className="w-[29rem] v1440:w-[32rem] v1536:w-[36rem] " itemsDisponibles={sucursalesDisponiblesStr} itemsSeleccionados={sucursalesSeleccionadasStr} />
+              <ListaFiltrosAplicados 
+              className="w-[29rem] v1440:w-[32rem] v1536:w-[36rem] " 
+              itemsDisponibles={sucursalesDisponiblesStr} 
+              itemsSeleccionados={sucursalesSeleccionadasStr} />
 
               {/* Información de ventas */}
               <Destacados {...destacadosObject} />

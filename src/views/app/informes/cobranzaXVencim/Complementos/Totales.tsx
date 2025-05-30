@@ -35,7 +35,9 @@ const TotalesItemBox = ({ titulo, icono, valor, mostrarPorcentaje = false, porce
 export default function Totales({ principales, extras, className = "" }: TotalesCobranzaProps) {
   return (
     <Card
-      className={`${className}  w-full noneScroll overflow-auto pt-0 px-0 
+    padding={false}
+      className={`${className}  w-full noneScroll overflow-auto 
+      pt-0 
     mx-auto `}
     >
       {/* Título */}

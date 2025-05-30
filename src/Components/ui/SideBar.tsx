@@ -12,6 +12,7 @@ import { BiBarChartSquare } from "react-icons/bi";
 import { FaBoxesPacking } from "react-icons/fa6";
 import { useVentasHoraStore } from "@/views/app/informes/ventasXHora/store/useVentasHoraStore";
 import { BsPerson } from "react-icons/bs";
+import { TbCashRegister } from "react-icons/tb";
 
 interface SubMenuItem {
   title: string;
@@ -108,6 +109,11 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
               title: "Morosidad",
               href: "/informes/morosidad",
               icon: <CiCalendar />,
+            },
+             {
+              title: "Ingresos",
+              href: "/informes/ingresos",
+              icon: <TbCashRegister />,
             },
           ],
     },

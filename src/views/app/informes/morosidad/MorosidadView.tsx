@@ -185,7 +185,7 @@ export default function MorosidadView() {
         />
 
         <Totales
-        className="rounded-lg  col-start-6 col-span-3  
+        className="rounded-lg  col-start-6 col-span-3   
         row-start-11 row-span-3 h-fit pb-1 w-fit
         v1440:col-span-4 v1440:col-start-6
         v1440:row-start-11  v1440:row-span-3   
