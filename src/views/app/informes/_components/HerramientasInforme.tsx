@@ -14,15 +14,18 @@ interface HerramientasInformeProps<_T> {
   disabledPrint?: boolean;
   datosParaFooter?: Record<string, any>;
   disabledClean?: boolean;
+  disabledAll?: boolean;
   gapButtons?: string;
 }
 
-export default function HerramientasInforme<T>({ data, 
-  handleClean,
-   datosParaFooter, disabledExportExcel, disabledPrint, disabledClean, gapButtons = 'gap-6' }: HerramientasInformeProps<T>) {
+export default function HerramientasInforme<T>({ data, handleClean, datosParaFooter, disabledExportExcel, disabledPrint, disabledClean, gapButtons = "gap-6", disabledAll }: HerramientasInformeProps<T>) {
   useEffect(() => {
     // Para evitar console.log (solo para deployar en vercel)
   }, [data]);
+  // Determina el estado disabled de cada botón
+  const isExportExcelDisabled = disabledAll ?? disabledExportExcel;
+  const isPrintDisabled = disabledAll ?? disabledPrint;
+  const isCleanDisabled = disabledAll ?? disabledClean;
 
   const datosTotales = datosParaFooter
     ? { id: 1, hora: "Totales", ...datosParaFooter } // Se añade un identificador único
@@ -83,20 +86,18 @@ export default function HerramientasInforme<T>({ data,
     setTimeout(() => printWindow.print(), 500);
   }, []);
 
-
-
   return (
     <div className={`flex justify-center ${gapButtons} w-fit rounded-lg `}>
       <ActionButton
         onClick={handleExportExcel}
-        disabled={disabledExportExcel}
+        disabled={isExportExcelDisabled}
         addClassName="h-5   rounded-md text-xs v1440:h-8 v1536:h-9 v1536:px-6 v1536:text-sm"
         color="green"
         icon={<RiFileExcel2Fill className="h-3 w-3 v1536:h-5 v1536:w-5" />}
       />
       <ActionButton
         onClick={handlePrint}
-        disabled={disabledPrint}
+        disabled={isPrintDisabled}
         addClassName="h-5  rounded-md text-xs v1440:h-8 v1536:h-9 v1536:px-6 v1536:text-sm"
         color="blue"
         icon={<RiPrinterFill className="h-3 w-3 v1536:h-5 v1536:w-5" />}
@@ -106,7 +107,7 @@ export default function HerramientasInforme<T>({ data,
         color="red"
         addClassName="h-5  rounded-md text-xs v1440:h-8 v1536:h-9 v1536:px-6 v1536:text-sm 2xl:w-12"
         onClick={handleClean || (() => {})}
-        disabled={disabledClean}
+        disabled={isCleanDisabled}
       />
     </div>
   );
