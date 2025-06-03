@@ -2,13 +2,14 @@ import { TablaDefault } from "@/frontend-resourses/components";
 import { ExtendedColumn } from "@/frontend-resourses/components/Tables/types";
 import { useMorosidadStore } from "../Store/store";
 import { dataTablaRango } from "../ts/data";
+import { useEffect } from "react";
 interface TablaRangoProps {
   estaProcesado: boolean;
   className?: string;
 }
 export default function TablaRango({ estaProcesado, className }: TablaRangoProps) {
   const { status } = useMorosidadStore();
-
+//  const {setId , id} = useRangoTabla()
   const tablaColumns: Array<ExtendedColumn<any>> = [
     {
       key: "__select__",
@@ -29,6 +30,7 @@ export default function TablaRango({ estaProcesado, className }: TablaRangoProps
     estaProcesado: estaProcesado,
     status: status,
     selectFn: true,
+    //  setIdTabla: setId,
        withTooltip: true,
     checkboxItem: true,
     objectStyles: {
@@ -57,6 +59,12 @@ export default function TablaRango({ estaProcesado, className }: TablaRangoProps
       },
     },
   };
+
+  
+    // useEffect(() =>{
+    //   console.log("id rango", id)
+    // },[estaProcesado])
+  
 
   return (
     <div

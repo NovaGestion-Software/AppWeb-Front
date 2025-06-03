@@ -1,12 +1,23 @@
-import { CheckboxState, Status } from '@/frontend-resourses/components/types';
-import { FechasRango, SucursalesModal } from '@/types';
-import dayjs from 'dayjs';
-import { create } from 'zustand';
-import { createJSONStorage, persist } from 'zustand/middleware';
+import { CheckboxState, Status } from "@/frontend-resourses/components/types";
+import { FechasRango, SucursalesModal } from "@/types";
+import dayjs from "dayjs";
+import { create } from "zustand";
+import { createJSONStorage, persist } from "zustand/middleware";
 
 const defaultDate = {
-  from: dayjs().startOf('month'),
+  from: dayjs().startOf("month"),
   to: dayjs(),
+};
+type TablaState = {
+  data: any[];
+  id: string;
+};
+
+type TablasState = {
+  localidad: TablaState;
+  categoria: TablaState;
+  actividad: TablaState;
+  rango: TablaState;
 };
 
 type MorosidadProps = {
@@ -14,7 +25,7 @@ type MorosidadProps = {
   fechas: FechasRango;
   clearFechas: () => void;
   setFechas: (data: FechasRango) => void;
-    // parametros date picker
+  // parametros date picker
   fecha: FechasRango;
   clearFecha: () => void;
   setFecha: (data: FechasRango) => void;
@@ -22,14 +33,18 @@ type MorosidadProps = {
   status: Status;
   setStatus: (status: Status) => void;
   //data
-//   cobranzaPorVencimiento: DatosMora[];
-//   setCobranzaPorVencimiento: (data: DatosMora[]) => void;
-//   clearCobranzaPorVencimiento: () => void;
+  //   cobranzaPorVencimiento: DatosMora[];
+  //   setCobranzaPorVencimiento: (data: DatosMora[]) => void;
+  //   clearCobranzaPorVencimiento: () => void;
 
-  //secciones:
-
-  secciones: any[];
-  setSecciones: (data: any[]) => void;
+  // tabla actividad
+  actividad: any[];
+  setActividad: (data: any[]) => void;
+  idActividad: string;
+  setIdActividad: (id: string) => void;
+  tablas: TablasState;
+  setTablaData: (tabla: keyof TablasState, data: any[]) => void;
+  setTablaId: (tabla: keyof TablasState, id: string) => void;
 
   // filtros
   sucursalesSeleccionadas: SucursalesModal[];
@@ -39,10 +54,9 @@ type MorosidadProps = {
   clearSucursalesSeleccionadas: () => void;
   clearSucursalesDisponibles: () => void;
 
-    // Inputs Radio Filtros
+  // Inputs Radio Filtros
   checkboxSeleccionados: CheckboxState;
   setCheckboxSeleccionados: (grupo: keyof CheckboxState, value: string | null) => void;
-
 };
 
 export const useMorosidadStore = create<MorosidadProps>()(
@@ -51,22 +65,24 @@ export const useMorosidadStore = create<MorosidadProps>()(
       //parametros range picker
       fechas: { from: defaultDate.from, to: defaultDate.to },
       setFechas: (data) => set({ fechas: data }),
-      clearFechas: () => set({ fechas: { from: '', to: '' } }),
-        //parametros date picker
+      clearFechas: () => set({ fechas: { from: "", to: "" } }),
+      //parametros date picker
       fecha: { from: defaultDate.from, to: defaultDate.to },
       setFecha: (data) => set({ fecha: data }),
-      clearFecha: () => set({ fecha: { from: '', to: '' } }),
+      clearFecha: () => set({ fecha: { from: "", to: "" } }),
       // status
-      status: 'idle',
+      status: "idle",
       setStatus: (status) => set({ status }),
       //data
-    //   cobranzaPorVencimiento: [],
-    //   setCobranzaPorVencimiento: (data) => set({ cobranzaPorVencimiento: data }),
-    //   clearCobranzaPorVencimiento: () => set({ cobranzaPorVencimiento: [] }),
+      //   cobranzaPorVencimiento: [],
+      //   setCobranzaPorVencimiento: (data) => set({ cobranzaPorVencimiento: data }),
+      //   clearCobranzaPorVencimiento: () => set({ cobranzaPorVencimiento: [] }),
 
-      // secciones
-      secciones: [] as any[],
-      setSecciones: (data: any[]) => set({ secciones: data }),
+      // actividad
+      actividad: [] as any[],
+      setActividad: (data: any[]) => set({ actividad: data }),
+      idActividad: "",
+      setIdActividad: (id: string) => set({ idActividad: id }),
 
       // filtros
       sucursalesSeleccionadas: [],
@@ -76,12 +92,12 @@ export const useMorosidadStore = create<MorosidadProps>()(
       clearSucursalesSeleccionadas: () => set({ sucursalesSeleccionadas: [] }),
       clearSucursalesDisponibles: () => set({ sucursalesDisponibles: [] }),
 
-       // Inputs Radio Filtros
+      // Inputs Radio Filtros
       checkboxSeleccionados: {
-        grupo1: 'Todos',
-        grupo2: 'Todos',
-        grupo3: 'CONTADO',
-        grupo4: 'Codigo',
+        grupo1: "Todos",
+        grupo2: "Todos",
+        grupo3: "CONTADO",
+        grupo4: "Codigo",
       },
       setCheckboxSeleccionados: (grupo, value) =>
         set((state) => ({
@@ -90,10 +106,36 @@ export const useMorosidadStore = create<MorosidadProps>()(
             [grupo]: value,
           },
         })),
-    }),
 
+      tablas: {
+        localidad: { data: [], id: "" },
+        categoria: { data: [], id: "" },
+        actividad: { data: [], id: "" },
+        rango: { data: [], id: "" },
+      },
+      setTablaData: (tabla, data) =>
+        set((state) => ({
+          tablas: {
+            ...state.tablas,
+            [tabla]: {
+              ...state.tablas[tabla],
+              data,
+            },
+          },
+        })),
+      setTablaId: (tabla, id) =>
+        set((state) => ({
+          tablas: {
+            ...state.tablas,
+            [tabla]: {
+              ...state.tablas[tabla],
+              id,
+            },
+          },
+        })),
+    }),
     {
-      name: 'morosidad-storage',
+      name: "morosidad-storage",
       storage: createJSONStorage(() => sessionStorage),
     }
   )

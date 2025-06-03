@@ -1,7 +1,8 @@
 import { TablaDefault } from "@/frontend-resourses/components";
 import { ExtendedColumn } from "@/frontend-resourses/components/Tables/types";
-import { useMorosidadStore } from "../Store/store";
+import {  useMorosidadStore } from "../Store/store";
 import { dataTablaActividad } from "../ts/data";
+import { useEffect } from "react";
 interface TablaActividadProps {
   estaProcesado: boolean;
   className?: string;
@@ -28,6 +29,7 @@ export default function TablaActividad({ estaProcesado, className }: TablaActivi
     datosParaTabla: estaProcesado ? dataTablaActividad : [],
     objectColumns: tablaColumns,
     estaProcesado: estaProcesado,
+    //setIdTabla: setId,
     status: status,
     selectFn: false,
     checkboxItem: true,
@@ -61,6 +63,9 @@ export default function TablaActividad({ estaProcesado, className }: TablaActivi
       },
     },
   };
+// useEffect(() =>{
+//   console.log("idActividad", id)
+// },[estaProcesado])
 
   return (
     <div

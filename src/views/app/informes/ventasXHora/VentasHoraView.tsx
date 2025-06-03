@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { useMutation } from "@tanstack/react-query";
+import { useEffect, useMemo, useState } from "react";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useVentasHoraStore } from "@/views/app/informes/ventasXHora/store/useVentasHoraStore";
 import { obtenerVentasHora } from "@/services/ApiPhpService";
 import { ApiResponse, FechasRango, SucursalesModal, VentaPorHora } from "@/types";
@@ -45,6 +45,44 @@ export default function VentasHoraView() {
   const [_footer, setFooter] = useState<boolean>(false);
   const [foco, setFoco] = useState<boolean>(false);
   const [showModalSucursales, setShowModalSucursales] = useState(false);
+  // configuracion grafico
+  const configuracionGrafico = [
+    { label: "horaini", key: "horaini" },
+    { label: "nOperaciones", key: "nOperaciones" },
+  ];
+  // configuracion agrupar indice
+   const config: ConfigKeys = {
+    filtroKey: "nsucursal",
+    agrupadorKey: "horaini",
+    innerArrayKey: "info",
+    sumaKeys: ["importe", "cantidad", "pares"],
+    convertir: ["importe"],
+  };
+  // Configuracion de tabla
+    const configTabla: ConfigTabla = {
+    agrupadorKey: "horaini",
+    columnas: [
+      {
+        key: "cantidad",
+        label: "nOperaciones",
+        calcularPorcentaje: true,
+        totalKey: "cantidad",
+      },
+      {
+        key: "importe",
+        label: "importe",
+        calcularPorcentaje: true,
+        totalKey: "importe",
+        parseNumber: true,
+      },
+      {
+        key: "pares",
+        label: "pares",
+        calcularPorcentaje: true,
+        totalKey: "pares",
+      },
+    ],
+  };
 
   //store
   const {
@@ -100,66 +138,60 @@ export default function VentasHoraView() {
     },
   });
 
+  // cambie el use mutation por el useQuery para mantener los datos de la tabla almacenados en cache.
+  // la idea es que los datos persistan en la cache y no almacenarlos en la store de zustand.
+  // Al parecer como enfoque global es mejor usar useQuery para mantener los datos en cache
+  // y dejar la store para cosas mas puntuales como los filtros y estados de la vista.
+
+  // Fetch de datos con cache
+  const { data, isLoading, isFetching, refetch } = useQuery({
+    queryKey: ["ventas", fechas],
+    queryFn: () => (fechas ? obtenerVentasHora(fechas) : null),
+    enabled: false, // Control manual
+    staleTime: 5 * 60 * 1000,
+    select: (response) => response.data,
+  });
+
+  //console.log("ventas por hora", ventasPorHora);
+  // let existenDatos = ventasPorHora && ventasPorHora.length > 0;
+   let existenDatos = data && data.length > 0;
+
+    const dataFinal = data || [];
+  // const dataFinal = ventasPorHora || [];
+
+  console.log("data final", dataFinal);
+
   // Formateo a array de strings
   const sucursalesDisponiblesStr = sucursalesDisponibles.map((s) => s.nsucursal);
   const sucursalesSeleccionadasStr = sucursalesSeleccionadas.map((s) => s.nsucursal);
-  // configuracion grafico
-  const configuracionGrafico = [
-    { label: "horaini", key: "horaini" },
-    { label: "nOperaciones", key: "nOperaciones" },
-  ];
 
   // extrae horarios para indice.
-  const indiceTabla = ventasPorHora ? extraerItemsDeIndice(ventasPorHora, "info", "horaini") : [];
-
+  const indiceTabla = useMemo(() => (dataFinal ? extraerItemsDeIndice(dataFinal, "info", "horaini") : []), [dataFinal]);
+  console.log("indiceTabla", indiceTabla);
+  
   // funcion agrupar por horario, te suma los totales en base a sumKey
-  const config: ConfigKeys = {
-    filtroKey: "nsucursal",
-    agrupadorKey: "horaini",
-    innerArrayKey: "info",
-    sumaKeys: ["importe", "cantidad", "pares"],
-    convertir: ["importe"],
-  };
-  const { datos, totales } = agruparPorIndice(ventasPorHora, sucursalesSeleccionadasStr, indiceTabla, config, formatearNumero);
-  console.log("ventas horas", datos);
+  const { datos, totales } = useMemo(() => agruparPorIndice(dataFinal, sucursalesSeleccionadasStr, indiceTabla, config, formatearNumero), [dataFinal, sucursalesSeleccionadasStr, indiceTabla]);
+
+  // console.log("datos", datos);
   // crea datos en estructura de tabla.
-  const configTabla: ConfigTabla = {
-    agrupadorKey: "horaini",
-    columnas: [
-      {
-        key: "cantidad",
-        label: "nOperaciones",
-        calcularPorcentaje: true,
-        totalKey: "cantidad",
-      },
-      {
-        key: "importe",
-        label: "importe",
-        calcularPorcentaje: true,
-        totalKey: "importe",
-        parseNumber: true,
-      },
-      {
-        key: "pares",
-        label: "pares",
-        calcularPorcentaje: true,
-        totalKey: "pares",
-      },
-    ],
-  };
-  const filasGenericas = crearDataParaTablaModular(datos, totales, configTabla);
+
+  const filasGenericas = useMemo(() => crearDataParaTablaModular(datos, totales, configTabla), [datos, totales]);
 
   // seteo de filas segun VentaPorHora
-  const filas: VentaPorHora[] = filasGenericas.map((fila) => ({
-    id: fila.id as number,
-    horaini: fila.horaini as string,
-    nOperaciones: fila.nOperaciones as number,
-    porcentajeNOperaciones: fila.porcentajeNOperaciones as string,
-    importe: fila.importe as string,
-    porcentajeImporte: fila.porcentajeImporte as string,
-    pares: fila.pares as number,
-    porcentajePares: fila.porcentajePares as string,
-  }));
+  const filas: VentaPorHora[] = useMemo(
+    () =>
+      filasGenericas.map((fila) => ({
+        id: fila.id as number,
+        horaini: fila.horaini as string,
+        nOperaciones: fila.nOperaciones as number,
+        porcentajeNOperaciones: fila.porcentajeNOperaciones as string,
+        importe: fila.importe as string,
+        porcentajeImporte: fila.porcentajeImporte as string,
+        pares: fila.pares as number,
+        porcentajePares: fila.porcentajePares as string,
+      })),
+    [filasGenericas]
+  );
 
   // esto es para setar los highLight
   // obtiene la fila que tiene el mayor importe y su indice (horario)
@@ -208,19 +240,23 @@ export default function VentasHoraView() {
     );
   };
 
-  // SETEAR ESTADOS SI DATOS TIENE INFO.
+  // Set Filtros
   useEffect(() => {
-    if (ventasPorHora?.length) {
+    if (existenDatos) {
       setProcesado(true);
+      console.log("isfetchi", isFetching);
+      console.log("existen datos useffect", existenDatos);
+      console.log("sucursales seleccionadas", sucursalesSeleccionadas);
+      console.log("data final use  effect", dataFinal);
       extraerItems({
-        data: ventasPorHora,
+        data: dataFinal,
         itemsKeysGroup: { nsucursal: "nsucursal", sucursal: "sucursal" },
         itemsSeleccionados: sucursalesSeleccionadas,
         setItemsDisponibles: setSucursalesDisponibles,
         setItemsSeleccionados: setSucursalesSeleccionadas,
       });
     }
-  }, [ventasPorHora]);
+  }, [isFetching]);
   // LIMPIAR EL ESTADO FOCO A LOS 0.5S
   useEffect(() => {
     if (foco) {
@@ -235,7 +271,7 @@ export default function VentasHoraView() {
   // USAR ESCAPE PARA VACIAR INFORME
   useEffect(() => {
     const handleEscapeKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && ventasPorHora) {
+      if (e.key === "Escape" && dataFinal) {
         handleClearData();
       }
     };
@@ -244,16 +280,19 @@ export default function VentasHoraView() {
     return () => {
       window.removeEventListener("keydown", handleEscapeKey);
     };
-  }, [ventasPorHora]);
+  }, [dataFinal]);
   // HANDLE FETCH
   const handleFetchData = async (dates: FechasRango) => {
-    try {
-      mutate(dates);
-    } catch (error) {
-      console.error("Error en la petición:", error);
-      alert("Error al obtener los datos");
-      setFoco(true);
-    }
+    // try {
+    //   mutate(dates);
+    //   console.log("mutate");
+    // } catch (error) {
+    //   console.error("Error en la petición:", error);
+    //   alert("Error al obtener los datos");
+    //   setFoco(true);
+    // }
+    refetch();
+    console.log("refetch");
   };
   // CLEAR DATA
   const handleClearData = () => {
@@ -324,10 +363,7 @@ export default function VentasHoraView() {
             transition-all duration-500 ease-out"
             >
               {/* Lista Sucursales */}
-              <ListaFiltrosAplicados 
-              className="w-[29rem] v1440:w-[32rem] v1536:w-[36rem] " 
-              itemsDisponibles={sucursalesDisponiblesStr} 
-              itemsSeleccionados={sucursalesSeleccionadasStr} />
+              <ListaFiltrosAplicados className="w-[29rem] v1440:w-[32rem] v1536:w-[36rem] " itemsDisponibles={sucursalesDisponiblesStr} itemsSeleccionados={sucursalesSeleccionadasStr} />
 
               {/* Información de ventas */}
               <Destacados {...destacadosObject} />

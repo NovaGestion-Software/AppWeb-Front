@@ -1,8 +1,9 @@
-import {TablaDefault } from "@/frontend-resourses/components";
+import { TablaDefault } from "@/frontend-resourses/components";
 import { ExtendedColumn } from "@/frontend-resourses/components/Tables/types";
 import { useMorosidadStore } from "../Store/store";
 import { dataTablaLocalidad } from "../ts/data";
 import { Card } from "@/frontend-resourses/components/Cards/CardBase";
+import { useEffect } from "react";
 interface TablaLocalidadProps {
   estaProcesado: boolean;
   className?: string;
@@ -10,6 +11,8 @@ interface TablaLocalidadProps {
 
 export default function TablaLocalidad({ estaProcesado, className }: TablaLocalidadProps) {
   const { status } = useMorosidadStore();
+ // const { setId, id } = useLocalidadTabla();
+
   const tablaColumns: Array<ExtendedColumn<any>> = [
     {
       key: "__select__",
@@ -33,6 +36,7 @@ export default function TablaLocalidad({ estaProcesado, className }: TablaLocali
     checkboxItem: true,
     selectFn: true,
     withTooltip: true,
+  //  setIdTabla: setId,
     objectStyles: {
       withBorder: false,
       InitColumCenter: 3,
@@ -51,7 +55,6 @@ export default function TablaLocalidad({ estaProcesado, className }: TablaLocali
         widthContainer1536px: "",
         addCellClass1536px: "max-height: 40px;",
         addHeaderCellClass1536px: "font-size: 0.8rem; padding: 15px 5px;",
-
       },
       viewport1920: {
         widthContainer1920px: "",
@@ -60,9 +63,12 @@ export default function TablaLocalidad({ estaProcesado, className }: TablaLocali
     },
   };
 
+  // useEffect(() => {
+  //   console.log("id localidad", id);
+  // }, [estaProcesado]);
+
   return (
-    <Card
-      className={`${className} w-full h-full p-2`}>
+    <Card className={`${className} w-full h-full p-2`}>
       <TablaDefault props={propsTabla} />
     </Card>
   );
