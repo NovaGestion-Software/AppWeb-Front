@@ -4,7 +4,6 @@ import { DepositoModal, MarcaModal } from "@/types";
 import { useStockPorSeccion } from "@/views/app/stockSeccion/store/useStockPorSeccion";
 import { obtenerRubrosDisponibles } from "@/services/ApiPhpService";
 import ViewTitle from "@/frontend-resourses/components/Labels/ViewTitle";
-import HerramientasComponent from "../informes/ventasXHora/components/HerramientasComponent";
 import ModalFiltro from "@/frontend-resourses/components/Modales/ModalFiltro";
 import TablaSeccionRubro from "./componentes/TablaSeccionRubro";
 import TablaStock from "./componentes/TablaStock";

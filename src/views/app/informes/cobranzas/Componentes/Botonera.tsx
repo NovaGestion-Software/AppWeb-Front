@@ -1,6 +1,5 @@
 import { useCallback, useState } from 'react';
 import HerramientasInforme, { ExcelExportConfig } from '../../_components/HerramientasInforme';
-import * as XLSX from 'xlsx';
 import { ActionButton } from '@/frontend-resourses/components';
 import ModalFiltro from '@/frontend-resourses/components/Modales/ModalFiltro';
 import { SucursalesModal } from '@/types';
@@ -16,7 +15,7 @@ interface BotoneraProps {
   handleClean?: () => void; // Función opcional para limpiar
 }
 
-export default function Botonera({ data, datosParaFooter, estaProcesado, disabled, className, handleClean }: BotoneraProps) {
+export default function Botonera({ data,  estaProcesado, disabled, className, handleClean }: BotoneraProps) {
   const [showModalSucursales, setShowModalSucursales] = useState(false);
     const {
       // filtros
@@ -26,9 +25,7 @@ export default function Botonera({ data, datosParaFooter, estaProcesado, disable
       setSucursalesDisponibles,
     } = useCobranzasStore();
 
-  const datosTotales = datosParaFooter
-    ? { id: 1, hora: 'Totales', ...datosParaFooter } // Se añade un identificador único
-    : null;
+
 
 
   const handlePrint = useCallback(() => {

@@ -1,6 +1,5 @@
 import { useCallback, useState } from "react";
 import HerramientasInforme, { ExcelExportConfig } from "../../_components/HerramientasInforme";
-import * as XLSX from "xlsx";
 import { ActionButton } from "@/frontend-resourses/components";
 import ModalFiltro from "@/frontend-resourses/components/Modales/ModalFiltro";
 import { SucursalesModal } from "@/types";

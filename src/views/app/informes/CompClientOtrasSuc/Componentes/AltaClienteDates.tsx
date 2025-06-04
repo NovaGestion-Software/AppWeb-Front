@@ -14,7 +14,7 @@ export default function AltaClienteDates({className} : { className?: string}) {
   return <Card className={` ${className}`}>
     <RangeDatesInput
       onClearData={() => {}}
-      onFetchData={async (dates) => {}}
+      onFetchData={async (_dates) => {}}
       rangeDatePicker={propsRangePicker}
     />
   </Card>;
