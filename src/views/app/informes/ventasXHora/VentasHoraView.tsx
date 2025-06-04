@@ -1,15 +1,15 @@
 import { useEffect, useMemo, useState } from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import {  useQuery } from "@tanstack/react-query";
 import { useVentasHoraStore } from "@/views/app/informes/ventasXHora/store/useVentasHoraStore";
 import { obtenerVentasHora } from "@/services/ApiPhpService";
-import { ApiResponse, FechasRango, SucursalesModal, VentaPorHora } from "@/types";
+import {  FechasRango, SucursalesModal, VentaPorHora } from "@/types";
 import { formatearNumero } from "@/utils";
 import ViewTitle from "@/frontend-resourses/components/Labels/ViewTitle";
 import dayjs from "dayjs";
 
 import HerramientasComponent from "./components/HerramientasComponent";
 import TablaVentaPorHora from "./components/TablaVentaPorHora";
-import showAlert from "@/utils/showAlert";
+// import showAlert from "@/utils/showAlert";
 import ModalFiltro from "@/frontend-resourses/components/Modales/ModalFiltro";
 import ActionButton from "@/frontend-resourses/components/Buttons/ActionButton";
 import GraficoConZoom from "@/frontend-resourses/components/Charts/GraficoConZoom";
@@ -88,7 +88,7 @@ export default function VentasHoraView() {
   const {
     // estados
     status,
-    setStatus,
+ //   setStatus,
     // dates
     fechas,
     setFechas,
@@ -100,43 +100,43 @@ export default function VentasHoraView() {
     clearSucursalesSeleccionadas,
     clearSucursalesDisponibles,
     // datos
-    ventasPorHora,
-    setVentasPorHora,
+    // ventasPorHora,
+    // setVentasPorHora,
     clearVentasPorHora,
   } = useVentasHoraStore();
 
-  // llamado a fetch
-  const { mutate } = useMutation<ApiResponse, Error, FechasRango>({
-    mutationFn: () => obtenerVentasHora(fechas),
-    onMutate: () => {
-      setStatus("pending");
-    },
-    onError: (error) => {
-      console.error("Error al obtener los datos:", error);
-      setStatus("error");
-    },
-    onSuccess: (data) => {
-      // console.log(data.data);
-      if (data.data.length === 0) {
-        showAlert({
-          text: "El rango de fecha seleccionado no contiene información",
-          icon: "error",
-          cancelButtonText: "Cerrar",
-          showCancelButton: true,
-          timer: 2200,
-        });
-      }
-      setVentasPorHora(data.data);
-      // setSucursalesDisponibles(data.data.map((sucursal) => sucursal.nsucursal));
-      // setSucursalesSeleccionadas(data.data.map((sucursal) => sucursal.nsucursal));
-      // setProcesado(true);
-      // setFooter(true);
-      setStatus("success");
-    },
-    onSettled: () => {
-      setStatus("idle");
-    },
-  });
+  // // llamado a fetch
+  // const { mutate } = useMutation<ApiResponse, Error, FechasRango>({
+  //   mutationFn: () => obtenerVentasHora(fechas),
+  //   onMutate: () => {
+  //     setStatus("pending");
+  //   },
+  //   onError: (error) => {
+  //     console.error("Error al obtener los datos:", error);
+  //     setStatus("error");
+  //   },
+  //   onSuccess: (data) => {
+  //     // console.log(data.data);
+  //     if (data.data.length === 0) {
+  //       showAlert({
+  //         text: "El rango de fecha seleccionado no contiene información",
+  //         icon: "error",
+  //         cancelButtonText: "Cerrar",
+  //         showCancelButton: true,
+  //         timer: 2200,
+  //       });
+  //     }
+  //     setVentasPorHora(data.data);
+  //     // setSucursalesDisponibles(data.data.map((sucursal) => sucursal.nsucursal));
+  //     // setSucursalesSeleccionadas(data.data.map((sucursal) => sucursal.nsucursal));
+  //     // setProcesado(true);
+  //     // setFooter(true);
+  //     setStatus("success");
+  //   },
+  //   onSettled: () => {
+  //     setStatus("idle");
+  //   },
+  // });
 
   // cambie el use mutation por el useQuery para mantener los datos de la tabla almacenados en cache.
   // la idea es que los datos persistan en la cache y no almacenarlos en la store de zustand.
@@ -144,7 +144,7 @@ export default function VentasHoraView() {
   // y dejar la store para cosas mas puntuales como los filtros y estados de la vista.
 
   // Fetch de datos con cache
-  const { data, isLoading, isFetching, refetch } = useQuery({
+  const { data, isFetching, refetch } = useQuery({
     queryKey: ["ventas", fechas],
     queryFn: () => (fechas ? obtenerVentasHora(fechas) : null),
     enabled: false, // Control manual
@@ -282,7 +282,7 @@ export default function VentasHoraView() {
     };
   }, [dataFinal]);
   // HANDLE FETCH
-  const handleFetchData = async (dates: FechasRango) => {
+  const handleFetchData = async (_dates: FechasRango) => {
     // try {
     //   mutate(dates);
     //   console.log("mutate");

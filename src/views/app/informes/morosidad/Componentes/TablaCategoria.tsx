@@ -2,7 +2,7 @@ import { TablaDefault } from "@/frontend-resourses/components";
 import { ExtendedColumn } from "@/frontend-resourses/components/Tables/types";
 import { useMorosidadStore } from "../Store/store";
 import { dataTablaCategoria } from "../ts/data";
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 interface TablaCategoriaProps {
   estaProcesado: boolean;
   className?: string;

@@ -3,7 +3,7 @@ import { ExtendedColumn } from "@/frontend-resourses/components/Tables/types";
 import { useMorosidadStore } from "../Store/store";
 import { dataTablaLocalidad } from "../ts/data";
 import { Card } from "@/frontend-resourses/components/Cards/CardBase";
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 interface TablaLocalidadProps {
   estaProcesado: boolean;
   className?: string;
