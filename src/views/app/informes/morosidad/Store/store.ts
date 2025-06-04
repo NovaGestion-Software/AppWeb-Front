@@ -32,16 +32,10 @@ type MorosidadProps = {
   // status
   status: Status;
   setStatus: (status: Status) => void;
-  //data
-  //   cobranzaPorVencimiento: DatosMora[];
-  //   setCobranzaPorVencimiento: (data: DatosMora[]) => void;
-  //   clearCobranzaPorVencimiento: () => void;
 
-  // tabla actividad
-  actividad: any[];
-  setActividad: (data: any[]) => void;
-  idActividad: string;
-  setIdActividad: (id: string) => void;
+
+
+
   tablas: TablasState;
   setTablaData: (tabla: keyof TablasState, data: any[]) => void;
   setTablaId: (tabla: keyof TablasState, id: string) => void;
@@ -78,11 +72,6 @@ export const useMorosidadStore = create<MorosidadProps>()(
       //   setCobranzaPorVencimiento: (data) => set({ cobranzaPorVencimiento: data }),
       //   clearCobranzaPorVencimiento: () => set({ cobranzaPorVencimiento: [] }),
 
-      // actividad
-      actividad: [] as any[],
-      setActividad: (data: any[]) => set({ actividad: data }),
-      idActividad: "",
-      setIdActividad: (id: string) => set({ idActividad: id }),
 
       // filtros
       sucursalesSeleccionadas: [],
@@ -140,3 +129,23 @@ export const useMorosidadStore = create<MorosidadProps>()(
     }
   )
 );
+
+// export const useActividadTabla = () => {
+//   return useMorosidadStore(state => ({
+//     id: state.tablas.actividad.id,
+//     data: state.tablas.actividad.data,
+//     setId: (id: string) => state.setTablaId('actividad', id),
+//     setData: (data: any[]) => state.setTablaData('actividad', data)
+//   }));
+// };
+
+// export const useCategoriaTabla = () => {
+//   return useMorosidadStore(state => ({
+//     id: state.tablas.categoria.id,
+//     data: state.tablas.categoria.data,
+//     setId: (id: string) => state.setTablaId('categoria', id),
+//     setData: (data: any[]) => state.setTablaData('categoria', data)
+//   }));
+// };
+
+// // Uso:

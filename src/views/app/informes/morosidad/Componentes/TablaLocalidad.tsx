@@ -3,7 +3,7 @@ import { ExtendedColumn } from "@/frontend-resourses/components/Tables/types";
 import { useMorosidadStore } from "../Store/store";
 import { dataTablaLocalidad } from "../ts/data";
 import { Card } from "@/frontend-resourses/components/Cards/CardBase";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 interface TablaLocalidadProps {
   estaProcesado: boolean;
   className?: string;
@@ -11,7 +11,13 @@ interface TablaLocalidadProps {
 
 export default function TablaLocalidad({ estaProcesado, className }: TablaLocalidadProps) {
   const { status } = useMorosidadStore();
- // const { setId, id } = useLocalidadTabla();
+  const setTablaId = useMorosidadStore(state => state.setTablaId);
+
+    const setId = useCallback(
+      (id: string) => setTablaId('localidad', id),
+      [setTablaId]
+    );
+
 
   const tablaColumns: Array<ExtendedColumn<any>> = [
     {
@@ -36,7 +42,7 @@ export default function TablaLocalidad({ estaProcesado, className }: TablaLocali
     checkboxItem: true,
     selectFn: true,
     withTooltip: true,
-  //  setIdTabla: setId,
+   setIdTabla: setId,
     objectStyles: {
       withBorder: false,
       InitColumCenter: 3,

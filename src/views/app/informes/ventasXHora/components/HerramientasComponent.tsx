@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import * as XLSX from 'xlsx';
-import HerramientasInforme from '../../_components/HerramientasInforme';
+import HerramientasInforme, { ExcelExportConfig } from '../../_components/HerramientasInforme';
 
 interface HerramientasComponentProps {
   data: Record<string, any>[]; // Ahora acepta cualquier estructura de datos
@@ -81,6 +81,16 @@ export default function HerramientasComponent({
     console.log('clear');
   });
 
+    const exportConfig: ExcelExportConfig = {
+      sheets: [
+        {
+          name: "Ventas por Hora",
+          data: data,
+        }
+      ],
+      fileName: "Informe_Venta_Por_Hora",
+    };
+
   return (
     <div className={`${className}`}>
       <HerramientasInforme
@@ -92,6 +102,7 @@ export default function HerramientasComponent({
         disabledPrint={disabled}
         disabledClean={disabled}
         handleClean={handleClearData}
+        exportConfig={exportConfig}
         >
       </HerramientasInforme>
     </div>

@@ -15,6 +15,7 @@ import TotalesVert from "./Componentes/Totales";
 import ContadorCuotas from "./Componentes/ContadorCuotas";
 import { Card } from "@/frontend-resourses/components/Cards/CardBase";
 
+
 export default function MorosidadView() {
   const { status, setFechas, setFecha, checkboxSeleccionados, setCheckboxSeleccionados } = useMorosidadStore();
   const [estaProcesado, setEstaProcesado] = useState(false);
@@ -116,7 +117,8 @@ export default function MorosidadView() {
       >
         <Card
           className="col-start-2 col-span-3 row-start-1 w-fit gap-0 px-2 items-center h-8 mb-3
-          v1440:h-10 v1440:mt-0 v1440:col-start-1  ">
+          v1440:h-10 v1440:mt-0 v1440:col-start-1  "
+        >
           <RadioGroupFiltro
             grupo="grupo1"
             className="w-[] gap-"
@@ -131,7 +133,8 @@ export default function MorosidadView() {
 
         <Card
           className=" col-start-2 col-span-7 row-start-1    mt-7
-          v1440:row-start- v1440:col-start-1 v1440:mt-11  v1536:px-2">
+          v1440:row-start- v1440:col-start-1 v1440:mt-11  v1536:px-2"
+        >
           <RangeDatesInput
             conBotones={true}
             estado={status}
@@ -153,6 +156,7 @@ export default function MorosidadView() {
          v1536:mt-0 v1536:h-12 v1536:col-start-9 v1920:col-start-10"
         >
           <ShowModalButtons estaProcesado={estaProcesado} className="flex gap-1 " props={propsShowModales} />
+       
         </Card>
 
         <Card
@@ -183,9 +187,10 @@ export default function MorosidadView() {
           className="row-start-9 row-span-5 col-span-4 col-start-9
         v1440:col-span-5 v1440:col-start-10 v1920:row-start-11"
         />
+        
 
         <Totales
-        className="rounded-lg  col-start-6 col-span-3   
+          className="rounded-lg  col-start-6 col-span-3   
         row-start-11 row-span-3 h-fit pb-1 w-fit
         v1440:col-span-4 v1440:col-start-6
         v1440:row-start-11  v1440:row-span-3   
@@ -194,8 +199,7 @@ export default function MorosidadView() {
           extras={totalesProps.extras}
         />
 
-        <Card
-          className="col-start-13  col-span-1 row-start-3 row-span-2 v1440:col-start-[15] v1440:col-span-2">
+        <Card className="col-start-13  col-span-1 row-start-3 row-span-2 v1440:col-start-[15] v1440:col-span-2">
           <RadioGroupFiltro
             className=" flex-col justify-start  "
             grupo="grupo2"
@@ -208,9 +212,7 @@ export default function MorosidadView() {
           />
         </Card>
 
-        
-        <Card
-          className="col-start-13 col-span-1 row-start-4 row-span-2 mt-6 v1440:col-start-[15]  v1920:row-start-4 " >
+        <Card className="col-start-13 col-span-1 row-start-4 row-span-2 mt-6 v1440:col-start-[15]  v1920:row-start-4 ">
           <RadioGroupFiltro
             className=" p-2 pr-0.5 flex-col justify-start "
             grupo="grupo3"
@@ -224,16 +226,16 @@ export default function MorosidadView() {
         </Card>
 
         <ContadorCuotas
-        disabled={!estaProcesado}
-        className="col-start-13 row-start-7 my-1
+          disabled={!estaProcesado}
+          className="col-start-13 row-start-7 my-1
         v1440:col-start-[16] v1440:col-span-1  v1920:col-start-[15] v1920:row-start-6"
         />
 
         <TotalesVert
-        className="row-start-8 col-start-13 row-span-6   w-[5.8rem]
+          className="row-start-8 col-start-13 row-span-6   w-[5.8rem]
         v1440:col-start-[15] v1440:col-span-2 v1440:w-full v1440:row-span-4 
         v1536:row-span-7 v1536:h-fit v1536:py-3 v1920:row-start-11 v1920:col-span-2 v1920:w-fit v1920:p-3 "
-        items={totalesVertProps}
+          items={totalesVertProps}
         />
       </div>
     </div>

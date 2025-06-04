@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import HerramientasInforme from '../../_components/HerramientasInforme';
+import HerramientasInforme, { ExcelExportConfig } from '../../_components/HerramientasInforme';
 import * as XLSX from 'xlsx';
 import { ActionButton } from '@/frontend-resourses/components';
 import ModalFiltro from '@/frontend-resourses/components/Modales/ModalFiltro';
@@ -30,28 +30,6 @@ export default function Botonera({ data, datosParaFooter, estaProcesado, disable
     ? { id: 1, hora: 'Totales', ...datosParaFooter } // Se añade un identificador único
     : null;
 
-  const handleExportExcel = useCallback(() => {
-    if (!data || data.length === 0) return;
-
-    // Convertimos los datos en un array de objetos sin depender de claves fijas
-    const datosTransformados = data.map((item, index) => ({
-      id: index + 1, // Añadir un ID opcional
-      ...item, // Mantener la estructura original
-    }));
-
-    // Si hay datos totales, los agregamos al final
-    if (datosTotales) {
-      datosTransformados.push(datosTotales);
-    }
-
-    // Creamos el libro de Excel
-    const wb = XLSX.utils.book_new();
-    const ws = XLSX.utils.json_to_sheet(datosTransformados);
-    XLSX.utils.book_append_sheet(wb, ws, 'Informe');
-
-    // Guardamos el archivo
-    XLSX.writeFile(wb, 'Informe.xlsx');
-  }, [data, datosTotales]);
 
   const handlePrint = useCallback(() => {
     const tableElement = document.getElementById('table-to-print');
@@ -96,13 +74,23 @@ export default function Botonera({ data, datosParaFooter, estaProcesado, disable
     );
   };
 
+    const exportConfig: ExcelExportConfig = {
+      sheets: [
+        {
+          name: "Cobranzas",
+          data: data,
+        },
+      ],
+      fileName: "Informe_Cobranzas",
+    };
+
   return (
     <div className={`${className} flex items-center justify-center gap-4  rounded-lg `}>
       <ActionButton text="Sucursales" icon={<FaStoreAlt size={15} />}
        addClassName="h-7  rounded-md text-xs v1440:h-8 v1536:h-9 v1536:px-6 v1536:text-sm" onClick={() => setShowModalSucursales(true)} 
        disabled={!estaProcesado} color="blue"/>{' '}
       <HerramientasInforme 
-      data={data} estaProcesado={estaProcesado} handleExportExcel={handleExportExcel} 
+      data={data} estaProcesado={estaProcesado} exportConfig={exportConfig}
       handlePrint={handlePrint} disabledExportExcel={disabled}  disabledPrint={disabled} disabledClean={disabled} handleClean={handleClearData} />
       <ModalFiltro<SucursalesModal>
         title="Sucursales"

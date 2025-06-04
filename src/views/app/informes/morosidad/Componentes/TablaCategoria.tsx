@@ -2,14 +2,19 @@ import { TablaDefault } from "@/frontend-resourses/components";
 import { ExtendedColumn } from "@/frontend-resourses/components/Tables/types";
 import { useMorosidadStore } from "../Store/store";
 import { dataTablaCategoria } from "../ts/data";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 interface TablaCategoriaProps {
   estaProcesado: boolean;
   className?: string;
 }
 export default function TablaCategoria({ estaProcesado, className }: TablaCategoriaProps) {
   const { status } = useMorosidadStore();
- // const { setId, id } = useCategoriaTabla();
+  const setTablaId = useMorosidadStore(state => state.setTablaId);
+  // Prepara la función específica para categoría
+  const setId = useCallback(
+    (id: string) => setTablaId('categoria', id),
+    [setTablaId]
+  );
 
   const tablaColumns: Array<ExtendedColumn<any>> = [
     {
@@ -24,14 +29,14 @@ export default function TablaCategoria({ estaProcesado, className }: TablaCatego
     { key: "cantidad", label: "Cant.", minWidth: "25", maxWidth: "50" },
     { key: "moraPorcentaje", label: "%", minWidth: "24", maxWidth: "55" },
   ];
-
+   
   const propsTabla = {
     datosParaTabla: estaProcesado ? dataTablaCategoria : [],
     objectColumns: tablaColumns,
     estaProcesado: estaProcesado,
     status: status,
     checkboxItem: true,
-  //  setIdTabla: setId,
+    setIdTabla: setId,
     withTooltip: true,
     selectFn: false,
     objectStyles: {

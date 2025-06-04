@@ -1,5 +1,5 @@
 import { Card } from "@/frontend-resourses/components/Cards/CardBase";
-import HerramientasInforme from "../../_components/HerramientasInforme";
+import HerramientasInforme, { ExcelExportConfig } from "../../_components/HerramientasInforme";
 import { useIngresosStore } from "../Store/store";
 import { ActionButton } from "@/frontend-resourses/components";
 import { FaWarehouse } from "react-icons/fa";
@@ -24,6 +24,16 @@ export default function Botonera({ className, props }: { className?: string; pro
     { id: 3, nombre: "Tomás", notas: [10, 9, 8] },
   ];
 
+  const exportConfig: ExcelExportConfig = {
+    sheets: [
+      {
+        name: "Ingresos",
+        data: exampleData,
+      },
+    ],
+    fileName: "Informe_Ingresos",
+  };
+
   return (
     <Card className={`${className} flex gap-3 `}>
       <ActionButton
@@ -43,7 +53,7 @@ export default function Botonera({ className, props }: { className?: string; pro
         addClassName="h-5 w-[6rem] v1536:w-[9rem]  rounded-md text-xxs  v1440:h-8 v1536:h-8 
         v1536:px-6 v1536:text-sm v1920:h-9"
       />
-      <HerramientasInforme disabledAll={!estaProcesado} gapButtons="gap-3" data={exampleData}  estaProcesado={estaProcesado} />
+      <HerramientasInforme disabledAll={!estaProcesado} exportConfig={exportConfig} gapButtons="gap-3" data={exampleData} estaProcesado={estaProcesado} />
     </Card>
   );
 }

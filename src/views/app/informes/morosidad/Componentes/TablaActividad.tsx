@@ -2,13 +2,19 @@ import { TablaDefault } from "@/frontend-resourses/components";
 import { ExtendedColumn } from "@/frontend-resourses/components/Tables/types";
 import {  useMorosidadStore } from "../Store/store";
 import { dataTablaActividad } from "../ts/data";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 interface TablaActividadProps {
   estaProcesado: boolean;
   className?: string;
 }
 export default function TablaActividad({ estaProcesado, className }: TablaActividadProps) {
   const { status } = useMorosidadStore();
+  const setTablaId = useMorosidadStore(state => state.setTablaId);
+
+    const setId = useCallback(
+      (id: string) => setTablaId('actividad', id),
+      [setTablaId]
+    );
 
   const tablaColumns: Array<ExtendedColumn<any>> = [
     {
@@ -29,7 +35,7 @@ export default function TablaActividad({ estaProcesado, className }: TablaActivi
     datosParaTabla: estaProcesado ? dataTablaActividad : [],
     objectColumns: tablaColumns,
     estaProcesado: estaProcesado,
-    //setIdTabla: setId,
+    setIdTabla: setId,
     status: status,
     selectFn: false,
     checkboxItem: true,

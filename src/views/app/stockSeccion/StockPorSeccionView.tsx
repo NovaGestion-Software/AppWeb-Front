@@ -15,6 +15,7 @@ import { FaWarehouse } from "react-icons/fa6";
 import ShowModalButtons from "./componentes/ShowModalButtons";
 import GrupoInputsRadio from "./componentes/GrupoInputsRadio";
 import BusquedaInputs from "@/frontend-resourses/components/Tables/Busqueda/BusquedaInputs";
+import Botonera from "./componentes/Botonera";
 
 export default function StockPorSeccionView() {
   // show modals de filtros
@@ -279,7 +280,7 @@ useEffect(() => {
                       v1536:px-4 v1536:h-11 v1536:col-start-5 v1536:right-12
                       v1920:col-start-5 "
         />
-        <HerramientasComponent
+        <Botonera
           className=" flex  w-fit  p-1.5  relative left-12 items-center bg-white rounded-lg shadow-sm shadow-gray-600
                       col-start-9 col-span-2 row-start-2
                        v1440:px-2 
@@ -290,6 +291,7 @@ useEffect(() => {
           estaProcesado={!isProcessing}
           modalSucursales={false}
           disabled={status === "idle"}
+
         />
       </div>
 

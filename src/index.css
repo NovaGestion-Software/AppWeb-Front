@@ -154,3 +154,8 @@ html {
   }
 }
 
+.grid2 {
+  display: grid;
+  grid-template-columns: repeat(15, 4.5rem);
+  grid-template-rows: repeat(14, 2rem);
+}

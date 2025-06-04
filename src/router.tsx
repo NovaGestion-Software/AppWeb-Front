@@ -15,6 +15,7 @@ import CobranzasView from './views/app/informes/cobranzas/cobranzasView';
 import MorosidadView from './views/app/informes/morosidad/MorosidadView';
 import IngresosView from './views/app/informes/Ingresos/IngresosView';
 import CompClientOtrasSucView from './views/app/informes/CompClientOtrasSuc/CompClientOtrasSucView';
+import Ranking from './views/Ranking/Ranking';
 
 export default function Router() {
   return (
@@ -25,6 +26,7 @@ export default function Router() {
         <Route element={<ProtectedRoute />}>
           <Route element={<Layout />}>
             <Route path="/home" element={<HomeView />} />
+            <Route path="/ranking" element={<Ranking />} />
             <Route path="/dashboard" element={<DashboardView />} />
             <Route path="/cajas" element={<CajasView />} />
             <Route path="/informes">
