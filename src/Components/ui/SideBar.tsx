@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useEffect,useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { MdOutlineAttachMoney, MdOutlineCategory } from "react-icons/md";
@@ -11,9 +11,9 @@ import { GrDocumentTime } from "react-icons/gr";
 import { BiBarChartSquare } from "react-icons/bi";
 import { FaBoxesPacking } from "react-icons/fa6";
 import { useVentasHoraStore } from "@/views/app/informes/ventasXHora/store/useVentasHoraStore";
-import { BsPerson, BsPersonAdd, BsPersonArmsUp, BsPersonBoundingBox, BsPersonDash } from "react-icons/bs";
+import { BsPerson, BsPersonBoundingBox } from "react-icons/bs";
 import { TbCashRegister } from "react-icons/tb";
-import { useTextOverflow } from "./layouts/effect";
+
 
 interface SubMenuItem {
   title: string;
@@ -35,8 +35,7 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
   const queryClient = useQueryClient();
   const [openMenus, setOpenMenus] = useState<{ [key: string]: boolean }>({});
   // const [hovering, setHovering] = useState(false);
-  const textRef = useRef(null);
-  const isOverflowing = useTextOverflow(textRef);
+
   const { clearVentasPorHora } = useVentasHoraStore();
 
   const storedUser = localStorage.getItem("_u");
