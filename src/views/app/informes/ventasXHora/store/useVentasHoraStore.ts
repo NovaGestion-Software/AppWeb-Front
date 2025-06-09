@@ -20,6 +20,9 @@ type VentasHoraProps = {
   setSucursalesSeleccionadas: (sucursales: SucursalesModal[]) => void;
   setSucursalesDisponibles: (sucursales: SucursalesModal[]) => void;
   status: Status;
+  // estado del proceso
+  estaProcesado: boolean;
+  setEstaProcesado: (value: boolean) => void;
   setVentasPorHora: (data: Sucursal[]) => void;
   setFechas: (data: FechasRango) => void;
   setStatus: (status: Status) => void;
@@ -39,6 +42,9 @@ export const useVentasHoraStore = create<VentasHoraProps>()(
       sucursalesSeleccionadas: [],
       sucursalesDisponibles: [],
       status: "idle",
+      // estado proceso
+      estaProcesado: false,
+      setEstaProcesado: (value) => set({ estaProcesado: value }),
       setVentasPorHora: (data) => set({ ventasPorHora: data }),
       setFechas: (data) => set({ fechas: data }),
       setSucursalesSeleccionadas: (sucursales) => set({ sucursalesSeleccionadas: sucursales }),
@@ -52,7 +58,7 @@ export const useVentasHoraStore = create<VentasHoraProps>()(
     {
       name: "ventas-hora-storage",
       storage: createJSONStorage(() => sessionStorage),
-      partialize: (state) => ({ sucursalesSeleccionadas: state.sucursalesSeleccionadas }),
+      partialize: (state) => ({ sucursalesSeleccionadas: state.sucursalesSeleccionadas, sucursalesDisponibles: state.sucursalesDisponibles }),
     }
   )
 );

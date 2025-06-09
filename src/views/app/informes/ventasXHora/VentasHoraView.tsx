@@ -1,8 +1,8 @@
-import { useEffect, useMemo, useState } from "react";
-import {  useQuery } from "@tanstack/react-query";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useVentasHoraStore } from "@/views/app/informes/ventasXHora/store/useVentasHoraStore";
 import { obtenerVentasHora } from "@/services/ApiPhpService";
-import {  FechasRango, SucursalesModal, VentaPorHora } from "@/types";
+import { FechasRango, SucursalesModal, VentaPorHora } from "@/types";
 import { formatearNumero } from "@/utils";
 import ViewTitle from "@/frontend-resourses/components/Labels/ViewTitle";
 import dayjs from "dayjs";
@@ -40,18 +40,19 @@ export type ConfigTabla = {
 };
 
 export default function VentasHoraView() {
-  const [procesado, setProcesado] = useState<boolean>(false);
+  //const [procesado, setProcesado] = useState<boolean>(false);
   // prueba de _ para deploy
   const [_footer, setFooter] = useState<boolean>(false);
   const [foco, setFoco] = useState<boolean>(false);
   const [showModalSucursales, setShowModalSucursales] = useState(false);
+  const queryClient = useQueryClient();
   // configuracion grafico
   const configuracionGrafico = [
     { label: "horaini", key: "horaini" },
     { label: "nOperaciones", key: "nOperaciones" },
   ];
   // configuracion agrupar indice
-   const config: ConfigKeys = {
+  const config: ConfigKeys = {
     filtroKey: "nsucursal",
     agrupadorKey: "horaini",
     innerArrayKey: "info",
@@ -59,7 +60,7 @@ export default function VentasHoraView() {
     convertir: ["importe"],
   };
   // Configuracion de tabla
-    const configTabla: ConfigTabla = {
+  const configTabla: ConfigTabla = {
     agrupadorKey: "horaini",
     columnas: [
       {
@@ -87,8 +88,10 @@ export default function VentasHoraView() {
   //store
   const {
     // estados
+    estaProcesado,
+    setEstaProcesado,
     status,
- //   setStatus,
+    //   setStatus,
     // dates
     fechas,
     setFechas,
@@ -144,7 +147,7 @@ export default function VentasHoraView() {
   // y dejar la store para cosas mas puntuales como los filtros y estados de la vista.
 
   // Fetch de datos con cache
-  const { data, isFetching, refetch } = useQuery({
+  const { data, isFetching, refetch, dataUpdatedAt } = useQuery({
     queryKey: ["ventas", fechas],
     queryFn: () => (fechas ? obtenerVentasHora(fechas) : null),
     enabled: false, // Control manual
@@ -154,12 +157,12 @@ export default function VentasHoraView() {
 
   //console.log("ventas por hora", ventasPorHora);
   // let existenDatos = ventasPorHora && ventasPorHora.length > 0;
-   let existenDatos = data && data.length > 0;
+  let existenDatos = data && data.length > 0;
 
-    const dataFinal = data || [];
+  const dataFinal = data || [];
   // const dataFinal = ventasPorHora || [];
 
-  console.log("data final", dataFinal);
+  // console.log("data final", dataFinal);
 
   // Formateo a array de strings
   const sucursalesDisponiblesStr = sucursalesDisponibles.map((s) => s.nsucursal);
@@ -167,8 +170,8 @@ export default function VentasHoraView() {
 
   // extrae horarios para indice.
   const indiceTabla = useMemo(() => (dataFinal ? extraerItemsDeIndice(dataFinal, "info", "horaini") : []), [dataFinal]);
-  console.log("indiceTabla", indiceTabla);
-  
+  //console.log("indiceTabla", indiceTabla);
+
   // funcion agrupar por horario, te suma los totales en base a sumKey
   const { datos, totales } = useMemo(() => agruparPorIndice(dataFinal, sucursalesSeleccionadasStr, indiceTabla, config, formatearNumero), [dataFinal, sucursalesSeleccionadasStr, indiceTabla]);
 
@@ -210,8 +213,10 @@ export default function VentasHoraView() {
       { label: "Horario", valor: destacados.indice },
     ],
   };
+  console.log(destacadosObject);
+
   // FOOTER TABLA 1
-  const datosParaFooter = procesado
+  const datosParaFooter = estaProcesado
     ? {
         hora: "",
         nOperaciones: totales.cantidad,
@@ -241,22 +246,30 @@ export default function VentasHoraView() {
   };
 
   // Set Filtros
-  useEffect(() => {
-    if (existenDatos) {
-      setProcesado(true);
-      console.log("isfetchi", isFetching);
-      console.log("existen datos useffect", existenDatos);
-      console.log("sucursales seleccionadas", sucursalesSeleccionadas);
-      console.log("data final use  effect", dataFinal);
-      extraerItems({
-        data: dataFinal,
-        itemsKeysGroup: { nsucursal: "nsucursal", sucursal: "sucursal" },
-        itemsSeleccionados: sucursalesSeleccionadas,
-        setItemsDisponibles: setSucursalesDisponibles,
-        setItemsSeleccionados: setSucursalesSeleccionadas,
-      });
-    }
-  }, [isFetching]);
+  const lastProcessedRef = useRef<number>(0);
+
+useEffect(() => {
+  const yaHayFiltros = sucursalesSeleccionadas.length > 0;
+
+  if (existenDatos && !yaHayFiltros && dataUpdatedAt > lastProcessedRef.current) {
+    lastProcessedRef.current = dataUpdatedAt;
+
+    extraerItems({
+      data: dataFinal,
+      itemsKeysGroup: { nsucursal: "nsucursal", sucursal: "sucursal" },
+      itemsSeleccionados: [],
+      setItemsDisponibles: setSucursalesDisponibles,
+      setItemsSeleccionados: setSucursalesSeleccionadas,
+    });
+  }
+}, [dataUpdatedAt, existenDatos, sucursalesSeleccionadas]);
+
+useEffect(() => {
+  if (existenDatos ) {
+        setEstaProcesado(true)
+  }
+}, [ existenDatos]);
+
   // LIMPIAR EL ESTADO FOCO A LOS 0.5S
   useEffect(() => {
     if (foco) {
@@ -281,6 +294,7 @@ export default function VentasHoraView() {
       window.removeEventListener("keydown", handleEscapeKey);
     };
   }, [dataFinal]);
+
   // HANDLE FETCH
   const handleFetchData = async (_dates: FechasRango) => {
     // try {
@@ -292,16 +306,18 @@ export default function VentasHoraView() {
     //   setFoco(true);
     // }
     refetch();
+    //                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                setEstaProcesado(true);
     console.log("refetch");
   };
   // CLEAR DATA
   const handleClearData = () => {
-    setProcesado(false);
+    setEstaProcesado(false);
     setFooter(false);
     clearVentasPorHora();
     clearSucursalesDisponibles();
     clearSucursalesSeleccionadas();
     setFoco(true);
+    queryClient.removeQueries({ queryKey: ["ventas"] });
   };
 
   const propsRangePicker = {
@@ -327,7 +343,7 @@ export default function VentasHoraView() {
               rangeDatePicker={propsRangePicker}
               estado={status}
               setFocus={foco}
-              estaProcesado={procesado}
+              estaProcesado={estaProcesado}
             />
           </div>
 
@@ -342,11 +358,11 @@ export default function VentasHoraView() {
               icon={<FaStoreAlt size={15} />}
               addClassName="h-7  rounded-md text-xs v1440:h-8 v1536:h-9 v1536:px-6 v1536:text-sm"
               onClick={() => setShowModalSucursales(true)}
-              disabled={!procesado}
+              disabled={!estaProcesado}
               color="blue"
               size="xs"
             />{" "}
-            <HerramientasComponent data={filas} estaProcesado={procesado} datosParaFooter={datosParaFooter} disabled={!procesado} modalSucursales={false} handleClean={handleClearData} />
+            <HerramientasComponent data={filas} estaProcesado={estaProcesado} datosParaFooter={datosParaFooter} disabled={!estaProcesado} modalSucursales={false} handleClean={handleClearData} />
           </div>
         </div>
 
@@ -355,7 +371,7 @@ export default function VentasHoraView() {
           className="grid  grid-cols-12 gap-4 ml-4 2xl:h-[45rem]
          2xl:ml-0 2xl:mt-5 overflow-hidden"
         >
-          {procesado && (
+          {estaProcesado && (
             <div
               className="col-span-5 gap-2 2xl:col-start-2  
             flex flex-col items-center justify-evenly 
@@ -366,7 +382,7 @@ export default function VentasHoraView() {
               <ListaFiltrosAplicados className="w-[29rem] v1440:w-[32rem] v1536:w-[36rem] " itemsDisponibles={sucursalesDisponiblesStr} itemsSeleccionados={sucursalesSeleccionadasStr} />
 
               {/* Información de ventas */}
-              <Destacados {...destacadosObject} />
+              {/* <Destacados {...destacadosObject} /> */}
 
               {/* Gráfico */}
               <GraficoConZoom
@@ -385,9 +401,9 @@ export default function VentasHoraView() {
           <div
             className={`flex bg-white  rounded-md w-fit h-fit 
                shadow shadow-gray-600  overflow-hidden  transition-all duration-500 ease-out  
-               ${procesado ? "col-start-6 col-span-7 2xl:col-start-7 " : " col-start-6 col-span-7  2xl:col-start-7 "}`}
+               ${estaProcesado ? "col-start-6 col-span-7 2xl:col-start-7 " : " col-start-6 col-span-7  2xl:col-start-7 "}`}
           >
-            <TablaVentaPorHora isProcessing={procesado} dataParaTabla={filas} datosFooter={datosParaFooter} />
+            <TablaVentaPorHora isProcessing={estaProcesado} dataParaTabla={filas} datosFooter={datosParaFooter} />
           </div>
         </div>
       </div>
@@ -399,8 +415,6 @@ export default function VentasHoraView() {
         showModal={showModalSucursales}
         setShowModal={setShowModalSucursales}
         datos={sucursalesDisponibles}
-        disabled2={false}
-        disabled={false}
         itemsDisponibles={sucursalesDisponibles}
         itemsSeleccionados={sucursalesSeleccionadas}
         setItemsDisponibles={setSucursalesDisponibles}

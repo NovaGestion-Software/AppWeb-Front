@@ -13,11 +13,11 @@ export default function Tabla({ className }: TablaProps) {
 
   const cobranzasColumns: Array<ExtendedColumn<any>> = [
     { key: "codigo", label: "Codigo", minWidth: "90", maxWidth: "120", resaltar: true },
-    { key: "nombre", label: "Nombre", minWidth: "90", maxWidth: "220", },
-    { key: "marca", label: "Marca", minWidth: "90", maxWidth: "120",  },
+    { key: "nombre", label: "Nombre", minWidth: "120", maxWidth: "220", },
+    { key: "marca", label: "Marca", minWidth: "120", maxWidth: "120",  },
     { key: "unidad", label: "Unidad", minWidth: "90", maxWidth: "120",  },
     { key: "cantidad", label: "Cantidad", minWidth: "90", maxWidth: "220", resaltar: true },
-    { key: "importe", label: "importe", minWidth: "90", maxWidth: "220", resaltar: true },
+    { key: "importe", label: "importe", minWidth: "130", maxWidth: "220", resaltar: true },
   ];
 
   const tablaProps = {

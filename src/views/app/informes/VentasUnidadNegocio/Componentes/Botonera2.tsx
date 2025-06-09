@@ -21,7 +21,7 @@ const Botonera2: FunctionComponent<Botonera2Props> = () => {
     },
   };
   return (
-    <Card className="col-start-8">
+    <Card className="col-start-7">
       <ShowModalsButtons estaProcesado={estaProcesado} className="flex gap-1 " props={propsShowModales} />
     </Card>
   );
