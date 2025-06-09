@@ -175,8 +175,9 @@ export default function VentasHoraView() {
   const { datos, totales } = useMemo(() => agruparPorIndice(dataFinal, sucursalesSeleccionadasStr, indiceTabla, config, formatearNumero), [dataFinal, sucursalesSeleccionadasStr, indiceTabla]);
 
   // console.log("datos", datos);
-  // crea datos en estructura de tabla.
 
+
+  // crea datos en estructura de tabla.1
   const filasGenericas = useMemo(() => crearDataParaTablaModular(datos, totales, configTabla), [datos, totales]);
 
   // seteo de filas segun VentaPorHora
