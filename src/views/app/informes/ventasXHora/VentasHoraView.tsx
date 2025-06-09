@@ -16,7 +16,6 @@ import GraficoConZoom from "@/frontend-resourses/components/Charts/GraficoConZoo
 import RangeDatesInput from "@/frontend-resourses/components/Inputs/RangeDatesInput";
 
 import { extraerItems, extraerItemsDeIndice, agruparPorIndice, crearDataParaTablaModular, obtenerValorMaximoConIndice } from "@/frontend-resourses/utils/dataManipulation";
-import { Destacados } from "@/frontend-resourses/components/Complementos/Destacados";
 import { ListaFiltrosAplicados } from "@/frontend-resourses/components/Complementos/ListaFiltrosAplicados";
 import { FaStoreAlt } from "react-icons/fa";
 
@@ -147,7 +146,7 @@ export default function VentasHoraView() {
   // y dejar la store para cosas mas puntuales como los filtros y estados de la vista.
 
   // Fetch de datos con cache
-  const { data, isFetching, refetch, dataUpdatedAt } = useQuery({
+  const { data, refetch, dataUpdatedAt } = useQuery({
     queryKey: ["ventas", fechas],
     queryFn: () => (fechas ? obtenerVentasHora(fechas) : null),
     enabled: false, // Control manual
