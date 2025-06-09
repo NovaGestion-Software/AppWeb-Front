@@ -1,5 +1,4 @@
 import { ActionButton } from "@/frontend-resourses/components";
-import { Status } from "@/frontend-resourses/components/types";
 import { BsPerson } from "react-icons/bs";
 import { FaWarehouse } from "react-icons/fa";
 import { MdReceiptLong } from "react-icons/md";
