@@ -10,6 +10,8 @@ const defaultDate = {
 };
 
 type VentasPorSeccionProps = {
+    id: string;
+  setId: (id: string) => void;
   // parametros
   fechas: FechasRango;
   clearFechas: () => void;
@@ -59,6 +61,8 @@ type VentasPorSeccionProps = {
 export const useVentasPorSeccionStore = create<VentasPorSeccionProps>()(
   persist(
     (set) => ({
+         id: "",
+      setId: (id) => set({ id }),
       //parametros
       fechas: { from: defaultDate.from, to: defaultDate.to },
       setFechas: (data) => set({ fechas: data }),

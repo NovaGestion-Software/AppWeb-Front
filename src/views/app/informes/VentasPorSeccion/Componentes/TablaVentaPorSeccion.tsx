@@ -28,7 +28,7 @@ export function TablaVentaPorSeccion({ data,
   // const heightContainerTabla1440 = "48rem";
   // const heightContainerTabla1536 = "44rem";
 
-  const { idsCoincidentes, indiceSeleccionado, buscado, modoNavegacion, indiceGlobal } = useVentasPorSeccionStore();
+  const { idsCoincidentes, indiceSeleccionado, buscado, modoNavegacion, indiceGlobal, setId } = useVentasPorSeccionStore();
 
   // columnas
   const VentaXSeccionColumns: Array<ExtendedColumn<VentaPorSeccionType>> = [
@@ -62,6 +62,7 @@ export function TablaVentaPorSeccion({ data,
     estaProcesado: estaProcesado,
     status: estaProcesado,
     selectFn: true,
+    setIdTabla: setId,
     objectStyles: {
       columnasNumber: [3, 4],
       heightContainer: "26.4rem",

@@ -5,6 +5,8 @@ import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
 type StockPorSeccionProps = {
+    id: string;
+  setId: (id: string) => void;
   status: Status;
   // MODAL PARA SELECCION DE SECCION Y RUBRO
   footer: boolean;
@@ -111,6 +113,8 @@ type StockPorSeccionProps = {
 export const useStockPorSeccion = create<StockPorSeccionProps>()(
   persist(
     (set) => ({
+       id: "",
+      setId: (id) => set({ id }),
       status: 'pending',
       footer: true,
       setFooter: (footer: boolean) => set({ footer }),

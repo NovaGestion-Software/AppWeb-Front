@@ -23,6 +23,7 @@ export default function TablaVentasPorVendedor({ className }: { className?: stri
   const subItemLabelProperty = "tipo"; // Nombre que identifica la etiqueta de los subítems
   const itemKey = "vendedorCodigo";
   const {
+    setId,
     //data
     ventasPorVendedor,
     // footer
@@ -40,6 +41,7 @@ export default function TablaVentasPorVendedor({ className }: { className?: stri
     datosParaTabla: ventasPorVendedor ?? [],
     objectColumns: SeccionRubrosColumns,
     selectFn: true,
+    setIdTabla: setId,
     objectStyles: {
       cursorPointer: true,
       columnasNumber: [2, 3, 4, 5, 6, 7],

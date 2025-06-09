@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { MdOutlineAttachMoney, MdOutlineCategory } from "react-icons/md";
@@ -11,8 +11,9 @@ import { GrDocumentTime } from "react-icons/gr";
 import { BiBarChartSquare } from "react-icons/bi";
 import { FaBoxesPacking } from "react-icons/fa6";
 import { useVentasHoraStore } from "@/views/app/informes/ventasXHora/store/useVentasHoraStore";
-import { BsPerson } from "react-icons/bs";
+import { BsPerson, BsPersonAdd, BsPersonArmsUp, BsPersonBoundingBox, BsPersonDash } from "react-icons/bs";
 import { TbCashRegister } from "react-icons/tb";
+import { useTextOverflow } from "./layouts/effect";
 
 interface SubMenuItem {
   title: string;
@@ -34,7 +35,8 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
   const queryClient = useQueryClient();
   const [openMenus, setOpenMenus] = useState<{ [key: string]: boolean }>({});
   // const [hovering, setHovering] = useState(false);
-
+  const textRef = useRef(null);
+  const isOverflowing = useTextOverflow(textRef);
   const { clearVentasPorHora } = useVentasHoraStore();
 
   const storedUser = localStorage.getItem("_u");
@@ -80,42 +82,48 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
       title: "Informes", // Menú desplegable principal
       icon: <BiBarChartSquare />,
       submenus: [
-            {
-              title: "Ventas por Hora",
-              href: "/informes/ventas-hora",
-              icon: <GrDocumentTime />,
-            },
-            {
-              title: "Ventas por Sección",
-              href: "/informes/ventas-seccion",
-              icon: <MdOutlineCategory />,
-            },
-            {
-              title: "Ventas por Vendedor",
-              href: "/informes/ventas-vend",
-              icon: <BsPerson />,
-            },
-            {
-              title: "Cobranzas",
-              href: "/informes/cobranzas",
-              icon: <CiClock2 />,
-            },
-            {
-              title: "Cobranzas por Vencimiento",
-              href: "/informes/cobranza-vencim",
-              icon: <CiClock2 />,
-            },
-            {
-              title: "Morosidad",
-              href: "/informes/morosidad",
-              icon: <CiCalendar />,
-            },
-             {
-              title: "Ingresos",
-              href: "/informes/ingresos",
-              icon: <TbCashRegister />,
-            },
-          ],
+        {
+          title: "Ventas por Hora",
+          href: "/informes/ventas-hora",
+          icon: <GrDocumentTime />,
+        },
+        {
+          title: "Ventas por Sección",
+          href: "/informes/ventas-seccion",
+          icon: <MdOutlineCategory />,
+        },
+        {
+          title: "Ventas por Vendedor",
+          href: "/informes/ventas-vend",
+          icon: <BsPerson />,
+        },
+        {
+          title: "Cobranzas",
+          href: "/informes/cobranzas",
+          icon: <CiClock2 />,
+        },
+        {
+          title: "Cobranzas por Vencimiento",
+          href: "/informes/cobranza-vencim",
+          icon: <CiClock2 />,
+        },
+        {
+          title: "Morosidad",
+          href: "/informes/morosidad",
+          icon: <CiCalendar />,
+        },
+        {
+          title: "Ingresos",
+          href: "/informes/ingresos",
+          icon: <TbCashRegister />,
+        },
+
+        {
+          title: "Comp. Clientes otras Sucursales",
+          href: "/informes/clientes-otras-suc",
+          icon: <BsPersonBoundingBox />,
+        },
+      ],
     },
   ];
   /**
@@ -208,15 +216,28 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
                   {submenu.submenus ? (
                     renderMenu(submenu)
                   ) : (
-                    <Link
-                      to={submenu.href ?? "#"}
-                      className={`text-white text-sm flex items-center gap-x-2 cursor-pointer p-2 pl-4 rounded-l-md rounded-r-none mt-0.5 hover:bg-[#FFFFFF2B] hover:-translate-y-0.5 duration-300 overflow-hidden ${
-                        submenu.href === location.pathname ? "bg-[#FFFFFF2B] -translate-y-0.5 " : ""
-                      }`}
-                    >
-                      <span className={`duration-300 ${submenu.href === location.pathname ? "scale-110" : ""}`}>{submenu.icon}</span>
-                      <span className={`block transition-all duration-500 whitespace-nowrap overflow-hidden ${!open ? "max-w-0 opacity-0" : "max-w-full opacity-100"}`}>{submenu.title}</span>
-                    </Link>
+                 <Link
+  to={submenu.href ?? "#"}
+  className={`text-white text-sm flex items-center gap-x-2 cursor-pointer p-2 pl-4 rounded-l-md rounded-r-none mt-0.5 hover:bg-[#FFFFFF2B] hover:-translate-y-0.5 duration-300 overflow-hidden ${
+    submenu.href === location.pathname ? "bg-[#FFFFFF2B] -translate-y-0.5" : ""
+  }`}
+>
+  <span className={`duration-300 ${submenu.href === location.pathname ? "scale-110" : ""}`}>
+    {submenu.icon}
+  </span>
+  
+  <span className={`
+    block transition-all duration-500 whitespace-nowrap overflow-hidden relative
+    ${!open ? "max-w-0 opacity-0" : "max-w-full opacity-100"}
+    group-hover:overflow-visible
+  `}>
+    <span className="inline-block group-hover:animate-marquee">
+      {submenu.title}
+    </span>
+    {/* Degradado para indicar que hay más texto */}
+    <span className="absolute right-0 top-0 bottom-0 w-4 bg-gradient-to-l from-[#yourSidebarBgColor] to-transparent pointer-events-none"></span>
+  </span>
+</Link>
                   )}
                 </p>
               ))}

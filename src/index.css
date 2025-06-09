@@ -156,6 +156,16 @@ html {
 
 .grid2 {
   display: grid;
-  grid-template-columns: repeat(15, 4.5rem);
-  grid-template-rows: repeat(14, 2rem);
+  grid-template-columns: repeat(14, minmax(0, 1fr)); /* Evita overflow */
+  grid-template-rows: repeat(12, min-content); /* Alto según contenido */
+  grid-auto-flow: dense; /* Mejor empaquetado */
+  overflow: auto; /* Scroll si excede */
 }
+
+/* Opcional: forzar tamaños mínimos/máximos */
+.grid-item {
+  min-width: 80px;
+  max-width: 200px;
+  min-height: 40px;
+}
+

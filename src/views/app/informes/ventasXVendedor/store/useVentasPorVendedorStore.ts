@@ -11,6 +11,8 @@ const defaultDate = {
 };
 
 type VentasPorVendedorProps = {
+  id: string;
+  setId: (id: string) => void;
   // parametros
   fechas: FechasRango;
   clearFechas: () => void;
@@ -23,7 +25,7 @@ type VentasPorVendedorProps = {
   setVentasPorVendedor: (data: VentaPorVendedorColumns[]) => void;
   clearVentasPorVendedor: () => void;
 
-    //data
+  //data
   ventasPorVendedorFooter: VentaPorVendedorColumns[];
   setVentasPorVendedorFooter: (dataFooter: VentaPorVendedorColumns[]) => void;
   clearVentasPorVendedorFooter: () => void;
@@ -62,6 +64,8 @@ type VentasPorVendedorProps = {
 export const useVentasPorVendedorStore = create<VentasPorVendedorProps>()(
   persist(
     (set) => ({
+      id: "",
+      setId: (id) => set({ id }),
       //parametros
       fechas: { from: defaultDate.from, to: defaultDate.to },
       setFechas: (data) => set({ fechas: data }),

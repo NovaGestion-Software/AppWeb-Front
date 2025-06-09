@@ -14,7 +14,7 @@ interface BotoneraProps {
   status?: Status;
 }
 export default function Botonera({ className, props }: { className?: string; props: BotoneraProps }) {
-  const { estaProcesado } = useIngresosStore();
+  const { estaProcesado, id } = useIngresosStore();
   const { propsShowModal } = props;
   const setShowSucursales = propsShowModal?.setShowSucursales;
   const setShowUniNego = propsShowModal?.setShowUniNego;
@@ -53,7 +53,7 @@ export default function Botonera({ className, props }: { className?: string; pro
         addClassName="h-5 w-[6rem] v1536:w-[9rem]  rounded-md text-xxs  v1440:h-8 v1536:h-8 
         v1536:px-6 v1536:text-sm v1920:h-9"
       />
-      <HerramientasInforme disabledAll={!estaProcesado} exportConfig={exportConfig} gapButtons="gap-3" data={exampleData} estaProcesado={estaProcesado} />
+      <HerramientasInforme disabledAll={!estaProcesado} exportConfig={exportConfig} gapButtons="gap-3" data={exampleData} estaProcesado={estaProcesado} containerId={id} />
     </Card>
   );
 }

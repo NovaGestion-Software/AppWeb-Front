@@ -1,20 +1,22 @@
-import { Status } from '@/frontend-resourses/components/types';
-import { FechasRango, SucursalesModal } from '@/types';
-import dayjs from 'dayjs';
-import { create } from 'zustand';
-import { createJSONStorage, persist } from 'zustand/middleware';
+import { Status } from "@/frontend-resourses/components/types";
+import { FechasRango, SucursalesModal } from "@/types";
+import dayjs from "dayjs";
+import { create } from "zustand";
+import { createJSONStorage, persist } from "zustand/middleware";
 
 const defaultDate = {
-  from: dayjs().startOf('month'),
+  from: dayjs().startOf("month"),
   to: dayjs(),
 };
 
 type IngresosProps = {
+  id: string;
+  setId: (id: string) => void;
   // parametros range picker
   fechas: FechasRango;
   clearFechas: () => void;
   setFechas: (data: FechasRango) => void;
-    // parametros date picker
+  // parametros date picker
   fecha: FechasRango;
   clearFecha: () => void;
   setFecha: (data: FechasRango) => void;
@@ -25,9 +27,9 @@ type IngresosProps = {
   estaProcesado: boolean;
   setEstaProcesado: (value: boolean) => void;
   //data
-//   cobranzaPorVencimiento: DatosMora[];
-//   setCobranzaPorVencimiento: (data: DatosMora[]) => void;
-//   clearCobranzaPorVencimiento: () => void;
+  //   cobranzaPorVencimiento: DatosMora[];
+  //   setCobranzaPorVencimiento: (data: DatosMora[]) => void;
+  //   clearCobranzaPorVencimiento: () => void;
 
   //secciones:
 
@@ -41,30 +43,31 @@ type IngresosProps = {
   setSucursalesDisponibles: (sucursales: SucursalesModal[]) => void;
   clearSucursalesSeleccionadas: () => void;
   clearSucursalesDisponibles: () => void;
-
 };
 
 export const useIngresosStore = create<IngresosProps>()(
   persist(
     (set) => ({
+      id: "",
+      setId: (id) => set({ id }),
       //parametros range picker
       fechas: { from: defaultDate.from, to: defaultDate.to },
       setFechas: (data) => set({ fechas: data }),
-      clearFechas: () => set({ fechas: { from: '', to: '' } }),
-        //parametros date picker
+      clearFechas: () => set({ fechas: { from: "", to: "" } }),
+      //parametros date picker
       fecha: { from: defaultDate.from, to: defaultDate.to },
       setFecha: (data) => set({ fecha: data }),
-      clearFecha: () => set({ fecha: { from: '', to: '' } }),
+      clearFecha: () => set({ fecha: { from: "", to: "" } }),
       // status
-      status: 'idle',
+      status: "idle",
       setStatus: (status) => set({ status }),
       // estado proceso
       estaProcesado: false,
-      setEstaProcesado: (value) => set({estaProcesado: value}),
+      setEstaProcesado: (value) => set({ estaProcesado: value }),
       //data
-    //   cobranzaPorVencimiento: [],
-    //   setCobranzaPorVencimiento: (data) => set({ cobranzaPorVencimiento: data }),
-    //   clearCobranzaPorVencimiento: () => set({ cobranzaPorVencimiento: [] }),
+      //   cobranzaPorVencimiento: [],
+      //   setCobranzaPorVencimiento: (data) => set({ cobranzaPorVencimiento: data }),
+      //   clearCobranzaPorVencimiento: () => set({ cobranzaPorVencimiento: [] }),
 
       // secciones
       secciones: [] as any[],
@@ -77,11 +80,10 @@ export const useIngresosStore = create<IngresosProps>()(
       setSucursalesDisponibles: (sucursales) => set({ sucursalesDisponibles: sucursales }),
       clearSucursalesSeleccionadas: () => set({ sucursalesSeleccionadas: [] }),
       clearSucursalesDisponibles: () => set({ sucursalesDisponibles: [] }),
-
     }),
 
     {
-      name: 'ingresos-storage',
+      name: "ingresos-storage",
       storage: createJSONStorage(() => sessionStorage),
     }
   )

@@ -25,6 +25,7 @@ interface HerramientasInformeProps<_T> {
   selectedIds?: string[]; // IDs seleccionados para imprimir
   setSelectedIds?: (ids: (string | number)[]) => void; // Función para actualizar los IDs seleccionados
   exportConfig?: ExcelExportConfig;
+  containerId?: string | number;
 }
 
 export interface ExcelExportConfig {
@@ -48,6 +49,7 @@ export default function HerramientasInforme<T>({
   itemsDisponibles,
   setSelectedIds,
   exportConfig,
+  containerId = "table-container",
 }: HerramientasInformeProps<T>) {
   useEffect(() => {
     // Para evitar console.log (solo para deployar en vercel)
@@ -90,7 +92,7 @@ export default function HerramientasInforme<T>({
   // //   XLSX.writeFile(wb, "Informe.xlsx");
   // // }, [data, datosTotales]);
 
-  const exportToExcel = (config: ExcelExportConfig) => { 
+  const exportToExcel = (config: ExcelExportConfig) => {
     try {
       const wb = XLSX.utils.book_new();
 
@@ -180,6 +182,7 @@ export default function HerramientasInforme<T>({
             border-collapse: collapse;
             margin-top: 10px;
             font-size: 0.9em;
+            page-break-inside: avoid;
           }
           th {
             background-color: #f5f5f5;
@@ -193,9 +196,50 @@ export default function HerramientasInforme<T>({
           tr:nth-child(even) {
             background-color: #f9f9f9;
           }
+          
+          /* Estilos para el footer */
+          .table-footer-grid {
+            display: grid;
+            width: 100%;
+            margin-top: -1px;
+            page-break-inside: avoid;
+          }
+          .table-footer-grid > div {
+            display: grid;
+            page-break-inside: avoid;
+
+            padding: 8px 12px;
+            text-align: right;
+            border: 1px solid #ddd;
+            border-top: none;
+            background-color: #f5f5f5;
+            font-weight: bold;
+          }
+          .table-footer-grid .resaltado {
+            color: #ff0000;
+            font-weight: bolder;
+            background-color: #ffecec;
+          }
+          .table-footer-grid .bg-green {
+            background-color: #51a377;
+          }
+          .table-footer-grid .bg-blue {
+            background-color: #a5c9ff;
+          }
+          .table-footer-grid .bg-gray {
+            background-color: #d1d5db;
+          }
+          .table-footer-grid .rounded-bl {
+            border-bottom-left-radius: 4px;
+          }
+          .table-footer-grid .rounded-br {
+            border-bottom-right-radius: 4px;
+          }
+          
           .page-break {
             page-break-after: always;
           }
+          
           @media print {
             body {
               padding: 0;
@@ -206,6 +250,17 @@ export default function HerramientasInforme<T>({
             }
             th, td {
               padding: 6px 8px;
+            }
+            .table-footer-grid > div {
+              padding: 6px 8px;
+            }
+            @page {
+              size: auto;
+              margin: 5mm;
+            }
+            * {
+              -webkit-print-color-adjust: exact;
+              print-color-adjust: exact;
             }
           }
         </style>
@@ -220,14 +275,18 @@ export default function HerramientasInforme<T>({
           .map((table, index) => {
             const title = table.dataset.printTitle || `Tabla ${index + 1}`;
             const tableHTML = table.querySelector("table")?.outerHTML || "";
+            const footerHTML = table.querySelector("#footer-id")?.outerHTML || "";
 
             return `
-            <div class="print-section">
-              <h2 class="print-title">${title}</h2>
-              ${tableHTML}
-            </div>
-            ${index < tableElements.length - 1 ? '<div class="page-break"></div>' : ""}
-          `;
+              <div class="print-section">
+                <h2 class="print-title">${title}</h2>
+                ${tableHTML}
+                <div class="table-footer-grid">
+                  ${footerHTML}
+                </div>
+              </div>
+              ${index < tableElements.length - 1 ? '<div class="page-break"></div>' : ""}
+            `;
           })
           .join("")}
       </body>
@@ -265,23 +324,31 @@ export default function HerramientasInforme<T>({
   return (
     <div className={`flex justify-center ${gapButtons} w-fit rounded-lg `}>
       <ActionButton
-        onClick={itemsDisponibles ? () => handleMostrarSelector("exportar") : () => exportToExcel(exportConfig || { sheets: [], fileName: "Informe" })}
-        disabled={isExportExcelDisabled}
-        addClassName="h-5   rounded-md text-xs v1440:h-8 v1536:h-9 v1536:px-6 v1536:text-sm"
+        // estilos botones
         color="green"
-        icon={<RiFileExcel2Fill className="h-3 w-3 v1536:h-5 v1536:w-5" />}
+        addClassName="h-5   rounded-md text-xs v1440:h-8 v1536:h-9 v1536:px-6 v1536:text-sm"
+        // icono
+        icon={<RiFileExcel2Fill className="h-3 w-3 v1440:w-5 v1440:h-4  v1536:h-5 v1536:w-5" />}
+        disabled={isExportExcelDisabled}
+        onClick={itemsDisponibles ? () => handleMostrarSelector("exportar") 
+          : () => exportToExcel(exportConfig || { sheets: [], fileName: "Informe" })}
       />
       <ActionButton
-        onClick={itemsDisponibles ? () => handleMostrarSelector("imprimir") : () => handlePrint(["table-to-print"])}
-        disabled={isPrintDisabled}
-        addClassName="h-5  rounded-md text-xs v1440:h-8 v1536:h-9 v1536:px-6 v1536:text-sm"
+        // estilos botones
         color="blue"
-        icon={<RiPrinterFill className="h-3 w-3 v1536:h-5 v1536:w-5" />}
+        addClassName="h-5  rounded-md text-xs v1440:h-8 v1440: v1536:h-9 v1536:px-6 v1536:text-sm"
+        // icono
+        icon={<RiPrinterFill className="h-3 w-3 v1440:w-5 v1440:h-4 v1536:h-5 v1536:w-5" />}
+        onClick={itemsDisponibles ? () => handleMostrarSelector("imprimir") 
+          : () => handlePrint([containerId])}
+        disabled={isPrintDisabled}
       />
       <ActionButton
-        icon={<IoTrash className="h-3 w-3 v1536:h-5 v1536:w-5" />}
+        // estilos botones
         color="red"
-        addClassName="h-5  rounded-md text-xs v1440:h-8 v1536:h-9 v1536:px-6 v1536:text-sm 2xl:w-12"
+        addClassName="h-5 rounded-md text-xs v1440:h-8 v1536:h-9 v1536:px-6 v1536:text-sm 2xl:w-12"
+        // icono
+        icon={<IoTrash className="h-3 w-3  v1440:w-5 v1440:h-4 v1536:h-5 v1536:w-5" />}
         onClick={handleClean || (() => {})}
         disabled={isCleanDisabled}
       />

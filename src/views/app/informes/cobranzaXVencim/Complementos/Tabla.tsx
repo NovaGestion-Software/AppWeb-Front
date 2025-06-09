@@ -7,7 +7,7 @@ interface TablaCxVProps {
   className?: string;
 }
 export default function TablaCxV({ estaProcesado, className }: TablaCxVProps) {
-  const { status, cobranzaPorVencimiento } = useCobranzaPorVencimientoStore();
+  const { status, cobranzaPorVencimiento, setId } = useCobranzaPorVencimientoStore();
   const cobranzaVencimientoColumns: Array<ExtendedColumn<any>> = [
     { key: "concepto", label: "Concepto", minWidth: "120", maxWidth: "200" , resaltar:true,},
     { key: "importe", label: "Importe $", minWidth: "100", maxWidth: "520" },
@@ -26,6 +26,7 @@ export default function TablaCxV({ estaProcesado, className }: TablaCxVProps) {
     estaProcesado: estaProcesado,
     status: status,
     selectFn: false,
+    setIdTabla: setId,
     objectStyles: {
       columnasNumber: [2,3,4,5,6,7,8,9],
       heightContainer: "8rem",

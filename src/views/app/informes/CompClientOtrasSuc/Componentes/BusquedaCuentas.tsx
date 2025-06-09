@@ -1,9 +1,10 @@
 import BusquedaInputs from "@/frontend-resourses/components/Tables/Busqueda/BusquedaInputs";
 import { useCompClientOtrasSucStore } from "../Store/store";
-import { dataTablaActividad } from "../../morosidad/ts/data";
+import { comprasClientesData } from "../Data/data";
 
 export default function BusquedaCuentas({className}: { className?: string;}) {
   const {
+    estaProcesado,
     // filtros
 
     buscado,
@@ -21,7 +22,8 @@ export default function BusquedaCuentas({className}: { className?: string;}) {
   } = useCompClientOtrasSucStore();
 
   const propsBusqueda = {
-    data: dataTablaActividad,
+    data: comprasClientesData,
+    disabled: !estaProcesado,
     // busqueda
     buscado,
     setBuscado,
@@ -38,11 +40,11 @@ export default function BusquedaCuentas({className}: { className?: string;}) {
     inputsLength: 2,
     modoBusqueda: "simple" as "simple",
     keysBusqueda: {
-      itemKey: "seccion",
-      busquedaKeyText: ["nseccion"],
-      busquedaKeyCode: ["seccion"],
-      textLabelProperty: "Seccion",
-      codeLabelProperty: "Codigo",
+      itemKey: "cuenta",
+      busquedaKeyText: ["nombre"],
+      busquedaKeyCode: ["cuenta"],
+      textLabelProperty: "Nombre",
+      codeLabelProperty: "Cuenta",
     },
   };
 

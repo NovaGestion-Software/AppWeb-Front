@@ -23,6 +23,7 @@ export default function Botonera({ data, estaProcesado, disabled, className }: B
     setSucursalesSeleccionadas,
     sucursalesDisponibles,
     setSucursalesDisponibles,
+    id,
   } = useCobranzaPorVencimientoStore();
 
   const renderSucursalesItem = (item: SucursalesModal) => {
@@ -61,6 +62,7 @@ export default function Botonera({ data, estaProcesado, disabled, className }: B
         disabledClean={disabled}
         disabledExportExcel={disabled}
         exportConfig={exportConfig}
+        containerId={id}
         
       />
       

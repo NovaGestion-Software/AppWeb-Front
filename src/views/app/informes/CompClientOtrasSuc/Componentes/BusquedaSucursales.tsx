@@ -2,10 +2,10 @@ import BusquedaInputs from "@/frontend-resourses/components/Tables/Busqueda/Busq
 import { useCompClientOtrasSucStore } from "../Store/store";
 import { dataTablaActividad } from "../../morosidad/ts/data";
 
-export default function BusquedaSucursales({className}: { className?: string;}) {
+export default function BusquedaSucursales({ className }: { className?: string }) {
   const {
     // filtros
- 
+    estaProcesado,
     buscado,
     setBuscado,
     idsCoincidentes,
@@ -22,6 +22,8 @@ export default function BusquedaSucursales({className}: { className?: string;}) 
 
   const propsBusqueda = {
     data: dataTablaActividad,
+    disabled: estaProcesado,
+    
     // busqueda
     buscado,
     setBuscado,
@@ -46,10 +48,5 @@ export default function BusquedaSucursales({className}: { className?: string;}) 
     },
   };
 
-  return (
-      <BusquedaInputs
-        props={propsBusqueda}
-        className={`${className}`}
-      />
-  );
+  return <BusquedaInputs props={propsBusqueda} className={`${className}`} />;
 }

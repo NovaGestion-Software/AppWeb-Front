@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 import * as XLSX from 'xlsx';
 import HerramientasInforme, { ExcelExportConfig } from '../../_components/HerramientasInforme';
+import { useVentasHoraStore } from '../store/useVentasHoraStore';
 
 interface HerramientasComponentProps {
   data: Record<string, any>[]; // Ahora acepta cualquier estructura de datos
@@ -20,6 +21,9 @@ export default function HerramientasComponent({
   handleClean,
   className
 }: HerramientasComponentProps) {
+
+  const {id} = useVentasHoraStore()
+
   // Aseguramos que datosTotales tenga un ID
   const datosTotales = datosParaFooter
     ? { id: 1, hora: 'Totales', ...datosParaFooter } // Se añade un identificador único
@@ -48,34 +52,6 @@ export default function HerramientasComponent({
     XLSX.writeFile(wb, 'Informe.xlsx');
   }, [data, datosTotales]);
 
-  const handlePrint = useCallback(() => {
-    const tableElement = document.getElementById('table-to-print');
-    if (!tableElement) return;
-
-    const printWindow = window.open('', '_blank', 'width=600,height=800');
-    if (!printWindow) return;
-
-    printWindow.document.write(`
-      <html>
-        <head>
-          <title>Imprimir Tabla</title>
-          <style>
-            body { font-family: Arial, sans-serif; padding: 20px; margin: 0; }
-            table { width: 100%; border-collapse: collapse; }
-            table, th, td { border: 1px solid black; }
-            th, td { padding: 8px; text-align: left; }
-            @media print { body { font-size: 12px; } button { display: none; } }
-          </style>
-        </head>
-        <body>
-          <h1>Informe</h1>
-          ${tableElement.outerHTML}
-        </body>
-      </html>
-    `);
-    printWindow.document.close();
-    setTimeout(() => printWindow.print(), 500);
-  }, []);
 
   const handleClearData = handleClean || (() => {
     console.log('clear');
@@ -97,12 +73,12 @@ export default function HerramientasComponent({
         data={data}
         estaProcesado={estaProcesado}
         handleExportExcel={handleExportExcel}
-        handlePrint={handlePrint}
         disabledExportExcel={disabled}
         disabledPrint={disabled}
         disabledClean={disabled}
         handleClean={handleClearData}
         exportConfig={exportConfig}
+        containerId={id}
         >
       </HerramientasInforme>
     </div>

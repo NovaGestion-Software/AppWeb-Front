@@ -23,9 +23,10 @@ export default function Botonera({ data,  estaProcesado, disabled, className, ha
       setSucursalesSeleccionadas,
       sucursalesDisponibles,
       setSucursalesDisponibles,
+      id,
     } = useCobranzasStore();
 
-
+console.log('id', id)
 
 
   const handlePrint = useCallback(() => {
@@ -87,7 +88,7 @@ export default function Botonera({ data,  estaProcesado, disabled, className, ha
        addClassName="h-7  rounded-md text-xs v1440:h-8 v1536:h-9 v1536:px-6 v1536:text-sm" onClick={() => setShowModalSucursales(true)} 
        disabled={!estaProcesado} color="blue"/>{' '}
       <HerramientasInforme 
-      data={data} estaProcesado={estaProcesado} exportConfig={exportConfig}
+      data={data} estaProcesado={estaProcesado} exportConfig={exportConfig} containerId={id}
       handlePrint={handlePrint} disabledExportExcel={disabled}  disabledPrint={disabled} disabledClean={disabled} handleClean={handleClearData} />
       <ModalFiltro<SucursalesModal>
         title="Sucursales"

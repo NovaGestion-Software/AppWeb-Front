@@ -33,6 +33,7 @@ type SelectData = {
 export default function TablaStock() {
   // store
   const {
+    setId,
     tablaStock,
     productos,
     setStockRenderizado,
@@ -272,6 +273,7 @@ export default function TablaStock() {
     objectColumns: productosColumns,
     selectFn: true,
     withTooltip: true,
+    setIdTabla: setId,
     objectStyles: {
       cursorPointer: true,
       heightContainer: "28rem",

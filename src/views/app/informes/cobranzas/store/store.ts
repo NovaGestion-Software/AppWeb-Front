@@ -11,6 +11,10 @@ const defaultDate = {
 };
 
 type CobranzasProps = {
+
+  id: string;
+  setId: (id: string) => void;
+
   // parametros
   fechas: FechasRango;
   clearFechas: () => void;
@@ -44,6 +48,9 @@ type CobranzasProps = {
 export const useCobranzasStore = create<CobranzasProps>()(
   persist(
     (set) => ({
+      id: "",
+      setId: (id) => set({id}),
+
       //parametros
       fechas: { from: defaultDate.from, to: defaultDate.to },
       setFechas: (data) => set({ fechas: data }),

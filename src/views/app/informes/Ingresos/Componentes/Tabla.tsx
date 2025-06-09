@@ -5,7 +5,7 @@ import { TablaDefault } from "@/frontend-resourses/components";
 import { dataIngresosFooter, dataTablaIngresos } from "../data/data";
 
 export default function Tabla({className}: {className?: string;}) {
-  const { status, estaProcesado } = useIngresosStore();
+  const { status, estaProcesado, setId } = useIngresosStore();
 
   const tablaColumns: Array<ExtendedColumn<any>> = [
     { key: "fecha", label: "Fecha", minWidth: "50", maxWidth: "100" , resaltar: true,},
@@ -29,6 +29,7 @@ export default function Tabla({className}: {className?: string;}) {
     status: status,
     checkboxItem: true,
     selectFn: true,
+    setIdTabla: setId,
     withTooltip: true,
     objectStyles: {
       withBorder: true,

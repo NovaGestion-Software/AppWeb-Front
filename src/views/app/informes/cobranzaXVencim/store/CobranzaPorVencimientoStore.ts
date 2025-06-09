@@ -1,16 +1,18 @@
-import { Status } from '@/frontend-resourses/components/types';
-import { FechasRango, SucursalesModal } from '@/types';
-import dayjs from 'dayjs';
-import { create } from 'zustand';
-import { createJSONStorage, persist } from 'zustand/middleware';
-import { DatosMora } from '../ts/data';
+import { Status } from "@/frontend-resourses/components/types";
+import { FechasRango, SucursalesModal } from "@/types";
+import dayjs from "dayjs";
+import { create } from "zustand";
+import { createJSONStorage, persist } from "zustand/middleware";
+import { DatosMora } from "../ts/data";
 
 const defaultDate = {
-  from: dayjs().startOf('month'),
+  from: dayjs().startOf("month"),
   to: dayjs(),
 };
 
 type CobranzasPorVencimientoProps = {
+  id: string;
+  setId: (id: string) => void;
   // parametros
   fechas: FechasRango;
   clearFechas: () => void;
@@ -35,18 +37,20 @@ type CobranzasPorVencimientoProps = {
   setSucursalesDisponibles: (sucursales: SucursalesModal[]) => void;
   clearSucursalesSeleccionadas: () => void;
   clearSucursalesDisponibles: () => void;
-
 };
 
 export const useCobranzaPorVencimientoStore = create<CobranzasPorVencimientoProps>()(
   persist(
     (set) => ({
+      id: "",
+      setId: (id) => set({ id }),
+
       //parametros
       fechas: { from: defaultDate.from, to: defaultDate.to },
       setFechas: (data) => set({ fechas: data }),
-      clearFechas: () => set({ fechas: { from: '', to: '' } }),
+      clearFechas: () => set({ fechas: { from: "", to: "" } }),
       // status
-      status: 'idle',
+      status: "idle",
       setStatus: (status) => set({ status }),
       //data
       cobranzaPorVencimiento: [],
@@ -64,10 +68,9 @@ export const useCobranzaPorVencimientoStore = create<CobranzasPorVencimientoProp
       setSucursalesDisponibles: (sucursales) => set({ sucursalesDisponibles: sucursales }),
       clearSucursalesSeleccionadas: () => set({ sucursalesSeleccionadas: [] }),
       clearSucursalesDisponibles: () => set({ sucursalesDisponibles: [] }),
-
     }),
     {
-      name: 'cobranzas-vencimiento-storage',
+      name: "cobranzas-vencimiento-storage",
       storage: createJSONStorage(() => sessionStorage),
     }
   )
