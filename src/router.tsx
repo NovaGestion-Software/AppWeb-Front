@@ -16,6 +16,7 @@ import MorosidadView from './views/app/informes/morosidad/MorosidadView';
 import IngresosView from './views/app/informes/Ingresos/IngresosView';
 import CompClientOtrasSucView from './views/app/informes/CompClientOtrasSuc/CompClientOtrasSucView';
 import Ranking from './views/Ranking/Ranking';
+import VentasUnidadNegocioView from './views/app/informes/VentasUnidadNegocio/VentasUnidadNegocioView';
 
 export default function Router() {
   return (
@@ -36,6 +37,7 @@ export default function Router() {
               <Route path="ventas-vend" element={<VentasXVendedorView />} />
               <Route path="ventas-seccion" element={<VentasPorSeccionView />} />
               <Route path="ventas-hora" element={<VentasHoraView />} />
+              <Route path="ventas-uni-nego" element={<VentasUnidadNegocioView />} />
               
               <Route path="ingresos" element={<IngresosView />} />
               <Route path="clientes-otras-suc" element={<CompClientOtrasSucView />} />
