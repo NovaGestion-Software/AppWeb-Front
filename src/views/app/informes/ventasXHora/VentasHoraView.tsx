@@ -18,7 +18,7 @@ import RangeDatesInput from "@/frontend-resourses/components/Inputs/RangeDatesIn
 import { extraerItems, extraerItemsDeIndice, agruparPorIndice, crearDataParaTablaModular, obtenerValorMaximoConIndice } from "@/frontend-resourses/utils/dataManipulation";
 import { ListaFiltrosAplicados } from "@/frontend-resourses/components/Complementos/ListaFiltrosAplicados";
 import { FaStoreAlt } from "react-icons/fa";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import {useNavigate } from "react-router-dom";
 
 export type ConfigKeys = {
   filtroKey: string;
