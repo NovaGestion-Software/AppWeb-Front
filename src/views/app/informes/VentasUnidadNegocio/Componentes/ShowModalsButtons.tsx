@@ -26,7 +26,7 @@ export default function ShowModalsButtons({ props, className, estaProcesado }: {
 
       <ActionButton text="Uni. Negocio"  
       onClick={() => setShowUniNego(true)} disabled={!estaProcesado} color="blue"  icon={<MdReceiptLong  size={12}  />}
-      addClassName="h-5 w-44 v1440:w-28 v1536:w-40  rounded-md text-xxs  v1440:h-8 v1536:h-8 v1536:px-6 v1536:text-sm" />
+      addClassName="h-5 w-28 v1440:w-28 v1536:w-40  rounded-md text-xxs  v1440:h-8 v1536:h-8 v1536:px-6 v1536:text-sm" />
 
       <ActionButton text="Clientes"  color="blue" 
       disabled={!estaProcesado} onClick={() => setShowClientes(true)}    icon={<BsPerson size={12}  />}

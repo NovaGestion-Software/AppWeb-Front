@@ -18,6 +18,7 @@ import RangeDatesInput from "@/frontend-resourses/components/Inputs/RangeDatesIn
 import { extraerItems, extraerItemsDeIndice, agruparPorIndice, crearDataParaTablaModular, obtenerValorMaximoConIndice } from "@/frontend-resourses/utils/dataManipulation";
 import { ListaFiltrosAplicados } from "@/frontend-resourses/components/Complementos/ListaFiltrosAplicados";
 import { FaStoreAlt } from "react-icons/fa";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 export type ConfigKeys = {
   filtroKey: string;
@@ -45,6 +46,8 @@ export default function VentasHoraView() {
   const [foco, setFoco] = useState<boolean>(false);
   const [showModalSucursales, setShowModalSucursales] = useState(false);
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
+
   // configuracion grafico
   const configuracionGrafico = [
     { label: "horaini", key: "horaini" },
@@ -176,7 +179,6 @@ export default function VentasHoraView() {
 
   // console.log("datos", datos);
 
-
   // crea datos en estructura de tabla.1
   const filasGenericas = useMemo(() => crearDataParaTablaModular(datos, totales, configTabla), [datos, totales]);
 
@@ -248,27 +250,27 @@ export default function VentasHoraView() {
   // Set Filtros
   const lastProcessedRef = useRef<number>(0);
 
-useEffect(() => {
-  const yaHayFiltros = sucursalesSeleccionadas.length > 0;
+  useEffect(() => {
+    const yaHayFiltros = sucursalesSeleccionadas.length > 0;
 
-  if (existenDatos && !yaHayFiltros && dataUpdatedAt > lastProcessedRef.current) {
-    lastProcessedRef.current = dataUpdatedAt;
+    if (existenDatos && !yaHayFiltros && dataUpdatedAt > lastProcessedRef.current) {
+      lastProcessedRef.current = dataUpdatedAt;
 
-    extraerItems({
-      data: dataFinal,
-      itemsKeysGroup: { nsucursal: "nsucursal", sucursal: "sucursal" },
-      itemsSeleccionados: [],
-      setItemsDisponibles: setSucursalesDisponibles,
-      setItemsSeleccionados: setSucursalesSeleccionadas,
-    });
-  }
-}, [dataUpdatedAt, existenDatos, sucursalesSeleccionadas]);
+      extraerItems({
+        data: dataFinal,
+        itemsKeysGroup: { nsucursal: "nsucursal", sucursal: "sucursal" },
+        itemsSeleccionados: [],
+        setItemsDisponibles: setSucursalesDisponibles,
+        setItemsSeleccionados: setSucursalesSeleccionadas,
+      });
+    }
+  }, [dataUpdatedAt, existenDatos, sucursalesSeleccionadas]);
 
-useEffect(() => {
-  if (existenDatos ) {
-        setEstaProcesado(true)
-  }
-}, [ existenDatos]);
+  useEffect(() => {
+    if (existenDatos) {
+      setEstaProcesado(true);
+    }
+  }, [existenDatos]);
 
   // LIMPIAR EL ESTADO FOCO A LOS 0.5S
   useEffect(() => {
@@ -284,6 +286,10 @@ useEffect(() => {
   // USAR ESCAPE PARA VACIAR INFORME
   useEffect(() => {
     const handleEscapeKey = (e: KeyboardEvent) => {
+      if (!estaProcesado ) {
+        navigate("/home");
+        return;
+      }
       if (e.key === "Escape" && dataFinal) {
         handleClearData();
       }
@@ -293,7 +299,7 @@ useEffect(() => {
     return () => {
       window.removeEventListener("keydown", handleEscapeKey);
     };
-  }, [dataFinal]);
+  }, [dataFinal, estaProcesado]);
 
   // HANDLE FETCH
   const handleFetchData = async (_dates: FechasRango) => {

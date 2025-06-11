@@ -2,9 +2,9 @@ import { RiFileExcel2Fill, RiPrinterFill } from "@remixicon/react";
 import ActionButton from "@/frontend-resourses/components/Buttons/ActionButton";
 import { useCallback, useEffect, useState } from "react";
 import * as XLSX from "xlsx";
-import { IoTrash } from "react-icons/io5";
+import { ImExit } from "react-icons/im";
 import SelectedTables from "../morosidad/Componentes/SelectedTables";
-
+import { useNavigate } from "react-router-dom";
 interface Item {
   id: string | number;
   nombre: string;
@@ -60,6 +60,7 @@ export default function HerramientasInforme<T>({
   const isCleanDisabled = disabledAll ?? disabledClean;
   const [tableSelect, setTableSelect] = useState(false);
   const [accionActual, setAccionActual] = useState<"imprimir" | "exportar" | null>(null);
+  const navigate = useNavigate();
 
   // lo que me imagino es que ahora al modificar las funciones para modificar lso datos, voy a crear directameente un objeto con los datos de la tabla y tambien los totales del footer
   // y asi envio todo eso por data en herramientas component para que se exporte.
@@ -321,6 +322,15 @@ export default function HerramientasInforme<T>({
     setTableSelect(true);
   };
 
+  const handleExit = () => {
+    if (handleClean) {
+      handleClean();
+    } else {
+      console.warn("No se proporcionó handleClean, se redirige igualmente.");
+    }
+    navigate("/home");
+  };
+
   return (
     <div className={`flex justify-center ${gapButtons} w-fit rounded-lg `}>
       <ActionButton
@@ -330,8 +340,7 @@ export default function HerramientasInforme<T>({
         // icono
         icon={<RiFileExcel2Fill className="h-3 w-3 v1440:w-5 v1440:h-4  v1536:h-5 v1536:w-5" />}
         disabled={isExportExcelDisabled}
-        onClick={itemsDisponibles ? () => handleMostrarSelector("exportar") 
-          : () => exportToExcel(exportConfig || { sheets: [], fileName: "Informe" })}
+        onClick={itemsDisponibles ? () => handleMostrarSelector("exportar") : () => exportToExcel(exportConfig || { sheets: [], fileName: "Informe" })}
       />
       <ActionButton
         // estilos botones
@@ -339,8 +348,7 @@ export default function HerramientasInforme<T>({
         addClassName="h-5  rounded-md text-xs v1440:h-8 v1440: v1536:h-9 v1536:px-6 v1536:text-sm"
         // icono
         icon={<RiPrinterFill className="h-3 w-3 v1440:w-5 v1440:h-4 v1536:h-5 v1536:w-5" />}
-        onClick={itemsDisponibles ? () => handleMostrarSelector("imprimir") 
-          : () => handlePrint([containerId])}
+        onClick={itemsDisponibles ? () => handleMostrarSelector("imprimir") : () => handlePrint([containerId])}
         disabled={isPrintDisabled}
       />
       <ActionButton
@@ -348,8 +356,8 @@ export default function HerramientasInforme<T>({
         color="red"
         addClassName="h-5 rounded-md text-xs v1440:h-8 v1536:h-9 v1536:px-6 v1536:text-sm 2xl:w-12"
         // icono
-        icon={<IoTrash className="h-3 w-3  v1440:w-5 v1440:h-4 v1536:h-5 v1536:w-5" />}
-        onClick={handleClean || (() => {})}
+        icon={<ImExit className="h-3 w-3  v1440:w-5 v1440:h-4 v1536:h-5 v1536:w-5" />}
+        onClick={handleExit}
         disabled={isCleanDisabled}
       />
       {tableSelect && (
