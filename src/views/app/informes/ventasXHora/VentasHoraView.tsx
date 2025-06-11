@@ -18,7 +18,7 @@ import RangeDatesInput from "@/frontend-resourses/components/Inputs/RangeDatesIn
 import { extraerItems, extraerItemsDeIndice, agruparPorIndice, crearDataParaTablaModular, obtenerValorMaximoConIndice } from "@/frontend-resourses/utils/dataManipulation";
 import { ListaFiltrosAplicados } from "@/frontend-resourses/components/Complementos/ListaFiltrosAplicados";
 import { FaStoreAlt } from "react-icons/fa";
-import {useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export type ConfigKeys = {
   filtroKey: string;
@@ -286,7 +286,7 @@ export default function VentasHoraView() {
   // USAR ESCAPE PARA VACIAR INFORME
   useEffect(() => {
     const handleEscapeKey = (e: KeyboardEvent) => {
-      if (!estaProcesado ) {
+      if (!estaProcesado) {
         navigate("/home");
         return;
       }
@@ -329,6 +329,8 @@ export default function VentasHoraView() {
   const propsRangePicker = {
     setFechas: setFechas,
   };
+
+
   return (
     <div className="h-screen ">
       <ViewTitle title={"Ventas por Hora"} />
