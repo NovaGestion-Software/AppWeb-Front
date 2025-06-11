@@ -23,6 +23,13 @@ type VentasHoraProps = {
   // estado del proceso
   estaProcesado: boolean;
   setEstaProcesado: (value: boolean) => void;
+  // foco en tabla
+  foco: boolean;
+  setFoco: (value: boolean) => void;
+  // footer
+  footer: boolean;
+  setFooter: (value: boolean) => void;
+
   setVentasPorHora: (data: Sucursal[]) => void;
   setFechas: (data: FechasRango) => void;
   setStatus: (status: Status) => void;
@@ -30,6 +37,7 @@ type VentasHoraProps = {
   clearSucursalesSeleccionadas: () => void;
   clearSucursalesDisponibles: () => void;
   clearFechas: () => void;
+  resetStore: () => void;
 };
 
 export const useVentasHoraStore = create<VentasHoraProps>()(
@@ -45,6 +53,12 @@ export const useVentasHoraStore = create<VentasHoraProps>()(
       // estado proceso
       estaProcesado: false,
       setEstaProcesado: (value) => set({ estaProcesado: value }),
+      // footer
+      footer: false,
+      setFooter: (value) => set({ footer: value }),
+      // foco
+      foco: false,
+      setFoco: (value) => set({ foco: value }),
       setVentasPorHora: (data) => set({ ventasPorHora: data }),
       setFechas: (data) => set({ fechas: data }),
       setSucursalesSeleccionadas: (sucursales) => set({ sucursalesSeleccionadas: sucursales }),
@@ -54,6 +68,16 @@ export const useVentasHoraStore = create<VentasHoraProps>()(
       clearSucursalesSeleccionadas: () => set({ sucursalesSeleccionadas: [] }),
       clearSucursalesDisponibles: () => set({ sucursalesDisponibles: [] }),
       clearFechas: () => set({ fechas: { from: "", to: "" } }),
+      //limpiar
+      resetStore: () =>
+        set((_state) => ({
+          id: "",
+          status: "idle",
+          estaProcesado: false,
+          footer: false,
+          sucursalesSeleccionadas: [],
+          sucursalesDisponibles: [],
+        })),
     }),
     {
       name: "ventas-hora-storage",

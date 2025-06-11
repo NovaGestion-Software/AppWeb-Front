@@ -110,7 +110,7 @@ export default function VentasHoraView() {
     clearVentasPorHora,
   } = useVentasHoraStore();
 
-  // // llamado a fetch
+  
   // const { mutate } = useMutation<ApiResponse, Error, FechasRango>({
   //   mutationFn: () => obtenerVentasHora(fechas),
   //   onMutate: () => {
@@ -286,7 +286,7 @@ export default function VentasHoraView() {
   // USAR ESCAPE PARA VACIAR INFORME
   useEffect(() => {
     const handleEscapeKey = (e: KeyboardEvent) => {
-      if (!estaProcesado) {
+      if (e.key === "Escape" && !estaProcesado) {
         navigate("/home");
         return;
       }
