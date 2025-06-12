@@ -13,8 +13,7 @@ export default function SwitchHomologacion() {
   };
 
   return (
-    <div>
-      <SwitchGenerico label="Homologación" valueOff="Desarrollo" valueOn="Producción" onToggle={toggleEntorno} isChecked={homologacion === "prod"} />
-    </div>
+      <SwitchGenerico label="Modo" valueOff="Homologacion" className="mt-5" 
+      valueOn="Producción" onToggle={toggleEntorno} isChecked={homologacion === "prod"} />
   );
 }

@@ -1,10 +1,10 @@
 
-import SwitchEntorno from "../../informes/_components/Switch";
+import SwitchGenerico from "../../informes/_components/Switch";
 import { useEntornoStore } from "../Store/useEntornoStore";
 import Cookies from "js-cookie";
 
 
-export default function SwitchCambioEntorno() {
+export default function SwitchEntorno() {
   const { entorno, setEntorno } = useEntornoStore();
 
   const toggleEntorno = () => {
@@ -23,7 +23,8 @@ export default function SwitchCambioEntorno() {
 
   return (
     <div>
-      <SwitchEntorno
+      <SwitchGenerico
+      className="mt-5"
         label="Entorno"
         valueOff="Desarrollo"
         valueOn="Producción"

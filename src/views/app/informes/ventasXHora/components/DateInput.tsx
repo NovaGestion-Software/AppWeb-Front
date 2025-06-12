@@ -2,9 +2,14 @@ import { Card } from "@/frontend-resourses/components/Cards/CardBase";
 import { FechasRango } from "@/frontend-resourses/components/types";
 import { useVentasHoraStore } from "../store/useVentasHoraStore";
 import RangeDatesInput from "@/frontend-resourses/components/Inputs/RangeDatesInput";
-import { handleClearData } from "../Utils/funciones";
+import { useHandleClearData } from "../Utils/funciones";
+interface DateInputProps {
+  refetch: () => void;
+}
 
-export default function DateInput() {
+export default function DateInput({ refetch }: DateInputProps) {
+  const handleClearData = useHandleClearData();
+
   //store
   const {
     // estados
@@ -19,17 +24,8 @@ export default function DateInput() {
   } = useVentasHoraStore();
   // HANDLE FETCH
   const handleFetchData = async (_dates: FechasRango) => {
-    // try {
-    //   mutate(dates);
-    //   console.log("mutate");
-    // } catch (error) {
-    //   console.error("Error en la petición:", error);
-    //   alert("Error al obtener los datos");
-    //   setFoco(true);
-    // }
-    // refetch();
-    //                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                setEstaProcesado(true);
-    console.log("refetch");
+    refetch();
+    //       console.log("refetch");
   };
   const propsRangePicker = {
     setFechas: setFechas,

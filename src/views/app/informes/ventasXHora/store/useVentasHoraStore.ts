@@ -1,6 +1,7 @@
 import { Status } from "@/frontend-resourses/components/types";
 import { FechasRango, Sucursal, SucursalesModal } from "@/types";
 import dayjs from "dayjs";
+import { SetStateAction } from "react";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
@@ -30,6 +31,10 @@ type VentasHoraProps = {
   footer: boolean;
   setFooter: (value: boolean) => void;
 
+  // showSucursales
+  showSucursales: boolean;
+  setShowSucursales: (value: SetStateAction<boolean>) => void;
+
   setVentasPorHora: (data: Sucursal[]) => void;
   setFechas: (data: FechasRango) => void;
   setStatus: (status: Status) => void;
@@ -56,6 +61,12 @@ export const useVentasHoraStore = create<VentasHoraProps>()(
       // footer
       footer: false,
       setFooter: (value) => set({ footer: value }),
+      // show sucursales
+      showSucursales: false,
+      setShowSucursales: (value: SetStateAction<boolean>) =>
+        set((state) => ({
+          showSucursales: typeof value === "function" ? value(state.showSucursales) : value,
+        })),
       // foco
       foco: false,
       setFoco: (value) => set({ foco: value }),

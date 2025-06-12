@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useVentasHoraStore } from "@/views/app/informes/ventasXHora/store/useVentasHoraStore";
 import { obtenerVentasHora } from "@/services/ApiPhpService";
-import { FechasRango, SucursalesModal, VentaPorHora } from "@/types";
+import { SucursalesModal, VentaPorHora } from "@/types";
 import { formatearNumero } from "@/utils";
 import ViewTitle from "@/frontend-resourses/components/Labels/ViewTitle";
 import dayjs from "dayjs";
@@ -13,12 +13,15 @@ import TablaVentaPorHora from "./components/TablaVentaPorHora";
 import ModalFiltro from "@/frontend-resourses/components/Modales/ModalFiltro";
 import ActionButton from "@/frontend-resourses/components/Buttons/ActionButton";
 import GraficoConZoom from "@/frontend-resourses/components/Charts/GraficoConZoom";
-import RangeDatesInput from "@/frontend-resourses/components/Inputs/RangeDatesInput";
 
 import { extraerItems, extraerItemsDeIndice, agruparPorIndice, crearDataParaTablaModular, obtenerValorMaximoConIndice } from "@/frontend-resourses/utils/dataManipulation";
 import { ListaFiltrosAplicados } from "@/frontend-resourses/components/Complementos/ListaFiltrosAplicados";
 import { FaStoreAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import DateInput from "./components/DateInput";
+import { useHandleClearData } from "./Utils/funciones";
+import { useEscapeShortcut } from "./Hooks/useEscapeShortcut";
+import Botonera from "./components/Botonera";
 
 export type ConfigKeys = {
   filtroKey: string;
@@ -42,11 +45,28 @@ export type ConfigTabla = {
 export default function VentasHoraView() {
   //const [procesado, setProcesado] = useState<boolean>(false);
   // prueba de _ para deploy
-  const [_footer, setFooter] = useState<boolean>(false);
-  const [foco, setFoco] = useState<boolean>(false);
-  const [showModalSucursales, setShowModalSucursales] = useState(false);
-  const queryClient = useQueryClient();
   const navigate = useNavigate();
+  //store
+  const {
+    // estados
+    estaProcesado,
+    setEstaProcesado,
+    // dates
+    fechas,
+    //foco
+    foco,
+    setFoco,
+    // show sucursales
+    showSucursales,
+    setShowSucursales,
+    // filtros
+    sucursalesSeleccionadas,
+    sucursalesDisponibles,
+    setSucursalesSeleccionadas,
+    setSucursalesDisponibles,
+  } = useVentasHoraStore();
+
+  const handleClearData = useHandleClearData();
 
   // configuracion grafico
   const configuracionGrafico = [
@@ -87,30 +107,6 @@ export default function VentasHoraView() {
     ],
   };
 
-  //store
-  const {
-    // estados
-    estaProcesado,
-    setEstaProcesado,
-    status,
-    //   setStatus,
-    // dates
-    fechas,
-    setFechas,
-    // filtros
-    sucursalesSeleccionadas,
-    sucursalesDisponibles,
-    setSucursalesSeleccionadas,
-    setSucursalesDisponibles,
-    clearSucursalesSeleccionadas,
-    clearSucursalesDisponibles,
-    // datos
-    // ventasPorHora,
-    // setVentasPorHora,
-    clearVentasPorHora,
-  } = useVentasHoraStore();
-
-  
   // const { mutate } = useMutation<ApiResponse, Error, FechasRango>({
   //   mutationFn: () => obtenerVentasHora(fechas),
   //   onMutate: () => {
@@ -156,6 +152,9 @@ export default function VentasHoraView() {
     staleTime: 5 * 60 * 1000,
     select: (response) => response.data,
   });
+
+  /// el rechet que tengo aca ahora lo quiero pasar a DateInput.
+  // puede ser por props.
 
   //console.log("ventas por hora", ventasPorHora);
   // let existenDatos = ventasPorHora && ventasPorHora.length > 0;
@@ -283,53 +282,11 @@ export default function VentasHoraView() {
     }
   }, [foco]);
 
-  // USAR ESCAPE PARA VACIAR INFORME
-  useEffect(() => {
-    const handleEscapeKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && !estaProcesado) {
-        navigate("/home");
-        return;
-      }
-      if (e.key === "Escape" && dataFinal) {
-        handleClearData();
-      }
-    };
-    window.addEventListener("keydown", handleEscapeKey);
-    // Limpiar el event listener cuando el componente se desmonte
-    return () => {
-      window.removeEventListener("keydown", handleEscapeKey);
-    };
-  }, [dataFinal, estaProcesado]);
-
-  // HANDLE FETCH
-  const handleFetchData = async (_dates: FechasRango) => {
-    // try {
-    //   mutate(dates);
-    //   console.log("mutate");
-    // } catch (error) {
-    //   console.error("Error en la petición:", error);
-    //   alert("Error al obtener los datos");
-    //   setFoco(true);
-    // }
-    refetch();
-    //                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                setEstaProcesado(true);
-    console.log("refetch");
-  };
-  // CLEAR DATA
-  const handleClearData = () => {
-    setEstaProcesado(false);
-    setFooter(false);
-    clearVentasPorHora();
-    clearSucursalesDisponibles();
-    clearSucursalesSeleccionadas();
-    setFoco(true);
-    queryClient.removeQueries({ queryKey: ["ventas"] });
-  };
-
-  const propsRangePicker = {
-    setFechas: setFechas,
-  };
-
+  // ShortCut Escape Hook.
+  useEscapeShortcut({
+    estaProcesado,
+    handleClearData,
+  });
 
   return (
     <div className="h-screen ">
@@ -339,39 +296,10 @@ export default function VentasHoraView() {
         {/** BOTONERA */}
         <div className="grid grid-cols-12 grid-rows-1 h-12 2xl:h-14 gap-4 ml-4 mt-2 mb-1 rounded">
           {/**RangeDates Input */}
-          <div
-            className="col-start-1 col-span-6 h-10  w-fit px-4 bg-white rounded-lg 
-           2xl:col-span-4 2xl:col-start-2 2xl:relative 2xl:right-5 2xl:h-14 "
-          >
-            <RangeDatesInput
-              conBotones={true}
-              textoBotones={{ fetch: "Procesar", clear: "Borrar" }}
-              onFetchData={handleFetchData}
-              onClearData={handleClearData}
-              rangeDatePicker={propsRangePicker}
-              estado={status}
-              setFocus={foco}
-              estaProcesado={estaProcesado}
-            />
-          </div>
+          <DateInput refetch={refetch} />
 
           {/**modales y funcionabilidades */}
-          <div
-            className="flex gap-6 items-center justify-center h-10 w-fit px-4 left-11 relative bg-white
-             rounded-lg col-span-3 col-start-9 
-             v1536:h-14 v1536:col-span-2 v1536:col-start-9 v1536:left-4 "
-          >
-            <ActionButton
-              text="Sucursales"
-              icon={<FaStoreAlt size={15} />}
-              addClassName="h-7  rounded-md text-xs v1440:h-8 v1536:h-9 v1536:px-6 v1536:text-sm"
-              onClick={() => setShowModalSucursales(true)}
-              disabled={!estaProcesado}
-              color="blue"
-              size="xs"
-            />{" "}
-            <HerramientasComponent data={filas} estaProcesado={estaProcesado} datosParaFooter={datosParaFooter} disabled={!estaProcesado} modalSucursales={false} handleClean={handleClearData} />
-          </div>
+         <Botonera data={filas} />
         </div>
 
         {/**SUCURSALES, DESTACADOS Y TABLA*/}
@@ -420,8 +348,8 @@ export default function VentasHoraView() {
       <ModalFiltro<SucursalesModal>
         title="Sucursales"
         renderItem={renderSucursalesItem}
-        showModal={showModalSucursales}
-        setShowModal={setShowModalSucursales}
+        showModal={showSucursales}
+        setShowModal={setShowSucursales}
         datos={sucursalesDisponibles}
         itemsDisponibles={sucursalesDisponibles}
         itemsSeleccionados={sucursalesSeleccionadas}
