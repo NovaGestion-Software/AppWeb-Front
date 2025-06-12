@@ -49,7 +49,7 @@ export default function ConfigView() {
       <ViewTitle title="Administracion" />
       {/* contenedor */}
       <div
-        className="flex-col h-[36rem] m-2 items-center justify-center ml-8 p-6  bg-white shadow-md rounded-lg
+        className="flex-col h-[36rem] m-2 items-center justify-center ml-8 p-6  bg-white  shadow-md rounded-lg
          v1440:w-4/5 v1440:mx-auto v1920:w-2/3 v1440:mt-12"
       >
         <div className="flex gap-10">
