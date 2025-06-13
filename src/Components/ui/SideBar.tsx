@@ -303,7 +303,6 @@ const handleMouseMove = (e: MouseEvent) => {
   };
 }, [isPinned]);
 
-
   return (
     <div
       ref={sidebarRef}
@@ -385,7 +384,7 @@ const handleMouseMove = (e: MouseEvent) => {
 
       <div
         className="absolute top-0 right-0 h-full w-2 cursor-col-resize z-50"
-    onMouseDown={(e) => {
+    onMouseDown={(_e) => {
     isResizing.current = true;
     document.body.style.userSelect = "none"; // bloquear selección
     document.body.style.cursor = "ew-resize"; // cursor resize horizontal

@@ -2,7 +2,6 @@ import { ActionButton } from "@/frontend-resourses/components";
 import { FaStoreAlt } from "react-icons/fa";
 import { useHandleClearData } from "../Utils/funciones";
 import { useVentasHoraStore } from "../store/useVentasHoraStore";
-import { useState } from "react";
 import HerramientasComponent from "./HerramientasComponent";
 
 export default function Botonera({data}: {data: any}) {

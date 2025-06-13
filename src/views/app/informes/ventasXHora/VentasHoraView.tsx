@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useVentasHoraStore } from "@/views/app/informes/ventasXHora/store/useVentasHoraStore";
 import { obtenerVentasHora } from "@/services/ApiPhpService";
@@ -6,18 +6,14 @@ import { SucursalesModal, VentaPorHora } from "@/types";
 import { formatearNumero } from "@/utils";
 import ViewTitle from "@/frontend-resourses/components/Labels/ViewTitle";
 import dayjs from "dayjs";
-
-import HerramientasComponent from "./components/HerramientasComponent";
 import TablaVentaPorHora from "./components/TablaVentaPorHora";
 // import showAlert from "@/utils/showAlert";
 import ModalFiltro from "@/frontend-resourses/components/Modales/ModalFiltro";
-import ActionButton from "@/frontend-resourses/components/Buttons/ActionButton";
 import GraficoConZoom from "@/frontend-resourses/components/Charts/GraficoConZoom";
 
 import { extraerItems, extraerItemsDeIndice, agruparPorIndice, crearDataParaTablaModular, obtenerValorMaximoConIndice } from "@/frontend-resourses/utils/dataManipulation";
 import { ListaFiltrosAplicados } from "@/frontend-resourses/components/Complementos/ListaFiltrosAplicados";
 import { FaStoreAlt } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
 import DateInput from "./components/DateInput";
 import { useHandleClearData } from "./Utils/funciones";
 import { useEscapeShortcut } from "./Hooks/useEscapeShortcut";
@@ -45,7 +41,7 @@ export type ConfigTabla = {
 export default function VentasHoraView() {
   //const [procesado, setProcesado] = useState<boolean>(false);
   // prueba de _ para deploy
-  const navigate = useNavigate();
+
   //store
   const {
     // estados
@@ -299,7 +295,7 @@ export default function VentasHoraView() {
           <DateInput refetch={refetch} />
 
           {/**modales y funcionabilidades */}
-         <Botonera data={filas} />
+          <Botonera data={filas} />
         </div>
 
         {/**SUCURSALES, DESTACADOS Y TABLA*/}
