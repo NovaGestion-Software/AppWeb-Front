@@ -13,7 +13,7 @@ export default function TipoDeFrecuencia() {
         opciones={["Detalle", "Diario"]}
         checkboxSeleccionados={checkboxSeleccionados}
         setCheckboxSeleccionados={setCheckboxSeleccionados}
-        disabled={!estaProcesado}
+        disabled={!estaProcesado || checkboxSeleccionados.grupo1 === "Articulos"}
       />
     </Card>
   );

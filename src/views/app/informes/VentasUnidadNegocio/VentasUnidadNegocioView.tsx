@@ -1,12 +1,12 @@
 import { ViewTitle } from "@/frontend-resourses/components";
 import Botonera from "./Componentes/Botonera";
 import { ventasUnidadNegocioData } from "./Data/data";
-import Tabla from "./Componentes/Tabla";
 import DateInput from "./Componentes/DateInput";
 import SearchInput from "./Componentes/SearchInput";
 import TipoDeMetrica from "./Componentes/TipoDeMetrica";
 import TipoDeFrecuencia from "./Componentes/TipoDeFrecuencia";
 import Botonera2 from "./Componentes/Botonera2";
+import Tabla from "./Componentes/Tabla";
 
 export default function VentasUnidadNegocioView() {
   return (
@@ -19,7 +19,7 @@ export default function VentasUnidadNegocioView() {
         <TipoDeMetrica />
         <TipoDeFrecuencia />
         <Botonera2 />
-        <Tabla className="row-start-4 row-span-full" />
+        <Tabla />
       </div>
     </div>
   );

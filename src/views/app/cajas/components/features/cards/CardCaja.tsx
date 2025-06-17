@@ -9,7 +9,7 @@ type CardCajaProps = {
 export default function CardCaja({ title, subtitle, bg }: CardCajaProps) {
   return (
     <Card
-      className={` p-3 hover:-translate-y-1 duration-150 2xl:w-full ${bg}`}
+      className={` p-3 hover:-translate-y-1 duration-150  ${bg}`}
     >
       <div className="flex flex-col w-52 h-24 justify-center items-center ">
         <p className="text-white text-center text-xs  font-semibold  break-words">
