@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { MdOutlineAttachMoney, MdOutlineCategory } from "react-icons/md";
-import {  FaChevronDown, FaChevronUp, FaThumbtack } from "react-icons/fa";
+import { FaChevronDown, FaChevronUp, FaThumbtack } from "react-icons/fa";
 import { RiDashboardFill } from "react-icons/ri";
 import { CiCalendar, CiClock2, CiLogout } from "react-icons/ci";
 import { SiAwsorganizations } from "react-icons/si";
@@ -14,6 +14,7 @@ import { FaBoxesPacking } from "react-icons/fa6";
 import { useVentasHoraStore } from "@/views/app/informes/ventasXHora/store/useVentasHoraStore";
 import { BsPerson, BsPersonBoundingBox } from "react-icons/bs";
 import { TbCashRegister } from "react-icons/tb";
+import { AnimatedOverflowText } from "./layouts/AnimatedOverflowText";
 
 interface SubMenuItem {
   title: string;
@@ -41,13 +42,10 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
   const isResizing = useRef(false);
   const [hoveringArrow, setHoveringArrow] = useState(false);
 
-
   const { clearVentasPorHora } = useVentasHoraStore();
 
   const storedUser = localStorage.getItem("_u");
   const user = storedUser ? JSON.parse(storedUser) : {};
-
-
 
   const Menus: MenuItem[] = [
     {
@@ -220,17 +218,7 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
                     >
                       <span className={`duration-300 ${submenu.href === location.pathname ? "scale-110" : ""}`}>{submenu.icon}</span>
 
-                      <span
-                        className={`
-    block transition-all duration-500 whitespace-nowrap overflow-hidden relative
-    ${!open ? "max-w-0 opacity-0" : "max-w-full opacity-100"}
-    group-hover:overflow-visible
-  `}
-                      >
-                        <span className="inline-block group-hover:animate-marquee">{submenu.title}</span>
-                        {/* Degradado para indicar que hay más texto */}
-                        <span className="absolute right-0 top-0 bottom-0 w-4 bg-gradient-to-l from-[#yourSidebarBgColor] to-transparent pointer-events-none"></span>
-                      </span>
+                     <AnimatedOverflowText text={submenu.title} />
                     </Link>
                   )}
                 </p>
@@ -243,18 +231,18 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
 
   const isSidebarOpen = open || isPinned;
 
-const handleMouseEnter = () => {
-  if (!isPinned) setOpen(true);
-};
+  const handleMouseEnter = () => {
+    if (!isPinned) setOpen(true);
+  };
 
-const handleMouseLeave = () => {
-  if (!isPinned) setOpen(false);
-};
-const handleThumbtack = () => {
-  const newPinnedState = !isPinned;
-  setIsPinned(newPinnedState);
-//  setOpen(newPinnedState); // Si se fija abierto, también se abre
-};
+  const handleMouseLeave = () => {
+    if (!isPinned) setOpen(false);
+  };
+  const handleThumbtack = () => {
+    const newPinnedState = !isPinned;
+    setIsPinned(newPinnedState);
+    //  setOpen(newPinnedState); // Si se fija abierto, también se abre
+  };
 
   const handleLogout = () => {
     queryClient.clear();
@@ -278,35 +266,34 @@ const handleThumbtack = () => {
     navigate("/");
   };
 
-useEffect(() => {
-const handleMouseMove = (e: MouseEvent) => {
-  if (!isResizing.current || !isPinned) return;
-  e.preventDefault();
-  const newWidth = e.clientX;
-  if (newWidth > 120 && newWidth < 400) {
-    setSidebarWidth(newWidth);
-  }
-};
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!isResizing.current || !isPinned) return;
+      e.preventDefault();
+      const newWidth = e.clientX;
+      if (newWidth > 120 && newWidth < 400) {
+        setSidebarWidth(newWidth);
+      }
+    };
 
+    const handleMouseUp = () => {
+      isResizing.current = false;
+      document.body.style.cursor = "default";
+      document.body.style.userSelect = "auto"; // habilitar selección otra vez
+    };
 
- const handleMouseUp = () => {
-  isResizing.current = false;
-  document.body.style.cursor = "default";
-  document.body.style.userSelect = "auto"; // habilitar selección otra vez
-};
-
-  window.addEventListener("mousemove", handleMouseMove);
-  window.addEventListener("mouseup", handleMouseUp);
-  return () => {
-    window.removeEventListener("mousemove", handleMouseMove);
-    window.removeEventListener("mouseup", handleMouseUp);
-  };
-}, [isPinned]);
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseup", handleMouseUp);
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, [isPinned]);
 
   return (
     <div
       ref={sidebarRef}
-  style={{ width: `${isSidebarOpen ? sidebarWidth : 80}px` }}
+      style={{ width: `${isSidebarOpen ? sidebarWidth : 80}px` }}
       className="fixed top-0 left-0 z-50 h-full border-r 
       border-r-slate-400 bg-gradient-to-b from-slate-900 
       to-[#081A51] transition-all duration-300 ease-out overflow-hidden"
@@ -314,31 +301,29 @@ const handleMouseMove = (e: MouseEvent) => {
       onMouseLeave={handleMouseLeave}
     >
       {/* thumbtrack */}
-<div className="flex justify-end left-1 h-5">
-  <div
-    onMouseEnter={() => setHoveringArrow(true)}
-    onMouseLeave={() => setHoveringArrow(false)}
-    onClick={handleThumbtack}
-    className={`
+      <div className="flex justify-end left-1 h-5">
+        <div
+          onMouseEnter={() => setHoveringArrow(true)}
+          onMouseLeave={() => setHoveringArrow(false)}
+          onClick={handleThumbtack}
+          className={`
       cursor-pointer
       transition-all duration-300 ease-in-out
       ${isSidebarOpen ? "opacity-100 scale-100" : "opacity-0 scale-90 pointer-events-none"}
       ${hoveringArrow || isPinned ? "text-yellow-400" : "text-white"}
     `}
-    style={{ transformOrigin: "center center" }}
-  >
-    <FaThumbtack
-      className={`
+          style={{ transformOrigin: "center center" }}
+        >
+          <FaThumbtack
+            className={`
         w-6 h-5 pt-1 mt-0.5
         transition-all duration-300 ease-in-out
         ${isPinned ? "scale-90 text-yellow-400" : ""}
         ${hoveringArrow && !isPinned ? "scale-105 text-yellow-400" : ""}
       `}
-    />
-  </div>
-</div>
-
-
+          />
+        </div>
+      </div>
 
       {/* Logo Nova */}
       <div className="flex items-center justify-start w-full mt-2 ml-1 gap-1">
@@ -384,11 +369,11 @@ const handleMouseMove = (e: MouseEvent) => {
 
       <div
         className="absolute top-0 right-0 h-full w-2 cursor-col-resize z-50"
-    onMouseDown={(_e) => {
-    isResizing.current = true;
-    document.body.style.userSelect = "none"; // bloquear selección
-    document.body.style.cursor = "ew-resize"; // cursor resize horizontal
-  }}
+        onMouseDown={(_e) => {
+          isResizing.current = true;
+          document.body.style.userSelect = "none"; // bloquear selección
+          document.body.style.cursor = "ew-resize"; // cursor resize horizontal
+        }}
       ></div>
 
       {/* Log out */}
