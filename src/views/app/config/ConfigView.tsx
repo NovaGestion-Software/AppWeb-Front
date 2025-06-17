@@ -56,8 +56,8 @@ export default function ConfigView() {
           <div className="">
             {/* Imagen Placeholder */}
             <div className="flex items-center justify-center">
-              <div className="flex items-center justify-center h-24 w-24 bg-gray-200 rounded-lg mb-6">
-                <img width={200} height={200} src={`data:image/jpeg;base64,${user.logoemp}`} alt="Nova Logo" className="rounded-full w-full h-full object-contain" />
+              <div className="flex items-center justify-center w-40 bg-white border-2 rounded-sm p-3">
+                <img width={200} height={200} src="/img/logos/logonovaCuadrado.jpg" alt="Nova Logo" className="rounded-sm w-full h-full object-contain" />
               </div>
             </div>
             {/**switch */}
@@ -69,15 +69,6 @@ export default function ConfigView() {
               <SwitchHomologacion />
             </div>
           </div>
-          {/* Información de Usuario */}
-          <div className="flex flex-col flex-wrap overflow-hidden gap-2  ">
-            {userData.map((item, index) => (
-              <div key={index} className="flex flex-col  items-start w-60 gap-4 p-4 border border-gray-300 rounded-lg bg-gray-100 shadow-sm shadow-gray-400">
-                <label className="text-sm font-medium underline text-gray-700">{item.label}:</label>
-                <p className="text-blue-800 font-semibold">{item.value}</p>
-              </div>
-            ))}
-          </div>
           {/* Información de Configuración */}
           <div className="flex flex-col flex-wrap gap-2   ">
             {configData.map((item, index) => (
@@ -86,6 +77,21 @@ export default function ConfigView() {
                 <p className="text-blue-800 font-semibold">{item.value}</p>
               </div>
             ))}
+          </div>
+          {/* Información de Usuario */}
+
+          <div className="flex flex-row-reverse gap-2">
+            <div className="flex items-center justify-center h-24 w-24 bg-gray-200 rounded-lg mb-6">
+              <img width={200} height={200} src={`data:image/jpeg;base64,${user.logoemp}`} alt="Nova Cliente" className="rounded-full w-full h-full object-contain" />
+            </div>{" "}
+            <div className="flex flex-col flex-wrap overflow-hidden gap-2  ">
+              {userData.map((item, index) => (
+                <div key={index} className="flex flex-col  items-start w-60 gap-4 p-4 border border-gray-300 rounded-lg bg-gray-100 shadow-sm shadow-gray-400">
+                  <label className="text-sm font-medium underline text-gray-700">{item.label}:</label>
+                  <p className="text-blue-800 font-semibold">{item.value}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
