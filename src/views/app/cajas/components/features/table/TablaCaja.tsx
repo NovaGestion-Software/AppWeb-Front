@@ -1,13 +1,4 @@
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableFoot,
-  TableFooterCell,
-  TableHead,
-  TableHeaderCell,
-  TableRow,
-} from '@tremor/react';
+
 import { Dispatch, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { obtenerCajasSecciones } from '@/services/AppService';
