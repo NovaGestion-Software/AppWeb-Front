@@ -218,7 +218,7 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
                     >
                       <span className={`duration-300 ${submenu.href === location.pathname ? "scale-110" : ""}`}>{submenu.icon}</span>
 
-                     <AnimatedOverflowText text={submenu.title} />
+                      <AnimatedOverflowText text={submenu.title} />
                     </Link>
                   )}
                 </p>
@@ -367,14 +367,16 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
         </Link>
       )}
 
-      <div
-        className="absolute top-0 right-0 h-full w-2 cursor-col-resize z-50"
-        onMouseDown={(_e) => {
-          isResizing.current = true;
-          document.body.style.userSelect = "none"; // bloquear selección
-          document.body.style.cursor = "ew-resize"; // cursor resize horizontal
-        }}
-      ></div>
+      {isPinned && (
+        <div
+          className="absolute top-0 right-0 h-full w-2 cursor-col-resize z-50"
+          onMouseDown={(_e) => {
+            isResizing.current = true;
+            document.body.style.userSelect = "none"; // bloquear selección
+            document.body.style.cursor = "ew-resize"; // cursor resize horizontal
+          }}
+        ></div>
+      )}
 
       {/* Log out */}
       <Link to="/" className="flex items-center gap-3 fixed bottom-2 left-5 duration-100 hover:translate-x-1 transition-all hover:scale-105" onClick={handleLogout}>

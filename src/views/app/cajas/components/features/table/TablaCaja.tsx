@@ -13,6 +13,7 @@ import { useQuery } from '@tanstack/react-query';
 import { obtenerCajasSecciones } from '@/services/AppService';
 import SkeletonTablaCaja from './SkTable';
 import ViewTitle from '@/frontend-resourses/components/Labels/ViewTitle';
+import Tabla from './Tabla';
 
 type CajaSeccion = {
   seccion: string;
@@ -116,6 +117,13 @@ export default function TablaCaja({ handleRefetch, setHandleRefetch }: TablaCaja
   const { totalVentas, totalVentasNetas, result } = calculateTotalAndPercentages(
     cajasSeccion || []
   );
+  const dataFooter = {
+    nseccion: "",
+    venta: totalVentas,
+    porcentaje: "",
+    porcentajeNeto: totalVentasNetas,
+
+  }
 
   return (
     <div className="w-1/2 p-5 pb-1">
@@ -123,11 +131,20 @@ export default function TablaCaja({ handleRefetch, setHandleRefetch }: TablaCaja
         <SkeletonTablaCaja />
       ) : (
         <>
-          <ViewTitle title="Venta por Sección" />
-          <div className="flex flex-col gap-2 bg-white h-fit w-full shadow-md rounded-b-md p-4">
+          <ViewTitle title="Venta por Sección" addClassName='rounded-t-md ' />
+          <Tabla data={result} footer={dataFooter} />
+        </>
+      )}
+    </div>
+  );
+}
+
+
+/**
+ *   <div className="flex flex-col gap-2 bg-white h-fit w-full shadow-md rounded-b-md p-4">
             <Table className="overflow-auto border-2 border-gray-300 scrollbar-thin rounded-md">
-              <TableHead className="">
-                <TableRow className="sticky top-0  bg-white z-10">
+              <TableHead className="h-4">
+                <TableRow className="sticky top-0  bg-white z-10 ">
                   <TableHeaderCell className="border-r-2 border-gray-300">
                     <p className="flex flex-col font-semibold gap-1">Seccion</p>
                   </TableHeaderCell>
@@ -172,8 +189,4 @@ export default function TablaCaja({ handleRefetch, setHandleRefetch }: TablaCaja
               </TableFoot>
             </Table>
           </div>
-        </>
-      )}
-    </div>
-  );
-}
+ */

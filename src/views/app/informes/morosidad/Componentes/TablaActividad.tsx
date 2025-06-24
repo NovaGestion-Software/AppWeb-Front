@@ -37,7 +37,7 @@ export default function TablaActividad({ estaProcesado, className }: TablaActivi
     estaProcesado: estaProcesado,
     setIdTabla: setId,
     status: status,
-    selectFn: false,
+    selectFn: true,
     checkboxItem: true,
     withTooltip: true,
     objectStyles: {

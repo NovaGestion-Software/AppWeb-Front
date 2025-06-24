@@ -44,7 +44,7 @@ export default function TablaVentaPorHora({
   isProcessing,
   datosFooter,
 }: TablaVentaPorHoraProps) {
-  const { status, setId } = useVentasHoraStore();
+  const { status, setId , estaProcesado} = useVentasHoraStore();
 
   const VentaXHoraColumns: Array<ExtendedColumn<VentaXHoraCType>> = [
     { key: "horaini", label: "Hora", minWidth: "90", maxWidth: "120" },
@@ -126,8 +126,10 @@ export default function TablaVentaPorHora({
   const propsTablaVentaPorHora = {
     datosParaTabla: dataParaTabla,
     objectColumns: VentaXHoraColumns,
-    estaProcesado: isProcessing,
+    estaProcesado: estaProcesado,
     status: status,
+    selectFirst: true,
+    selectFn: true,
     setIdTabla: setId,
     objectStyles: {
       columnasNumber: [2,3,4,5,6,7],

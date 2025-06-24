@@ -1,5 +1,9 @@
-import { Card } from '@tremor/react';
-import { FaCashRegister } from 'react-icons/fa';
+import { Card } from "@/frontend-resourses/components/Cards/CardBase";
+import { BsPersonVcardFill } from "react-icons/bs";
+import { FaCashRegister, FaMoneyBillWave, FaRegCreditCard } from "react-icons/fa";
+import { MdOutlinePointOfSale } from "react-icons/md";
+import { AiFillDollarCircle } from "react-icons/ai";
+import { TbClockDollar, TbClockPlay, TbClockStop, TbClockX } from "react-icons/tb";
 
 type CardSucursalesProps = {
   estado: boolean; // Se refiere a si la fecha_c es null
@@ -16,113 +20,118 @@ type CardSucursalesProps = {
   saldo: string; // Saldo disponible calculado
 };
 
-export default function CardSucursales({
-  estado,
-  nombre,
-  sucursal,
-  numero,
-  apertura,
-  ultimaVenta,
-  efectivo,
-  ventas,
-  cobranza,
-  planP,
-  egresos,
-  saldo,
-}: CardSucursalesProps) {
+export default function CardSucursales({ estado, numero, apertura, ultimaVenta, efectivo, ventas, cobranza, planP, egresos, saldo }: CardSucursalesProps) {
+  const itemClass = `font-semibold flex flex-row justify-between items-center gap-1`;
+  const valorClass = `text-green-700  proportional-nums text-right  p-0  font-bold  w-full  text-base `;
+  const labelClass = `w-full`;
+  const iconClass = `text-green-600 w-4 h-4`;
+
+  const labelClassContainer = `space-x-1 flex items-center w-full`;
+
   return (
     <Card
-      decoration="left"
-      decorationColor={`${estado ? 'green' : 'red'}`}
-      className={`flex flex-row w-full h-72 border-2
-         border-slate-500 pt-4 p-2 pl-5 hover:-translate-y-1 duration-150 hover:shadow-lg hover:shadow-gray-400 `}
+      className={`flex flex-row w-[21rem] h-72 border-2
+         border-slate-500 hover:cursor-pointer  
+         hover:-translate-y-1 duration-150 hover:shadow-lg hover:shadow-gray-400 `}
     >
-      <div className="grid grid-cols-7 grid-rows-7 gap-4 gap-x-5 px-2 ">
-        <div className="col-span-7 ">
-          {' '}
-          {/***numero y nombre sucursal y caja */}
-          <ul className="flex flex-row gap-4 flex-wrap itemsce  w-full p-2 text-sm 2xl:text-xl  ">
-            <li className="font-semibold ">
-              Sucursal:{' '}
-              <span className="font-extrabold">
-                {sucursal} - {nombre}
-              </span>
-            </li>
-            <li className="font-semibold">
-              N° Caja: <span className="font-extrabold">{numero}</span>
-            </li>
-          </ul>
-        </div>
+      <div className="flex flex-col w-full space-y-3    ">
+          {/***numero de caja */}
+          <div className="flex flex-row gap-1  w-full p-2 text-sm  ">
+             <span className="font-semibold"> N° Caja: </span>
+             <span className="font-extrabold">{numero}</span>
+          </div>
 
-        <div className="col-span-3 row-span-4 col-start-1 row-start-2 text-xs 2xl:text-lg pt-2  ">
-          {' '}
+        <div className="col-span-full row-span-auto col-start-1  text-xs  pt-2 ">
           {/***apertura y cierre */}
-          <ul className=" flex flex-col  gap-1 flex-wrap p-1 ">
-            <li className="font-semibold  ">Apertura: {apertura}</li>
-            <li className="font-semibold">Cierre: {ultimaVenta}</li>
+          <ul className=" flex flex-col space-y-1 text-gray-500 font-semibold">
+            <li className="flex justify-between items-center">
+              <div className={`${labelClassContainer}`}>
+                <TbClockPlay />
+                <span>Apertura:</span>
+              </div>{" "}
+              <span className="text-black">{apertura.split(" ")[1]}hs.</span>
+            </li>
+            <li className="flex justify-between">
+              <div className={`${labelClassContainer}`}>
+                <TbClockX />
+                <span>Cierre:</span>
+              </div>
+              <span className="text-black"> {ultimaVenta}</span>
+            </li>
 
-            <li className="font-semibold">Ult. Vta.: {ultimaVenta}</li>
+            <li className="flex justify-between">
+              <div className={`${labelClassContainer}`}>
+                <TbClockStop />
+                <span> Ult. Vta.: </span>
+              </div>
+              <span className="text-black">{ultimaVenta}</span>
+            </li>
 
-            <li className="font-semibold">Ult. Cobr.: {ultimaVenta}</li>
+            <li className="flex justify-between">
+              <div className={`${labelClassContainer}`}>
+                <TbClockDollar />
+                <span> Ult. Cobr.:</span>
+              </div>
+              <span className="text-black">{ultimaVenta}</span>
+            </li>
           </ul>
         </div>
 
-        <div className="col-span-4 row-span-5 2xl:row-span-4 col-start-4 row-start-2 text-xs 2xl:text-lg pt-2">
-          {' '}
+        <div className="">
+          {" "}
           {/***Mov de caja */}
-          <ul className="flex flex-col  gap-1  h-44 p-1  ">
-            <li className="font-semibold flex flex-row justify-between 2xl:items-start items-center gap-1">
-              Ventas:{' '}
-              <span className="text-green-700 text-right  p-0 font-extrabold  w-full 2xl:w-auto text-base 2xl:text-xl  ">
-                $ {ventas}
-              </span>
+          <ul className="flex flex-col space-y-1 text-xs ">
+            <li className={`${itemClass}`}>
+              <div className={`${labelClassContainer}`}>
+                <MdOutlinePointOfSale className={`${iconClass}`} />
+                <span className={`${labelClass}`}>Ventas:</span>
+              </div>
+              <span className={`${valorClass}`}>$ {ventas}</span>
             </li>
-            <li className="font-semibold flex flex-row justify-between items-center 2xl:items-start   gap-1">
-              Cobranza de Credito:{' '}
-              <span className="text-green-700 text-right  p-0  font-extrabold  w-full 2xl:w-auto text-base 2xl:text-xl">
-                $ {cobranza}
-              </span>
+            <li className={`${itemClass}`}>
+              <div className={`${labelClassContainer}`}>
+                <FaRegCreditCard className={`${iconClass}`} />
+                <span className={`${labelClass}`}>Cobranza de Credito:</span>
+              </div>
+              <span className={`${valorClass}`}>$ {cobranza}</span>
             </li>
-            <li className="font-semibold flex flex-row justify-between items-center 2xl:items-start  gap-3">
-              Cobranza de P. Pago:{' '}
-              <span className="text-green-700 text-right  p-0  font-extrabold  w-full 2xl:w-auto text-base 2xl:text-xl ">
-                $ {planP}
-              </span>
+            <li className={`${itemClass}`}>
+              <div className={`${labelClassContainer}`}>
+                <BsPersonVcardFill className={`${iconClass}`} />
+                <span className={`${labelClass}`}>Cobranza de P. Pago:</span>
+              </div>
+              <span className={`${valorClass}`}>$ {planP}</span>
             </li>
-            <li className="font-semibold flex flex-row justify-between items-center 2xl:items-start  gap-3">
-              Efectivo:{' '}
-              <span className="text-green-700 text-right  p-0  font-extrabold  w-full 2xl:w-auto text-base 2xl:text-xl">
-                $ {efectivo}
-              </span>
+            <li className={`${itemClass}`}>
+              <div className={`${labelClassContainer}`}>
+                <FaMoneyBillWave className={`${iconClass}`} />
+                <span className={`${labelClass}`}>Efectivo:</span>
+              </div>
+              <span className={`${valorClass}`}>$ {efectivo}</span>
             </li>
-            <li className="font-semibold flex flex-row justify-between items-center 2xl:items-start  gap-3">
-              Otros:
-              <span className="text-green-700 text-right  p-0  font-extrabold  w-full 2xl:w-auto text-base 2xl:text-xl">
-                {' '}
-                $ {egresos}
-              </span>
+            <li className={`${itemClass}`}>
+              <div className={`${labelClassContainer}`}>
+                <AiFillDollarCircle className={`${iconClass}`} />
+                <span className={`${labelClass}`}>Otros:</span>
+              </div>
+
+              <span className={`${valorClass}`}> $ {egresos}</span>
             </li>
           </ul>
         </div>
 
         <div className="col-span-4 col-start-4 row-start-7  ">
-          {' '}
-          {/***DISPONIBILIDAD */}{' '}
-          <div
-            className="2xl:text-xl text-base font-semibold text-blue-700 -mt-[15px] 
-          flex flex-row justify-between 2xl:gap-3 gap-1"
-          >
-            Disponibilidad: <span className="font-extrabold"> $ {saldo}</span>
+          {" "}
+          {/***DISPONIBILIDAD */}{" "}
+          <div className=" font-semibold text-blue-700  flex justify-between items-center px-2">
+            <span> Disponibilidad: </span>
+            <span className="font-extrabold"> $ {saldo}</span>
           </div>
         </div>
 
         <div className="col-span-2 col-start-1 row-start-6 row-span-2 pt-[10px]">
           {/**icono* */}
-          <div
-            className={` border boder-green-700 h-10 w-10 rounded flex justify-center items-center text-white ${
-              estado ? 'bg-green-700 ' : 'bg-red-800'
-            }`}
-          >
+          <div className={` border boder-green-700 h-10 w-10 rounded flex justify-center items-center text-white ${estado ? "bg-green-700 " : "bg-red-800"}`}>
             <FaCashRegister className="h-5 w-5" />
           </div>
         </div>

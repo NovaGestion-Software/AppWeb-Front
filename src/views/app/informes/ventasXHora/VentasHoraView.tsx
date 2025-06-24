@@ -335,7 +335,7 @@ export default function VentasHoraView() {
                shadow shadow-gray-600  overflow-hidden  transition-all duration-500 ease-out  
                ${estaProcesado ? "col-start-6 col-span-7 2xl:col-start-7 " : " col-start-6 col-span-7  2xl:col-start-7 "}`}
           >
-            <TablaVentaPorHora isProcessing={estaProcesado} dataParaTabla={filas} datosFooter={datosParaFooter} />
+            <TablaVentaPorHora isProcessing={estaProcesado} dataParaTabla={filas} datosFooter={datosParaFooter}  />
           </div>
         </div>
       </div>

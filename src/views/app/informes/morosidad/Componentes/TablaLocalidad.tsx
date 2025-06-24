@@ -42,6 +42,7 @@ export default function TablaLocalidad({ estaProcesado, className }: TablaLocali
     checkboxItem: true,
     selectFn: true,
     withTooltip: true,
+    selectFirst: true,
    setIdTabla: setId,
     objectStyles: {
       withBorder: false,
