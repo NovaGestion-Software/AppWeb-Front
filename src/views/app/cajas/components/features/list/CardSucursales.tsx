@@ -30,11 +30,11 @@ export default function CardSucursales({ estado, numero, apertura, ultimaVenta, 
 
   return (
     <Card
-      className={`flex flex-row w-[21rem] h-72 border-2
+      className={`flex flex-row  h-72 border-2
          border-slate-500 hover:cursor-pointer  
          hover:-translate-y-1 duration-150 hover:shadow-lg hover:shadow-gray-400 `}
     >
-      <div className="flex flex-col w-full space-y-3    ">
+      <div className="flex flex-col w-[21rem] space-y-3    ">
           {/***numero de caja */}
           <div className="flex flex-row gap-1  w-full p-2 text-sm  ">
              <span className="font-semibold"> N° Caja: </span>
