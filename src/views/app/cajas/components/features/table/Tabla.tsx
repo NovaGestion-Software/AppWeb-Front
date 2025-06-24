@@ -18,21 +18,21 @@ export default function Tabla({ data, footer }: { data: any, footer: any }) {
     objectStyles: {
       columnasNumber: [2, 3, 4],
       heightContainer: "30rem",
-      widthContainer: "",
+      widthContainer: "30rem",
       addCellClass: "max-height: 45px; padding: 4px 8px 4px 12px;",
-      withoutPadding: true,
+      withoutPadding: false,
       viewport1440: {
         widthContainer1440px: "",
-        heightContainer1440px: "43rem",
+        heightContainer1440px: "34rem",
         addCellClass1440px: "max-height: 40px;",
       },
       viewport1536: {
-        heightContainer1536px: "41rem",
-        widthContainer1536px: "",
+        heightContainer1536px: "36rem",
+        widthContainer1536px: "35rem",
         addCellClass1536px: "max-height: 60px;",
       },
       viewport1920: {
-        widthContainer1920px: "",
+        widthContainer1920px: "40rem",
         heightContainer1920px: "45rem",
       },
     },
@@ -44,7 +44,7 @@ export default function Tabla({ data, footer }: { data: any, footer: any }) {
   };
 
   return (
-    <Card>
+    <Card className="rounded-t-none">
       <TablaDefault props={tablaProps} />
     </Card>
   );

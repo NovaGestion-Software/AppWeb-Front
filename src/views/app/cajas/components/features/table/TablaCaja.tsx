@@ -117,7 +117,7 @@ export default function TablaCaja({ handleRefetch, setHandleRefetch }: TablaCaja
   }
 
   return (
-    <div className="w-1/2 p-5 pb-1">
+    <div className="w-fit p-5 pb-1">
       {isFetching ? (
         <SkeletonTablaCaja />
       ) : (

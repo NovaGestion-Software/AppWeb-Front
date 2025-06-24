@@ -152,13 +152,13 @@ export default function CajasList({ handleRefetch, setHandleRefetch, cajas, refe
   };
 
   return (
-    <div className="w-1/2 p-5 pb-1 ">
+    <div className="w-1/2 p-5 pb-1 mb-3 ">
       {isFetching ? (
         <SkListComponent />
       ) : (
         <>
           <ViewTitle title="Detalle de Cajas" addClassName="rounded-t-md" />
-          <div className="flex flex-col gap-2 bg-white h-[40rem]  shadow-md rounded-b-md">
+          <div className="flex flex-col gap-2 bg-white h-[32rem] v1536:h-[38.5rem] v1920:h-[47.5rem]  shadow-md rounded-b-md">
             <div className="flex flex-col gap-y-5 scrollbar-thin  overflow-auto p-4">
               {cajas
                 .slice()
