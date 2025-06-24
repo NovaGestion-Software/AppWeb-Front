@@ -260,6 +260,8 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
     localStorage.removeItem("_ce");
     localStorage.removeItem("_dbp");
     localStorage.removeItem("_dbd");
+    localStorage.removeItem("homologacion");
+    localStorage.removeItem("user");
 
     clearVentasPorHora();
 
@@ -379,7 +381,8 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
       )}
 
       {/* Log out */}
-      <Link to="/" className="flex items-center gap-3 fixed bottom-2 left-5 duration-100 hover:translate-x-1 transition-all hover:scale-105" onClick={handleLogout}>
+      <Link to="/" className="flex items-center gap-3 fixed bottom-2 left-5 duration-100 hover:translate-x-1 transition-all hover:scale-105"
+       onClick={handleLogout}>
         <div className="border bg-white rounded-full cursor-pointer w-8">
           <CiLogout className="w-6 h-8 font-extrabold" />
         </div>
