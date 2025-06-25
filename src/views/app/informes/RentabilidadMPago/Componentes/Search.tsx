@@ -2,7 +2,7 @@ import BusquedaInputs from "@/frontend-resourses/components/Tables/Busqueda/Busq
 import { useRentabilidadMPStore } from "../Store/useRentabilidadMPagoStore";
 import { rentabilidadMPData } from "../Data/data";
 
-export default function Search({ className, data }: { className?: string; data?: any }) {
+export default function Search({ className, }: { className?: string; data?: any }) {
   const {
     estaProcesado,
     // filtros
