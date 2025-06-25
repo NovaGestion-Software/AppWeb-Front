@@ -17,6 +17,10 @@ import IngresosView from './views/app/informes/Ingresos/IngresosView';
 import CompClientOtrasSucView from './views/app/informes/CompClientOtrasSuc/CompClientOtrasSucView';
 import Ranking from './views/Ranking/Ranking';
 import VentasUnidadNegocioView from './views/app/informes/VentasUnidadNegocio/VentasUnidadNegocioView';
+import RentabilidadMPagoView from './views/app/informes/RentabilidadMPago/RentabilidadMPagoView';
+import RankingClientesView from './views/app/informes/RankingClientes/RankingClientesView';
+import RentabilidadView from './views/app/informes/Rentabilidad/RentabilidadView';
+import VentasPorCondicionView from './views/app/informes/VentasPorCondicion/VentasPorCondicionView';
 
 export default function Router() {
   return (
@@ -38,8 +42,12 @@ export default function Router() {
               <Route path="ventas-seccion" element={<VentasPorSeccionView />} />
               <Route path="ventas-hora" element={<VentasHoraView />} />
               <Route path="ventas-uni-nego" element={<VentasUnidadNegocioView />} />
+              <Route path="ventas-condicion" element={<VentasPorCondicionView />} />
               
               <Route path="ingresos" element={<IngresosView />} />
+              <Route path="rentabilidad" element={<RentabilidadView />} />
+              <Route path="rentabilidadmp" element={<RentabilidadMPagoView />} />
+              <Route path="ranking" element={<RankingClientesView />} />
               <Route path="clientes-otras-suc" element={<CompClientOtrasSucView />} />
 
             </Route>

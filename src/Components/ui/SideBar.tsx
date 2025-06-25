@@ -10,12 +10,12 @@ import { TiHome } from "react-icons/ti";
 import Cookies from "js-cookie";
 import { GrDocumentTime } from "react-icons/gr";
 import { BiBarChartSquare } from "react-icons/bi";
-import { FaBoxesPacking } from "react-icons/fa6";
+import { FaBoxesPacking, FaRankingStar } from "react-icons/fa6";
 import { useVentasHoraStore } from "@/views/app/informes/ventasXHora/store/useVentasHoraStore";
 import { BsPerson, BsPersonBoundingBox } from "react-icons/bs";
 import { TbCashRegister } from "react-icons/tb";
 import { AnimatedOverflowText } from "./layouts/AnimatedOverflowText";
-
+import { GiPayMoney, GiProfit } from "react-icons/gi";
 interface SubMenuItem {
   title: string;
   icon?: JSX.Element;
@@ -92,6 +92,11 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
           href: "/informes/ventas-uni-nego",
           icon: <SiAwsorganizations />,
         },
+          {
+          title: "Ventas por Condicion",
+          href: "/informes/ventas-condicion",
+          icon: <GiPayMoney />,
+        },
         {
           title: "Cobranzas",
           href: "/informes/cobranzas",
@@ -116,6 +121,21 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
           title: "Comp. Clientes otras Sucursales",
           href: "/informes/clientes-otras-suc",
           icon: <BsPersonBoundingBox />,
+        },
+           {
+          title: "Rentabilidad",
+          href: "/informes/rentabilidad",
+          icon: <GiProfit />,
+        },
+        {
+          title: "Rentabilidad - Medio de Pago",
+          href: "/informes/rentabilidadmp",
+          icon: <GiProfit />,
+        },
+         {
+          title: "Ranking de Clientes",
+          href: "/informes/ranking",
+          icon: <FaRankingStar />,
         },
       ],
     },
