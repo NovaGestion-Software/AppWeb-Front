@@ -21,6 +21,7 @@ import RentabilidadMPagoView from './views/app/informes/RentabilidadMPago/Rentab
 import RankingClientesView from './views/app/informes/RankingClientes/RankingClientesView';
 import RentabilidadView from './views/app/informes/Rentabilidad/RentabilidadView';
 import VentasPorCondicionView from './views/app/informes/VentasPorCondicion/VentasPorCondicionView';
+import MovCajaView from './views/app/informes/MovimientosCajas/MovimientosCajasView';
 
 export default function Router() {
   return (
@@ -43,6 +44,8 @@ export default function Router() {
               <Route path="ventas-hora" element={<VentasHoraView />} />
               <Route path="ventas-uni-nego" element={<VentasUnidadNegocioView />} />
               <Route path="ventas-condicion" element={<VentasPorCondicionView />} />
+
+              <Route path="mov-cajas" element={<MovCajaView />} />
               
               <Route path="ingresos" element={<IngresosView />} />
               <Route path="rentabilidad" element={<RentabilidadView />} />

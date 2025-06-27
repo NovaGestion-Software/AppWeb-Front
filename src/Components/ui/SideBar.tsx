@@ -9,7 +9,7 @@ import { SiAwsorganizations } from "react-icons/si";
 import { TiHome } from "react-icons/ti";
 import Cookies from "js-cookie";
 import { GrDocumentTime } from "react-icons/gr";
-import { BiBarChartSquare } from "react-icons/bi";
+import { BiBarChartSquare, BiTransferAlt } from "react-icons/bi";
 import { FaBoxesPacking, FaRankingStar } from "react-icons/fa6";
 import { useVentasHoraStore } from "@/views/app/informes/ventasXHora/store/useVentasHoraStore";
 import { BsPerson, BsPersonBoundingBox } from "react-icons/bs";
@@ -92,10 +92,15 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
           href: "/informes/ventas-uni-nego",
           icon: <SiAwsorganizations />,
         },
-          {
+        {
           title: "Ventas por Condicion",
           href: "/informes/ventas-condicion",
           icon: <GiPayMoney />,
+        },
+        {
+          title: "Comp. Clientes otras Sucursales",
+          href: "/informes/clientes-otras-suc",
+          icon: <BsPersonBoundingBox />,
         },
         {
           title: "Cobranzas",
@@ -108,21 +113,21 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
           icon: <CiClock2 />,
         },
         {
-          title: "Morosidad",
-          href: "/informes/morosidad",
-          icon: <CiCalendar />,
-        },
-        {
           title: "Ingresos",
           href: "/informes/ingresos",
           icon: <TbCashRegister />,
         },
         {
-          title: "Comp. Clientes otras Sucursales",
-          href: "/informes/clientes-otras-suc",
-          icon: <BsPersonBoundingBox />,
+          title: "Morosidad",
+          href: "/informes/morosidad",
+          icon: <CiCalendar />,
         },
-           {
+        {
+          title: "Mov. de Cajas",
+          href: "/informes/mov-cajas",
+          icon: <BiTransferAlt />,
+        },
+        {
           title: "Rentabilidad",
           href: "/informes/rentabilidad",
           icon: <GiProfit />,
@@ -132,7 +137,7 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
           href: "/informes/rentabilidadmp",
           icon: <GiProfit />,
         },
-         {
+        {
           title: "Ranking de Clientes",
           href: "/informes/ranking",
           icon: <FaRankingStar />,
@@ -401,8 +406,7 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
       )}
 
       {/* Log out */}
-      <Link to="/" className="flex items-center gap-3 fixed bottom-2 left-5 duration-100 hover:translate-x-1 transition-all hover:scale-105"
-       onClick={handleLogout}>
+      <Link to="/" className="flex items-center gap-3 fixed bottom-2 left-5 duration-100 hover:translate-x-1 transition-all hover:scale-105" onClick={handleLogout}>
         <div className="border bg-white rounded-full cursor-pointer w-8">
           <CiLogout className="w-6 h-8 font-extrabold" />
         </div>
