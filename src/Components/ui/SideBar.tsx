@@ -362,7 +362,7 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
         </div>
       </div>
 
-      <hr className="w-full border-t border-gray-700 mt-4" />
+      <hr className="w-full border-t border-gray-700 mt-4 " />
 
       {/* Empresa */}
       <div className="flex flex-col justify-center items-center gap-1">
@@ -380,13 +380,15 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
 
       {/* Menú */}
       <ul className={`absolute top-52 mt-3 ml-1 w-full transition-all`}>
-        <div className="min-h-[20rem] 2xl:min-h-[40rem] max-h-[10rem] overflow-y-auto scrollbar-custom">{Menus.map((menu) => renderMenu(menu))}</div>
-        <hr className="w-full border-t border-gray-700" />
+        <div className="min-h-[20rem] 2xl:min-h-[38rem] max-h-[10rem] 
+        overflow-y-auto scrollbar-custom">{Menus.map((menu) => renderMenu(menu))}</div>
+        <hr className="w-full pt-12 border-t border-gray-700" />
       </ul>
 
       {/* Configuración */}
       {localStorage.getItem("_tu") === "1" && (
-        <Link to="/configuracion" className="flex justify-center items-center gap-1 fixed bottom-16 left-7 duration-100 hover:translate-x-1 transition-all hover:scale-105">
+        <Link to="/configuracion" className="flex justify-center
+         items-center gap-1 fixed bottom-16 left-7 duration-100 hover:translate-x-1 transition-all hover:scale-105">
           <div className="cursor-pointer w-8">
             <img src="/img/icons/settings.png" alt="Configuración" className="w-6 h-6" />
           </div>

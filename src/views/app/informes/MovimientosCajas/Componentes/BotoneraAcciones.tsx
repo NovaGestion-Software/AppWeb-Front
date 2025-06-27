@@ -3,7 +3,7 @@ import { IoMdOptions } from "react-icons/io";
 import { Card } from "@/frontend-resourses/components/Cards/CardBase";
 import { useMovCajaStore } from "../Store/store";
 import { LuRefreshCcw } from "react-icons/lu";
-import { FaWarehouse } from "react-icons/fa";
+import { FaStoreAlt } from "react-icons/fa";
 import { BsCalendarRangeFill } from "react-icons/bs";
 import { RiCloseCircleLine, RiPlayCircleLine } from "react-icons/ri";
 
@@ -20,7 +20,7 @@ function Buttons({ className, estaProcesado, setEstaProcesado }: { className?: s
 
       <ActionButton text="" color="blue" disabled={!estaProcesado} onClick={() => {}} icon={<BsCalendarRangeFill size={buttonSize} />} addClassName={`${buttonsClass}`}  />
 
-      <ActionButton text="" color="blue" disabled={!estaProcesado} onClick={() => {}} icon={<FaWarehouse size={buttonSize} />} addClassName={`${buttonsClass}`}  />
+      <ActionButton text="" color="blue" disabled={!estaProcesado} onClick={() => {}} icon={<FaStoreAlt size={buttonSize} />} addClassName={`${buttonsClass}`}  />
 
       <ActionButton text="" color="blue" disabled={!estaProcesado} onClick={() => {}} icon={<IoMdOptions size={buttonSize} />} addClassName={`${buttonsClass}`}  />
     </div>

@@ -1,5 +1,5 @@
 import { ActionButton } from "@/frontend-resourses/components";
-import { FaWarehouse } from "react-icons/fa";
+import { FaStoreAlt } from "react-icons/fa";
 import { MdReceiptLong } from "react-icons/md";
 interface ShowModalButtonsProps {
   propsShowModal: {
@@ -19,7 +19,7 @@ export default function ShowButtons({ props, className, estaProcesado }: { props
        onClick={() => setShowSucursales(true)}  
        addClassName="h-5  rounded-md text-xxs v1440:h-8 v1536:h-8 v1536:px-6 v1536:text-sm"
        disabled={!estaProcesado} 
-       color="blue" icon={<FaWarehouse size={12}  />} />
+       color="blue" icon={<FaStoreAlt size={12}  />} />
 
       <ActionButton text="Uni. Negocio"  
       onClick={() => setShowUniNego(true)} disabled={!estaProcesado} color="blue"  icon={<MdReceiptLong  size={12}  />}

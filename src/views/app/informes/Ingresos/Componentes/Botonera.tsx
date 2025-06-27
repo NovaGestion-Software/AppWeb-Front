@@ -2,7 +2,7 @@ import { Card } from "@/frontend-resourses/components/Cards/CardBase";
 import HerramientasInforme, { ExcelExportConfig } from "../../_components/HerramientasInforme";
 import { useIngresosStore } from "../Store/store";
 import { ActionButton } from "@/frontend-resourses/components";
-import { FaWarehouse } from "react-icons/fa";
+import { FaStoreAlt } from "react-icons/fa";
 import { Status } from "@/frontend-resourses/components/types";
 import { MdReceiptLong } from "react-icons/md";
 
@@ -42,7 +42,7 @@ export default function Botonera({ className, props }: { className?: string; pro
         addClassName="h-5  rounded-md text-xxs v1440:h-8 v1536:h-8 v1536:px-6 v1536:text-sm v1920:h-9"
         disabled={!estaProcesado}
         color="blue"
-        icon={<FaWarehouse size={12} />}
+        icon={<FaStoreAlt size={12} />}
       />
       <ActionButton
         text="U. Negocio"
