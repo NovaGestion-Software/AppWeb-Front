@@ -22,6 +22,7 @@ import RankingClientesView from './views/app/informes/RankingClientes/RankingCli
 import RentabilidadView from './views/app/informes/Rentabilidad/RentabilidadView';
 import VentasPorCondicionView from './views/app/informes/VentasPorCondicion/VentasPorCondicionView';
 import MovCajaView from './views/app/informes/MovimientosCajas/MovimientosCajasView';
+import MovCajaTotalesView from './views/app/informes/MovimientosCajaTotales/MovimientosCajasTotalesView';
 
 export default function Router() {
   return (
@@ -46,6 +47,7 @@ export default function Router() {
               <Route path="ventas-condicion" element={<VentasPorCondicionView />} />
 
               <Route path="mov-cajas" element={<MovCajaView />} />
+              <Route path="mov-cajas-totales" element={<MovCajaTotalesView />} />
               
               <Route path="ingresos" element={<IngresosView />} />
               <Route path="rentabilidad" element={<RentabilidadView />} />

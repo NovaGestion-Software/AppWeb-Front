@@ -127,6 +127,11 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
           href: "/informes/mov-cajas",
           icon: <BiTransferAlt />,
         },
+         {
+          title: "Mov. de Cajas Totales",
+          href: "/informes/mov-cajas-totales",
+          icon: <BiTransferAlt />,
+        },
         {
           title: "Rentabilidad",
           href: "/informes/rentabilidad",
