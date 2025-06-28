@@ -10,7 +10,7 @@ import { TiHome } from "react-icons/ti";
 import Cookies from "js-cookie";
 import { GrDocumentTime } from "react-icons/gr";
 import { BiBarChartSquare, BiTransferAlt } from "react-icons/bi";
-import { FaBoxesPacking, FaRankingStar } from "react-icons/fa6";
+import { FaBoxesPacking, FaMoneyBillTransfer, FaRankingStar } from "react-icons/fa6";
 import { useVentasHoraStore } from "@/views/app/informes/ventasXHora/store/useVentasHoraStore";
 import { BsPerson, BsPersonBoundingBox } from "react-icons/bs";
 import { TbCashRegister } from "react-icons/tb";
@@ -130,7 +130,7 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
          {
           title: "Mov. de Cajas Totales",
           href: "/informes/mov-cajas-totales",
-          icon: <BiTransferAlt />,
+          icon: <FaMoneyBillTransfer />,
         },
         {
           title: "Rentabilidad",
