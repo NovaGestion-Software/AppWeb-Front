@@ -62,36 +62,7 @@ export default function HerramientasInforme<T>({
   const [accionActual, setAccionActual] = useState<"imprimir" | "exportar" | null>(null);
   const navigate = useNavigate();
 
-  // lo que me imagino es que ahora al modificar las funciones para modificar lso datos, voy a crear directameente un objeto con los datos de la tabla y tambien los totales del footer
-  // y asi envio todo eso por data en herramientas component para que se exporte.
-  // Sobre la funcion de imprimir la tabla lo que me imagino es cambiar donde se coloca el id, o dejar ese idunique para los estilos pero para pasarlo al padre pasar el que tiene todo el contenedor.
 
-  // const datosTotales = datosParaFooter
-  //   ? { id: 1, hora: "Totales", ...datosParaFooter } // Se añade un identificador único
-  //   : null;
-
-  // // const handleExportExcel = useCallback(() => {
-  // //   if (!data || data.length === 0) return;
-
-  // //   // Convertimos los datos en un array de objetos sin depender de claves fijas
-  // //   const datosTransformados = data.map((item, index) => ({
-  // //     id: index + 1, // Añadir un ID opcional
-  // //     ...item, // Mantener la estructura original
-  // //   }));
-
-  // //   // Si hay datos totales, los agregamos al final
-  // //   if (datosTotales) {
-  // //     datosTransformados.push(datosTotales);
-  // //   }
-
-  // //   // Creamos el libro de Excel
-  // //   const wb = XLSX.utils.book_new();
-  // //   const ws = XLSX.utils.json_to_sheet(datosTransformados);
-  // //   XLSX.utils.book_append_sheet(wb, ws, "Informe");
-
-  // //   // Guardamos el archivo
-  // //   XLSX.writeFile(wb, "Informe.xlsx");
-  // // }, [data, datosTotales]);
 
   const exportToExcel = (config: ExcelExportConfig) => {
     try {
@@ -366,3 +337,35 @@ export default function HerramientasInforme<T>({
     </div>
   );
 }
+
+
+  // lo que me imagino es que ahora al modificar las funciones para modificar lso datos, voy a crear directameente un objeto con los datos de la tabla y tambien los totales del footer
+  // y asi envio todo eso por data en herramientas component para que se exporte.
+  // Sobre la funcion de imprimir la tabla lo que me imagino es cambiar donde se coloca el id, o dejar ese idunique para los estilos pero para pasarlo al padre pasar el que tiene todo el contenedor.
+
+  // const datosTotales = datosParaFooter
+  //   ? { id: 1, hora: "Totales", ...datosParaFooter } // Se añade un identificador único
+  //   : null;
+
+  // // const handleExportExcel = useCallback(() => {
+  // //   if (!data || data.length === 0) return;
+
+  // //   // Convertimos los datos en un array de objetos sin depender de claves fijas
+  // //   const datosTransformados = data.map((item, index) => ({
+  // //     id: index + 1, // Añadir un ID opcional
+  // //     ...item, // Mantener la estructura original
+  // //   }));
+
+  // //   // Si hay datos totales, los agregamos al final
+  // //   if (datosTotales) {
+  // //     datosTransformados.push(datosTotales);
+  // //   }
+
+  // //   // Creamos el libro de Excel
+  // //   const wb = XLSX.utils.book_new();
+  // //   const ws = XLSX.utils.json_to_sheet(datosTransformados);
+  // //   XLSX.utils.book_append_sheet(wb, ws, "Informe");
+
+  // //   // Guardamos el archivo
+  // //   XLSX.writeFile(wb, "Informe.xlsx");
+  // // }, [data, datosTotales]);

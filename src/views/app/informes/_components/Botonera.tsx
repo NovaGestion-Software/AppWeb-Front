@@ -18,7 +18,6 @@ export function Botonera({ config, className = "" }: { config: BotoneraConfig[];
             disabled={btn.disabled}
             onClick={btn.onClick}
             addClassName={btn.addClassName}
-            
           />
         )
       )}

@@ -1,16 +1,13 @@
-import { IoMdOptions } from "react-icons/io";
 import { Card } from "@/frontend-resourses/components/Cards/CardBase";
 import { LuRefreshCcw } from "react-icons/lu";
 import { BsCalendarRangeFill } from "react-icons/bs";
 import { RiCloseCircleLine, RiPlayCircleLine } from "react-icons/ri";
-import { useState } from "react";
 import { Botonera } from "../../_components/Botonera";
 import { BotoneraConfig } from "@/types/ButtonConfig";
 import { useMovCajaTotalesStore } from "../Store/store";
 
 export default function BotoneraAcciones() {
   const { estaProcesado, setEstaProcesado } = useMovCajaTotalesStore();
-  const [_show, setShow] = useState<boolean>();
   const buttonsClass = `h-6 rounded-md text-xxs  v1440:h-8 v1536:h-8 v1536:px-6 v1536:text-sm`;
 
   const config: BotoneraConfig[] = [

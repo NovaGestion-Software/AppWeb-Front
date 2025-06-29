@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { MdOutlineAttachMoney, MdOutlineCategory } from "react-icons/md";
-import { FaChevronDown, FaChevronUp, FaThumbtack } from "react-icons/fa";
+import { FaChevronDown, FaChevronUp, FaFileContract, FaThumbtack } from "react-icons/fa";
 import { RiDashboardFill } from "react-icons/ri";
 import { CiCalendar, CiClock2, CiLogout } from "react-icons/ci";
 import { SiAwsorganizations } from "react-icons/si";
@@ -113,6 +113,11 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
           icon: <CiClock2 />,
         },
         {
+          title: "Garantias",
+          href: "/informes/garantias",
+          icon: <FaFileContract />,
+        },
+        {
           title: "Ingresos",
           href: "/informes/ingresos",
           icon: <TbCashRegister />,
@@ -127,7 +132,7 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
           href: "/informes/mov-cajas",
           icon: <BiTransferAlt />,
         },
-         {
+        {
           title: "Mov. de Cajas Totales",
           href: "/informes/mov-cajas-totales",
           icon: <FaMoneyBillTransfer />,
@@ -385,15 +390,22 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
 
       {/* Menú */}
       <ul className={`absolute top-52 mt-3 ml-1 w-full transition-all`}>
-        <div className="min-h-[20rem] 2xl:min-h-[38rem] max-h-[10rem] 
-        overflow-y-auto scrollbar-custom">{Menus.map((menu) => renderMenu(menu))}</div>
+        <div
+          className="min-h-[20rem] 2xl:min-h-[38rem] max-h-[10rem] 
+        overflow-y-auto scrollbar-custom"
+        >
+          {Menus.map((menu) => renderMenu(menu))}
+        </div>
         <hr className="w-full pt-12 border-t border-gray-700" />
       </ul>
 
       {/* Configuración */}
       {localStorage.getItem("_tu") === "1" && (
-        <Link to="/configuracion" className="flex justify-center
-         items-center gap-1 fixed bottom-16 left-7 duration-100 hover:translate-x-1 transition-all hover:scale-105">
+        <Link
+          to="/configuracion"
+          className="flex justify-center
+         items-center gap-1 fixed bottom-16 left-7 duration-100 hover:translate-x-1 transition-all hover:scale-105"
+        >
           <div className="cursor-pointer w-8">
             <img src="/img/icons/settings.png" alt="Configuración" className="w-6 h-6" />
           </div>

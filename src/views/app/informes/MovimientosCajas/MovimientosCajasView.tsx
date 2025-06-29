@@ -2,11 +2,11 @@ import { ViewTitle } from "@/frontend-resourses/components";
 
 import { useEscapeShortcut } from "../ventasXHora/Hooks/useEscapeShortcut";
 import { useMovCajaStore } from "./Store/store";
-import BotoneraDefault from "./Componentes/BotoneraDefault";
 import Tabla from "./Componentes/Tabla";
 import RadioButtons from "./Componentes/RadioButtons";
 import BotoneraExtra from "./Componentes/BotoneraExtra";
 import BotoneraAcciones from "./Componentes/BotoneraAcciones";
+import BotoneraPrincipal from "./Componentes/BotoneraPrincipal";
 
 export default function MovCajaView() {
   const { estaProcesado, setEstaProcesado } = useMovCajaStore();
@@ -24,11 +24,10 @@ export default function MovCajaView() {
       <ViewTitle title="Movimientos de Caja" />
       <div className="grid2 gap-1 mx-6 my-2 ">
         <BotoneraExtra />
-        <BotoneraDefault handleClean={handleClearData} />
+        <BotoneraPrincipal handleClean={handleClearData} />
         <RadioButtons />
         <Tabla />
         <BotoneraAcciones />
-
       </div>
     </div>
   );

@@ -235,3 +235,13 @@ export interface TablaSecciones extends TableNode {
   nseccion: string;
   rubros: { rubro: string; nrubro: string }[];
 }
+
+export interface ExcelExportConfig {
+  sheets: {
+    name: string;
+    data: any[];
+    headers?: string[];
+  }[];
+  fileName: string;
+}
+
