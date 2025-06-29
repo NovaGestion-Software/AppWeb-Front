@@ -17,10 +17,11 @@ export default function GarantiasView() {
     estaProcesado,
     handleClearData,
   });
+
   return (
     <div>
       <ViewTitle title="Garantias" />
-      <div className="grid2 gap-1 mx-6 my-2 ">
+      <div className="grid2 gap-1 my-2 mx-6  ">
         <Date />
         <Search />
         <BotoneraPrincipal />
