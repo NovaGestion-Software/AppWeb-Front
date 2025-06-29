@@ -12,13 +12,13 @@ export default function Tabla({ className }: TablaProps) {
   const { status, setId, estaProcesado, idsCoincidentes, indiceSeleccionado, buscado, modoNavegacion, indiceGlobal } = useGarantiasStore();
 
   const garantiasColumns: Array<ExtendedColumn<any>> = [
-    { key: "fecha", label: "Fecha", minWidth: "90", maxWidth: "100", resaltar: true },
+    { key: "fecha", label: "Fecha", minWidth: "90", maxWidth: "120", resaltar: true },
     { key: "garantia", label: "Garantía", minWidth: "80", maxWidth: "100" },
     { key: "vende", label: "Vende", minWidth: "60", maxWidth: "90" },
     { key: "cliente", label: "Cliente", minWidth: "80", maxWidth: "100" },
-    { key: "nombre", label: "Nombre", minWidth: "150", maxWidth: "170" },
+    { key: "nombre", label: "Nombre", minWidth: "150", maxWidth: "250" },
     { key: "suc", label: "Suc.", minWidth: "60", maxWidth: "70" },
-    { key: "comprob", label: "Comprobante", minWidth: "130", maxWidth: "130" },
+    { key: "comprob", label: "Comprobante", minWidth: "130", maxWidth: "160" },
     { key: "importe", label: "Importe $", minWidth: "80", maxWidth: "100", resaltar: true, },
     { key: "mes", label: "Mes", minWidth: "70", maxWidth: "70" },
   ];
@@ -37,7 +37,7 @@ export default function Tabla({ className }: TablaProps) {
       addCellClass: "max-height: 45px; padding: 4px 8px 4px 16px;",
       addHeaderCellClass: "padding: 4px 8px 4px 16px;",
       viewport1440: {
-        widthContainer1440px: "",
+        widthContainer1440px: "60rem",
         heightContainer1440px: "35rem",
         addCellClass1440px: "max-height: 40px;",
       },
