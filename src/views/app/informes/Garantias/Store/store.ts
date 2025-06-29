@@ -1,4 +1,4 @@
-import { CheckboxState, Status } from "@/frontend-resourses/components/types";
+import { Status } from "@/frontend-resourses/components/types";
 import { FechasRango, SucursalesModal } from "@/types";
 import dayjs from "dayjs";
 import { create } from "zustand";
