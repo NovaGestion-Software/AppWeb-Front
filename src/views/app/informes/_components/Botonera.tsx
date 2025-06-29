@@ -1,8 +1,6 @@
 import { ActionButton } from "@/frontend-resourses/components";
 import { BotoneraConfig } from "@/types/ButtonConfig";
 
-
-
 export function Botonera({ config, className = "" }: { config: BotoneraConfig[]; className?: string }) {
   return (
     <div className={`${className} flex flex-row gap-3`}>

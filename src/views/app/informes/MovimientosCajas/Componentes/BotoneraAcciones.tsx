@@ -6,7 +6,7 @@ import { BsCalendarRangeFill } from "react-icons/bs";
 import { RiCloseCircleLine, RiPlayCircleLine } from "react-icons/ri";
 import { BotoneraConfig } from "@/types/ButtonConfig";
 import { Botonera } from "../../_components/Botonera";
-import { getBotonSucursal } from "@/frontend-resourses/utils/helpers/botonera";
+import { getBotonSucursal } from "@/utils/helpers/botonera";
 import { useState } from "react";
 
 export default function BotoneraAcciones() {

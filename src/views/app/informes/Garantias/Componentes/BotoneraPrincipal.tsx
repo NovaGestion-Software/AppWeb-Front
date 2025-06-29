@@ -1,5 +1,5 @@
 import { Card } from "@/frontend-resourses/components/Cards/CardBase";
-import { crearExportConfig, getBotonSucursal } from "@/frontend-resourses/utils/helpers/botonera";
+import { crearExportConfig, getBotonSucursal } from "@/utils/helpers/botonera";
 import BotoneraDefault from "../../_components/BotoneraDefault";
 import { useGarantiasStore } from "../Store/store";
 import { garantiasData } from "../Data/Data";

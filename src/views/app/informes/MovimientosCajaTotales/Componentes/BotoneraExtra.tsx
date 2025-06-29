@@ -1,6 +1,6 @@
 import { Card } from "@/frontend-resourses/components/Cards/CardBase";
 import { Botonera } from "../../_components/Botonera";
-import { getBotonSucursal } from "@/frontend-resourses/utils/helpers/botonera";
+import { getBotonSucursal } from "@/utils/helpers/botonera";
 import { useState } from "react";
 import { useMovCajaTotalesStore } from "../Store/store";
 

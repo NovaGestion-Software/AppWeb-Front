@@ -1,7 +1,7 @@
 import { Card } from "@/frontend-resourses/components/Cards/CardBase";
 import {  useMovCajaTotalesStore } from "../Store/store";
 import { movCajaData } from "../Data/data";
-import { crearExportConfig } from "@/frontend-resourses/utils/helpers/botonera";
+import { crearExportConfig } from "@/utils/helpers/botonera";
 import BotoneraDefault from "../../_components/BotoneraDefault";
 
 interface BotoneraProps {
