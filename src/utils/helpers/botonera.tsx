@@ -22,7 +22,7 @@ export function getBotonSucursal({
     color: "blue",
     disabled,
     addClassName:
-      "h-5 rounded-md text-xxs  v1440:h-8 v1536:h-8 v1536:px-6 v1536:text-sm",
+      "h-6 rounded-md text-xxs  v1440:h-8 v1536:h-8 v1536:px-6 v1536:text-sm",
   };
 }
 

@@ -70,11 +70,11 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
     },
     {
       title: "Informes Ventas", // Menú desplegable principal
-      icon: <FaChartLine  />,
+      icon: <FaChartLine />,
       submenus: [
         {
           title: "Importes", // Menú desplegable principal
-          icon: <FaDollarSign   />,
+          icon: <FaDollarSign />,
           submenus: [
             {
               title: "Ventas por Condicion",
@@ -111,6 +111,11 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
               href: "/informes/rentabilidadmp",
               icon: <GiProfit />,
             },
+            {
+              title: "Comparativo Mensual de Ventas",
+              href: "/informes/comparativo-mensual",
+              icon: <GiProfit />,
+            },
 
             {
               title: "Comp. Clientes otras Sucursales",
@@ -123,7 +128,7 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
     },
     {
       title: "Informes Cobranzas",
-      icon: <FaMoneyBillWave  />,
+      icon: <FaMoneyBillWave />,
       submenus: [
         {
           title: "Cobranzas",
@@ -145,7 +150,7 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
 
     {
       title: "Ventas por Vendedor", // Menú desplegable principal
-      icon: <FaUserTie  />,
+      icon: <FaUserTie />,
       submenus: [
         {
           title: "Detalle Ventas por Vendedor",

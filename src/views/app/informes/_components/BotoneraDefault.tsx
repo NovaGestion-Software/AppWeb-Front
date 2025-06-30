@@ -99,7 +99,7 @@ export default function BotoneraDefault({ className = "", exportConfig, containe
   return (
     <div className={`flex gap-6 w-fit rounded-lg ${className}`}>
       <ActionButton
-        icon={<RiFileExcel2Fill className="w-4 h-4" />}
+        icon={<RiFileExcel2Fill className="w-4 h-4 m-1 v1920:w-6 v1920:h-6" />}
         color="green"
         disabled={disabled}
         onClick={
@@ -110,11 +110,11 @@ export default function BotoneraDefault({ className = "", exportConfig, containe
               }
             : () => exportToExcel(exportConfig)
         }
-        addClassName="h-5 rounded-md text-xs v1440:h-8 v1536:h-9 v1536:px-6 v1536:text-sm"
+        addClassName="h-6 p-1 rounded-md text-xs v1440:h-8 v1536:h-9 v1536:px-6 v1536:text-sm"
       />
 
       <ActionButton
-        icon={<RiPrinterFill className="w-4 h-4" />}
+        icon={<RiPrinterFill className="w-4 h-4 m-1 v1920:w-6 v1920:h-6" />}
         color="blue"
         disabled={disabled}
         onClick={
@@ -125,10 +125,11 @@ export default function BotoneraDefault({ className = "", exportConfig, containe
               }
             : () => handlePrint([containerId])
         }
-        addClassName="h-5 rounded-md text-xs v1440:h-8 v1536:h-9 v1536:px-6 v1536:text-sm"
+        addClassName="h-6 p-1 rounded-md text-xs v1440:h-8 v1536:h-9 v1536:px-6 v1536:text-sm"
       />
 
-      <ActionButton icon={<ImExit className="w-4 h-4" />} color="red" onClick={handleExit} disabled={disabled} addClassName="h-5 rounded-md text-xs v1440:h-8 v1536:h-9 v1536:px-6 v1536:text-sm 2xl:w-12" />
+      <ActionButton icon={<ImExit className="w-4 h-4 m-1  v1920:w-6 v1920:h-6" />} color="red" onClick={handleExit} disabled={disabled} 
+      addClassName="h-6 p-1 rounded-md text-xs v1440:h-8 v1536:h-9 v1536:px-6 v1536:text-sm " />
 
       {tableSelect && itemsDisponibles && (
         <SelectedTables className="z-50" funcion={accion === "imprimir" ? "Imprimir" : "Exportar"} itemsDisponibles={itemsDisponibles} setShowSelectedTables={setTableSelect} onConfirm={handleSelectionConfirm} />
