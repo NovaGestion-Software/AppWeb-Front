@@ -4,25 +4,24 @@ import ProtectedRoute from './Components/features/ProtectedRoute';
 import HomeView from './views/app/home/HomeView';
 import DashboardView from './views/app/dashboard/DashboardView';
 import CajasView from './views/app/cajas/CajasView';
-import CobranzaVencimView from './views/app/informes/cobranzaXVencim/CobranzaVencimView';
-import VentasXVendedorView from './views/app/informes/ventasXVendedor/VentasXVendedorView';
-import VentasHoraView from './views/app/informes/ventasXHora/VentasHoraView';
+import CobranzaVencimView from './views/app/informes/Cobranza/cobranzaXVencim/CobranzaVencimView';
+import VentasXVendedorView from './views/app/informes/VentasPorVendedor/DetalleVentasPorVendedor/VentasXVendedorView';
+import VentasHoraView from './views/app/informes/Ventas/ventasXHora/VentasHoraView';
 import ConfigView from './views/app/config/ConfigView';
 import Layout from './Components/ui/layouts/Layout';
 import StockPorSeccionView from './views/app/stockSeccion/StockPorSeccionView';
-import VentasPorSeccionView from './views/app/informes/VentasPorSeccion/VentasPorSeccionView';
-import CobranzasView from './views/app/informes/cobranzas/cobranzasView';
-import MorosidadView from './views/app/informes/morosidad/MorosidadView';
-import IngresosView from './views/app/informes/Ingresos/IngresosView';
-import CompClientOtrasSucView from './views/app/informes/CompClientOtrasSuc/CompClientOtrasSucView';
-import Ranking from './views/Ranking/Ranking';
+import VentasPorSeccionView from './views/app/informes/Ventas/VentasPorSeccion/VentasPorSeccionView';
+import CobranzasView from './views/app/informes/Cobranza/cobranzas/cobranzasView';
+import MorosidadView from './views/app/informes/Cobranza/morosidad/MorosidadView';
+import IngresosView from './views/app/informes/Ventas/Ingresos/IngresosView';
+import CompClientOtrasSucView from './views/app/informes/Ventas/CompClientOtrasSuc/CompClientOtrasSucView';
 import VentasUnidadNegocioView from './views/app/informes/VentasUnidadNegocio/VentasUnidadNegocioView';
-import RentabilidadMPagoView from './views/app/informes/RentabilidadMPago/RentabilidadMPagoView';
-import RankingClientesView from './views/app/informes/RankingClientes/RankingClientesView';
-import RentabilidadView from './views/app/informes/Rentabilidad/RentabilidadView';
-import VentasPorCondicionView from './views/app/informes/VentasPorCondicion/VentasPorCondicionView';
-import MovCajaView from './views/app/informes/MovimientosCajas/MovimientosCajasView';
-import MovCajaTotalesView from './views/app/informes/MovimientosCajaTotales/MovimientosCajasTotalesView';
+import RentabilidadMPagoView from './views/app/informes/Ventas/RentabilidadMPago/RentabilidadMPagoView';
+import RankingClientesView from './views/app/informes/Ventas/RankingClientes/RankingClientesView';
+import RentabilidadView from './views/app/informes/Ventas/Rentabilidad/RentabilidadView';
+import VentasPorCondicionView from './views/app/informes/Ventas/VentasPorCondicion/VentasPorCondicionView';
+import MovCajaView from './views/app/informes/Caja/MovimientosCajas/MovimientosCajasView';
+import MovCajaTotalesView from './views/app/informes/Caja/MovimientosCajaTotales/MovimientosCajasTotalesView';
 import GarantiasView from './views/app/informes/Garantias/GarantiasView';
 
 export default function Router() {
@@ -34,14 +33,13 @@ export default function Router() {
         <Route element={<ProtectedRoute />}>
           <Route element={<Layout />}>
             <Route path="/home" element={<HomeView />} />
-            <Route path="/ranking" element={<Ranking />} />
             <Route path="/dashboard" element={<DashboardView />} />
             <Route path="/cajas" element={<CajasView />} />
             <Route path="/informes">
               <Route path="cobranza-vencim" element={<CobranzaVencimView />} />
               <Route path="cobranzas" element={<CobranzasView />} />
               <Route path="morosidad" element={<MorosidadView />} />
-              <Route path="ventas-vend" element={<VentasXVendedorView />} />
+              <Route path="detalle-ventas-vend" element={<VentasXVendedorView />} />
               <Route path="ventas-seccion" element={<VentasPorSeccionView />} />
               <Route path="ventas-hora" element={<VentasHoraView />} />
               <Route path="ventas-uni-nego" element={<VentasUnidadNegocioView />} />

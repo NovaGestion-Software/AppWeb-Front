@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { MdOutlineAttachMoney, MdOutlineCategory } from "react-icons/md";
-import { FaChevronDown, FaChevronUp, FaFileContract, FaThumbtack } from "react-icons/fa";
+import { FaChartLine, FaChevronDown, FaChevronUp, FaDollarSign, FaFileContract, FaMoneyBillWave, FaThumbtack, FaUserTie } from "react-icons/fa";
 import { RiDashboardFill } from "react-icons/ri";
 import { CiCalendar, CiClock2, CiLogout } from "react-icons/ci";
 import { SiAwsorganizations } from "react-icons/si";
@@ -11,7 +11,7 @@ import Cookies from "js-cookie";
 import { GrDocumentTime } from "react-icons/gr";
 import { BiBarChartSquare, BiTransferAlt } from "react-icons/bi";
 import { FaBoxesPacking, FaMoneyBillTransfer, FaRankingStar } from "react-icons/fa6";
-import { useVentasHoraStore } from "@/views/app/informes/ventasXHora/store/useVentasHoraStore";
+import { useVentasHoraStore } from "@/views/app/informes/Ventas/ventasXHora/store/useVentasHoraStore";
 import { BsPerson, BsPersonBoundingBox } from "react-icons/bs";
 import { TbCashRegister } from "react-icons/tb";
 import { AnimatedOverflowText } from "./layouts/AnimatedOverflowText";
@@ -69,39 +69,62 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
       icon: <FaBoxesPacking />,
     },
     {
-      title: "Informes", // Menú desplegable principal
-      icon: <BiBarChartSquare />,
+      title: "Informes Ventas", // Menú desplegable principal
+      icon: <FaChartLine  />,
       submenus: [
         {
-          title: "Ventas por Hora",
-          href: "/informes/ventas-hora",
-          icon: <GrDocumentTime />,
+          title: "Importes", // Menú desplegable principal
+          icon: <FaDollarSign   />,
+          submenus: [
+            {
+              title: "Ventas por Condicion",
+              href: "/informes/ventas-condicion",
+              icon: <GiPayMoney />,
+            },
+            {
+              title: "Ventas por Hora",
+              href: "/informes/ventas-hora",
+              icon: <GrDocumentTime />,
+            },
+            {
+              title: "Ventas por Sección",
+              href: "/informes/ventas-seccion",
+              icon: <MdOutlineCategory />,
+            },
+            {
+              title: "Ingresos",
+              href: "/informes/ingresos",
+              icon: <TbCashRegister />,
+            },
+            {
+              title: "Ranking de Clientes",
+              href: "/informes/ranking",
+              icon: <FaRankingStar />,
+            },
+            {
+              title: "Rentabilidad ( Artículo )",
+              href: "/informes/rentabilidad",
+              icon: <GiProfit />,
+            },
+            {
+              title: "Rentabilidad - Medio de Pago",
+              href: "/informes/rentabilidadmp",
+              icon: <GiProfit />,
+            },
+
+            {
+              title: "Comp. Clientes otras Sucursales",
+              href: "/informes/clientes-otras-suc",
+              icon: <BsPersonBoundingBox />,
+            },
+          ],
         },
-        {
-          title: "Ventas por Sección",
-          href: "/informes/ventas-seccion",
-          icon: <MdOutlineCategory />,
-        },
-        {
-          title: "Ventas por Vendedor",
-          href: "/informes/ventas-vend",
-          icon: <BsPerson />,
-        },
-        {
-          title: "Ventas por Unidad de Negocio",
-          href: "/informes/ventas-uni-nego",
-          icon: <SiAwsorganizations />,
-        },
-        {
-          title: "Ventas por Condicion",
-          href: "/informes/ventas-condicion",
-          icon: <GiPayMoney />,
-        },
-        {
-          title: "Comp. Clientes otras Sucursales",
-          href: "/informes/clientes-otras-suc",
-          icon: <BsPersonBoundingBox />,
-        },
+      ],
+    },
+    {
+      title: "Informes Cobranzas",
+      icon: <FaMoneyBillWave  />,
+      submenus: [
         {
           title: "Cobranzas",
           href: "/informes/cobranzas",
@@ -113,19 +136,37 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
           icon: <CiClock2 />,
         },
         {
-          title: "Garantias",
-          href: "/informes/garantias",
-          icon: <FaFileContract />,
-        },
-        {
-          title: "Ingresos",
-          href: "/informes/ingresos",
-          icon: <TbCashRegister />,
-        },
-        {
           title: "Morosidad",
           href: "/informes/morosidad",
           icon: <CiCalendar />,
+        },
+      ],
+    },
+
+    {
+      title: "Ventas por Vendedor", // Menú desplegable principal
+      icon: <FaUserTie  />,
+      submenus: [
+        {
+          title: "Detalle Ventas por Vendedor",
+          href: "/informes/detalle-ventas-vend",
+          icon: <BsPerson />,
+        },
+      ],
+    },
+    {
+      title: "Otros Informes", // Menú desplegable principal
+      icon: <BiBarChartSquare />,
+      submenus: [
+        {
+          title: "Ventas por Unidad de Negocio",
+          href: "/informes/ventas-uni-nego",
+          icon: <SiAwsorganizations />,
+        },
+        {
+          title: "Garantias",
+          href: "/informes/garantias",
+          icon: <FaFileContract />,
         },
         {
           title: "Mov. de Cajas",
@@ -136,21 +177,6 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
           title: "Mov. de Cajas Totales",
           href: "/informes/mov-cajas-totales",
           icon: <FaMoneyBillTransfer />,
-        },
-        {
-          title: "Rentabilidad",
-          href: "/informes/rentabilidad",
-          icon: <GiProfit />,
-        },
-        {
-          title: "Rentabilidad - Medio de Pago",
-          href: "/informes/rentabilidadmp",
-          icon: <GiProfit />,
-        },
-        {
-          title: "Ranking de Clientes",
-          href: "/informes/ranking",
-          icon: <FaRankingStar />,
         },
       ],
     },
@@ -212,7 +238,7 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
         {menu.href ? (
           <Link
             to={menu.href}
-            className={`flex items-center text-white text-sm gap-x-2 cursor-pointer p-2 rounded-l-md rounded-r-none mt-0.5 hover:bg-[#FFFFFF2B] hover:-translate-y-0.5 duration-300 overflow-hidden 2xl:text-base ${
+            className={`flex items-center text-white text-sm gap-x-2 cursor-pointer p-2 pr-4 rounded-l-md rounded-r-none mt-0.5 hover:bg-[#FFFFFF2B] hover:-translate-y-0.5 duration-300 overflow-hidden 2xl:text-base ${
               location.pathname === menu.href ? "bg-[#FFFFFF2B] -translate-y-0.5" : ""
             }`}
           >
@@ -221,7 +247,7 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
           </Link>
         ) : (
           <div
-            className={`flex items-center text-white text-sm gap-x-2 p-2 rounded-l-md rounded-r-none mt-0.5 hover:bg-[#FFFFFF2B] hover:-translate-y-0.5 duration-300 overflow-hidden cursor-pointer 2xl:text-base  ${
+            className={`flex items-center text-white text-sm gap-x-2 p-2 pr-3 rounded-l-md rounded-r-none mt-0.5 hover:bg-[#FFFFFF2B] hover:-translate-y-0.5 duration-300 overflow-hidden cursor-pointer 2xl:text-base  ${
               isMenuActive(menu) ? "bg-[#FFFFFF2B] -translate-y-0.5" : ""
             }`}
             onClick={() => toggleMenu(menu.title)}

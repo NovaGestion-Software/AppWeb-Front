@@ -3,8 +3,8 @@ import ActionButton from "@/frontend-resourses/components/Buttons/ActionButton";
 import { useCallback, useEffect, useState } from "react";
 import * as XLSX from "xlsx";
 import { ImExit } from "react-icons/im";
-import SelectedTables from "../morosidad/Componentes/SelectedTables";
 import { useNavigate } from "react-router-dom";
+import SelectedTables from "./SelectedTables";
 interface Item {
   id: string | number;
   nombre: string;

@@ -1,11 +1,11 @@
 import { RiFileExcel2Fill, RiPrinterFill } from "@remixicon/react";
 import { ImExit } from "react-icons/im";
 import ActionButton from "@/frontend-resourses/components/Buttons/ActionButton";
-import SelectedTables from "../morosidad/Componentes/SelectedTables";
 import { useState, useCallback } from "react";
 import * as XLSX from "xlsx";
 import { useNavigate } from "react-router-dom";
 import { ExcelExportConfig } from "@/types";
+import SelectedTables from "./SelectedTables";
 
 interface BotoneraInformeProps {
   className?: string;
