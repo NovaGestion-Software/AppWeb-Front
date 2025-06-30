@@ -1,7 +1,7 @@
 import TablaExpandible from "@/frontend-resourses/components/Tables/TablaExpansible/TablaExpandible";
 import { VentaPorVendedorColumns } from "../data";
 import { ExtendedColumn } from "@/frontend-resourses/components/Tables/types";
-import { useVentasPorVendedorStore } from "../store/useVentasPorVendedorStore";
+import { useDetallesVentasPorVendedorStore } from "../store/useVentasPorVendedorStore";
 
 export default function TablaVentasPorVendedor({ className }: { className?: string }) {
   const SeccionRubrosColumns: Array<ExtendedColumn<VentaPorVendedorColumns>> = [
@@ -36,7 +36,7 @@ export default function TablaVentasPorVendedor({ className }: { className?: stri
     buscado,
     // filtros
     modoNavegacion,
-  } = useVentasPorVendedorStore();
+  } = useDetallesVentasPorVendedorStore();
   const propsTablaVXV = {
     datosParaTabla: ventasPorVendedor ?? [],
     objectColumns: SeccionRubrosColumns,

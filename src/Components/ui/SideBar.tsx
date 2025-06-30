@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { MdOutlineAttachMoney, MdOutlineCategory } from "react-icons/md";
-import { FaChartLine, FaChevronDown, FaChevronUp, FaDollarSign, FaFileContract, FaMoneyBillWave, FaThumbtack, FaUserTie } from "react-icons/fa";
+import { FaBalanceScale, FaChartLine, FaChevronDown, FaChevronUp, FaDollarSign, FaFileContract, FaMoneyBillWave, FaThumbtack, FaUserTie } from "react-icons/fa";
 import { RiDashboardFill } from "react-icons/ri";
 import { CiCalendar, CiClock2, CiLogout } from "react-icons/ci";
 import { SiAwsorganizations } from "react-icons/si";
@@ -114,7 +114,7 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
             {
               title: "Comparativo Mensual de Ventas",
               href: "/informes/comparativo-mensual",
-              icon: <GiProfit />,
+              icon: <FaBalanceScale />,
             },
 
             {
@@ -152,6 +152,11 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
       title: "Ventas por Vendedor", // Menú desplegable principal
       icon: <FaUserTie />,
       submenus: [
+        {
+          title: "Ventas por Vendedor",
+          href: "/informes/ventas-vend",
+          icon: <BsPerson />,
+        },
         {
           title: "Detalle Ventas por Vendedor",
           href: "/informes/detalle-ventas-vend",

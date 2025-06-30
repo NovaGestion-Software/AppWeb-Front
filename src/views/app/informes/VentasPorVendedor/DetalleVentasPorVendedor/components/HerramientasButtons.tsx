@@ -3,8 +3,8 @@ import { ActionButton } from "@/frontend-resourses/components";
 import ModalFiltro from "@/frontend-resourses/components/Modales/ModalFiltro";
 import { ExcelExportConfig, SucursalesModal } from "@/types";
 import { FaStoreAlt } from "react-icons/fa";
-import { useVentasPorVendedorStore } from "../store/useVentasPorVendedorStore";
 import HerramientasInforme from "../../../_components/HerramientasInforme";
+import { useDetallesVentasPorVendedorStore } from "../store/useVentasPorVendedorStore";
 
 interface BotoneraHerramientasProps {
   data: Record<string, any>[];
@@ -24,7 +24,7 @@ export default function BotoneraHerramientas({ data, estaProcesado, disabled, cl
     sucursalesDisponibles,
     setSucursalesDisponibles,
     id,
-  } = useVentasPorVendedorStore();
+  } = useDetallesVentasPorVendedorStore();
 
   // const datosTotales = datosParaFooter
   //   ? { id: 1, hora: 'Totales', ...datosParaFooter } // Se añade un identificador único

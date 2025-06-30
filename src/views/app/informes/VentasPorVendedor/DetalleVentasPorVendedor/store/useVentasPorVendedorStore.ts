@@ -10,7 +10,7 @@ const defaultDate = {
   to: dayjs(),
 };
 
-type VentasPorVendedorProps = {
+type DetallesVentasPorVendedorProps = {
   id: string;
   setId: (id: string) => void;
   // parametros
@@ -61,7 +61,7 @@ type VentasPorVendedorProps = {
   setIdsCoincidentes: (ids: (string | number)[]) => void;
 };
 
-export const useVentasPorVendedorStore = create<VentasPorVendedorProps>()(
+export const useDetallesVentasPorVendedorStore = create<DetallesVentasPorVendedorProps>()(
   persist(
     (set) => ({
       id: "",
@@ -121,7 +121,7 @@ export const useVentasPorVendedorStore = create<VentasPorVendedorProps>()(
       setIdsCoincidentes: (ids) => set({ idsCoincidentes: ids }),
     }),
     {
-      name: "ventas-vendedor-storage",
+      name: "detalles-ventas-vendedor-storage",
       storage: createJSONStorage(() => sessionStorage),
     }
   )

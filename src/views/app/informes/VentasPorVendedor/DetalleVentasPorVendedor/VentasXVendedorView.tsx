@@ -3,12 +3,12 @@ import { dataFooter, dataVentaPorVendedor } from "./data";
 import { ViewTitle } from "@/frontend-resourses/components";
 import RangeDatesInput from "@/frontend-resourses/components/Inputs/RangeDatesInput";
 import { FechasRango } from "@/types";
-import { useVentasPorVendedorStore } from "./store/useVentasPorVendedorStore";
 import TablaVentasPorVendedor from "./components/TablaVentasVendedor";
 import BusquedaInputs from "@/frontend-resourses/components/Tables/Busqueda/BusquedaInputs";
 import BotoneraHerramientas from "./components/HerramientasButtons";
+import { useDetallesVentasPorVendedorStore } from "./store/useVentasPorVendedorStore";
 
-export default function VentasXVendedorView() {
+export default function DetallesVentasXVendedorView() {
   const {
     // status de la vista
     status,
@@ -33,7 +33,7 @@ export default function VentasXVendedorView() {
     setNavegandoCoincidentes,
     indiceGlobal,
     setModoNavegacion,
-  } = useVentasPorVendedorStore();
+  } = useDetallesVentasPorVendedorStore();
   const [estaProcesado, setEstaProcesado] = useState(false);
   // Formateo a array de strings
   // const sucursalesDisponiblesStr = sucursalesDisponibles.map((s) => s.nsucursal);
