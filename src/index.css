@@ -104,6 +104,10 @@ html {
   height: 8px; /* Altura de la barra de desplazamiento horizontal */
 }
 
+.scroll-gutter {
+  scrollbar-gutter: stable;
+}
+
 /* Elimina las flechas de desplazamiento */
 .scrollbar-custom::-webkit-scrollbar-button {
   display: none; /* No mostrar las flechas de arriba y abajo */
@@ -182,5 +186,9 @@ html {
   animation: marquee 6s linear infinite;
 }
 
-#containerId { border: 2px solid red; }
-#innerId { border: 2px solid blue; }
+#containerId {
+  border: 2px solid red;
+}
+#innerId {
+  border: 2px solid blue;
+}

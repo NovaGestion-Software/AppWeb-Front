@@ -13,7 +13,7 @@ export default function Tabla({ className }: { className?: string }) {
     { key: "codigo", label: "Código", minWidth: "100", maxWidth: "220" },
     { key: "descripcion", label: "Descripcion", minWidth: "100", maxWidth: "220" },
     { key: "marca", label: "Marca", minWidth: "100", maxWidth: "220" },
-    { key: "cantidad", label: "Cant.", minWidth: "100", maxWidth: "220" , resaltar: true},
+    { key: "cantidad", label: "Cant.", minWidth: "100", maxWidth: "120" , resaltar: true},
     { key: "importe", label: "Importe $", minWidth: "100", maxWidth: "220", resaltar: true },
   ];
 
@@ -29,22 +29,23 @@ export default function Tabla({ className }: { className?: string }) {
       InitColumCenter: 1,
       columnasNumber: [ 6, 7,],
       heightContainer: "24.4rem",
+      widthContainer: "50rem",
       addHeaderCellClass: "font-size: 0.5rem;",
       addCellClass: "min-height: 25px; font-size: 0.6rem;",
       viewport1440: {
-        widthContainer1440px: "",
+        widthContainer1440px: "62rem",
         addHeaderCellClass1440px: "font-size: 0.7rem; padding: 15px 5px;",
         heightContainer1440px: "37rem",
         addCellClass1440px: "max-height: 35px; font-size: .7rem; padding: 5px 10px;",
       },
       viewport1536: {
         heightContainer1536px: "37rem",
-        widthContainer1536px: "",
+        widthContainer1536px: "77rem",
         addCellClass1536px: "max-height: 40px; padding: 15px 15px;",
         addHeaderCellClass1536px: "font-size: 0.8rem; padding: 15px 5px;",
       },
       viewport1920: {
-        widthContainer1920px: "",
+        widthContainer1920px: "80rem",
         heightContainer1920px: "40.5rem",
       },
     },

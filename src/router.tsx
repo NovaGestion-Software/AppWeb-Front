@@ -25,6 +25,8 @@ import GarantiasView from "./views/app/informes/Garantias/GarantiasView";
 import ComparativoMensualView from "./views/app/informes/Ventas/ComparativoMensual/ComparativoMensualView";
 import DetallesVentasXVendedorView from "./views/app/informes/VentasPorVendedor/DetalleVentasPorVendedor/VentasXVendedorView";
 import VentasPorVendedorView from "./views/app/informes/VentasPorVendedor/VentasPorVendedor/VentasPorVendedorView";
+import ArticulosEnPromocionView from "./views/app/informes/VentasPorVendedor/ArticulosEnPromocion/ArticulosEnPromocionView";
+import VentasEnPromocionView from "./views/app/informes/VentasPorVendedor/VentasPromocion/VentasPromocionView";
 
 export default function Router() {
   return (
@@ -57,6 +59,8 @@ export default function Router() {
               {/** ventas por vendedor */}
               <Route path="detalle-ventas-vend" element={<DetallesVentasXVendedorView />} />
               <Route path="ventas-vend" element={<VentasPorVendedorView />} />
+              <Route path="art-prom" element={<ArticulosEnPromocionView />} />
+              <Route path="ventas-prom" element={<VentasEnPromocionView />} />
 
               {/**Otros */}
               <Route path="garantias" element={<GarantiasView />} />

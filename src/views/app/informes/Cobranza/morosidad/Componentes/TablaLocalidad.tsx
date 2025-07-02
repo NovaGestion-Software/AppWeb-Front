@@ -28,11 +28,11 @@ export default function TablaLocalidad({ estaProcesado, className }: TablaLocali
     },
 
     // Columnas normales
-    { key: "localidad", label: "Localidad", minWidth: "50", maxWidth: "200" },
-    { key: "importe", label: "Importe $", minWidth: "50", maxWidth: "220" },
-    { key: "mora", label: "Mora $", minWidth: "50", maxWidth: "220" },
-    { key: "cantidad", label: "Cant.", minWidth: "30", maxWidth: "120" },
-    { key: "moraPorcentaje", label: "%", minWidth: "30", maxWidth: "220" },
+    { key: "localidad", label: "Localidad", minWidth: "50", maxWidth: "250" },
+    { key: "importe", label: "Importe $", minWidth: "50", maxWidth: "250" },
+    { key: "mora", label: "Mora $", minWidth: "50", maxWidth: "260" },
+    { key: "cantidad", label: "Cant.", minWidth: "30", maxWidth: "270" },
+    { key: "moraPorcentaje", label: "%", minWidth: "30", maxWidth: "280" },
   ];
   const propsTabla = {
     datosParaTabla: estaProcesado ? dataTablaLocalidad : [],
@@ -52,19 +52,15 @@ export default function TablaLocalidad({ estaProcesado, className }: TablaLocali
       addHeaderCellClass: "font-size: 0.5rem; padding: 10px 5px;",
       addCellClass: "max-height: 25px; font-size: 0.5rem;",
       viewport1440: {
-        widthContainer1440px: "",
         addHeaderCellClass1440px: "font-size: 0.7rem; padding: 15px 5px;",
         heightContainer1440px: "37rem",
         addCellClass1440px: "max-height: 35px; font-size: .7rem;",
       },
       viewport1536: {
-        heightContainer1536px: "36rem",
-        widthContainer1536px: "",
         addCellClass1536px: "max-height: 40px;",
         addHeaderCellClass1536px: "font-size: 0.8rem; padding: 15px 5px;",
       },
       viewport1920: {
-        widthContainer1920px: "",
         heightContainer1920px: "40.5rem",
       },
     },

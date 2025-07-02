@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { MdOutlineAttachMoney, MdOutlineCategory } from "react-icons/md";
-import { FaBalanceScale, FaChartLine, FaChevronDown, FaChevronUp, FaDollarSign, FaFileContract, FaMoneyBillWave, FaThumbtack, FaUserTie } from "react-icons/fa";
+import { FaBalanceScale, FaChartLine, FaChevronDown, FaChevronUp, FaDollarSign, FaFileContract, FaGift, FaMoneyBillWave, FaTags, FaThumbtack, FaUserTie } from "react-icons/fa";
 import { RiDashboardFill } from "react-icons/ri";
 import { CiCalendar, CiClock2, CiLogout } from "react-icons/ci";
 import { SiAwsorganizations } from "react-icons/si";
@@ -161,6 +161,17 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
           title: "Detalle Ventas por Vendedor",
           href: "/informes/detalle-ventas-vend",
           icon: <BsPerson />,
+        },
+
+        {
+          title: "Articulos en Promoción",
+          href: "/informes/art-prom",
+          icon: <FaTags  />,
+        },
+            {
+          title: "Ventas en Promoción",
+          href: "/informes/ventas-prom",
+          icon: <FaGift  /> ,
         },
       ],
     },
@@ -425,9 +436,9 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
       <hr className="w-full border-t border-gray-700" />
 
       {/* Menú */}
-      <ul className={`absolute top-52 mt-3 ml-1 w-full transition-all`}>
+      <ul className={`absolute top-52 mt-3 ml-1 w-full transition-all `}>
         <div
-          className="min-h-[20rem] 2xl:min-h-[38rem] max-h-[10rem] 
+          className="min-h-[20rem] 2xl:min-h-[38rem] max-h-[10rem]  
         overflow-y-auto scrollbar-custom"
         >
           {Menus.map((menu) => renderMenu(menu))}

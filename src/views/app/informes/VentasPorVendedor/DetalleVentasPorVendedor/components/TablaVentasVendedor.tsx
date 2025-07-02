@@ -46,12 +46,16 @@ export default function TablaVentasPorVendedor({ className }: { className?: stri
       cursorPointer: true,
       columnasNumber: [2, 3, 4, 5, 6, 7],
       addCellClass: "max-height: 45px; padding: 4px 8px 4px 8px;",
-      width: "42rem",
+      widthContainer: "69rem",
       heightContainer: "h-[28rem] 2xl:h-[30rem] rounded-md",
       addRowClass: "",
       height: "auto",
       viewport1536: {
-        width: "60rem",
+        widthContainer1536px: "70rem",
+        addCellClass1536px: "max-height: 80px;",
+      },
+       viewport1920: {
+        widthContainer1920px: "90rem",
         addCellClass1536px: "max-height: 80px;",
       },
     },
