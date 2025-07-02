@@ -27,6 +27,8 @@ import DetallesVentasXVendedorView from "./views/app/informes/VentasPorVendedor/
 import VentasPorVendedorView from "./views/app/informes/VentasPorVendedor/VentasPorVendedor/VentasPorVendedorView";
 import ArticulosEnPromocionView from "./views/app/informes/VentasPorVendedor/ArticulosEnPromocion/ArticulosEnPromocionView";
 import VentasEnPromocionView from "./views/app/informes/VentasPorVendedor/VentasPromocion/VentasPromocionView";
+import VentasDeCreditoView from "./views/app/informes/VentasDeCredito/VentasCredito/VentasCreditoView";
+import VentasPorLocalidadView from "./views/app/informes/VentasDeCredito/VentasPorLocalidad/VentasPorLocalidadView";
 
 export default function Router() {
   return (
@@ -50,6 +52,10 @@ export default function Router() {
               <Route path="rentabilidad" element={<RentabilidadView />} />
               <Route path="rentabilidadmp" element={<RentabilidadMPagoView />} />
               <Route path="clientes-otras-suc" element={<CompClientOtrasSucView />} />
+
+              {/** Ventas de credito */}
+              <Route path="ventas-creditos" element={<VentasDeCreditoView />} />
+              <Route path="ventas-localidad" element={<VentasPorLocalidadView />} />
 
               {/** Cobranzas */}
               <Route path="cobranza-vencim" element={<CobranzaVencimView />} />

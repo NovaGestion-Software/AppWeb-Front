@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { MdOutlineAttachMoney, MdOutlineCategory } from "react-icons/md";
-import { FaBalanceScale, FaChartLine, FaChevronDown, FaChevronUp, FaDollarSign, FaFileContract, FaGift, FaMoneyBillWave, FaTags, FaThumbtack, FaUserTie } from "react-icons/fa";
+import { FaBalanceScale, FaChartLine, FaChevronDown, FaChevronUp, FaCreditCard, FaDollarSign, FaFileContract, FaGift, FaMapMarkerAlt, FaMoneyBillWave, FaTags, FaThumbtack, FaUserTie } from "react-icons/fa";
 import { RiDashboardFill } from "react-icons/ri";
 import { CiCalendar, CiClock2, CiLogout } from "react-icons/ci";
 import { SiAwsorganizations } from "react-icons/si";
@@ -69,7 +69,7 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
       icon: <FaBoxesPacking />,
     },
     {
-      title: "Informes Ventas", // Menú desplegable principal
+      title: "Informes Ventas", 
       icon: <FaChartLine />,
       submenus: [
         {
@@ -124,6 +124,23 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
             },
           ],
         },
+        {
+          title: "Creditos", 
+          icon: <FaDollarSign />,
+          submenus: [
+            {
+              title: "Ventas de Créditos",
+              href: "/informes/ventas-creditos",
+              icon: <FaCreditCard  />,
+            },
+            {
+              title: "Ventas por Localidad",
+              href: "/informes/ventas-localidad",
+              icon: <FaMapMarkerAlt   />,
+            },
+            
+          ],
+        },
       ],
     },
     {
@@ -166,15 +183,16 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
         {
           title: "Articulos en Promoción",
           href: "/informes/art-prom",
-          icon: <FaTags  />,
+          icon: <FaTags />,
         },
-            {
+        {
           title: "Ventas en Promoción",
           href: "/informes/ventas-prom",
-          icon: <FaGift  /> ,
+          icon: <FaGift />,
         },
       ],
     },
+
     {
       title: "Otros Informes", // Menú desplegable principal
       icon: <BiBarChartSquare />,
