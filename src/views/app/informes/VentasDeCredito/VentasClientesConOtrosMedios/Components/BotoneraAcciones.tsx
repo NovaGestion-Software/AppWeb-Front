@@ -1,6 +1,5 @@
-import { MdSaveAs } from "react-icons/md";
-import { TbReportMoney } from "react-icons/tb";
-import { FaBan, FaClipboardList, FaFileInvoiceDollar, FaHandHoldingUsd } from "react-icons/fa";
+
+import {  FaClipboardList, FaHandHoldingUsd } from "react-icons/fa";
 import { FcBinoculars } from "react-icons/fc";
 import { BotoneraConfig } from "@/types/ButtonConfig";
 import { Botonera } from "../../../_components/Botonera";
