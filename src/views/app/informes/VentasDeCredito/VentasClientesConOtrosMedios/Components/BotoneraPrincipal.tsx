@@ -1,21 +1,21 @@
 import { Card } from "@/frontend-resourses/components/Cards/CardBase";
 import { crearExportConfig } from "@/utils/helpers/botonera";
 import BotoneraDefault from "../../../_components/BotoneraDefault";
-import { useVentasCreditoPorCliente } from "../Store/Store";
-import { ventasPorClienteData } from "../Data/Data";
+import { useVentasClientesOtrosMedios } from "../Store/Store";
+import { ventasClientesOtrosMediosData } from "../Data/data";
 
 interface BotoneraProps {
   className?: string;
-  datosParaFooter?: Record<string, any>; 
+  datosParaFooter?: Record<string, any>;
   disabled?: boolean;
-  handleClean?: () => void; 
+  handleClean?: () => void;
 }
 
 export default function BotoneraPrincipal({ className, handleClean }: BotoneraProps) {
-  const { id, estaProcesado } = useVentasCreditoPorCliente();
-  const exportConfig = crearExportConfig("informe_ventas_credito_clientes", "Informe Ventas de Crédito por Clientes", ventasPorClienteData);
+  const { id, estaProcesado } = useVentasClientesOtrosMedios();
+  const exportConfig = crearExportConfig("informe_ventas_clientes_otros_medios", "Informe Ventas Clientes con Otros Medios", ventasClientesOtrosMediosData);
   return (
-    <Card className={`${className}  col-start-12 row-start-1 self-center v1536:col-start-12  `}>
+    <Card className={`${className}  col-start-12 row-start-1 self-start v1536:col-start-12  `}>
       <BotoneraDefault exportConfig={exportConfig} containerId={id} disabled={!estaProcesado} handleClean={handleClean} />
     </Card>
   );

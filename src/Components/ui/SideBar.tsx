@@ -2,7 +2,26 @@ import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { MdOutlineAttachMoney, MdOutlineCategory } from "react-icons/md";
-import { FaBalanceScale, FaChartLine, FaChevronDown, FaChevronUp, FaCreditCard, FaDollarSign, FaFileContract, FaGift, FaMapMarkerAlt, FaMoneyBillWave, FaTags, FaThumbtack, FaUserTie } from "react-icons/fa";
+import {
+  FaBalanceScale,
+  FaChartArea,
+  FaChartLine,
+  FaChevronDown,
+  FaChevronUp,
+  FaCreditCard,
+  FaFileContract,
+  FaGift,
+  FaMapMarkerAlt,
+  FaMoneyBillWave,
+  FaMoneyCheckAlt,
+  FaRegCreditCard,
+  FaTags,
+  FaThumbtack,
+  FaUserSlash,
+  FaUserTie,
+} from "react-icons/fa";
+import { HiCreditCard } from "react-icons/hi";
+import { IoWalletSharp } from "react-icons/io5";
 import { RiDashboardFill } from "react-icons/ri";
 import { CiCalendar, CiClock2, CiLogout } from "react-icons/ci";
 import { SiAwsorganizations } from "react-icons/si";
@@ -69,12 +88,12 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
       icon: <FaBoxesPacking />,
     },
     {
-      title: "Informes Ventas", 
+      title: "Informes Ventas",
       icon: <FaChartLine />,
       submenus: [
         {
           title: "Importes", // Menú desplegable principal
-          icon: <FaDollarSign />,
+          icon: <IoWalletSharp  />,
           submenus: [
             {
               title: "Ventas por Condicion",
@@ -125,20 +144,45 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
           ],
         },
         {
-          title: "Creditos", 
-          icon: <FaDollarSign />,
+          title: "Creditos",
+          icon: <HiCreditCard  />,
           submenus: [
             {
               title: "Ventas de Créditos",
               href: "/informes/ventas-creditos",
-              icon: <FaCreditCard  />,
+              icon: <FaRegCreditCard />,
             },
             {
               title: "Ventas por Localidad",
               href: "/informes/ventas-localidad",
-              icon: <FaMapMarkerAlt   />,
+              icon: <FaMapMarkerAlt />,
+            },
+            {
+              title: "Ventas de Créditos por Cliente",
+              href: "/informes/creditos-clientes",
+              icon: <FaCreditCard />,
+            },
+            {
+              title: "Ranking Clientes Créditos",
+              href: "/informes/ranking-creditos-clientes",
+              icon: <FaRankingStar />,
+            },
+            {
+              title: "Clientes sin Operaciones",
+              href: "/informes/clientes-sin-operaciones",
+              icon: <FaUserSlash />,
+            },
+              {
+              title: "Distribucion Mensual de Créditos",
+              href: "/informes/dist-men-clientes",
+              icon: <FaChartArea  />,
             },
             
+              {
+              title: "Ventas Clientes con Otros Medios",
+              href: "/informes/vent-client-otros-medios",
+              icon: <FaMoneyCheckAlt   />,
+            },
           ],
         },
       ],

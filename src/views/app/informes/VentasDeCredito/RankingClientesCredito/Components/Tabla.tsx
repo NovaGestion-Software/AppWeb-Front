@@ -1,27 +1,28 @@
 import { TablaDefault } from "@/frontend-resourses/components";
 import { ExtendedColumn } from "@/frontend-resourses/components/Tables/types";
 import { Card } from "@/frontend-resourses/components/Cards/CardBase";
-import { useVentasCreditoPorCliente,  } from "../Store/Store";
-import { footerVentasPorCliente, ventasPorClienteData } from "../Data/Data";
+import { useRankingClientesCredito } from "../Store/Store";
+import { footerRankingCreditosClientes, rankingClientesCreditosData } from "../Data/Data";
 
 interface TablaProps {
   className?: string;
 }
 
 export default function Tabla({ className }: TablaProps) {
-  const { status, setId, estaProcesado } = useVentasCreditoPorCliente();
+  const { status, setId, estaProcesado } = useRankingClientesCredito();
 
   const tableColumns: Array<ExtendedColumn<any>> = [
-    { key: "cliente", label: "Cliente", minWidth: "110", maxWidth: "120", resaltar: true },
+    { key: "cuenta", label: "Cuenta", minWidth: "110", maxWidth: "120", resaltar: true },
     { key: "nombre", label: "Nombre", minWidth: "180", maxWidth: "200" , },
-    { key: "nOpera", label: "N. Opera.", minWidth: "110", maxWidth: "140",  },
-    { key: "importe", label: "Importe $", minWidth: "120", maxWidth: "180",  },
-    { key: "impProm", label: "Imp. Prom. $", minWidth: "120", maxWidth: "160",  },
-    { key: "ultiMov", label: "Ult.Mov.", minWidth: "120", maxWidth: "160",  },
+    { key: "cancelados", label: "Cancelados", minWidth: "110", maxWidth: "140",resaltar: true,  },
+    { key: "noVencidos", label: "No Vencidos", minWidth: "120", maxWidth: "180", resaltar: true, },
+    { key: "morosos", label: "Morosos", minWidth: "120", maxWidth: "160",  resaltar: true,},
+    { key: "total", label: "Total", minWidth: "120", maxWidth: "160", resaltar: true, },
+    { key: "promedio", label: "Promedio $", minWidth: "120", maxWidth: "160", },
   ];
 
   const tablaProps = {
-    datosParaTabla: estaProcesado ? ventasPorClienteData : [],
+    datosParaTabla: estaProcesado ? rankingClientesCreditosData : [],
     objectColumns: tableColumns,
     estaProcesado: estaProcesado,
     status: status,
@@ -50,7 +51,7 @@ export default function Tabla({ className }: TablaProps) {
     objectFooter: {
       footer: true,
       footerHeight: "h-8",
-      datosFooter: estaProcesado ? footerVentasPorCliente[0] : [],
+      datosFooter: estaProcesado ? footerRankingCreditosClientes[0] : [],
     },
 
   };

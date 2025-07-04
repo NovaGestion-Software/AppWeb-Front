@@ -29,6 +29,11 @@ import ArticulosEnPromocionView from "./views/app/informes/VentasPorVendedor/Art
 import VentasEnPromocionView from "./views/app/informes/VentasPorVendedor/VentasPromocion/VentasPromocionView";
 import VentasDeCreditoView from "./views/app/informes/VentasDeCredito/VentasCredito/VentasCreditoView";
 import VentasPorLocalidadView from "./views/app/informes/VentasDeCredito/VentasPorLocalidad/VentasPorLocalidadView";
+import VentasDeCreditoPorClienteView from "./views/app/informes/VentasDeCredito/VentasCreditosPorCliente/VentasCreditoPorClienteView";
+import RankingClientesCreditoView from "./views/app/informes/VentasDeCredito/RankingClientesCredito/RankingClientesCreditoView";
+import ClientesSinOperacionesView from "./views/app/informes/VentasDeCredito/ClientesSinOperaciones/ClientesSinOperacionesView";
+import DistribucionMensualClientesView from "./views/app/informes/VentasDeCredito/DistribucionMensualCreditos/DistribucionMensualCreditoView";
+import VentasClientesOtrosMediosView from "./views/app/informes/VentasDeCredito/VentasClientesConOtrosMedios/VentasClientesConOtrosMediosView";
 
 export default function Router() {
   return (
@@ -56,6 +61,11 @@ export default function Router() {
               {/** Ventas de credito */}
               <Route path="ventas-creditos" element={<VentasDeCreditoView />} />
               <Route path="ventas-localidad" element={<VentasPorLocalidadView />} />
+              <Route path="creditos-clientes" element={<VentasDeCreditoPorClienteView />} />
+              <Route path="ranking-creditos-clientes" element={<RankingClientesCreditoView />} />
+              <Route path="clientes-sin-operaciones" element={<ClientesSinOperacionesView />} />
+              <Route path="dist-men-clientes" element={<DistribucionMensualClientesView />} />
+              <Route path="vent-client-otros-medios" element={<VentasClientesOtrosMediosView />} />
 
               {/** Cobranzas */}
               <Route path="cobranza-vencim" element={<CobranzaVencimView />} />

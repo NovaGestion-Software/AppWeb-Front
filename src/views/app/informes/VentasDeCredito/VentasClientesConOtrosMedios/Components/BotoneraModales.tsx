@@ -3,11 +3,11 @@ import { getBotonSucursal } from "@/utils/helpers/botonera";
 import { useState } from "react";
 import { Botonera } from "../../../_components/Botonera";
 import { BotoneraConfig } from "@/types/ButtonConfig";
-import { useVentasLocalidad } from "../Store/Store";
+import { useVentasClientesOtrosMedios } from "../Store/Store";
 
 export default function BotoneraModales() {
   const [_show, setShow] = useState<boolean>();
-  const { estaProcesado, } = useVentasLocalidad();
+  const { estaProcesado, } = useVentasClientesOtrosMedios();
 
   const config: BotoneraConfig[] = [
     getBotonSucursal({
@@ -17,7 +17,7 @@ export default function BotoneraModales() {
   ];
 
   return (
-    <Card className="col-start-9 v1536:col-start-8 self-center">
+    <Card className="col-start-11 relative right-5 v1536:right-0 v1536:col-start-10  self-start">
       <Botonera config={config} />
     </Card>
   );

@@ -2,14 +2,14 @@ import { TablaDefault } from "@/frontend-resourses/components";
 import { ExtendedColumn } from "@/frontend-resourses/components/Tables/types";
 import { Card } from "@/frontend-resourses/components/Cards/CardBase";
 import { footerVentasPorLocalidad, ventasPorLocalidadData} from "../Data/Data";
-import { useVentasEnCredito } from "../Store/Store";
+import { useVentasLocalidad } from "../Store/Store";
 
 interface TablaProps {
   className?: string;
 }
 
 export default function Tabla({ className }: TablaProps) {
-  const { status, setId, estaProcesado } = useVentasEnCredito();
+  const { status, setId, estaProcesado } = useVentasLocalidad();
 
   const tableColumns: Array<ExtendedColumn<any>> = [
     { key: "codigo", label: "Código", minWidth: "70", maxWidth: "120",},

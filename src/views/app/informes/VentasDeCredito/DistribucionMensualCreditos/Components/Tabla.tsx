@@ -1,62 +1,56 @@
 import { TablaDefault } from "@/frontend-resourses/components";
 import { ExtendedColumn } from "@/frontend-resourses/components/Tables/types";
 import { Card } from "@/frontend-resourses/components/Cards/CardBase";
-import { useVentasCreditoPorCliente,  } from "../Store/Store";
-import { footerVentasPorCliente, ventasPorClienteData } from "../Data/Data";
+import { useDistribucionMensualClientes } from "../Store/Store";
+import { distribucionMensualCreditosData, footer } from "../Data/Data";
 
 interface TablaProps {
   className?: string;
 }
 
 export default function Tabla({ className }: TablaProps) {
-  const { status, setId, estaProcesado } = useVentasCreditoPorCliente();
+  const { status, setId, estaProcesado, } = useDistribucionMensualClientes();
 
   const tableColumns: Array<ExtendedColumn<any>> = [
-    { key: "cliente", label: "Cliente", minWidth: "110", maxWidth: "120", resaltar: true },
-    { key: "nombre", label: "Nombre", minWidth: "180", maxWidth: "200" , },
-    { key: "nOpera", label: "N. Opera.", minWidth: "110", maxWidth: "140",  },
-    { key: "importe", label: "Importe $", minWidth: "120", maxWidth: "180",  },
-    { key: "impProm", label: "Imp. Prom. $", minWidth: "120", maxWidth: "160",  },
-    { key: "ultiMov", label: "Ult.Mov.", minWidth: "120", maxWidth: "160",  },
+    { key: "mes", label: "Mes", minWidth: "120", maxWidth: "120"},
+    { key: "cantidad", label: "Cant.", minWidth: "150", maxWidth: "220", resaltar: true  },
+    { key: "importe", label: "Importe", minWidth: "150", maxWidth: "140", resaltar: true },
   ];
 
   const tablaProps = {
-    datosParaTabla: estaProcesado ? ventasPorClienteData : [],
+    datosParaTabla: estaProcesado ? distribucionMensualCreditosData : [],
     objectColumns: tableColumns,
     estaProcesado: estaProcesado,
     status: status,
     setIdTabla: setId,
     selectFn: true,
     objectStyles: {
-      columnasNumber: [3,4,5,],
+      columnasNumber: [3],
       heightContainer: "18rem",
       addCellClass: "max-height: 45px; padding: 4px 8px 4px 16px;",
       addHeaderCellClass: "padding: 4px 8px 4px 16px;",
       viewport1440: {
-        heightContainer1440px: "25rem",
-        widthContainer1440px: "55rem",
+        heightContainer1440px: "30rem",
         addCellClass1440px: "max-height: 40px;",
       },
       viewport1536: {
         heightContainer1536px: "30rem",
-        widthContainer1536px: "58rem",
         addCellClass1536px: "max-height: 60px;",
       },
       viewport1920: {
         heightContainer1920px: "32rem",
-        widthContainer1920px: "60rem",
       },
     },
     objectFooter: {
       footer: true,
       footerHeight: "h-8",
-      datosFooter: estaProcesado ? footerVentasPorCliente[0] : [],
+      datosFooter: estaProcesado ? footer[0] : [],
     },
 
   };
 
   return (
-    <Card className={`${className} row-start-2 col-auto row-span-5 `}>
+    <Card className={`${className} row-start-3 col-auto row-span-5 `}>
       <TablaDefault props={tablaProps} />
     </Card>
   );

@@ -4,10 +4,11 @@ import { useEscapeShortcut } from "../../_Hooks/useEscapeShortcut";
 import BotoneraPrincipal from "./Componentes/BotoneraPrincipal";
 import BotoneraModales from "./Componentes/BotoneraModales";
 import Date from "./Componentes/Date";
-import { useVentasEnCredito } from "./Store/Store";
+import { useVentasLocalidad } from "./Store/Store";
+
 
 export default function VentasPorLocalidadView() {
-  const { estaProcesado, setEstaProcesado, } = useVentasEnCredito();
+  const { estaProcesado, setEstaProcesado, } = useVentasLocalidad();
 
   const handleClearData = () => {
     setEstaProcesado(false);
@@ -28,7 +29,6 @@ export default function VentasPorLocalidadView() {
         <BotoneraPrincipal handleClean={handleClearData} />
         <BotoneraModales />
       </div>
-
     </div>
   );
 }

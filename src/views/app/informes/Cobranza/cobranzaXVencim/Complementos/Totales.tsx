@@ -2,7 +2,7 @@ import { Card } from "@/frontend-resourses/components/Cards/CardBase";
 
 export interface TotalesItem {
   titulo: string;
-  icono: string;
+  icono: string | JSX.Element;
   valor: number;
   mostrarPorcentaje?: boolean;
   porcentaje?: number;
@@ -35,7 +35,7 @@ const TotalesItemBox = ({ titulo, icono, valor, mostrarPorcentaje = false, porce
 export default function Totales({ principales, extras, className = "" }: TotalesCobranzaProps) {
   return (
     <Card
-    padding={false}
+      padding={false}
       className={`${className}  w-full noneScroll overflow-auto 
       pt-0 
     mx-auto `}
@@ -63,24 +63,17 @@ export default function Totales({ principales, extras, className = "" }: Totales
           {extras?.map((item, index) => (
             <div
               key={index}
-              className="flex gap-0 col-span-full overflow-x-auto
-               noneScroll items-center border-gray-300 
-               border rounded-md py-1  pl-2 
-               v1440:pl-4 v1440:py-2"
-            >
-              <div
-                className="flex gap-0 w-full justify-start text-xs 
-                items-center font-semibold 
-                v1440:gap-4 "
-              >
+              className="grid grid-cols-5 col-span-full overflow-x-auto noneScroll items-center border-gray-300  border rounded-md py-1  pl-2  v1440:pl-4 v1440:py-2">
+              
+              {/**Texto e icono */}
+              <div className=" col-span-3 v1536:col-span-3 flex gap-0 w-full justify-start text-xs items-center 
+              font-semibold v1440:gap-2 ">
                 <span className="w-6 ">{item.icono}</span>
-                <span className="w-full px-1 pt-0 text-[0.7rem]">{item.titulo}</span>
+                <span className="w-fit px-1 pt-0 text-[0.7rem] ">{item.titulo}</span>
               </div>
 
-              <span
-                className="tabular-nums font-semibold text-xs font-roboto
-               overflow-x-auto w-full flex flex-row items-center gap-0 justify-start  noneScroll"
-              >
+              {/** Valor */}
+              <span className="col-span-2 v1536:col-span-2 tabular-nums font-semibold text-xs font-roboto overflow-x-auto w-full flex flex-row items-center gap-0 justify-start  noneScroll">
                 $ {item.valor.toLocaleString()}
                 {item.mostrarPorcentaje && item.porcentaje !== undefined && <span className="text-gray-600 text-xs">({item.porcentaje.toFixed(2)}%)</span>}
               </span>

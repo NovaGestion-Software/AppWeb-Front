@@ -1,9 +1,9 @@
 import { Card } from "@/frontend-resourses/components/Cards/CardBase";
 import RadioGroupFiltro from "@/frontend-resourses/components/Inputs/RadioGroupFiltros";
-import { useVentasCreditoPorCliente } from "../Store/Store";
+import { useRankingClientesCredito } from "../Store/Store";
 
 export default function RadioButtons() {
-  const { estaProcesado, checkboxSeleccionados, setCheckboxSeleccionados } = useVentasCreditoPorCliente();
+  const { estaProcesado, checkboxSeleccionados, setCheckboxSeleccionados } = useRankingClientesCredito();
 
   return (
     <Card className="col-start-11 row-span-2 v1920:col-start-9 row-start-2 self-center">
@@ -11,7 +11,7 @@ export default function RadioButtons() {
         className=" flex flex-col"
         grupo="grupo1"
         labelClassName="w-24"
-        opciones={["Todos", "Nuevos", "12 Meses", "Existentes"]}
+        opciones={["Cancelados", "Total", "Importe", "Nombre", "Cuenta"]}
         checkboxSeleccionados={checkboxSeleccionados}
         setCheckboxSeleccionados={setCheckboxSeleccionados}
         disabled={!estaProcesado}
