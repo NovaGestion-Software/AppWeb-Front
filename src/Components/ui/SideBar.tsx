@@ -23,7 +23,7 @@ import {
 import { HiCreditCard } from "react-icons/hi";
 import { IoWalletSharp } from "react-icons/io5";
 import { RiDashboardFill } from "react-icons/ri";
-import { CiCalendar, CiClock2, CiLogout } from "react-icons/ci";
+import { CiCalendar, CiClock2, CiLogout, CiUser } from "react-icons/ci";
 import { SiAwsorganizations } from "react-icons/si";
 import { TiHome } from "react-icons/ti";
 import Cookies from "js-cookie";
@@ -205,6 +205,11 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
           title: "Morosidad",
           href: "/informes/morosidad",
           icon: <CiCalendar />,
+        },
+          {
+          title: "Cobranza por Cobrador",
+          href: "/informes/cobranzas-cobrador",
+          icon: <CiUser />,
         },
       ],
     },

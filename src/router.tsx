@@ -34,6 +34,8 @@ import RankingClientesCreditoView from "./views/app/informes/VentasDeCredito/Ran
 import ClientesSinOperacionesView from "./views/app/informes/VentasDeCredito/ClientesSinOperaciones/ClientesSinOperacionesView";
 import DistribucionMensualClientesView from "./views/app/informes/VentasDeCredito/DistribucionMensualCreditos/DistribucionMensualCreditoView";
 import VentasClientesOtrosMediosView from "./views/app/informes/VentasDeCredito/VentasClientesConOtrosMedios/VentasClientesConOtrosMediosView";
+import ConexionServidor from "./views/app/test/ConexionServidor";
+import CobranzasPorCobradorView from "./views/app/informes/Cobranza/CobranzaPorCobrador/CobranzaPorCobradorView";
 
 export default function Router() {
   return (
@@ -46,6 +48,7 @@ export default function Router() {
             <Route path="/home" element={<HomeView />} />
             <Route path="/dashboard" element={<DashboardView />} />
             <Route path="/cajas" element={<CajasView />} />
+            <Route path="/conexion" element={<ConexionServidor />} />
             <Route path="/informes">
               <Route path="ventas-hora" element={<VentasHoraView />} />
               <Route path="ventas-seccion" element={<VentasPorSeccionView />} />
@@ -71,6 +74,7 @@ export default function Router() {
               <Route path="cobranza-vencim" element={<CobranzaVencimView />} />
               <Route path="cobranzas" element={<CobranzasView />} />
               <Route path="morosidad" element={<MorosidadView />} />
+              <Route path="cobranzas-cobrador" element={<CobranzasPorCobradorView />} />
 
               {/** ventas por vendedor */}
               <Route path="detalle-ventas-vend" element={<DetallesVentasXVendedorView />} />
