@@ -23,7 +23,7 @@ import {
 import { HiCreditCard } from "react-icons/hi";
 import { IoWalletSharp } from "react-icons/io5";
 import { RiDashboardFill } from "react-icons/ri";
-import { CiCalendar, CiClock2, CiLogout, CiUser } from "react-icons/ci";
+import { CiCalendar, CiCalendarDate, CiClock2, CiLogout, CiUser } from "react-icons/ci";
 import { SiAwsorganizations } from "react-icons/si";
 import { TiHome } from "react-icons/ti";
 import Cookies from "js-cookie";
@@ -211,6 +211,15 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
           href: "/informes/cobranzas-cobrador",
           icon: <CiUser />,
         },
+          {
+          title: "Cobranza por Fecha de Emisíon",
+          href: "/informes/cobranzas-fecha-emision",
+          icon: <CiCalendarDate />,
+        },
+
+
+
+
       ],
     },
 

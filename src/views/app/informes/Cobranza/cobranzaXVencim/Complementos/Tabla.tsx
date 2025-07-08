@@ -32,7 +32,7 @@ export default function TablaCxV({ estaProcesado, className }: TablaCxVProps) {
       heightContainer: "8rem",
       widthContainer: "",
       addCellClass: "max-height: 45px; padding: 4px 8px 4px 8px;",
-      withoutPadding: true,
+      withoutPadding: false,
       viewport1440: {
         widthContainer1440px: "",
         heightContainer1440px: "",

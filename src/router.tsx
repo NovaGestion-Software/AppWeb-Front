@@ -36,6 +36,7 @@ import DistribucionMensualClientesView from "./views/app/informes/VentasDeCredit
 import VentasClientesOtrosMediosView from "./views/app/informes/VentasDeCredito/VentasClientesConOtrosMedios/VentasClientesConOtrosMediosView";
 import ConexionServidor from "./views/app/test/ConexionServidor";
 import CobranzasPorCobradorView from "./views/app/informes/Cobranza/CobranzaPorCobrador/CobranzaPorCobradorView";
+import CobranzasPorFechaEmisionView from "./views/app/informes/Cobranza/CobranzaPorFechaEmision/CobranzaPorFechaEmisionView";
 
 export default function Router() {
   return (
@@ -75,6 +76,7 @@ export default function Router() {
               <Route path="cobranzas" element={<CobranzasView />} />
               <Route path="morosidad" element={<MorosidadView />} />
               <Route path="cobranzas-cobrador" element={<CobranzasPorCobradorView />} />
+              <Route path="cobranzas-fecha-emision" element={<CobranzasPorFechaEmisionView />} />
 
               {/** ventas por vendedor */}
               <Route path="detalle-ventas-vend" element={<DetallesVentasXVendedorView />} />
