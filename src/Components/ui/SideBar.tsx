@@ -216,7 +216,11 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
           href: "/informes/cobranzas-fecha-emision",
           icon: <CiCalendarDate />,
         },
-
+       {
+          title: "Cobranza y Vto.",
+          href: "/informes/cobranza-vto",
+          icon: <CiClock2 />,
+        },
 
 
 

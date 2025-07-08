@@ -7,13 +7,15 @@ export type RadioInputsState = {
 };
 
 export const withRadioInputs = <T extends object>(
-  set: StoreApi<T & RadioInputsState>["setState"]
+  set: StoreApi<T & RadioInputsState>["setState"],
+  initial?: Partial<CheckboxState>
 ): RadioInputsState => ({
   checkboxSeleccionados: {
     grupo1: "",
     grupo2: "",
     grupo3: "",
     grupo4: "",
+    ...initial, // Sobrescribís los valores default con los que se pasen
   },
   setCheckboxSeleccionados: (grupo, value) =>
     set((state) =>
@@ -22,6 +24,6 @@ export const withRadioInputs = <T extends object>(
           ...state.checkboxSeleccionados,
           [grupo]: value,
         },
-      } as Partial<T & RadioInputsState>) 
+      } as Partial<T & RadioInputsState>)
     ),
 });
