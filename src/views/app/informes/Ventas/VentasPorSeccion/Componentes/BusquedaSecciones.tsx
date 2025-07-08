@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
-import FlexibleInputField from '@/Components/ui/Inputs/FlexibleInputs';
 import { TbArrowBigRightLinesFilled } from 'react-icons/tb';
 import { BiSearch } from 'react-icons/bi';
 import { FiAlertTriangle } from 'react-icons/fi';
 import { FiltrosBusqueda, useBusqueda } from '@/frontend-resourses/components/Tables/Hooks/useBusqueda';
 import { useVentasPorSeccionStore } from '../useVentasPorSeccionStore';
-import { ActionButton } from '@/frontend-resourses/components';
+import { ActionButton, FlexibleInputField } from '@/frontend-resourses/components';
 
 export default function BusquedaSecciones({ className }: { className?: string }) {
   // funciones de busqueda

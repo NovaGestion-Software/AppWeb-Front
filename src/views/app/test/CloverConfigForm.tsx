@@ -24,6 +24,7 @@ export default function CloverConfigForm() {
         modo,
         ...campos
       });
+      console.log('res',res)
       setEstado("✅ Conexión iniciada correctamente");
     } catch (error) {
       console.error(error);
