@@ -241,6 +241,7 @@ export interface ExcelExportConfig {
     name: string;
     data: any[];
     headers?: string[];
+    maxItems?: number; 
   }[];
   fileName: string;
 }

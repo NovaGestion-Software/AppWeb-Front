@@ -2,7 +2,7 @@ import { Card } from "@/frontend-resourses/components/Cards/CardBase";
 import { FechasRango } from "@/frontend-resourses/components/types";
 import { useVentasHoraStore } from "../store/useVentasHoraStore";
 import RangeDatesInput from "@/frontend-resourses/components/Inputs/RangeDatesInput";
-import { useHandleClearData } from "../Utils/funciones";
+import { useHandleClearData } from "../Utils/useHandleClear";
 interface DateInputProps {
   refetch: () => void;
 }

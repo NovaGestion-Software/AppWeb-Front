@@ -1,6 +1,6 @@
 import { ActionButton } from "@/frontend-resourses/components";
 import { FaStoreAlt } from "react-icons/fa";
-import { useHandleClearData } from "../Utils/funciones";
+import { useHandleClearData } from "../Utils/useHandleClear";
 import { useVentasHoraStore } from "../store/useVentasHoraStore";
 import HerramientasComponent from "./HerramientasComponent";
 

@@ -1,5 +1,4 @@
-import {  StoreApi } from "zustand";
-
+import { StoreApi } from "zustand";
 import dayjs from "dayjs";
 import { Status } from "@/frontend-resourses/components/types";
 import { FechasRango, SucursalesModal } from "@/types";
@@ -8,6 +7,7 @@ const defaultDate = {
   from: dayjs().startOf("month"),
   to: dayjs(),
 };
+
 export type BaseStore = {
   id: string;
   setId: (id: string) => void;
@@ -32,9 +32,10 @@ export type BaseStore = {
   setSucursalesDisponibles: (sucs: SucursalesModal[]) => void;
   clearSucursalesSeleccionadas: () => void;
   clearSucursalesDisponibles: () => void;
+
+  foco: boolean;
+  setFoco: (v: boolean) => void;
 };
-
-
 
 export const createBaseStore = <T extends object>(
   set: StoreApi<BaseStore & T>["setState"]
@@ -62,4 +63,7 @@ export const createBaseStore = <T extends object>(
   setSucursalesDisponibles: (sucs) => set({ sucursalesDisponibles: sucs } as Partial<BaseStore & T>),
   clearSucursalesSeleccionadas: () => set({ sucursalesSeleccionadas: [] } as Partial<BaseStore & T>),
   clearSucursalesDisponibles: () => set({ sucursalesDisponibles: [] } as Partial<BaseStore & T>),
+
+  foco: false,
+  setFoco: (v) => set({ foco: v } as Partial<BaseStore & T>),
 });

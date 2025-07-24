@@ -1,4 +1,4 @@
-import {  useEffect } from "react";
+import { useEffect } from "react";
 import { HighlightMap } from "@/frontend-resourses/components/Tables/types";
 import TablaDefault from "@/frontend-resourses/components/Tables/TablaDefault/TablaDefault";
 import { extraerMaxIds } from "@/frontend-resourses/components/Tables/TablaDefault/Utils/utils";
@@ -14,7 +14,7 @@ import { useVentasHoraStore } from "../store/useVentasHoraStore";
 
 interface TablaVentaPorHoraProps {
   dataParaTabla: VentaPorHora[];
-  isProcessing: boolean;
+  isProcessing?: boolean;
   datosFooter?: {};
 }
 type ExtendedColumn<T = any> = {
@@ -39,12 +39,8 @@ type VentaXHoraCType = {
   porcentajeImporte: number | string;
 };
 
-export default function TablaVentaPorHora({
-  dataParaTabla,
-  isProcessing,
-  datosFooter,
-}: TablaVentaPorHoraProps) {
-  const { status, setId , estaProcesado} = useVentasHoraStore();
+function TablaVentaPorHora({ dataParaTabla, isProcessing, datosFooter }: TablaVentaPorHoraProps) {
+  const { status, setId, estaProcesado } = useVentasHoraStore();
 
   const VentaXHoraColumns: Array<ExtendedColumn<VentaXHoraCType>> = [
     { key: "horaini", label: "Hora", minWidth: "90", maxWidth: "120" },
@@ -94,7 +90,6 @@ export default function TablaVentaPorHora({
       maxWidth: "80",
     },
   ];
-  
 
   // SI hay funcion de resaltar a los de maximos valores:
   // Elementos seleccionados
@@ -109,10 +104,7 @@ export default function TablaVentaPorHora({
   };
 
   // extraer ids.
-  const maxIds = extraerMaxIds<VentaXHoraCType, GrupoCustom>(
-    dataParaTabla,
-    seleccionados
-  );
+  const maxIds = extraerMaxIds<VentaXHoraCType, GrupoCustom>(dataParaTabla, seleccionados);
 
   const maxIdsFunction = {
     highlightMap,
@@ -132,36 +124,43 @@ export default function TablaVentaPorHora({
     selectFn: true,
     setIdTabla: setId,
     objectStyles: {
-      columnasNumber: [2,3,4,5,6,7],
+      columnasNumber: [2, 3, 4, 5, 6, 7],
       heightContainer: "30rem",
       viewport1440: {
         heightContainer1440px: "45rem",
-        addCellClass1440px: "padding: 7.8px;"
-
+        addCellClass1440px: "padding: 7.8px;",
       },
       viewport1536: {
         heightContainer1536px: "40rem",
-        addCellClass1536px: "padding: 4px;"
-
+        addCellClass1536px: "padding: 4px;",
       },
     },
     objectFooter: {
       footer: true,
       datosFooter: datosFooter,
-     footerHeight: "h-8",
-
+      footerHeight: "h-8",
     },
     maxIdsFunction: maxIdsFunction,
-  }
-
+  };
 
   return (
     <div className={` w-fit bg-white p-1`} id="container">
-    <TablaDefault props={propsTablaVentaPorHora} />
+      <TablaDefault props={propsTablaVentaPorHora} />
     </div>
   );
 }
 
+export default function Tabla({ dataParaTabla, datosFooter }: TablaVentaPorHoraProps) {
+  const { estaProcesado } = useVentasHoraStore();
+  const tablaContainerClass = `flex bg-white  rounded-md w-fit h-fit 
+               shadow shadow-gray-600  overflow-hidden  transition-all duration-500 ease-out  
+               ${estaProcesado ? "col-start-6 col-span-7 2xl:col-start-7 " : " col-start-6 col-span-7  2xl:col-start-7 "}`;
+  return (
+    <div className={tablaContainerClass}>
+      <TablaVentaPorHora isProcessing={estaProcesado} dataParaTabla={dataParaTabla} datosFooter={datosFooter} />
+    </div>
+  );
+}
 // funcion sencilla, le pasas una key y un array y de todos los elementos que pertecene a la key va a devolver el que tiene el mayor importe.
 // funcion deprecada, devuelve el item entero, se usa solo el id..
 // function findMaxByKey(array: VentaPorHora[], key: keyof VentaPorHora): VentaPorHora | null {

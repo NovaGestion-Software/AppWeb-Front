@@ -1,99 +1,55 @@
-import { Status } from "@/frontend-resourses/components/types";
-import { FechasRango, Sucursal, SucursalesModal } from "@/types";
-import dayjs from "dayjs";
-import { SetStateAction } from "react";
 import { create } from "zustand";
-import { createJSONStorage, persist } from "zustand/middleware";
+import { persist, createJSONStorage } from "zustand/middleware";
+import dayjs from "dayjs";
+import { BaseStore, createBaseStore } from "@/utils/helpers/BaseStore";
+import { Sucursal } from "@/types";
 
-const defaultDate = {
-  from: dayjs().startOf("month"),
-  to: dayjs(),
-};
 
-type VentasHoraProps = {
-  id: string;
-  setId: (id: string) => void;
-  fechas: FechasRango;
+type VentasHoraStore = BaseStore & {
   ventasPorHora: Sucursal[] | null;
-  // HACER TIPO Y EXTENDERLO DE FILTROMODAL
-  sucursalesSeleccionadas: SucursalesModal[];
-  sucursalesDisponibles: SucursalesModal[];
-  setSucursalesSeleccionadas: (sucursales: SucursalesModal[]) => void;
-  setSucursalesDisponibles: (sucursales: SucursalesModal[]) => void;
-  status: Status;
-  // estado del proceso
-  estaProcesado: boolean;
-  setEstaProcesado: (value: boolean) => void;
-  // foco en tabla
-  foco: boolean;
-  setFoco: (value: boolean) => void;
-  // footer
-  footer: boolean;
-  setFooter: (value: boolean) => void;
-
-  // showSucursales
-  showSucursales: boolean;
-  setShowSucursales: (value: SetStateAction<boolean>) => void;
-
   setVentasPorHora: (data: Sucursal[]) => void;
-  setFechas: (data: FechasRango) => void;
-  setStatus: (status: Status) => void;
   clearVentasPorHora: () => void;
-  clearSucursalesSeleccionadas: () => void;
-  clearSucursalesDisponibles: () => void;
-  clearFechas: () => void;
+
+  showSucursales: boolean;
+  setShowSucursales: (value: boolean) => void;
+
   resetStore: () => void;
 };
 
-export const useVentasHoraStore = create<VentasHoraProps>()(
+export const useVentasHoraStore = create<VentasHoraStore>()(
   persist(
     (set) => ({
-      id: "",
-      setId: (id) => set({ id }),
-      fechas: { from: defaultDate.from, to: defaultDate.to },
+      ...createBaseStore<VentasHoraStore>(set),
+
       ventasPorHora: null,
-      sucursalesSeleccionadas: [],
-      sucursalesDisponibles: [],
-      status: "idle",
-      // estado proceso
-      estaProcesado: false,
-      setEstaProcesado: (value) => set({ estaProcesado: value }),
-      // footer
-      footer: false,
-      setFooter: (value) => set({ footer: value }),
-      // show sucursales
-      showSucursales: false,
-      setShowSucursales: (value: SetStateAction<boolean>) =>
-        set((state) => ({
-          showSucursales: typeof value === "function" ? value(state.showSucursales) : value,
-        })),
-      // foco
-      foco: false,
-      setFoco: (value) => set({ foco: value }),
       setVentasPorHora: (data) => set({ ventasPorHora: data }),
-      setFechas: (data) => set({ fechas: data }),
-      setSucursalesSeleccionadas: (sucursales) => set({ sucursalesSeleccionadas: sucursales }),
-      setSucursalesDisponibles: (sucursales) => set({ sucursalesDisponibles: sucursales }),
-      setStatus: (status) => set({ status }),
       clearVentasPorHora: () => set({ ventasPorHora: null }),
-      clearSucursalesSeleccionadas: () => set({ sucursalesSeleccionadas: [] }),
-      clearSucursalesDisponibles: () => set({ sucursalesDisponibles: [] }),
-      clearFechas: () => set({ fechas: { from: "", to: "" } }),
-      //limpiar
+
+      showSucursales: false,
+      setShowSucursales: (value) => set({ showSucursales: value }),
+
       resetStore: () =>
-        set((_state) => ({
+        set(() => ({
           id: "",
           status: "idle",
           estaProcesado: false,
-          footer: false,
+          fechas: { from: dayjs().startOf("month"), to: dayjs() },
+          fecha: { from: dayjs().startOf("month"), to: dayjs() },
+          ventasPorHora: null,
           sucursalesSeleccionadas: [],
           sucursalesDisponibles: [],
+          foco: false,
+          footer: false,
+          showSucursales: false,
         })),
     }),
     {
       name: "ventas-hora-storage",
       storage: createJSONStorage(() => sessionStorage),
-      partialize: (state) => ({ sucursalesSeleccionadas: state.sucursalesSeleccionadas, sucursalesDisponibles: state.sucursalesDisponibles }),
+      partialize: (state) => ({
+        sucursalesSeleccionadas: state.sucursalesSeleccionadas,
+        sucursalesDisponibles: state.sucursalesDisponibles,
+      }),
     }
   )
 );

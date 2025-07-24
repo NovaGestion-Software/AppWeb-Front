@@ -34,19 +34,28 @@ export function getBotonSucursal({
       "h-6 rounded-md text-xxs  v1440:h-8 v1536:h-9 v1536:px-6 v1536:text-sm v1920:h-9",
   };
 }
+function getFechaActualFormateada() {
+  const hoy = new Date();
+  const año = hoy.getFullYear();
+  const mes = String(hoy.getMonth() + 1).padStart(2, "0");
+  const dia = String(hoy.getDate()).padStart(2, "0");
+  return `${dia}-${mes}-${año}`;
+}
+
 export function crearExportConfig(
   nombreArchivo: string,
   nombreHoja: string,
   data: any[],
   headers?: string[]
 ): ExcelExportConfig {
+  const fecha = getFechaActualFormateada();
   return {
-    fileName: nombreArchivo,
+    fileName: `${nombreArchivo}_${fecha}`,
     sheets: [
       {
         name: nombreHoja,
         data,
-        headers, 
+        headers,
       },
     ],
   };

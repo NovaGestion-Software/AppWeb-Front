@@ -7,7 +7,7 @@ import { ExtendedColumn } from "@/frontend-resourses/components/Tables/types";
 import { useObtenerProductos } from "../hooks/useObtenerProductos";
 import showAlert from "@/frontend-resourses/utils/showAlert";
 import CheckboxInput from "@/frontend-resourses/components/Inputs/Checkbox";
-import { areArraysEqual, buscarEnArray, FiltrarItemsTraidos } from "@/frontend-resourses/utils/dataManipulation";
+import { sonArrayIguales, buscarEnArray, FiltrarItemsTraidos } from "@/frontend-resourses/utils/dataManipulation";
 import BusquedaInputs from "@/frontend-resourses/components/Tables/Busqueda/BusquedaInputs";
 
 interface TablaSeccionRubroProps {
@@ -151,7 +151,7 @@ export default function TablaSeccionRubro({ data, showRubrosModal, setShowRubros
   // seteo de disabled para botones segun estado de rubros
   useEffect(() => {
     // Si rubrosSeleccionados tiene contenido, habilitar el botón de confirmar
-    if (rubrosSeleccionados.length > 0 && !areArraysEqual(rubrosSeleccionados, rubrosTraidos)) {
+    if (rubrosSeleccionados.length > 0 && !sonArrayIguales(rubrosSeleccionados, rubrosTraidos)) {
       setIsConfirmEnabled(false);
     } else {
       setIsConfirmEnabled(true);

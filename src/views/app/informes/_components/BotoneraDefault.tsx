@@ -1,11 +1,12 @@
 import { RiFileExcel2Fill, RiPrinterFill } from "@remixicon/react";
 import { ImExit } from "react-icons/im";
 import ActionButton from "@/frontend-resourses/components/Buttons/ActionButton";
-import { useState, useCallback } from "react";
-import * as XLSX from "xlsx";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ExcelExportConfig } from "@/types";
 import SelectedTables from "./SelectedTables";
+import { exportToExcel } from "@/utils/exportToExcel";
+import { printElementsById } from "@/utils/printElementsById";
+import { ExcelExportConfig } from "@/types";
 
 interface BotoneraInformeProps {
   className?: string;
@@ -22,72 +23,12 @@ export default function BotoneraDefault({ className = "", exportConfig, containe
   const [accion, setAccion] = useState<"imprimir" | "exportar" | null>(null);
   const navigate = useNavigate();
 
-  function calcularAnchoColumnas(data: any[]): { wch: number }[] {
-    if (data.length === 0) return [];
-
-    // Obtener todas las claves de las propiedades del primer objeto
-    const keys = Object.keys(data[0]);
-
-    return keys.map((key) => {
-      // Calcular el largo máximo entre el nombre de la columna y todos los valores de esa columna
-      const maxLength = Math.max(
-        key.length,
-        ...data.map((row) => {
-          const val = row[key];
-          return val ? String(val).length : 0;
-        })
-      );
-      return { wch: maxLength + 2 }; // +2 para un poco de padding
-    });
-  }
-
-  const exportToExcel = (config: ExcelExportConfig) => {
-    try {
-      const wb = XLSX.utils.book_new();
-
-      config.sheets.forEach((sheet) => {
-        const ws = XLSX.utils.json_to_sheet(sheet.data);
-
-        // Calcular y asignar ancho automático según contenido
-        ws["!cols"] = calcularAnchoColumnas(sheet.data);
-
-        XLSX.utils.book_append_sheet(wb, ws, sheet.name);
-      });
-
-      XLSX.writeFile(wb, `${config.fileName}.xlsx`);
-    } catch (error) {
-      console.error("Error al exportar Excel:", error);
-    }
-  };
-
-  const handlePrint = useCallback((ids: (string | number)[]) => {
-    const tablas = ids.map((id) => document.getElementById(`${id}`)?.cloneNode(true) as HTMLElement).filter(Boolean);
-
-    if (!tablas.length) {
-      alert("No se encontraron las tablas seleccionadas");
-      return;
-    }
-
-    const printWindow = window.open("", "_blank", "width=800,height=900");
-    if (!printWindow) return;
-
-    printWindow.document.write(`
-      <html>
-        <head><title>Impresión</title></head>
-        <body>${tablas.map((t) => t.outerHTML).join("<hr/>")}</body>
-      </html>
-    `);
-    printWindow.document.close();
-
-    printWindow.onload = () => setTimeout(() => printWindow.print(), 300);
-  }, []);
-
   const handleSelectionConfirm = (ids: (string | number)[]) => {
     setSelectedIds?.(ids);
     if (accion === "exportar") {
       exportToExcel(exportConfig);
     } else {
-      handlePrint(ids);
+      printElementsById(ids);
     }
   };
 
@@ -123,13 +64,18 @@ export default function BotoneraDefault({ className = "", exportConfig, containe
                 setAccion("imprimir");
                 setTableSelect(true);
               }
-            : () => handlePrint([containerId])
+            : () => printElementsById([containerId])
         }
         addClassName="h-6 p-1 rounded-md text-xs v1440:h-8 v1536:h-9 v1536:px-6 v1536:text-sm"
       />
 
-      <ActionButton icon={<ImExit className="w-4 h-4 m-1  v1920:w-6 v1920:h-6" />} color="red" onClick={handleExit} disabled={disabled} 
-      addClassName="h-6 p-1 rounded-md text-xs v1440:h-8 v1536:h-9 v1536:px-6 v1536:text-sm " />
+      <ActionButton
+        icon={<ImExit className="w-4 h-4 m-1  v1920:w-6 v1920:h-6" />}
+        color="red"
+        onClick={handleExit}
+        disabled={disabled}
+        addClassName="h-6 p-1 rounded-md text-xs v1440:h-8 v1536:h-9 v1536:px-6 v1536:text-sm "
+      />
 
       {tableSelect && itemsDisponibles && (
         <SelectedTables className="z-50" funcion={accion === "imprimir" ? "Imprimir" : "Exportar"} itemsDisponibles={itemsDisponibles} setShowSelectedTables={setTableSelect} onConfirm={handleSelectionConfirm} />
