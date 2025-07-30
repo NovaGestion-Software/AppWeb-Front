@@ -4,14 +4,11 @@ import apiPhp from "../lib/axiosPhp";
 
 const user = JSON.parse(localStorage.getItem("_u") || "{}");
 console.log('user', user)
-const empresa = user?.empresa.toString().slice(-2); 
-console.log('empresa', empresa)
+const empresa = user.empresa ? user.empresa.toString().slice(-2) : "00"; 
 
 export async function grabarCodeMercadoPago(code: string) {
   const entorno = localStorage.getItem("_ce") || "development";
   const homologacion = localStorage.getItem("homologacion") || "homo";
-  console.log('usuario', user)
-  console.log('empresa', empresa)
 
   const baseSeleccionada = entorno === "development" ? "apinovades" : "apinova";
 
