@@ -39,7 +39,7 @@ import CobranzasPorCobradorView from "./views/app/informes/Cobranza/CobranzaPorC
 import CobranzasPorFechaEmisionView from "./views/app/informes/Cobranza/CobranzaPorFechaEmision/CobranzaPorFechaEmisionView";
 import CobranzasPorFechaYVtoView from "./views/app/informes/Cobranza/CobranzaPorFecha&Vto/CobranzaYVtoView";
 import IntegracionesView from "./views/app/Integraciones/IntegracionesView";
-import { RedirectMercadoPago } from "./views/app/Integraciones/Components/RedirectMP";
+import { Redirect } from "./views/app/Integraciones/Components/Redirect";
 
 export default function Router() {
   return (
@@ -54,7 +54,7 @@ export default function Router() {
             <Route path="/cajas" element={<CajasView />} />
             <Route path="/conexion" element={<ConexionServidor />} />
             <Route path="/integraciones" element={<IntegracionesView />} />
-            <Route path="/integracion" element={<RedirectMercadoPago />} />
+            <Route path="/integracion" element={<Redirect />} />
             <Route path="/informes">
               <Route path="ventas-hora" element={<VentasHoraView />} />
               <Route path="ventas-seccion" element={<VentasPorSeccionView />} />
