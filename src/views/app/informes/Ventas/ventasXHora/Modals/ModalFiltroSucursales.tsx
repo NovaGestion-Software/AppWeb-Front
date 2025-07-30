@@ -21,7 +21,7 @@ export default function ModalFiltroSucursales() {
         title="Sucursales"
         renderItem={renderSucursalesItem}
         showModal={showSucursales}
-        setShowModal={setShowSucursales}
+        setShowModal={setShowSucursales as React.Dispatch<React.SetStateAction<boolean>>}
         datos={sucursalesDisponibles}
         itemsDisponibles={sucursalesDisponibles}
         itemsSeleccionados={sucursalesSeleccionadas}
