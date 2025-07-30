@@ -17,7 +17,7 @@ export async function grabarCodeMercadoPago(code: string) {
   const payload = {
     _e: empresa,
     _m: homologacion,
-    _a: 1,
+    _a: "1",
     _c: code,
   };
 
