@@ -32,7 +32,7 @@ import { BiBarChartSquare, BiTransferAlt } from "react-icons/bi";
 import { FaBoxesPacking, FaMoneyBillTransfer, FaRankingStar } from "react-icons/fa6";
 import { useVentasHoraStore } from "@/views/app/informes/Ventas/ventasXHora/store/useVentasHoraStore";
 import { BsPerson, BsPersonBoundingBox } from "react-icons/bs";
-import { TbCashRegister } from "react-icons/tb";
+import { TbCashRegister, TbPlugConnected } from "react-icons/tb";
 import { AnimatedOverflowText } from "./layouts/AnimatedOverflowText";
 import { GiPayMoney, GiProfit } from "react-icons/gi";
 interface SubMenuItem {
@@ -87,13 +87,14 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
       href: "/stock-seccion",
       icon: <FaBoxesPacking />,
     },
+
     {
       title: "Informes Ventas",
       icon: <FaChartLine />,
       submenus: [
         {
           title: "Importes", // Menú desplegable principal
-          icon: <IoWalletSharp  />,
+          icon: <IoWalletSharp />,
           submenus: [
             {
               title: "Ventas por Condicion",
@@ -145,7 +146,7 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
         },
         {
           title: "Creditos",
-          icon: <HiCreditCard  />,
+          icon: <HiCreditCard />,
           submenus: [
             {
               title: "Ventas de Créditos",
@@ -172,16 +173,16 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
               href: "/informes/clientes-sin-operaciones",
               icon: <FaUserSlash />,
             },
-              {
+            {
               title: "Distribucion Mensual de Créditos",
               href: "/informes/dist-men-clientes",
-              icon: <FaChartArea  />,
+              icon: <FaChartArea />,
             },
-            
-              {
+
+            {
               title: "Ventas Clientes con Otros Medios",
               href: "/informes/vent-client-otros-medios",
-              icon: <FaMoneyCheckAlt   />,
+              icon: <FaMoneyCheckAlt />,
             },
           ],
         },
@@ -206,24 +207,21 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
           href: "/informes/morosidad",
           icon: <CiCalendar />,
         },
-          {
+        {
           title: "Cobranza por Cobrador",
           href: "/informes/cobranzas-cobrador",
           icon: <CiUser />,
         },
-          {
+        {
           title: "Cobranza por Fecha de Emisíon",
           href: "/informes/cobranzas-fecha-emision",
           icon: <CiCalendarDate />,
         },
-       {
+        {
           title: "Cobranza y Vto.",
           href: "/informes/cobranza-vto",
           icon: <CiClock2 />,
         },
-
-
-
       ],
     },
 
@@ -280,6 +278,11 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
           icon: <FaMoneyBillTransfer />,
         },
       ],
+    },
+    {
+      title: "Integraciones",
+      href: "/integraciones",
+      icon: <TbPlugConnected />,
     },
   ];
   /**

@@ -6,6 +6,59 @@ const user = JSON.parse(localStorage.getItem('_u') || '{}');
 const empresa = user.empresa ? user.empresa.toString().slice(-2) : '00'; // Extrae los últimos 2 dígitos
 
 
+export async function grabarCodeMercadoPago(code: string) {
+  const entorno = localStorage.getItem("_ce") || "development";
+  const homologacion = localStorage.getItem("homologacion") || "homo";
+
+  const baseSeleccionada = entorno === "development" ? "apinovades" : "apinova";
+
+  const url = `/${baseSeleccionada}/mercadopago/grabarMercadoAcceso.php`;
+
+  const payload = {
+    _e: empresa,
+    _m: homologacion,
+    _a: 1,
+    _c: code,
+  };
+
+  try {
+    const { data } = await apiPhp(url, {
+      method: "POST",
+      data: payload,
+    });
+
+    return data;
+  } catch (error) {
+    if (isAxiosError(error) && error.response)
+      throw new Error(error.response.data.error);
+    console.log(error);
+  }
+}
+
+
+export async function obtenerUrlAuthorization() {
+  // anda en los dos entornos, no funciona en homo.
+  const homologacion = localStorage.getItem("homologacion") || "homo"; // o valor default
+  const entorno = localStorage.getItem("_ce") || "development"; // o valor default
+  try {
+    const baseSeleccionada = entorno === "development" ? "apinovades" : "apinova";
+    const url = `/${baseSeleccionada}/mercadopago/obtenerMpAuth.php?_i={"_e":"${empresa}","_m":"${homologacion}","_a":"1"}`;
+
+    const { data } = await apiPhp(url);
+    console.log("url obtenerUrlAuthorization", url);
+
+    return data;
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.error);
+    } else {
+      console.log(error);
+      throw new Error("Error desconocido al obtener  secciones de cajas");
+    }
+  }
+}
+
+
 export async function obtenerVentasHora(fechas: FechasRango) {
   // funciona con ambos entornos y con homologacion en prod
   const homologacion = localStorage.getItem("homologacion") || "homo"; // o valor default
