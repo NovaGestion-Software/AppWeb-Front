@@ -9,7 +9,7 @@ type VentasHoraStore = BaseStore & {
   ventasPorHora: Sucursal[] | null;
   setVentasPorHora: (data: Sucursal[]) => void;
   clearVentasPorHora: () => void;
-
+// set show ya no es dispatch
   showSucursales: boolean;
   setShowSucursales: (value: boolean) => void;
 
