@@ -4,7 +4,7 @@ import apiPhp from "../lib/axiosPhp";
 
 const user = JSON.parse(localStorage.getItem("_u") || "{}");
 console.log('user', user)
-const empresa = user.empresa.toString().slice(-2); 
+const empresa = user?.empresa.toString().slice(-2); 
 console.log('empresa', empresa)
 
 export async function grabarCodeMercadoPago(code: string) {
