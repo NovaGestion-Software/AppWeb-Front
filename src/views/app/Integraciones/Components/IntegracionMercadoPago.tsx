@@ -6,8 +6,7 @@ type EstadoIntegracion = "no_conectado" | "conectando" | "conectado";
 
 export const IntegracionMercadoPago: React.FC = () => {
   const [estado, setEstado] = useState<EstadoIntegracion>("no_conectado");
-
- const iniciarIntegracion = async () => {
+const iniciarIntegracion = async () => {
   setEstado("conectando");
 
   try {
@@ -16,8 +15,12 @@ export const IntegracionMercadoPago: React.FC = () => {
 
     const urlAuthorization = `https://auth.mercadopago.com.ar/authorization?client_id=${client_id}&response_type=code&platform_id=mp&redirect_uri=${redirect_uri}`;
 
-    // Abre en una nueva pestaña del navegador
-    window.open(urlAuthorization, "_blank");
+    // Abre en una nueva ventana con opciones
+    window.open(
+      urlAuthorization,
+      "_blank",
+      "width=600,height=800,scrollbars=yes,resizable=yes"
+    );
   } catch (err) {
     console.error("Error al obtener URL de autorización:", err);
   }
