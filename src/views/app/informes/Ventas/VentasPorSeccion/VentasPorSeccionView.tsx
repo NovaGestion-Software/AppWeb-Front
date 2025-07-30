@@ -5,14 +5,14 @@ import { FechasRango } from "@/types";
 import BotoneraHerramientas from "./Componentes/HerramientasButtons";
 import { useEffect, useState } from "react";
 import { dataDefault } from "./data";
-import { agruparPorIndice, ConfigKeys, crearDataParaTablaModular, extraerItems, extraerItemsDeIndice } from "@/frontend-resourses/utils/dataManipulation";
-import { ConfigTabla } from "../ventasXHora/VentasHoraView";
 import { formatearNumero } from "@/utils";
 import { TablaVentaPorSeccion, VentaPorSeccionType } from "./Componentes/TablaVentaPorSeccion";
 import { ListaFiltrosAplicados } from "@/frontend-resourses/components/Complementos/ListaFiltrosAplicados";
 import GraficoDeTorta from "./Componentes/GraficoDeTorta";
 import MetodosPagoModal from "./Componentes/MetodosPagoModal";
 import BusquedaInputs from "@/frontend-resourses/components/Tables/Busqueda/BusquedaInputs";
+import { ConfigKeys, ConfigTabla } from "../ventasXHora/config/tabla.config";
+import { agruparPorIndice, crearDataParaTablaModular, extraerItems, extraerItemsDeIndice } from "@/frontend-resourses/utils/dataManipulation";
 
 export default function VentasPorSeccionView() {
   const [showModal, setShowModal] = useState(false);

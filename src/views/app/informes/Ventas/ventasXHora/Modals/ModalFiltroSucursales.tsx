@@ -5,7 +5,7 @@ import { FaStoreAlt } from "react-icons/fa";
 
 export default function ModalFiltroSucursales() {
   const { sucursalesDisponibles, sucursalesSeleccionadas, setSucursalesDisponibles, setSucursalesSeleccionadas, showSucursales, setShowSucursales } = useVentasHoraStore();
-  // render sucursalesitems
+  // render sucursalesitems prueba
   const renderSucursalesItem = (item: SucursalesModal) => {
     return (
       <>

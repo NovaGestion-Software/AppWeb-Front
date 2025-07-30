@@ -7,8 +7,9 @@ import { ExtendedColumn } from "@/frontend-resourses/components/Tables/types";
 import { useObtenerProductos } from "../hooks/useObtenerProductos";
 import showAlert from "@/frontend-resourses/utils/showAlert";
 import CheckboxInput from "@/frontend-resourses/components/Inputs/Checkbox";
-import { sonArrayIguales, buscarEnArray, FiltrarItemsTraidos } from "@/frontend-resourses/utils/dataManipulation";
+import {buscarEnArray, FiltrarItemsTraidos } from "@/frontend-resourses/utils/dataManipulation";
 import BusquedaInputs from "@/frontend-resourses/components/Tables/Busqueda/BusquedaInputs";
+import { sonArrayIguales } from "@/frontend-resourses/utils/dataManipulation";
 
 interface TablaSeccionRubroProps {
   data: TablaSecciones[];
