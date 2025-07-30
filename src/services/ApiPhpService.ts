@@ -3,12 +3,15 @@ import { FechasRango } from "@/types";
 import apiPhp from "../lib/axiosPhp";
 
 const user = JSON.parse(localStorage.getItem("_u") || "{}");
-const empresa = user.empresa ? user.empresa.toString().slice(-2) : "00"; // Extrae los últimos 2 dígitos
+console.log('user', user)
+const empresa = user.empresa.toString().slice(-2); 
+console.log('empresa', empresa)
 
 export async function grabarCodeMercadoPago(code: string) {
   const entorno = localStorage.getItem("_ce") || "development";
   const homologacion = localStorage.getItem("homologacion") || "homo";
-  const empresa = localStorage.getItem("empresa") || "12"; // Asegurate de tener esto
+  console.log('usuario', user)
+  console.log('empresa', empresa)
 
   const baseSeleccionada = entorno === "development" ? "apinovades" : "apinova";
 
