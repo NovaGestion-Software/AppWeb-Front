@@ -27,9 +27,9 @@ useEffect(() => {
   // Enviar el código al backend usando la función con apiPhp
   grabarCodeMercadoPago(code)
     .then((res) => {
-      if (res?.estado === "ok") {
+      console.log('res',res)
+      if (res?.code === 200 && res.message === "grabarMercadoAcceso OK") {
         setEstado("completado");
-        console.log('res',res)
         const countdownSeconds = 5;
         setSecondsLeft(countdownSeconds);
 
