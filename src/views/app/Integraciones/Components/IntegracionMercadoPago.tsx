@@ -1,31 +1,53 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-import { obtenerUrlAuthorization } from "@/services/ApiPhpService";
+import { grabarCodeMercadoPago, obtenerUrlAuthorization } from "@/services/ApiPhpService";
 
-type EstadoIntegracion = "no_conectado" | "conectando" | "conectado";
+type EstadoIntegracion = "no_conectado" | "conectando" | "conectado" | "error";
 
 export const IntegracionMercadoPago: React.FC = () => {
   const [estado, setEstado] = useState<EstadoIntegracion>("no_conectado");
-const iniciarIntegracion = async () => {
-  setEstado("conectando");
+  const iniciarIntegracion = async () => {
+    setEstado("conectando");
 
-  try {
-    const data = await obtenerUrlAuthorization();
-    const { client_id, redirect_uri } = data?.data[0];
+    try {
+      const data = await obtenerUrlAuthorization();
+      const { client_id, redirect_uri } = data?.data[0];
 
-    const urlAuthorization = `https://auth.mercadopago.com.ar/authorization?client_id=${client_id}&response_type=code&platform_id=mp&redirect_uri=${redirect_uri}`;
+      const urlAuthorization = `https://auth.mercadopago.com.ar/authorization?client_id=${client_id}&response_type=code&platform_id=mp&redirect_uri=${redirect_uri}`;
 
-    // Abre en una nueva ventana con opciones
-    window.open(
-      urlAuthorization,
-      "_blank",
-      "width=600,height=800,scrollbars=yes,resizable=yes"
-    );
-  } catch (err) {
-    console.error("Error al obtener URL de autorización:", err);
-  }
-};
+      window.open(urlAuthorization, "_blank", "width=600,height=800,scrollbars=yes,resizable=yes");
+    } catch (err) {
+      console.error("Error al obtener URL de autorización:", err);
+      setEstado("error");
+    }
+  };
 
+  // 🧠 Escuchar mensaje desde ventana emergente
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      if (event.origin !== window.origin) return;
+      const { code } = event.data || {};
+      if (!code) return;
+
+      // Procesar el code
+      grabarCodeMercadoPago(code)
+        .then((res) => {
+          console.log("res", res);
+          if (res?.code === 200 && res.message === "grabarMercadoAcceso OK") {
+            setEstado("conectado");
+          } else {
+            setEstado("error");
+          }
+        })
+        .catch((err) => {
+          console.error("Error al enviar el código:", err);
+          setEstado("error");
+        });
+    };
+
+    window.addEventListener("message", handleMessage);
+    return () => window.removeEventListener("message", handleMessage);
+  }, []);
 
   const renderEstado = () => {
     switch (estado) {
@@ -45,6 +67,8 @@ const iniciarIntegracion = async () => {
             Conectando...
           </div>
         );
+      case "error":
+        return <div className="text-red-600 font-medium">❌ Error en la integración</div>;
       case "conectado":
         return (
           <div className="text-green-600 font-semibold flex items-center gap-2">
