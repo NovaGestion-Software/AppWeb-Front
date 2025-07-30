@@ -34,6 +34,7 @@ export async function grabarCodeMercadoPago(code: string) {
     return data;
   } catch (error) {
     if (isAxiosError(error)) {
+      console.log('error principal',error)
       console.error("🔴 Axios error");
       console.error("👉 Mensaje:", error.message);
       console.error("👉 Código:", error.code);
@@ -67,6 +68,7 @@ export async function obtenerUrlAuthorization() {
 
     const { data } = await apiPhp(url);
     console.log("url obtenerUrlAuthorization", url);
+    console.log("url obtenerUrlAuthorization", data);
 
     return data;
   } catch (error) {
