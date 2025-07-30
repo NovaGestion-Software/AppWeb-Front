@@ -12,6 +12,7 @@ export type ConfigKeys = {
   innerArrayKey: string;
   sumaKeys: string[];
   convertir: string[];
+  detalleKey?: string;
 };
 
 export type ConfigTabla = {
