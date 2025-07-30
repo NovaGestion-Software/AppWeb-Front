@@ -33,7 +33,7 @@ export const IntegracionMercadoPago: React.FC = () => {
       grabarCodeMercadoPago(code)
         .then((res) => {
           console.log("res", res);
-          if (res?.code === 200 && res.message === "grabarMercadoAcceso OK") {
+          if (res?.code === 201 && res.message === "grabarMercadoAcceso OK") {
             setEstado("conectado");
           } else {
             setEstado("error");
