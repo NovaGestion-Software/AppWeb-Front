@@ -21,6 +21,10 @@ export async function grabarCodeMercadoPago(code: string) {
     _c: code,
   };
 
+    // 🟢 Mostrar lo que se va a enviar
+  console.log("📤 Enviando solicitud a:", url);
+  console.log("📝 Payload:", JSON.stringify(payload, null, 2));
+
   try {
     const { data } = await apiPhp(url, {
       method: "POST",
