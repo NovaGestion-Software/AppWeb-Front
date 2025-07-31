@@ -57,7 +57,7 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
   const isResizing = useRef(false);
   const [hoveringArrow, setHoveringArrow] = useState(false);
 
-  const { clearVentasPorHora } = useVentasHoraStore();
+  const { resetStore } = useVentasHoraStore();
 
   const storedUser = localStorage.getItem("_u");
   const user = storedUser ? JSON.parse(storedUser) : {};
@@ -393,7 +393,7 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
     localStorage.removeItem("user");
     localStorage.removeItem("_mqr");
 
-    clearVentasPorHora();
+    resetStore();
 
     navigate("/");
   };
@@ -524,7 +524,8 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
       )}
 
       {/* Log out */}
-      <Link to="/" className="flex items-center gap-3 fixed bottom-2 left-5 duration-100 hover:translate-x-1 transition-all hover:scale-105" onClick={handleLogout}>
+      <Link to="/" className="flex items-center gap-3 fixed bottom-2 left-5 duration-100 hover:translate-x-1 
+      transition-all hover:scale-105" onClick={handleLogout}>
         <div className="border bg-white rounded-full cursor-pointer w-8">
           <CiLogout className="w-6 h-8 font-extrabold" />
         </div>
