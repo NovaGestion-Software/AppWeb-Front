@@ -1,15 +1,12 @@
 import { ActionButton } from "@/frontend-resourses/components";
 import { FaStoreAlt } from "react-icons/fa";
-import { useHandleClearData } from "../Utils/useHandleClear";
 import { useVentasHoraStore } from "../store/useVentasHoraStore";
-import HerramientasComponent from "./HerramientasComponent";
+import BotoneraPrincipal from "./BotoneraPrincipal";
 
-export default function Botonera({data}: {data: any}) {
-  const handleClearData = useHandleClearData();
+export default function Botonera() {
   const {
     // estados
     estaProcesado,
-    //
     setShowSucursales,
   } = useVentasHoraStore();
 
@@ -28,12 +25,7 @@ export default function Botonera({data}: {data: any}) {
         color="blue"
         size="xs"
       />{" "}
-      <HerramientasComponent 
-      data={data} 
-      estaProcesado={estaProcesado} 
-      datosParaFooter={data} 
-      disabled={!estaProcesado} 
-      handleClean={handleClearData} />
+      <BotoneraPrincipal />
     </div>
   );
 }

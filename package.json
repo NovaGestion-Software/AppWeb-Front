@@ -54,6 +54,7 @@
     "vercel-submodules": "^1.0.10",
     "vite": "^6.0.5",
     "vite-plugin-pwa": "^0.21.1",
+    "vite-plugin-remove-console": "^2.2.0",
     "workbox-cli": "^7.3.0"
   }
 }

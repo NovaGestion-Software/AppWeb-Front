@@ -1,12 +1,9 @@
 import { useMemo } from "react";
-import {
-  extraerItemsDeIndice,
-  agruparPorIndice,
-  crearDataParaTablaModular,
-} from "@/frontend-resourses/utils/dataManipulation";
+
 import { formatearNumero } from "@/utils";
 import { SucursalesModal, VentaPorHora } from "@/types";
 import { ConfigKeys, ConfigTabla } from "../config/tabla.config";
+import { agruparPorIndice, crearDataParaTablaModular, extraerItemsDeIndice } from "@/frontend-resourses/utils/dataManipulation";
 
 type Props = {
   data: any[];

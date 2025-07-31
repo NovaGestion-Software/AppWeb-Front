@@ -7,7 +7,7 @@ export default function SwitchHomologacion() {
   const { homologacion, setHomologacion } = useEntornoStore();
 
   const toggleEntorno = () => {
-    const nuevo = homologacion === "prod" ? "dev" : "prod";
+    const nuevo = homologacion === "prod" ? "homo" : "prod";
     setHomologacion(nuevo);
     console.log("Nuevo entorno:", nuevo);
   };

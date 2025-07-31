@@ -1,40 +1,36 @@
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
-import { MdOutlineAttachMoney, MdOutlineCategory } from "react-icons/md";
-import {
-  FaBalanceScale,
-  FaChartArea,
-  FaChartLine,
-  FaChevronDown,
-  FaChevronUp,
-  FaCreditCard,
-  FaFileContract,
-  FaGift,
-  FaMapMarkerAlt,
-  FaMoneyBillWave,
-  FaMoneyCheckAlt,
-  FaRegCreditCard,
-  FaTags,
-  FaThumbtack,
-  FaUserSlash,
-  FaUserTie,
-} from "react-icons/fa";
-import { HiCreditCard } from "react-icons/hi";
+import { MdOutlineAttachMoney } from "react-icons/md";
+import { FaChartLine, FaChevronDown, FaChevronUp, FaThumbtack } from "react-icons/fa";
 import { IoWalletSharp } from "react-icons/io5";
 import { RiDashboardFill } from "react-icons/ri";
-import { CiCalendar, CiCalendarDate, CiClock2, CiLogout, CiUser } from "react-icons/ci";
-import { SiAwsorganizations } from "react-icons/si";
 import { TiHome } from "react-icons/ti";
 import Cookies from "js-cookie";
 import { GrDocumentTime } from "react-icons/gr";
-import { BiBarChartSquare, BiTransferAlt } from "react-icons/bi";
-import { FaBoxesPacking, FaMoneyBillTransfer, FaRankingStar } from "react-icons/fa6";
 import { useVentasHoraStore } from "@/views/app/informes/Ventas/ventasXHora/store/useVentasHoraStore";
-import { BsPerson, BsPersonBoundingBox } from "react-icons/bs";
-import { TbCashRegister, TbPlugConnected } from "react-icons/tb";
 import { AnimatedOverflowText } from "./layouts/AnimatedOverflowText";
-import { GiPayMoney, GiProfit } from "react-icons/gi";
+import { TbPlugConnected } from "react-icons/tb";
+import { CiLogout } from "react-icons/ci";
+// import {  FaChartArea, FaCreditCard, FaMapMarkerAlt, FaMoneyCheckAlt, FaRegCreditCard,FaUserSlash } from "react-icons/fa";
+// import { FaRankingStar } from "react-icons/fa6";
+// import { HiCreditCard } from "react-icons/hi";
+// import { TbCashRegister} from "react-icons/tb";
+// import { MdOutlineCategory } from "react-icons/md";
+// import {
+//   FaBalanceScale,
+//   FaFileContract,
+//   FaGift,
+//   FaMoneyBillWave,
+//   FaTags,
+//   FaUserTie,
+// } from "react-icons/fa";
+// import { SiAwsorganizations } from "react-icons/si";
+// import { CiCalendar, CiCalendarDate, CiClock2, CiLogout, CiUser } from "react-icons/ci";
+// import { BiBarChartSquare, BiTransferAlt } from "react-icons/bi";
+// import { FaBoxesPacking, FaMoneyBillTransfer } from "react-icons/fa6";
+// import { BsPerson, BsPersonBoundingBox } from "react-icons/bs";
+// import { GiPayMoney, GiProfit } from "react-icons/gi";
 interface SubMenuItem {
   title: string;
   icon?: JSX.Element;
@@ -65,6 +61,7 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
 
   const storedUser = localStorage.getItem("_u");
   const user = storedUser ? JSON.parse(storedUser) : {};
+  //console.log("user sidebar", user);
 
   const Menus: MenuItem[] = [
     {
@@ -82,11 +79,11 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
       href: "/cajas",
       icon: <MdOutlineAttachMoney />,
     },
-    {
-      title: "Stock por Sección",
-      href: "/stock-seccion",
-      icon: <FaBoxesPacking />,
-    },
+    // {
+    //   title: "Stock por Sección",
+    //   href: "/stock-seccion",
+    //   icon: <FaBoxesPacking />,
+    // },
 
     {
       title: "Informes Ventas",
@@ -97,228 +94,195 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
           icon: <IoWalletSharp />,
           submenus: [
             {
-              title: "Ventas por Condicion",
-              href: "/informes/ventas-condicion",
-              icon: <GiPayMoney />,
-            },
-            {
               title: "Ventas por Hora",
               href: "/informes/ventas-hora",
               icon: <GrDocumentTime />,
             },
-            {
-              title: "Ventas por Sección",
-              href: "/informes/ventas-seccion",
-              icon: <MdOutlineCategory />,
-            },
-            {
-              title: "Ingresos",
-              href: "/informes/ingresos",
-              icon: <TbCashRegister />,
-            },
-            {
-              title: "Ranking de Clientes",
-              href: "/informes/ranking",
-              icon: <FaRankingStar />,
-            },
-            {
-              title: "Rentabilidad ( Artículo )",
-              href: "/informes/rentabilidad",
-              icon: <GiProfit />,
-            },
-            {
-              title: "Rentabilidad - Medio de Pago",
-              href: "/informes/rentabilidadmp",
-              icon: <GiProfit />,
-            },
-            {
-              title: "Comparativo Mensual de Ventas",
-              href: "/informes/comparativo-mensual",
-              icon: <FaBalanceScale />,
-            },
+            // {
+            //   title: "Ventas por Condicion",
+            //   href: "/informes/ventas-condicion",
+            //   icon: <GiPayMoney />,
+            // },
+            // {
+            //   title: "Ventas por Sección",
+            //   href: "/informes/ventas-seccion",
+            //   icon: <MdOutlineCategory />,
+            // },
+            // {
+            //   title: "Ingresos",
+            //   href: "/informes/ingresos",
+            //   icon: <TbCashRegister />,
+            // },
+            // {
+            //   title: "Ranking de Clientes",
+            //   href: "/informes/ranking",
+            //   icon: <FaRankingStar />,
+            // },
+            // {
+            //   title: "Rentabilidad ( Artículo )",
+            //   href: "/informes/rentabilidad",
+            //   icon: <GiProfit />,
+            // },
+            // {
+            //   title: "Rentabilidad - Medio de Pago",
+            //   href: "/informes/rentabilidadmp",
+            //   icon: <GiProfit />,
+            // },
+            // {
+            //   title: "Comparativo Mensual de Ventas",
+            //   href: "/informes/comparativo-mensual",
+            //   icon: <FaBalanceScale />,
+            // },
 
-            {
-              title: "Comp. Clientes otras Sucursales",
-              href: "/informes/clientes-otras-suc",
-              icon: <BsPersonBoundingBox />,
-            },
+            // {
+            //   title: "Comp. Clientes otras Sucursales",
+            //   href: "/informes/clientes-otras-suc",
+            //   icon: <BsPersonBoundingBox />,
+            // },
           ],
         },
-        {
-          title: "Creditos",
-          icon: <HiCreditCard />,
-          submenus: [
-            {
-              title: "Ventas de Créditos",
-              href: "/informes/ventas-creditos",
-              icon: <FaRegCreditCard />,
-            },
-            {
-              title: "Ventas por Localidad",
-              href: "/informes/ventas-localidad",
-              icon: <FaMapMarkerAlt />,
-            },
-            {
-              title: "Ventas de Créditos por Cliente",
-              href: "/informes/creditos-clientes",
-              icon: <FaCreditCard />,
-            },
-            {
-              title: "Ranking Clientes Créditos",
-              href: "/informes/ranking-creditos-clientes",
-              icon: <FaRankingStar />,
-            },
-            {
-              title: "Clientes sin Operaciones",
-              href: "/informes/clientes-sin-operaciones",
-              icon: <FaUserSlash />,
-            },
-            {
-              title: "Distribucion Mensual de Créditos",
-              href: "/informes/dist-men-clientes",
-              icon: <FaChartArea />,
-            },
+        // {
+        //   title: "Creditos",
+        //   icon: <HiCreditCard />,
+        //   submenus: [
+        //     {
+        //       title: "Ventas de Créditos",
+        //       href: "/informes/ventas-creditos",
+        //       icon: <FaRegCreditCard />,
+        //     },
+        //     {
+        //       title: "Ventas por Localidad",
+        //       href: "/informes/ventas-localidad",
+        //       icon: <FaMapMarkerAlt />,
+        //     },
+        //     {
+        //       title: "Ventas de Créditos por Cliente",
+        //       href: "/informes/creditos-clientes",
+        //       icon: <FaCreditCard />,
+        //     },
+        //     {
+        //       title: "Ranking Clientes Créditos",
+        //       href: "/informes/ranking-creditos-clientes",
+        //       icon: <FaRankingStar />,
+        //     },
+        //     {
+        //       title: "Clientes sin Operaciones",
+        //       href: "/informes/clientes-sin-operaciones",
+        //       icon: <FaUserSlash />,
+        //     },
+        //     {
+        //       title: "Distribucion Mensual de Créditos",
+        //       href: "/informes/dist-men-clientes",
+        //       icon: <FaChartArea />,
+        //     },
 
-            {
-              title: "Ventas Clientes con Otros Medios",
-              href: "/informes/vent-client-otros-medios",
-              icon: <FaMoneyCheckAlt />,
-            },
-          ],
-        },
+        //     {
+        //       title: "Ventas Clientes con Otros Medios",
+        //       href: "/informes/vent-client-otros-medios",
+        //       icon: <FaMoneyCheckAlt />,
+        //     },
+        //   ],
+        // },
       ],
     },
-    {
-      title: "Informes Cobranzas",
-      icon: <FaMoneyBillWave />,
-      submenus: [
-        {
-          title: "Cobranzas",
-          href: "/informes/cobranzas",
-          icon: <CiClock2 />,
-        },
-        {
-          title: "Cobranzas por Vencimiento",
-          href: "/informes/cobranza-vencim",
-          icon: <CiClock2 />,
-        },
-        {
-          title: "Morosidad",
-          href: "/informes/morosidad",
-          icon: <CiCalendar />,
-        },
-        {
-          title: "Cobranza por Cobrador",
-          href: "/informes/cobranzas-cobrador",
-          icon: <CiUser />,
-        },
-        {
-          title: "Cobranza por Fecha de Emisíon",
-          href: "/informes/cobranzas-fecha-emision",
-          icon: <CiCalendarDate />,
-        },
-        {
-          title: "Cobranza y Vto.",
-          href: "/informes/cobranza-vto",
-          icon: <CiClock2 />,
-        },
-      ],
-    },
+    // {
+    //   title: "Informes Cobranzas",
+    //   icon: <FaMoneyBillWave />,
+    //   submenus: [
+    //     {
+    //       title: "Cobranzas",
+    //       href: "/informes/cobranzas",
+    //       icon: <CiClock2 />,
+    //     },
+    //     {
+    //       title: "Cobranzas por Vencimiento",
+    //       href: "/informes/cobranza-vencim",
+    //       icon: <CiClock2 />,
+    //     },
+    //     {
+    //       title: "Morosidad",
+    //       href: "/informes/morosidad",
+    //       icon: <CiCalendar />,
+    //     },
+    //     {
+    //       title: "Cobranza por Cobrador",
+    //       href: "/informes/cobranzas-cobrador",
+    //       icon: <CiUser />,
+    //     },
+    //     {
+    //       title: "Cobranza por Fecha de Emisíon",
+    //       href: "/informes/cobranzas-fecha-emision",
+    //       icon: <CiCalendarDate />,
+    //     },
+    //     {
+    //       title: "Cobranza y Vto.",
+    //       href: "/informes/cobranza-vto",
+    //       icon: <CiClock2 />,
+    //     },
+    //   ],
+    // },
 
-    {
-      title: "Ventas por Vendedor", // Menú desplegable principal
-      icon: <FaUserTie />,
-      submenus: [
-        {
-          title: "Ventas por Vendedor",
-          href: "/informes/ventas-vend",
-          icon: <BsPerson />,
-        },
-        {
-          title: "Detalle Ventas por Vendedor",
-          href: "/informes/detalle-ventas-vend",
-          icon: <BsPerson />,
-        },
+    // {
+    //   title: "Ventas por Vendedor", // Menú desplegable principal
+    //   icon: <FaUserTie />,
+    //   submenus: [
+    //     {
+    //       title: "Ventas por Vendedor",
+    //       href: "/informes/ventas-vend",
+    //       icon: <BsPerson />,
+    //     },
+    //     {
+    //       title: "Detalle Ventas por Vendedor",
+    //       href: "/informes/detalle-ventas-vend",
+    //       icon: <BsPerson />,
+    //     },
 
-        {
-          title: "Articulos en Promoción",
-          href: "/informes/art-prom",
-          icon: <FaTags />,
-        },
-        {
-          title: "Ventas en Promoción",
-          href: "/informes/ventas-prom",
-          icon: <FaGift />,
-        },
-      ],
-    },
+    //     {
+    //       title: "Articulos en Promoción",
+    //       href: "/informes/art-prom",
+    //       icon: <FaTags />,
+    //     },
+    //     {
+    //       title: "Ventas en Promoción",
+    //       href: "/informes/ventas-prom",
+    //       icon: <FaGift />,
+    //     },
+    //   ],
+    // },
 
-    {
-      title: "Otros Informes", // Menú desplegable principal
-      icon: <BiBarChartSquare />,
-      submenus: [
-        {
-          title: "Ventas por Unidad de Negocio",
-          href: "/informes/ventas-uni-nego",
-          icon: <SiAwsorganizations />,
-        },
-        {
-          title: "Garantias",
-          href: "/informes/garantias",
-          icon: <FaFileContract />,
-        },
-        {
-          title: "Mov. de Cajas",
-          href: "/informes/mov-cajas",
-          icon: <BiTransferAlt />,
-        },
-        {
-          title: "Mov. de Cajas Totales",
-          href: "/informes/mov-cajas-totales",
-          icon: <FaMoneyBillTransfer />,
-        },
-      ],
-    },
+    // {
+    //   title: "Otros Informes", // Menú desplegable principal
+    //   icon: <BiBarChartSquare />,
+    //   submenus: [
+    //     {
+    //       title: "Ventas por Unidad de Negocio",
+    //       href: "/informes/ventas-uni-nego",
+    //       icon: <SiAwsorganizations />,
+    //     },
+    //     {
+    //       title: "Garantias",
+    //       href: "/informes/garantias",
+    //       icon: <FaFileContract />,
+    //     },
+    //     {
+    //       title: "Mov. de Cajas",
+    //       href: "/informes/mov-cajas",
+    //       icon: <BiTransferAlt />,
+    //     },
+    //     {
+    //       title: "Mov. de Cajas Totales",
+    //       href: "/informes/mov-cajas-totales",
+    //       icon: <FaMoneyBillTransfer />,
+    //     },
+    //   ],
+    // },
     {
       title: "Integraciones",
       href: "/integraciones",
       icon: <TbPlugConnected />,
     },
   ];
-  /**
-   * 
-   *  {
-      title: "Informes", // Menú desplegable principal
-      icon: <BiBarChartSquare />,
-      submenus: [
-        {
-          title: "Informes de Análisis", // Submenú desplegable
-          submenus: [
-            {
-              title: "Ventas por Hora",
-              href: "/informes/ventas-hora",
-              icon: <GrDocumentTime />,
-            },
-            {
-              title: "Ventas por Sección",
-              href: "/informes/ventas-seccion",
-              icon: <MdOutlineCategory />,
-            },
-            {
-              title: "Ventas por Vendedor",
-              href: "/informes/ventas-vend",
-              icon: <BsPerson />,
-            },
-            {
-              title: "Cobranzas por Vencimiento",
-              href: "/informes/cobranza-vencim",
-              icon: <CiClock2 />,
-            },
-          ],
-        },
-      ],
-    },
-   */
+
   // Función para alternar el estado de un menú desplegable
   const toggleMenu = (title: string) => {
     setOpenMenus((prev) => ({
@@ -425,8 +389,9 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
     localStorage.removeItem("_ce");
     localStorage.removeItem("_dbp");
     localStorage.removeItem("_dbd");
-    localStorage.removeItem("homologacion");
+    localStorage.removeItem("modo");
     localStorage.removeItem("user");
+    localStorage.removeItem("_mqr");
 
     clearVentasPorHora();
 
@@ -456,7 +421,11 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
       window.removeEventListener("mouseup", handleMouseUp);
     };
   }, [isPinned]);
-
+  const modo = localStorage.getItem("modo");
+  const entorno = localStorage.getItem("_ce");
+  useEffect(() => {
+    console.log("Modo actual:", modo, "Entorno:", entorno);
+  }, [entorno, modo]);
   return (
     <div
       ref={sidebarRef}
@@ -559,7 +528,12 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
         <div className="border bg-white rounded-full cursor-pointer w-8">
           <CiLogout className="w-6 h-8 font-extrabold" />
         </div>
-        <span className={`transition-all duration-500 whitespace-nowrap overflow-hidden ${!open ? "max-w-0 opacity-0" : "max-w-full opacity-100 text-white text-lg"}`}>Salir</span>
+        <span
+          className={`transition-all duration-500 whitespace-nowrap overflow-hidden
+           ${!open ? "max-w-0 opacity-0" : "max-w-full opacity-100 text-white text-lg"}`}
+        >
+          Salir
+        </span>
       </Link>
     </div>
   );

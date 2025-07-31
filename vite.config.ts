@@ -3,6 +3,7 @@ import { createHtmlPlugin } from 'vite-plugin-html';
 import react from '@vitejs/plugin-react-swc';
 import path from 'path';
 import packageInfo from './package.json';
+import removeConsole from "vite-plugin-remove-console";
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -17,6 +18,8 @@ export default defineConfig({
         },
       },
     }),
+    removeConsole()
+
   ],
   resolve: {
     alias: {

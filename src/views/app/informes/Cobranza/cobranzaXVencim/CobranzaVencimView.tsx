@@ -7,9 +7,9 @@ import Botonera from "./Complementos/Botonera";
 import TablaCxV from "./Complementos/Tabla";
 import { data, dataFalsa } from "./ts/data";
 import Totales from "./Complementos/Totales";
+import GraficoDeTorta from "./Complementos/GraficoDeTorta";
 import { ListaFiltrosAplicados } from "@/frontend-resourses/components/Complementos/ListaFiltrosAplicados";
 import { extraerItems } from "@/frontend-resourses/utils/dataManipulation";
-import GraficoDeTorta from "./Complementos/GraficoDeTorta";
 
 export default function CobranzaVencimView() {
   const {

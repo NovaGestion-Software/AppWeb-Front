@@ -1,7 +1,7 @@
 import DonutCard from "@/views/app/dashboard/components/features/donut/DonutCard";
 import { useVentasPorSeccionStore } from "../useVentasPorSeccionStore";
-import { extraerItems } from "@/frontend-resourses/utils/dataManipulation";
 import { useEffect, useState } from "react";
+import { extraerItems } from "@/frontend-resourses/utils/dataManipulation";
 type TipoTransformacion = "string" | "number" | "boolean";
 
 export function transformarTipos<T extends Record<string, any>>(data: T[], tipos: Record<keyof T, TipoTransformacion>): Record<string, any>[] {

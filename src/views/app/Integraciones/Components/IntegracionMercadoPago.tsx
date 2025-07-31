@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import { grabarCodeMercadoPago, obtenerUrlAuthorization } from "@/services/ApiPhpService";
+import { useVerificarIntegracionMP } from "../Hooks/useVerificarIntegracionMP";
 
 type EstadoIntegracion = "no_conectado" | "conectando" | "conectado" | "error";
 
@@ -49,6 +50,16 @@ export const IntegracionMercadoPago: React.FC = () => {
     return () => window.removeEventListener("message", handleMessage);
   }, []);
 
+  const { estadoIntegracion, cargando } = useVerificarIntegracionMP();
+  
+
+  console.log("estado integracion", estadoIntegracion, cargando);
+
+  useEffect(() => {
+    if (estadoIntegracion) {
+      setEstado("conectado");
+    }
+  }, [estadoIntegracion]);
   const renderEstado = () => {
     switch (estado) {
       case "no_conectado":

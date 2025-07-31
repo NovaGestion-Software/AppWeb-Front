@@ -1,7 +1,7 @@
 import DonutCard from "@/views/app/dashboard/components/features/donut/DonutCard";
-import { extraerItems } from "@/frontend-resourses/utils/dataManipulation";
 import { useEffect, useState } from "react";
 import { data } from "../ts/data";
+import { extraerItems } from "@/frontend-resourses/utils/dataManipulation";
 type TipoTransformacion = "string" | "number" | "boolean";
 
  interface DonutData {

@@ -30,6 +30,7 @@ export default function CardsComponent({ handleRefetch, setHandleRefetch }: Card
   }, [handleRefetch]);
 
   const filteredCards = dataCards?.filter((card: any) => !card.titulo.includes('Ejemplo')) || [];
+  console.log(dataCards, 'dataCards');
 
   return (
     <div>

@@ -1,7 +1,7 @@
 // src/store/useEntornoStore.ts
 import { create } from "zustand";
 
-type Homologacion = "prod" | "dev";
+type Homologacion = "prod" | "homo";
 type Entorno = "production" | "development";
 
 interface EntornoState {
@@ -17,9 +17,9 @@ export const useEntornoStore = create<EntornoState>((set) => ({
     localStorage.setItem("_ce", nuevo);
     set({ entorno: nuevo });
   },
-  homologacion: (localStorage.getItem("homologacion") as Homologacion) || "dev",
+  homologacion: (localStorage.getItem("modo") as Homologacion) || "homo",
   setHomologacion: (nuevo) => {
-    localStorage.setItem("homologacion", nuevo);
+    localStorage.setItem("modo", nuevo);
     set({ homologacion: nuevo });
   },
 }));

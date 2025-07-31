@@ -15,11 +15,7 @@ export default function DateInput({ refetch }: DateInputProps) {
     // estados
     estaProcesado,
     status,
-    //   setStatus,
-    // foco
     foco,
-    // dates
-
     setFechas,
   } = useVentasHoraStore();
   // HANDLE FETCH
@@ -31,6 +27,7 @@ export default function DateInput({ refetch }: DateInputProps) {
     setFechas: setFechas,
   };
 
+  console.log(foco, "foco en DateInput");
   return (
     <Card
       className="col-start-1 col-span-6  

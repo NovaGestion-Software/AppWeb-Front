@@ -6,6 +6,7 @@ import { loginEmpresa } from "@/services/UserService";
 import { Account } from "@/types";
 import InputLabel from "@/Components/ui/Inputs/InputLabel";
 import Cookies from "js-cookie";
+import { verificarIntegracionMP } from "../Utils/verificarIntegracionMP";
 
 export default function LoginForm() {
   const navigate = useNavigate();
@@ -78,7 +79,7 @@ export default function LoginForm() {
         setError("");
       }, 3000);
     },
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       if (data.tusuario === 1) {
         // Para administradores, guardar tokens especiales en cookies
         Cookies.set("token_acceso_prod", data.token_acceso_prod, {
@@ -105,6 +106,7 @@ export default function LoginForm() {
         // Definir el ambiente actual por defecto
         const currentEnv = "production";
         localStorage.setItem("_ce", currentEnv);
+        localStorage.setItem("modo", "homo");
 
         // Guardar los tokens actuales según el ambiente por defecto
         Cookies.set("token_acceso", data[`token_acceso_${currentEnv === "production" ? "prod" : "des"}`], { path: "/", secure: true, sameSite: "Strict" });
@@ -136,7 +138,7 @@ export default function LoginForm() {
         logoemp: data.logoemp,
         logonova: data.logonova,
       };
-
+      await verificarIntegracionMP(data.empresa);
       localStorage.setItem("_u", JSON.stringify(dataUser));
 
       navigate("/home");

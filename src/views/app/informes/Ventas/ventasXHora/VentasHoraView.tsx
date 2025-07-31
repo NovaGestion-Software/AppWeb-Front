@@ -12,7 +12,7 @@ import { useEscapeShortcut } from "../../_Hooks/useEscapeShortcut";
 import { useVentasHoraStore } from "./store/useVentasHoraStore";
 import { useProcesarDatosTabla } from "./Hooks/useProcesarDatosTabla";
 import { agrupacionConfig, tablaConfig } from "./config/tabla.config";
-import { useFocoReset } from "./Hooks/useResetFoco";
+//import { useFocoReset } from "./Hooks/useResetFoco";
 import { useAutoSeleccionSucursales } from "./Hooks/useAutoSeleccionFiltros";
 import { botoneraClass, bodyClass, leftSideClass } from "./config/classes.config";
 import { useVentasPorHoraQuery } from "./Hooks/useVentasPorHoraQuery";
@@ -20,6 +20,11 @@ import { useVentasPorHoraQuery } from "./Hooks/useVentasPorHoraQuery";
 export default function VentasHoraView() {
   //store
   const {
+    // nuevos
+    filas,
+    setFilas,
+    totales,
+    setTotales,
     // estados
     estaProcesado,
     setEstaProcesado,
@@ -35,30 +40,36 @@ export default function VentasHoraView() {
   } = useVentasHoraStore();
 
   const { data, refetch, dataUpdatedAt } = useVentasPorHoraQuery(fechas);
-  let existenDatos = data && data.length > 0;
-
+  const existenDatos = data && data.length > 0;
   const dataFinal = data || [];
 
-  // Procesamiento de datos
-  const { filas, totales } = useProcesarDatosTabla({
+  // Procesamiento local de datos
+  const datosProcesados = useProcesarDatosTabla({
     data: dataFinal,
     sucursalesSeleccionadas,
     config: agrupacionConfig,
     configTabla: tablaConfig,
   });
 
-  // FOOTER TABLA 1
-  const totalImporteFormateado = formatearNumero(totales.importe);
+  // Guardar datos procesados en la store cuando están listos
+  useEffect(() => {
+    if (estaProcesado && datosProcesados.filas.length > 0) {
+      setFilas(datosProcesados.filas);
+      setTotales(datosProcesados.totales);
+    }
+  }, [estaProcesado, datosProcesados.filas, datosProcesados.totales, setFilas, setTotales]);
+
+  // FOOTER TABLA
+  const totalImporteFormateado = formatearNumero(totales?.importe || 0);
   const datosParaFooter = {
     hora: "",
-    nOperaciones: estaProcesado ? totales.cantidad : "",
+    nOperaciones: estaProcesado ? totales?.cantidad : "",
     porcentajeOperaciones: "",
-    pares: estaProcesado ? totales.pares : "",
+    pares: estaProcesado ? totales?.pares : "",
     porcentajePares: "",
     importe: estaProcesado ? totalImporteFormateado : "",
     porcentajeImporte: "",
   };
-
 
   // Set Filtros
   useAutoSeleccionSucursales({
@@ -71,31 +82,45 @@ export default function VentasHoraView() {
   });
 
   // LIMPIAR EL ESTADO FOCO A LOS 0.5S
-  useFocoReset({ foco, setFoco });
-  
+ // useFocoReset({ foco, setFoco });
+  useEffect(() => {
+    console.log("Foco cambió:", foco);
+  }, [foco]);
+
   // ShortCut Escape Hook.
   const handleClearData = useHandleClearData();
   useEscapeShortcut({ estaProcesado, handleClearData });
 
+  // Cambiar estado de procesado si hay datos nuevos
   useEffect(() => {
     if (existenDatos) {
       setEstaProcesado(true);
+    //  setFoco(false);
     }
   }, [existenDatos]);
+
+  useEffect(() => {
+
+    if(estaProcesado){
+      setFoco(false)
+    }
+    else{
+      setFoco(true);
+    }
+  },[estaProcesado])
 
   return (
     <div className="h-screen ">
       <ViewTitle title={"Ventas por Hora"} />
 
       <div className="flex flex-col h-fit mx-4">
-        
         {/** BOTONERA */}
         <div className={botoneraClass}>
           {/**RangeDates Input */}
           <DateInput refetch={refetch} />
 
           {/**modales y funcionabilidades */}
-          <Botonera data={filas} />
+          <Botonera  />
         </div>
 
         {/**Sucursales, Grafico, y Tabla*/}
@@ -105,12 +130,12 @@ export default function VentasHoraView() {
               <ListaSucursalesFiltradas />
 
               {/* Gráfico */}
-              <GraficoOperaciones />
+              <GraficoOperaciones filas={filas || []} />
             </div>
           )}
 
           {/** Tabla */}
-          <Tabla dataParaTabla={filas} datosFooter={datosParaFooter} />
+          <Tabla dataParaTabla={filas || []} datosFooter={datosParaFooter} />
         </div>
       </div>
       <ModalFiltroSucursales />

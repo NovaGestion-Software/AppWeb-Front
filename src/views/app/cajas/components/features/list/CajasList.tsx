@@ -171,7 +171,7 @@ export default function CajasList({ handleRefetch, setHandleRefetch, cajas, refe
                   return (
                     <div
                       key={sucursal.sucursal}
-                      className=" p-3 pl-1 pr-1 rounded-md border 
+                      className=" p-3 pl-1 pr-1 rounded-md border  bg-gray-100
                    border-gray-500 z-50 "
                     >
                      <div className="flex gap-2 items-center px-2 v1536:items-end ">

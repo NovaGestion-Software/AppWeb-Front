@@ -6,7 +6,7 @@ type Props = {
   delay?: number;
 };
 
-export function useFocoReset({ foco, setFoco, delay = 500 }: Props) {
+export function useFocoReset({ foco, setFoco, delay = 5000 }: Props) {
   useEffect(() => {
     if (foco) {
       const timer = setTimeout(() => setFoco(false), delay);
