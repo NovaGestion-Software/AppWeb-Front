@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { formatearNumero } from "@/utils";
 import ViewTitle from "@/frontend-resourses/components/Labels/ViewTitle";
 import DateInput from "./components/DateInput";
@@ -16,6 +16,7 @@ import { agrupacionConfig, tablaConfig } from "./config/tabla.config";
 import { useAutoSeleccionSucursales } from "./Hooks/useAutoSeleccionFiltros";
 import { botoneraClass, bodyClass, leftSideClass } from "./config/classes.config";
 import { useVentasPorHoraQuery } from "./Hooks/useVentasPorHoraQuery";
+import { MensajeSinDatos } from "./Modals/MensajeSinDatos";
 
 export default function VentasHoraView() {
   //store
@@ -31,17 +32,25 @@ export default function VentasHoraView() {
     // dates
     fechas,
     //foco
-    foco,
     setFoco,
     // filtros
     sucursalesSeleccionadas,
     setSucursalesSeleccionadas,
     setSucursalesDisponibles,
   } = useVentasHoraStore();
+  const [mostrarMensaje, setMostrarMensaje] = useState(false);
+  const [consultaEjecutada, setConsultaEjecutada] = useState(false);
 
   const { data, refetch, dataUpdatedAt } = useVentasPorHoraQuery(fechas);
   const existenDatos = data && data.length > 0;
   const dataFinal = data || [];
+  console.log("dataFinal", dataFinal, existenDatos);
+
+  useEffect(() => {
+    if (consultaEjecutada && data && data.length === 0) {
+      setMostrarMensaje(true);
+    }
+  }, [dataUpdatedAt]);
 
   // Procesamiento local de datos
   const datosProcesados = useProcesarDatosTabla({
@@ -82,10 +91,10 @@ export default function VentasHoraView() {
   });
 
   // LIMPIAR EL ESTADO FOCO A LOS 0.5S
- // useFocoReset({ foco, setFoco });
-  useEffect(() => {
-    console.log("Foco cambió 2:", foco);
-  }, [foco]);
+  // useFocoReset({ foco, setFoco });
+  // useEffect(() => {
+  //   console.log("Foco cambió 2:", foco);
+  // }, [foco]);
 
   // ShortCut Escape Hook.
   const handleClearData = useHandleClearData();
@@ -95,32 +104,31 @@ export default function VentasHoraView() {
   useEffect(() => {
     if (existenDatos) {
       setEstaProcesado(true);
-    //  setFoco(false);
+      //  setFoco(false);
     }
   }, [existenDatos]);
 
   useEffect(() => {
-
-    if(estaProcesado){
-      setFoco(false)
-    }
-    else{
+    if (estaProcesado) {
+      setFoco(false);
+    } else {
       setFoco(true);
     }
-  },[estaProcesado])
+  }, [estaProcesado]);
 
   return (
     <div className="h-screen ">
       <ViewTitle title={"Ventas por Hora"} />
+      {mostrarMensaje && <MensajeSinDatos fechas={fechas} onClose={() => setMostrarMensaje(false)} />}
 
       <div className="flex flex-col h-fit mx-4">
         {/** BOTONERA */}
         <div className={botoneraClass}>
           {/**RangeDates Input */}
-          <DateInput refetch={refetch} />
+          <DateInput refetch={refetch} setConsultaEjecutada={setConsultaEjecutada} />
 
           {/**modales y funcionabilidades */}
-          <Botonera  />
+          <Botonera />
         </div>
 
         {/**Sucursales, Grafico, y Tabla*/}

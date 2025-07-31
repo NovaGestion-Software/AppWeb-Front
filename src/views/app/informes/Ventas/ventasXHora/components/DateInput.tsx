@@ -5,9 +5,10 @@ import RangeDatesInput from "@/frontend-resourses/components/Inputs/RangeDatesIn
 import { useHandleClearData } from "../Utils/useHandleClear";
 interface DateInputProps {
   refetch: () => void;
+  setConsultaEjecutada: (value: boolean) => void;
 }
 
-export default function DateInput({ refetch }: DateInputProps) {
+export default function DateInput({ refetch, setConsultaEjecutada }: DateInputProps) {
   const handleClearData = useHandleClearData();
 
   //store
@@ -20,6 +21,7 @@ export default function DateInput({ refetch }: DateInputProps) {
   } = useVentasHoraStore();
   // HANDLE FETCH
   const handleFetchData = async (_dates: FechasRango) => {
+    setConsultaEjecutada(true);
     refetch();
     //       console.log("refetch");
   };
