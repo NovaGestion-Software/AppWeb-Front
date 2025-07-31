@@ -84,7 +84,7 @@ export default function VentasHoraView() {
   // LIMPIAR EL ESTADO FOCO A LOS 0.5S
  // useFocoReset({ foco, setFoco });
   useEffect(() => {
-    console.log("Foco cambió:", foco);
+    console.log("Foco cambió 2:", foco);
   }, [foco]);
 
   // ShortCut Escape Hook.
