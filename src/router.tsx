@@ -57,7 +57,7 @@ export default function Router() {
             <Route path="/informes">
               <Route path="ventas-hora" element={<VentasHoraView />} />
 
-              {/** NO VA A LA BUILD */}
+              {/** NO VA A LA BUILD s*/}
 
               {/* <Route path="ventas-seccion" element={<VentasPorSeccionView />} />
               <Route path="ventas-condicion" element={<VentasPorCondicionView />} />
