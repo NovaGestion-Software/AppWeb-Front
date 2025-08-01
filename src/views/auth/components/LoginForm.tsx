@@ -80,6 +80,11 @@ export default function LoginForm() {
       }, 3000);
     },
     onSuccess: async (data) => {
+      // Definir el ambiente actual por defecto
+      const currentEnv = "production";
+      localStorage.setItem("_ce", currentEnv);
+      localStorage.setItem("_m", "prod");
+      localStorage.setItem("_p", "prod");
       if (data.tusuario === 1) {
         // Para administradores, guardar tokens especiales en cookies
         Cookies.set("token_acceso_prod", data.token_acceso_prod, {
@@ -102,17 +107,9 @@ export default function LoginForm() {
           secure: true,
           sameSite: "Strict",
         });
-
-        // Definir el ambiente actual por defecto
-        const currentEnv = "production";
-        localStorage.setItem("_ce", currentEnv);
-        localStorage.setItem("_m", "homo");
-        localStorage.setItem("_p", "prod");
-
         // Guardar los tokens actuales según el ambiente por defecto
         Cookies.set("token_acceso", data[`token_acceso_${currentEnv === "production" ? "prod" : "des"}`], { path: "/", secure: true, sameSite: "Strict" });
         Cookies.set("token_refresh", data[`token_refresh_${currentEnv === "production" ? "prod" : "des"}`], { path: "/", secure: true, sameSite: "Strict" });
-
         // Guardar nombres de base de datos en localStorage
         localStorage.setItem("_dbp", data.dbnameprod);
         localStorage.setItem("_dbd", data.dbnamedev);
