@@ -39,8 +39,10 @@ import CobranzasPorFechaEmisionView from "./views/app/informes/Cobranza/Cobranza
 import CobranzasPorFechaYVtoView from "./views/app/informes/Cobranza/CobranzaPorFecha&Vto/CobranzaYVtoView";
 import IntegracionesView from "./views/app/Integraciones/IntegracionesView";
 import { Redirect } from "./views/app/Integraciones/Components/Redirect";
+import { useEntornoStore } from "./views/app/config/Store/useEntornoStore";
 
 export default function Router() {
+  const projectType = useEntornoStore((state) => state.projectType);
   return (
     <BrowserRouter>
       <Routes>
@@ -55,49 +57,55 @@ export default function Router() {
             <Route path="/integracion" element={<Redirect />} />
             <Route path="/informes">
               <Route path="ventas-hora" element={<VentasHoraView />} />
-
-              {/** NO VA A LA BUILD */}
-
-              <Route path="ventas-seccion" element={<VentasPorSeccionView />} />
-              <Route path="ventas-condicion" element={<VentasPorCondicionView />} />
-              <Route path="ventas-uni-nego" element={<VentasUnidadNegocioView />} />
-              <Route path="comparativo-mensual" element={<ComparativoMensualView />} />
-              <Route path="ingresos" element={<IngresosView />} />
-              <Route path="ranking" element={<RankingClientesView />} />
-              <Route path="rentabilidad" element={<RentabilidadView />} />
-              <Route path="rentabilidadmp" element={<RentabilidadMPagoView />} />
-              <Route path="clientes-otras-suc" element={<CompClientOtrasSucView />} />
-
-              {/** Ventas de credito */}
-              <Route path="ventas-creditos" element={<VentasDeCreditoView />} />
-              <Route path="ventas-localidad" element={<VentasPorLocalidadView />} />
-              <Route path="creditos-clientes" element={<VentasDeCreditoPorClienteView />} />
-              <Route path="ranking-creditos-clientes" element={<RankingClientesCreditoView />} />
-              <Route path="clientes-sin-operaciones" element={<ClientesSinOperacionesView />} />
-              <Route path="dist-men-clientes" element={<DistribucionMensualClientesView />} />
-              <Route path="vent-client-otros-medios" element={<VentasClientesOtrosMediosView />} />
-
-              {/** Cobranzas */}
-              <Route path="cobranza-vencim" element={<CobranzaVencimView />} />
-              <Route path="cobranzas" element={<CobranzasView />} />
-              <Route path="morosidad" element={<MorosidadView />} />
-              <Route path="cobranzas-cobrador" element={<CobranzasPorCobradorView />} />
-              <Route path="cobranzas-fecha-emision" element={<CobranzasPorFechaEmisionView />} />
-              <Route path="cobranza-vto" element={<CobranzasPorFechaYVtoView />} />
-
-              {/** ventas por vendedor */}
-              <Route path="detalle-ventas-vend" element={<DetallesVentasXVendedorView />} />
-              <Route path="ventas-vend" element={<VentasPorVendedorView />} />
-              <Route path="art-prom" element={<ArticulosEnPromocionView />} />
-              <Route path="ventas-prom" element={<VentasEnPromocionView />} />
-
-              {/**Otros */}
-              <Route path="garantias" element={<GarantiasView />} />
-
-              <Route path="mov-cajas" element={<MovCajaView />} />
-              <Route path="mov-cajas-totales" element={<MovCajaTotalesView />} />
             </Route>
-            <Route path="/stock-seccion" element={<StockPorSeccionView />} />
+
+            {/** NO VA A LA BUILD */}
+            {projectType === "dev" && (
+              <>
+                <Route path="/informes">
+                  <Route path="ventas-hora" element={<VentasHoraView />} />
+                  <Route path="ventas-seccion" element={<VentasPorSeccionView />} />
+                  <Route path="ventas-condicion" element={<VentasPorCondicionView />} />
+                  <Route path="ventas-uni-nego" element={<VentasUnidadNegocioView />} />
+                  <Route path="comparativo-mensual" element={<ComparativoMensualView />} />
+                  <Route path="ingresos" element={<IngresosView />} />
+                  <Route path="ranking" element={<RankingClientesView />} />
+                  <Route path="rentabilidad" element={<RentabilidadView />} />
+                  <Route path="rentabilidadmp" element={<RentabilidadMPagoView />} />
+                  <Route path="clientes-otras-suc" element={<CompClientOtrasSucView />} />
+
+                  {/** Ventas de credito */}
+                  <Route path="ventas-creditos" element={<VentasDeCreditoView />} />
+                  <Route path="ventas-localidad" element={<VentasPorLocalidadView />} />
+                  <Route path="creditos-clientes" element={<VentasDeCreditoPorClienteView />} />
+                  <Route path="ranking-creditos-clientes" element={<RankingClientesCreditoView />} />
+                  <Route path="clientes-sin-operaciones" element={<ClientesSinOperacionesView />} />
+                  <Route path="dist-men-clientes" element={<DistribucionMensualClientesView />} />
+                  <Route path="vent-client-otros-medios" element={<VentasClientesOtrosMediosView />} />
+
+                  {/** Cobranzas */}
+                  <Route path="cobranza-vencim" element={<CobranzaVencimView />} />
+                  <Route path="cobranzas" element={<CobranzasView />} />
+                  <Route path="morosidad" element={<MorosidadView />} />
+                  <Route path="cobranzas-cobrador" element={<CobranzasPorCobradorView />} />
+                  <Route path="cobranzas-fecha-emision" element={<CobranzasPorFechaEmisionView />} />
+                  <Route path="cobranza-vto" element={<CobranzasPorFechaYVtoView />} />
+
+                  {/** ventas por vendedor */}
+                  <Route path="detalle-ventas-vend" element={<DetallesVentasXVendedorView />} />
+                  <Route path="ventas-vend" element={<VentasPorVendedorView />} />
+                  <Route path="art-prom" element={<ArticulosEnPromocionView />} />
+                  <Route path="ventas-prom" element={<VentasEnPromocionView />} />
+
+                  {/**Otros */}
+                  <Route path="garantias" element={<GarantiasView />} />
+
+                  <Route path="mov-cajas" element={<MovCajaView />} />
+                  <Route path="mov-cajas-totales" element={<MovCajaTotalesView />} />
+                </Route>
+                <Route path="/stock-seccion" element={<StockPorSeccionView />} />
+              </>
+            )}
             <Route path="/configuracion" element={<ConfigView />} />
           </Route>
         </Route>

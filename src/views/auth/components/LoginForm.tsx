@@ -107,6 +107,7 @@ export default function LoginForm() {
         const currentEnv = "production";
         localStorage.setItem("_ce", currentEnv);
         localStorage.setItem("modo", "homo");
+        localStorage.setItem("_p", "prod");
 
         // Guardar los tokens actuales según el ambiente por defecto
         Cookies.set("token_acceso", data[`token_acceso_${currentEnv === "production" ? "prod" : "des"}`], { path: "/", secure: true, sameSite: "Strict" });
