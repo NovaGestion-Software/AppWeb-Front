@@ -106,7 +106,7 @@ export default function LoginForm() {
         // Definir el ambiente actual por defecto
         const currentEnv = "production";
         localStorage.setItem("_ce", currentEnv);
-        localStorage.setItem("modo", "homo");
+        localStorage.setItem("_m", "homo");
         localStorage.setItem("_p", "prod");
 
         // Guardar los tokens actuales según el ambiente por defecto

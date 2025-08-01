@@ -145,7 +145,7 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
     localStorage.removeItem("_ce");
     localStorage.removeItem("_dbp");
     localStorage.removeItem("_dbd");
-    localStorage.removeItem("modo");
+    localStorage.removeItem("_m");
     localStorage.removeItem("user");
     localStorage.removeItem("_mqr");
 
@@ -177,7 +177,7 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
       window.removeEventListener("mouseup", handleMouseUp);
     };
   }, [isPinned]);
-  const modo = localStorage.getItem("modo");
+  const modo = localStorage.getItem("_m");
   const entorno = localStorage.getItem("_ce");
   useEffect(() => {
     console.log("Modo actual:", modo, "Entorno:", entorno);

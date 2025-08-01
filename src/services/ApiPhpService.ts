@@ -19,7 +19,7 @@ function getBaseSeleccionada(): string {
   return entorno === "development" ? "apinovades" : "apinova";
 }
 
-function getHomologacion(clave = "modo"): string {
+function getHomologacion(clave = "_m"): string {
   return localStorage.getItem(clave) || "homo";
 }
 
@@ -43,7 +43,7 @@ function manejarErrorAxios(error: unknown, mensajeDefault: string) {
 // 💳 MercadoPago
 
 export async function grabarCodeMercadoPago(code: string) {
-  const homologacion = getHomologacion("modo");
+  const homologacion = getHomologacion("_m");
   //const base = getBaseSeleccionada();
   const empresa = getEmpresa();
 

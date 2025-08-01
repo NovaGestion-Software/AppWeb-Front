@@ -23,9 +23,9 @@ export const useEntornoStore = create<EntornoState>((set) => ({
     set({ entorno: nuevo });
   },
 
-  homologacion: (localStorage.getItem("modo") as Homologacion) || "homo",
+  homologacion: (localStorage.getItem("_m") as Homologacion) || "homo",
   setHomologacion: (nuevo) => {
-    localStorage.setItem("modo", nuevo);
+    localStorage.setItem("_m", nuevo);
     set({ homologacion: nuevo });
   },
 
