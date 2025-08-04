@@ -9,7 +9,7 @@ export default function ViewportBlocker() {
         </div>
         <h2 className="text-2xl font-semibold text-white">Pantalla no compatible</h2>
         <p className="text-base text-gray-300">
-          Esta aplicación fue diseñada para resoluciones de escritorio (mínimo 1280px de ancho).
+          Esta aplicación fue diseñada para resoluciones de escritorio (mínimo 600px de ancho).
         </p>
         <p className="text-sm text-gray-400">
           Por favor, accedé desde una computadora o ampliá el tamaño de tu ventana para continuar.

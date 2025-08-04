@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-export function useViewportGuard(minWidth = 1280) {
+export function useViewportGuard(minWidth = 600) {
   const [isBlocked, setIsBlocked] = useState(false);
 
   useEffect(() => {
