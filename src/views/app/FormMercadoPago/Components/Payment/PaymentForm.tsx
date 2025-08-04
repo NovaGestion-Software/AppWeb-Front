@@ -1,15 +1,14 @@
 // PaymentForm.tsx
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import PaymentMethodSelector from "./PaymentMethodSelector";
 import ItemsForm from "./ItemsForm";
 import BuyerInfoForm from "./BuyerInfoForm";
 import PaymentMethodConfig from "./PaymentMethodConfig";
-import PaymentConfigForm from "./PaymentConfigForm";
 import ActionButtons from "./ActionButtons";
 import PaymentResponseDisplay from "./PaymentResponseDisplay";
 import LoadingOverlay from "../LoadingOverlay";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import { useMercadoPagoStore } from "../../Store/MercadoPagoStore";
 
 type PaymentMethod = "qr" | "pos";
@@ -77,13 +76,6 @@ export type PaymentData = {
   };
 };
 
-// Props para el componente de configuración
-type PaymentMethodConfigProps = {
-  paymentMethod: PaymentMethod;
-  formData: PaymentData;
-  handleInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>, field: string) => void;
-  setFormData: React.Dispatch<React.SetStateAction<PaymentData>>;
-};
 
 const PaymentForm = () => {
   const [paymentMethod, setPaymentMethod] = useState<"qr" | "pos">("qr");
@@ -92,7 +84,7 @@ const PaymentForm = () => {
     payer: { email: "" },
   });
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [_isLoading, setIsLoading] = useState(false);
   const [response, setResponse] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
   const [qrCode, setQrCode] = useState<string | null>(null);

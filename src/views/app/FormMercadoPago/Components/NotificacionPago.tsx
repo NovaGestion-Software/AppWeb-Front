@@ -1,4 +1,3 @@
-// components/NotificacionPago.tsx
 import { useEffect, useState } from "react";
 
 type EventoPago = {

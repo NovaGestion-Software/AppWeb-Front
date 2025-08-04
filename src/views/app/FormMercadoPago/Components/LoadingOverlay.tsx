@@ -1,4 +1,3 @@
-// components/LoadingOverlay.tsx
 import React from "react";
 import QRPago from "./Payment/PaymentQRDisplay";
 import OrderChecker from "./OrderChecker";

@@ -1,4 +1,3 @@
-// src/store/slices/ordenesSlice.ts
 import { StateCreator } from "zustand";
 
 export interface Orden {

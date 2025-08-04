@@ -7,7 +7,7 @@ import CrearCajaForm from "./Components/StepHandlers/CrearCajasForm";
 import { useMercadoPagoStore } from "./Store/MercadoPagoStore";
 
 export default function FormMercadoPagoView() {
-  const [cajas, setCajas] = useState(true);
+  const [cajas, _setCajas] = useState(true);
   const store = useMercadoPagoStore();
   const { ultimaSucursalCreada } = store;
 

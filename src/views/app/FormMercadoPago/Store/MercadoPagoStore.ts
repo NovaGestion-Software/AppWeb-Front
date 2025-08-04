@@ -1,4 +1,3 @@
-// src/Stores/mercadoPago/useMercadoPagoStore.ts
 import { create } from "zustand";
 import { createSucursalesSlice, SucursalesSlice } from "./SucursalSlice";
 import { AuthSlice, createAuthSlice } from "./AuthSlice";

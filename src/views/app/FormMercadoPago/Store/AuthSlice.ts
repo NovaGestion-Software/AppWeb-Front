@@ -1,4 +1,3 @@
-// src/Stores/mercadoPago/authSlice.ts
 import { StateCreator } from "zustand";
 
 export interface AuthSlice {

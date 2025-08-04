@@ -31,8 +31,8 @@ const OrderChecker = ({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [timeElapsed, setTimeElapsed] = useState(0);
-  const intervalRef = useRef<number | undefined>(undefined);
-  const timeoutRef = useRef<number | undefined>(undefined);
+  const intervalRef = useRef<NodeJS.Timeout | undefined>(undefined);
+  const timeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
   const isPaymentCompleted =
     orderData?.data?.paymentStatus_detail === "accredited";

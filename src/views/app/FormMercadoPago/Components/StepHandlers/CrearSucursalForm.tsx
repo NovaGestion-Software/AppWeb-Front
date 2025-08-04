@@ -1,4 +1,3 @@
-// src/Components/MercadoPago/StepHandlers/CrearSucursalForm.tsx
 import { useState } from "react";
 import { useMercadoPagoStore } from "../../Store/MercadoPagoStore";
 

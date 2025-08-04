@@ -1,4 +1,3 @@
-// components/QRModal.tsx
 import QRCode from "react-qr-code";
 import Switch from "./Switch";
 import { useState } from "react";

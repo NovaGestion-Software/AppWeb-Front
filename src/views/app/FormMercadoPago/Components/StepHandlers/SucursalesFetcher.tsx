@@ -1,4 +1,3 @@
-// src/Components/MercadoPago/StepHandlers/SucursalesFetcher.tsx
 import { useEffect } from "react";
 import { useMercadoPagoStore } from "../../Store/MercadoPagoStore";
 import CrearSucursalForm from "./CrearSucursalForm";
