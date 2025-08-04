@@ -40,6 +40,7 @@ import CobranzasPorFechaYVtoView from "./views/app/informes/Cobranza/CobranzaPor
 import IntegracionesView from "./views/app/Integraciones/IntegracionesView";
 import { Redirect } from "./views/app/Integraciones/Components/Redirect";
 import { useEntornoStore } from "./views/app/config/Store/useEntornoStore";
+import FormMercadoPagoView from "./views/app/FormMercadoPago/FormMercadoPagoView";
 
 export default function Router() {
   const projectType = useEntornoStore((state) => state.projectType);
@@ -59,7 +60,7 @@ export default function Router() {
               <Route path="ventas-hora" element={<VentasHoraView />} />
             </Route>
 
-            {/** NO VA A LA BUILD */}
+            {/** NO VA A LA BUILD  /form-mercado-pago*/}
             {projectType === "dev" && (
               <>
                 <Route path="/informes">
@@ -104,6 +105,7 @@ export default function Router() {
                   <Route path="mov-cajas-totales" element={<MovCajaTotalesView />} />
                 </Route>
                 <Route path="/stock-seccion" element={<StockPorSeccionView />} />
+                <Route path="/form-mercado-pago" element={<FormMercadoPagoView />} />
               </>
             )}
             <Route path="/configuracion" element={<ConfigView />} />

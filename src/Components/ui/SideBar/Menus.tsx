@@ -4,7 +4,7 @@ import { RiDashboardFill } from "react-icons/ri";
 import { TiHome } from "react-icons/ti";
 import { GrDocumentTime } from "react-icons/gr";
 import { TbPlugConnected } from "react-icons/tb";
-import { FaChartArea, FaCreditCard, FaMapMarkerAlt, FaMoneyCheckAlt, FaRegCreditCard, FaUserSlash } from "react-icons/fa";
+import { FaChartArea, FaCreditCard, FaFileInvoiceDollar, FaMapMarkerAlt, FaMoneyCheckAlt, FaRegCreditCard, FaUserSlash } from "react-icons/fa";
 import { FaRankingStar } from "react-icons/fa6";
 import { HiCreditCard } from "react-icons/hi";
 import { TbCashRegister } from "react-icons/tb";
@@ -64,11 +64,7 @@ export const MenuBase: MenuItem[] = [
       },
     ],
   },
-  {
-    title: "Integraciones",
-    href: "/integraciones",
-    icon: <TbPlugConnected />,
-  },
+
 ];
 
 export const MenuDev: MenuItem[] = [
@@ -273,5 +269,11 @@ export const MenuDev: MenuItem[] = [
     href: "/integraciones",
     icon: <TbPlugConnected />,
     orden: 9,
+  },
+    {
+    title: "Ordenes de Pago",
+    href: "/form-mercado-pago",
+    icon: <FaFileInvoiceDollar />,
+    orden: 10,
   },
 ];

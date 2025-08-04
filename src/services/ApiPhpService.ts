@@ -42,6 +42,23 @@ function manejarErrorAxios(error: unknown, mensajeDefault: string) {
 
 // 💳 MercadoPago
 
+export async function obtenerTokenMP() {
+  const homologacion = getHomologacion();
+  const empresa = getEmpresa();
+
+  const url = `/apinovades/mercadopago/obtenerMercadoToken.php?_i={"_e":"${empresa}",
+  "_m":"${homologacion}","_a":"1"}`;
+
+  try {
+    const { data } = await apiPhp(url);
+    console.log('obtenertokenmp', data)
+    return data;
+  } catch (error) {
+    manejarErrorAxios(error, "Error");
+  }
+}
+
+
 export async function grabarCodeMercadoPago(code: string) {
   const homologacion = getHomologacion("_m");
   //const base = getBaseSeleccionada();
