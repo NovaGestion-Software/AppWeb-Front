@@ -1,55 +1,66 @@
 import { useEffect } from "react";
 import { useMercadoPagoStore } from "../../Store/MercadoPagoStore";
 import CrearSucursalForm from "./CrearSucursalForm";
+import { MercadoPagoService } from "../../services/MercadoPagoService";
+import { Card } from "@/frontend-resourses/components/Cards/CardBase";
 
 export default function SucursalesFetcher() {
   const store = useMercadoPagoStore();
-  const { token, userId, sucursales, setSucursales, setLoadingSucursales,
-     isLoadingSucursales, setError } = store;
+  const { userId, sucursales, setSucursales, setLoadingSucursales, isLoadingSucursales, setError,  } = store;
 
   useEffect(() => {
     const fetchSucursales = async () => {
-      if (!token || !userId) return;
+      if (!userId) return;
 
       setLoadingSucursales(true);
       try {
-        const res = await fetch(`https://api.mercadopago.com/users/${userId}/stores/search`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        const data = await res.json();
+        const data = await MercadoPagoService.obtenerSucursales(userId);
         console.log("Sucursales data:", data);
 
-        if (Array.isArray(data.results)) {
-          setSucursales(data.results);
+        if (data && Array.isArray(data.sucursales)) {
+          setSucursales(data.sucursales);
         } else {
+          console.warn("Respuesta inesperada:", data);
           throw new Error("Respuesta inesperada al consultar sucursales.");
         }
       } catch (error: any) {
+        console.error("Error al consultar sucursales:", error);
         setError(error.message || "Error al consultar sucursales");
+      } finally {
+        setLoadingSucursales(false);
       }
     };
 
-    // Solo consultamos si no lo hicimos ya
-    if (token && userId && sucursales === null) {
+    if (userId && sucursales === null) {
       fetchSucursales();
     }
-  }, [token, userId, sucursales, setSucursales, setLoadingSucursales, setError]);
+  }, [userId, sucursales, setSucursales, setLoadingSucursales, setError]);
 
-  if (isLoadingSucursales) return <p className="text-sm text-gray-600">Consultando sucursales...</p>;
+  if (isLoadingSucursales) {
+    return <p className="text-sm text-gray-600">Consultando sucursales...</p>;
+  }
 
   if (sucursales && sucursales.length > 0) {
     return (
-      <div className="mt-4">
-        <p className="text-green-600 text-sm">Sucursales existentes:</p>
-        <ul className="list-disc ml-5 text-sm">
-          {sucursales.map((s: any) => (
-            <li key={s.id}>{s.name}</li>
-          ))}
-        </ul>
-      </div>
+<Card className="mt-4">
+  <p className="text-green-600 text-sm mb-2">Sucursales existentes:</p>
+  <div className="space-y-2">
+    {sucursales.map((s: any) => (
+      <label key={s.id} className="flex items-center space-x-2 text-sm text-gray-700">
+        <input
+          type="radio"
+          name="sucursal"
+          value={s.id}
+          checked={store.sucursalSeleccionada?.id === s.id}
+          onChange={() => store.setSucursalSeleccionada(s)}
+          className="form-radio text-blue-600"
+        />
+        <span>{s.name}</span>
+      </label>
+    ))}
+  </div>
+</Card>
+
     );
   }
 
@@ -62,5 +73,5 @@ export default function SucursalesFetcher() {
     );
   }
 
-  return null
+  return null;
 }

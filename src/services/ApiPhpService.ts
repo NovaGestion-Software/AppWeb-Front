@@ -9,7 +9,7 @@ function getUser() {
   return JSON.parse(localStorage.getItem("_u") || "{}");
 }
 
-function getEmpresa(): string {
+export function getEmpresa(): string {
   const user = getUser();
   return user.empresa?.toString().slice(-2);
 }
@@ -19,7 +19,7 @@ function getBaseSeleccionada(): string {
   return entorno === "development" ? "apinovades" : "apinova";
 }
 
-function getHomologacion(clave = "_m"): string {
+export function getHomologacion(clave = "_m"): string {
   return localStorage.getItem(clave) || "homo";
 }
 

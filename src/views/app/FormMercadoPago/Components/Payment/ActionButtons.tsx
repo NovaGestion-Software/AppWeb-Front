@@ -1,12 +1,15 @@
 import React from "react";
 
 type ActionButtonsProps = {
+  isLoading: boolean;
   fillRandomData: () => void;
   handleSubmit: (e: React.FormEvent) => void;
 };
 
 const ActionButtons: React.FC<ActionButtonsProps> = ({
+  isLoading,
   fillRandomData,
+  handleSubmit,
 }) => (
   <div className="flex justify-between items-center">
     <button
@@ -17,7 +20,16 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
       Llenar Datos Aleatorios
     </button>
 
-
+    <div className="flex items-center space-x-4">
+      <button
+        type="button"
+        disabled={isLoading}
+        onClick={handleSubmit}
+        className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-blue-300"
+      >
+        {isLoading ? "Procesando..." : "Crear Pago"}
+      </button>
+    </div>
   </div>
 );
 

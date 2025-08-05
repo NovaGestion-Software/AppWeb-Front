@@ -1,63 +1,69 @@
 import { useState } from "react";
 import { useMercadoPagoStore } from "../../Store/MercadoPagoStore";
+import { MercadoPagoService } from "../../services/MercadoPagoService";
 
 export default function CrearCajaForm() {
   const store = useMercadoPagoStore();
   const {
-    token,
     cajas,
     setCajas,
     setUltimaCajaCreada,
     setLoadingCajas,
     isLoadingCajas,
-    setError, // si lo tenés en un slice global
-    ultimaSucursalCreada,
+    setError,
+    sucursalSeleccionada,
   } = store;
 
   const [name, setName] = useState("");
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
-  if (!token || !ultimaSucursalCreada?.external_id || !ultimaSucursalCreada.id) {
-    return <p className="text-sm text-yellow-600">No hay una sucursal activa para crear la caja.</p>;
+  if (!sucursalSeleccionada?.external_id || !sucursalSeleccionada.id) {
+    return (
+      <p className="text-sm text-yellow-600">
+        Seleccioná una sucursal para crear la caja.
+      </p>
+    );
   }
+
+  const normalizarCaja = (caja: any) => ({
+    id: caja.id,
+    name: caja.name,
+    store_id: caja.store_id || caja.external_store_id || "",
+    external_id: caja.external_id || "",
+    fixed_amount: caja.fixed_amount ?? false,
+    qr: caja.qr || null,
+    status: caja.status || "",
+    site: caja.site || "",
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoadingCajas(true);
     setSuccessMsg(null);
-    setError?.(null); // si usás manejo global de error
+    setError?.(null);
 
     try {
-      // Generar external_id único
       const existingCount = cajas?.length || 0;
       const newPosNumber = existingCount + 1;
-      const external_id = `${ultimaSucursalCreada.external_id}POS${String(newPosNumber).padStart(3, "0")}`;
+      const external_id = `${sucursalSeleccionada.external_id}POS${String(
+        newPosNumber
+      ).padStart(3, "0")}`;
 
       const payload = {
         name,
         fixed_amount: false,
-        store_id: Number(ultimaSucursalCreada.id),
-        external_store_id: ultimaSucursalCreada.external_id,
+        store_id: Number(sucursalSeleccionada.id),
+        external_store_id: sucursalSeleccionada.external_id,
         external_id,
-        category: 621102, // categoría ejemplo
+        category: 621102,
       };
 
-      const res = await fetch("https://api.mercadopago.com/pos", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
+      const data = await MercadoPagoService.crearCaja(payload);
+      const cajaNormalizada = normalizarCaja(data);
 
-      if (!res.ok) throw new Error("No se pudo crear la caja (POS)");
-
-      const data = await res.json();
-
-      setUltimaCajaCreada(data);
-      setCajas([...(cajas ?? []), data]);
-      setSuccessMsg(`Caja creada: ${data.name}`);
+      setUltimaCajaCreada(cajaNormalizada);
+      setCajas([...(cajas ?? []), cajaNormalizada]);
+      setSuccessMsg(`Caja creada: ${cajaNormalizada.name}`);
       setName("");
     } catch (err: any) {
       setError?.(err.message || "Error al crear caja");
@@ -67,7 +73,10 @@ export default function CrearCajaForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 bg-gray-50 p-4 rounded mt-4 max-w-md">
+    <form
+      onSubmit={handleSubmit}
+      className="space-y-4 bg-gray-50 p-4 rounded mt-4 max-w-md"
+    >
       <label className="block text-sm font-medium text-gray-700">
         Nombre de la caja:
         <input

@@ -11,15 +11,19 @@ export interface CajasSlice {
   cajas: Caja[] | null;
   isLoadingCajas: boolean;
   ultimaCajaCreada: Caja | null;
+  cajaSeleccionada: Caja | null;
+  setUltimaCajaCreada: (caja: Caja) => void;
+  setCajaSeleccionada: (caja: Caja) => void;
   setCajas: (cajas: Caja[]) => void;
   setLoadingCajas: (loading: boolean) => void;
-  setUltimaCajaCreada: (caja: Caja) => void;
 }
 
 export const createCajasSlice: StateCreator<CajasSlice, [], [], CajasSlice> = (set) => ({
   cajas: null,
   isLoadingCajas: false,
   ultimaCajaCreada: null,
+  cajaSeleccionada: null,
+  setCajaSeleccionada: (caja) => set({ cajaSeleccionada: caja }),
   setCajas: (cajas) => set({ cajas, isLoadingCajas: false }),
   setLoadingCajas: (loading) => set({ isLoadingCajas: loading }),
   setUltimaCajaCreada: (caja) => set({ ultimaCajaCreada: caja }),

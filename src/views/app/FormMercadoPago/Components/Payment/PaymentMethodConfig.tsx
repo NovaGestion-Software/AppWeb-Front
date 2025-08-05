@@ -2,96 +2,73 @@ import React, { useEffect } from "react";
 import type { PaymentData } from "./PaymentForm";
 import { useMercadoPagoStore } from "../../Store/MercadoPagoStore";
 
-
 type PaymentMethod = "online" | "qr" | "pos";
 
 type PaymentMethodConfigProps = {
   paymentMethod: PaymentMethod;
   formData: PaymentData;
-  handleInputChange: (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
-    field: string
-  ) => void;
+  handleInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>, field: string) => void;
   setFormData: React.Dispatch<React.SetStateAction<PaymentData>>;
 };
 
-const PaymentMethodConfig: React.FC<PaymentMethodConfigProps> = ({
-  paymentMethod,
-  formData,
-  handleInputChange,
-  setFormData,
-}) => {
-  const store = useMercadoPagoStore();
-  const { ultimaCajaCreada } = store;
+const PaymentMethodConfig: React.FC<PaymentMethodConfigProps> = ({ paymentMethod, formData, handleInputChange, setFormData }) => {
+const store = useMercadoPagoStore();
+const {  cajaSeleccionada } = store;
 
-  // Si hay una caja y el POS aún no está definido, setearlo automáticamente
-  useEffect(() => {
-    if (
-      paymentMethod === "qr" &&
-      ultimaCajaCreada?.external_id &&
-      formData.config?.qr?.external_pos_id !== ultimaCajaCreada.external_id
-    ) {
-      setFormData((prev) => ({
-        ...prev,
-        config: {
-          ...prev.config,
-          qr: {
-            ...prev.config?.qr,
-            external_pos_id: ultimaCajaCreada.external_id,
-          },
-        },
-      }));
-    }
+useEffect(() => {
+  if (paymentMethod === "pos" && cajaSeleccionada?.external_id) {
+    console.log("Asignando POS ID:", cajaSeleccionada.external_id);
+    setFormData((prev) => ({
+      ...prev,
+      point_of_interaction: {
+        ...prev.point_of_interaction,
+        pos_id: cajaSeleccionada.external_id,
+      },
+    }));
+  }
+}, [paymentMethod, cajaSeleccionada]);
 
-    if (
-      paymentMethod === "pos" &&
-      ultimaCajaCreada?.external_id &&
-      formData.point_of_interaction?.pos_id !== ultimaCajaCreada.external_id
-    ) {
-      setFormData((prev) => ({
-        ...prev,
-        point_of_interaction: {
-          ...prev.point_of_interaction,
-          pos_id: ultimaCajaCreada.external_id,
+useEffect(() => {
+  if (
+    paymentMethod === "qr" &&
+    cajaSeleccionada?.external_id &&
+    formData.config?.qr?.external_pos_id !== cajaSeleccionada.external_id
+  ) {
+    console.log("Asignando external_pos_id:", cajaSeleccionada.external_id);
+    setFormData((prev) => ({
+      ...prev,
+      config: {
+        ...prev.config,
+        qr: {
+          ...prev.config?.qr,
+          external_pos_id: cajaSeleccionada.external_id,
         },
-      }));
-    }
-  }, [paymentMethod, ultimaCajaCreada]);
+      },
+    }));
+  }
+}, [paymentMethod, cajaSeleccionada, formData.config?.qr?.external_pos_id]);
 
   if (paymentMethod === "online") {
-  return (
+    return (
       <div className="border-b pb-4">
-        <h2 className="text-lg font-semibold mb-3">
-          Configuración de Pagos Online
-        </h2>
+        <h2 className="text-lg font-semibold mb-3">Configuración de Pagos Online</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Métodos Excluidos
-            </label>
+            <label className="block text-sm font-medium text-gray-700">Métodos Excluidos</label>
             <div className="mt-2 space-y-2">
               {["ticket", "atm", "credit_card", "debit_card"].map((type) => (
                 <div key={type} className="flex items-center">
                   <input
                     type="checkbox"
-                    checked={
-                      formData.payment_methods?.excluded_payment_types?.some(
-                        (t) => t.id === type
-                      ) || false
-                    }
+                    checked={formData.payment_methods?.excluded_payment_types?.some((t) => t.id === type) || false}
                     onChange={(e) => {
                       const isChecked = e.target.checked;
                       setFormData((prev: any) => {
-                        const newExcluded = [
-                          ...(prev.payment_methods?.excluded_payment_types ||
-                            []),
-                        ];
+                        const newExcluded = [...(prev.payment_methods?.excluded_payment_types || [])];
                         if (isChecked) {
                           newExcluded.push({ id: type });
                         } else {
-                          const index = newExcluded.findIndex(
-                            (t) => t.id === type
-                          );
+                          const index = newExcluded.findIndex((t) => t.id === type);
                           if (index !== -1) {
                             newExcluded.splice(index, 1);
                           }
@@ -118,9 +95,7 @@ const PaymentMethodConfig: React.FC<PaymentMethodConfigProps> = ({
             </div>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Máximo de Cuotas
-            </label>
+            <label className="block text-sm font-medium text-gray-700">Máximo de Cuotas</label>
             <input
               type="number"
               value={formData.payment_methods?.installments || 6}
@@ -142,9 +117,7 @@ const PaymentMethodConfig: React.FC<PaymentMethodConfigProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Tipo de QR */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Tipo de QR
-            </label>
+            <label className="block text-sm font-medium text-gray-700">Tipo de QR</label>
             <select
               value={formData.config?.qr?.mode || "dynamic"}
               onChange={(e) => handleInputChange(e, "config.qr.mode")}
@@ -158,15 +131,11 @@ const PaymentMethodConfig: React.FC<PaymentMethodConfigProps> = ({
 
           {/* External POS ID */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">
-              ID del POS (Obligatorio)
-            </label>
+            <label className="block text-sm font-medium text-gray-700">ID del POS (Obligatorio)</label>
             <input
               type="text"
               value={formData.config?.qr?.external_pos_id || ""}
-              onChange={(e) =>
-                handleInputChange(e, "config.qr.external_pos_id")
-              }
+              onChange={(e) => handleInputChange(e, "config.qr.external_pos_id")}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
               placeholder="SUCURSAL_01_POS_01"
               required
@@ -175,9 +144,7 @@ const PaymentMethodConfig: React.FC<PaymentMethodConfigProps> = ({
 
           {/* Expiración */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Tiempo de expiración
-            </label>
+            <label className="block text-sm font-medium text-gray-700">Tiempo de expiración</label>
             <select
               value={formData.expiration_time || "PT30M"}
               onChange={(e) => handleInputChange(e, "expiration_time")}
@@ -193,15 +160,11 @@ const PaymentMethodConfig: React.FC<PaymentMethodConfigProps> = ({
 
           {/* Referencia externa */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Referencia Externa (Opcional)
-            </label>
+            <label className="block text-sm font-medium text-gray-700">Referencia Externa (Opcional)</label>
             <input
               type="text"
               value={formData.external_reference || ""}
-              onChange={(e) =>
-                handleInputChange(e, "external_reference")
-              }
+              onChange={(e) => handleInputChange(e, "external_reference")}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
               placeholder="REF_12345"
             />
@@ -217,15 +180,11 @@ const PaymentMethodConfig: React.FC<PaymentMethodConfigProps> = ({
         <h2 className="text-lg font-semibold mb-3">Configuración de POS</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700">
-              ID del POS*
-            </label>
+            <label className="block text-sm font-medium text-gray-700">ID del POS*</label>
             <input
               type="text"
               value={formData.point_of_interaction?.pos_id || ""}
-              onChange={(e) =>
-                handleInputChange(e, "point_of_interaction.pos_id")
-              }
+              onChange={(e) => handleInputChange(e, "point_of_interaction.pos_id")}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
               placeholder="POS-12345"
               required
