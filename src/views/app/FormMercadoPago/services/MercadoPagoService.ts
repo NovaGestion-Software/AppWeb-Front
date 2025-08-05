@@ -60,10 +60,11 @@ export const MercadoPagoService = {
   // Crear orden
   crearOrden(payload: any) {
     const token = useMercadoPagoStore.getState().token;
-
+    const cleanToken = token?.replace(/^Bearer\s+/i, "");
+    console.log("clean token", cleanToken);
     return apiVercel.post("/ordenes", payload, {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${cleanToken}`,
       },
     });
   },
