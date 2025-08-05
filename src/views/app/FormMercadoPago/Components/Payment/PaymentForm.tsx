@@ -8,7 +8,6 @@ import PaymentMethodConfig from "./PaymentMethodConfig";
 import ActionButtons from "./ActionButtons";
 import PaymentResponseDisplay from "./PaymentResponseDisplay";
 import LoadingOverlay from "../LoadingOverlay";
-import axios from "axios";
 import { useMercadoPagoStore } from "../../Store/MercadoPagoStore";
 import { MercadoPagoService } from "../../services/MercadoPagoService";
 
