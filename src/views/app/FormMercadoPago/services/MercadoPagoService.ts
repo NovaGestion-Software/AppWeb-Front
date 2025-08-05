@@ -2,6 +2,7 @@
 
 import { getEmpresa, getHomologacion } from "@/services/ApiPhpService";
 import { apiVercel } from "../Utils/apiVercel";
+import { useMercadoPagoStore } from "../Store/MercadoPagoStore";
 
 export const MercadoPagoService = {
   async obtenerToken() {
@@ -37,18 +38,17 @@ export const MercadoPagoService = {
   },
 
   // Obtener cajas (POS)
-async obtenerCajas(userId: string, token?: string) {
-  const headers = token ? { Authorization: `Bearer ${token}` } : undefined;
+  async obtenerCajas(userId: string, token?: string) {
+    const headers = token ? { Authorization: `Bearer ${token}` } : undefined;
 
-  const res = await apiVercel.get(`/cajas`, {
-    params: { user_id: userId },
-    headers,
-  });
-  console.log('Cajas obtenidas:', res.data);
+    const res = await apiVercel.get(`/cajas`, {
+      params: { user_id: userId },
+      headers,
+    });
+    console.log("Cajas obtenidas:", res.data);
 
-  return res.data;
-}
-,
+    return res.data;
+  },
   // Crear caja (POS)
   async crearCaja(payload: any, token?: string) {
     const headers = token ? { Authorization: `Bearer ${token}` } : undefined;
@@ -58,12 +58,15 @@ async obtenerCajas(userId: string, token?: string) {
   },
 
   // Crear orden
-async crearOrden(payload: any) {
-  const res = await apiVercel.post("/ordenes", payload);
-  return res.data;
-}
-,
+  crearOrden(payload: any) {
+    const token = useMercadoPagoStore.getState().token;
 
+    return apiVercel.post("/ordenes", payload, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  },
   // Obtener orden por ID
   async obtenerOrden(orderId: string, token: string) {
     const res = await apiVercel.get(`/ordenes/${orderId}`, {

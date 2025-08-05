@@ -1,4 +1,3 @@
-// PaymentForm.tsx
 import React, { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import PaymentMethodSelector from "./PaymentMethodSelector";
@@ -134,18 +133,18 @@ const PaymentForm = () => {
 
       const res = await MercadoPagoService.crearOrden(payload);
 
-      setResponse(res);
+      setResponse(res.data);
 
       setUltimaOrdenCreada({
-        ...res,
+        ...res.data,
         caja_id: cajaSeleccionada?.id,
         sucursal_id: sucursalSeleccionada?.id,
-      });
+      } as any);
 
-      if (paymentMethod === "qr") {
-        const qr = res?.qr_data || res?.raw_mp_response?.type_response?.qr_data;
-        if (qr) setQrCode(qr);
-      }
+     if (paymentMethod === "qr") {
+  const qr = res.data?.qr_data || res.data?.type_response?.qr_data;
+  if (qr) setQrCode(qr);
+}
 
       setShowLoading(true);
     } catch (err: any) {
