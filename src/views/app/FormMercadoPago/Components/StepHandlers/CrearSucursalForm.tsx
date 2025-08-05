@@ -16,48 +16,51 @@ export default function CrearSucursalForm() {
   const [creating, setCreating] = useState(false);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!userId) return console.warn("Falta userId");
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
 
-    setCreating(true);
-    setError(null);
-    setSuccessMsg(null);
+  if (!userId) return console.warn("Falta userId");
 
-    try {
-      const cantidadActual = sucursales?.length || 0;
-      const nuevoNumero = cantidadActual + 1;
-      const externalIdGenerado = `SUC${String(nuevoNumero).padStart(4, "0")}`;
+  setCreating(true);
+  setError(null);
+  setSuccessMsg(null);
 
-      const payload = {
-        name,
-        external_id: externalIdGenerado,
-        location: {
-          street_number: "123",
-          street_name: "Calle Falsa",
-          city_name: "25 de Mayo",
-          state_name: "Buenos Aires",
-          latitude: -34.6037,
-          longitude: -58.3816,
-          reference: "Frente a la plaza",
-        },
-      };
+  try {
+    const cantidadActual = sucursales?.length || 0;
+    const nuevoNumero = cantidadActual + 1;
+    const externalIdGenerado = `SUC${String(nuevoNumero).padStart(4, "0")}`;
 
-      const data = await MercadoPagoService.crearSucursal(payload);
+    const payload = {
+      name,
+      external_id: externalIdGenerado,
+      location: {
+        street_number: "123",
+        street_name: "Calle Falsa",
+        city_name: "25 de Mayo",
+        state_name: "Buenos Aires",
+        latitude: -34.6037,
+        longitude: -58.3816,
+        reference: "Frente a la plaza",
+      },
+    };
 
-      setSuccessMsg(`Sucursal creada: ${data.name}`);
-      setUltimaSucursalCreada(data);
-      setSucursales([...(sucursales || []), data]);
+   const token = store.token ?? undefined; // null => undefined
 
-      // ✅ Si querés, podrías guardar `data.store_id` y `data.external_id` en la store acá.
-      // Por ejemplo:
-      // store.setSucursalSeleccionada({ id: data.id, external_id: data.external_id });
-    } catch (err: any) {
-      setError(err.message || "Error al crear sucursal");
-    } finally {
-      setCreating(false);
-    }
-  };
+    const data = await MercadoPagoService.crearSucursal(payload, token);
+
+    setSuccessMsg(`Sucursal creada: ${data.name}`);
+    setUltimaSucursalCreada(data);
+    setSucursales([...(sucursales || []), data]);
+
+    // Podrías setear como seleccionada automáticamente
+    // store.setSucursalSeleccionada(data);
+  } catch (err: any) {
+    setError(err.message || "Error al crear sucursal");
+  } finally {
+    setCreating(false);
+  }
+};
+
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4 mt-4 max-w-md bg-gray-50 p-4 rounded">

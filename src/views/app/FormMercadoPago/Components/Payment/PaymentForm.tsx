@@ -131,20 +131,23 @@ const PaymentForm = () => {
         })),
       };
 
-      const res = await MercadoPagoService.crearOrden(payload);
-
-      setResponse(res.data);
+      const data = await MercadoPagoService.crearOrden(payload);
+      setResponse(data);
 
       setUltimaOrdenCreada({
-        ...res.data,
+        ...data,
         caja_id: cajaSeleccionada?.id,
         sucursal_id: sucursalSeleccionada?.id,
       } as any);
 
-     if (paymentMethod === "qr") {
-  const qr = res.data?.qr_data || res.data?.type_response?.qr_data;
-  if (qr) setQrCode(qr);
-}
+      if (paymentMethod === "qr") {
+        const qr = data?.type_response?.qr_data;
+        if (qr) {
+          setQrCode(qr);
+        } else {
+          console.warn("No se encontró qr_data en la respuesta:", data);
+        }
+      }
 
       setShowLoading(true);
     } catch (err: any) {

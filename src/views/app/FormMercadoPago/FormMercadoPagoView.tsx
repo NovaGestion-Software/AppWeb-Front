@@ -6,7 +6,7 @@ import CajasFetcher from "./Components/StepHandlers/CajasFetcher";
 import { useMercadoPagoStore } from "./Store/MercadoPagoStore";
 
 export default function FormMercadoPagoView() {
-  const { cajaSeleccionada } = useMercadoPagoStore(); // ✅ obtener desde la store
+  const { cajaSeleccionada } = useMercadoPagoStore(); 
 
   return (
     <>

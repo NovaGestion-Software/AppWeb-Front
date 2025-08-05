@@ -6,6 +6,7 @@ import { Card } from "@/frontend-resourses/components/Cards/CardBase";
 
 export default function CajasFetcher() {
   const [mostrarCrearCaja, setMostrarCrearCaja] = useState(false);
+  const [retryFetch, setRetryFetch] = useState(false); // Estado para reintentar la consulta
 
   const store = useMercadoPagoStore();
   const { userId, cajas, setCajas, setLoadingCajas, isLoadingCajas, setError, cajaSeleccionada, setCajaSeleccionada, sucursalSeleccionada } = store;
@@ -49,7 +50,12 @@ export default function CajasFetcher() {
     if (userId && cajas === null) {
       fetchCajas();
     }
-  }, [userId, cajas, setCajas, setLoadingCajas, setError]);
+
+    if (retryFetch) {
+      fetchCajas();
+      setRetryFetch(false); // Resetear el estado después de intentar
+    }
+  }, [userId, cajas, setCajas, setLoadingCajas, setError, retryFetch]);
 
   if (isLoadingCajas) return <p className="text-sm text-gray-600">Consultando cajas...</p>;
 
@@ -83,6 +89,12 @@ export default function CajasFetcher() {
       <div className="mt-4 text-sm text-yellow-600">
         <p>No se encontraron cajas.</p>
         <CrearCajaForm />
+        <button
+          onClick={() => setRetryFetch(true)}
+          className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md"
+        >
+          Intentar nuevamente
+        </button>
       </div>
     );
   }

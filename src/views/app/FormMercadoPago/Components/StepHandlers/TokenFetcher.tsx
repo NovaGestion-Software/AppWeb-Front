@@ -1,23 +1,26 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useMercadoPagoStore } from "../../Store/MercadoPagoStore";
 import { MercadoPagoService } from "../../services/MercadoPagoService";
 import { Card } from "@/frontend-resourses/components/Cards/CardBase";
+import TokenManualInput from "./TokenManualInput";
 
 export default function TokenFetcher() {
   const store = useMercadoPagoStore();
   const {
     token,
+    userId,
     setToken,
     setLoading,
     setError,
     isTokenLoading,
   } = store;
 
+  const [manualMode, setManualMode] = useState(false);
+
   const fetchToken = async () => {
     setLoading(true);
     try {
       const response = await MercadoPagoService.obtenerToken();
-
       console.log("Respuesta obtenerToken:", response);
 
       if (response?.token && response?.user_id) {
@@ -37,33 +40,38 @@ export default function TokenFetcher() {
     const mqr = localStorage.getItem("_mqr");
     const yaTieneToken = !!token;
 
-    if (mqr === "1" && !yaTieneToken) {
+    if (!manualMode && mqr === "1" && !yaTieneToken) {
       fetchToken();
-    } else if (mqr !== "1") {
+    } else if (!manualMode && mqr !== "1") {
       console.log("No autorizado aún (mqr !== 1)");
     }
-  }, [token]);
+  }, [token, manualMode]);
 
   if (isTokenLoading)
     return <p className="text-sm text-gray-600">Cargando token...</p>;
 
-  if (token) {
-    return (
-      <Card className="flex flex-col items-center gap-2 text-sm text-green-600">
-        <span>Token obtenido correctamente.</span>
+  return (
+    <Card className="p-4 space-y-3 text-sm">
+      {token && userId && (
+        <div className="text-green-600">
+          <p><strong>Token actual:</strong> {token.slice(0, 32)}...</p>
+          <p><strong>User ID:</strong> {userId}</p>
+        </div>
+      )}
+
+      {!manualMode && token && (
         <button
           onClick={fetchToken}
-          className="text-blue-600 hover:underline text-xs ml-2 bg-blue-100 px-2 py-1 rounded hover:bg-blue-200"
+          className="text-blue-600 hover:underline text-xs bg-blue-100 px-2 py-1 rounded hover:bg-blue-200"
         >
-          Renovar token
+          Renovar token automáticamente
         </button>
-      </Card>
-    );
-  }
+      )}
 
-  return (
-    <p className="text-red-500 text-sm">
-      Esperando autorización para continuar...
-    </p>
+      <TokenManualInput
+        manualMode={manualMode}
+        setManualMode={setManualMode}
+      />
+    </Card>
   );
 }
