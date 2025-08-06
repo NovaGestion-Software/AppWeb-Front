@@ -22,7 +22,7 @@ export default function TokenManualInput({ manualMode, setManualMode }: Props) {
   };
 
   return (
-    <div className="text-sm space-y-2">
+    <div className="text-sm space-y-3">
       <Switch
         showQR={manualMode}
         onChange={setManualMode}
@@ -31,24 +31,24 @@ export default function TokenManualInput({ manualMode, setManualMode }: Props) {
       />
 
       {manualMode && (
-        <div className="space-y-2">
+        <div className="space-y-2 pt-1">
           <input
             type="text"
             placeholder="Token"
-            className="border px-2 py-1 w-full rounded"
+            className="border border-gray-300 px-3 py-1.5 w-full rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             value={manualToken}
             onChange={(e) => setManualToken(e.target.value)}
           />
           <input
             type="text"
             placeholder="User ID"
-            className="border px-2 py-1 w-full rounded"
+            className="border border-gray-300 px-3 py-1.5 w-full rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             value={manualUserId}
             onChange={(e) => setManualUserId(e.target.value)}
           />
           <button
             onClick={handleSetManualToken}
-            className="bg-blue-600 text-white px-4 py-1 rounded text-sm hover:bg-blue-700"
+            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 text-sm w-full transition"
           >
             Usar token
           </button>

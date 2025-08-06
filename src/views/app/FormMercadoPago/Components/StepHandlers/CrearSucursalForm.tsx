@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useMercadoPagoStore } from "../../Store/MercadoPagoStore";
 import { MercadoPagoService } from "../../services/MercadoPagoService";
+import { FaCheckCircle } from "react-icons/fa";
 
 export default function CrearSucursalForm() {
   const store = useMercadoPagoStore();
@@ -63,27 +64,34 @@ const handleSubmit = async (e: React.FormEvent) => {
 
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 mt-4 max-w-md bg-gray-50 p-4 rounded">
-      <label className="block text-sm font-medium text-gray-700">
-        Nombre de la sucursal:
+  <form onSubmit={handleSubmit} className="space-y-4 mt-4">
+      <div>
+        <label className="block text-sm font-medium text-gray-800">
+          Nombre de la sucursal:
+        </label>
         <input
           type="text"
           required
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="mt-1 block w-full border border-gray-300 rounded px-2 py-1"
+          className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
         />
-      </label>
+      </div>
 
       <button
         type="submit"
         disabled={creating || !name}
-        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:opacity-50"
+        className="flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700 disabled:opacity-50 transition"
       >
         {creating ? "Creando..." : "Crear sucursal"}
       </button>
 
-      {successMsg && <p className="text-green-600 text-sm">{successMsg}</p>}
+      {successMsg && (
+        <div className="flex items-center gap-2 text-green-600 text-sm mt-2">
+          <FaCheckCircle className="w-4 h-4" />
+          <span>{successMsg}</span>
+        </div>
+      )}
     </form>
   );
 }

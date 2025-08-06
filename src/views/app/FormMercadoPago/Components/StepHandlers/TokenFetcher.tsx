@@ -3,6 +3,7 @@ import { useMercadoPagoStore } from "../../Store/MercadoPagoStore";
 import { MercadoPagoService } from "../../services/MercadoPagoService";
 import { Card } from "@/frontend-resourses/components/Cards/CardBase";
 import TokenManualInput from "./TokenManualInput";
+import { FaSyncAlt } from "react-icons/fa";
 
 export default function TokenFetcher() {
   const store = useMercadoPagoStore();
@@ -21,8 +22,6 @@ export default function TokenFetcher() {
     setLoading(true);
     try {
       const response = await MercadoPagoService.obtenerToken();
-      console.log("Respuesta obtenerToken:", response);
-
       if (response?.token && response?.user_id) {
         setToken(response.token, response.user_id.toString());
       } else {
@@ -48,30 +47,36 @@ export default function TokenFetcher() {
   }, [token, manualMode]);
 
   if (isTokenLoading)
-    return <p className="text-sm text-gray-600">Cargando token...</p>;
+    return <p className="text-sm text-gray-600 mt-4">Cargando token...</p>;
 
   return (
-    <Card className="p-4 space-y-3 text-sm">
-      {token && userId && (
-        <div className="text-green-600">
-          <p><strong>Token actual:</strong> {token.slice(0, 32)}...</p>
-          <p><strong>User ID:</strong> {userId}</p>
+  <Card
+  padding={false}
+  className="p-4 space-y-4 text-sm h-full min-h-[260px] 
+  max-w-[450px]  min-w-[450px] transition-all duration-300 ease-in-out">
+ {token && userId && (
+        <div className="text-green-700 space-y-1">
+          <p>
+            <strong>Token actual:</strong>{" "}
+            <span className="break-all">{token.slice(0, 32)}...</span>
+          </p>
+          <p>
+            <strong>User ID:</strong> {userId}
+          </p>
         </div>
       )}
 
       {!manualMode && token && (
         <button
           onClick={fetchToken}
-          className="text-blue-600 hover:underline text-xs bg-blue-100 px-2 py-1 rounded hover:bg-blue-200"
+          className="flex items-center gap-2 text-xs bg-blue-100 px-3 py-1 rounded hover:bg-blue-200 text-blue-700 transition"
         >
-          Renovar token automáticamente
+          <FaSyncAlt className="w-3 h-3" />
+          Renovar token 
         </button>
       )}
 
-      <TokenManualInput
-        manualMode={manualMode}
-        setManualMode={setManualMode}
-      />
+      <TokenManualInput manualMode={manualMode} setManualMode={setManualMode} />
     </Card>
   );
 }
