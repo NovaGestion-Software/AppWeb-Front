@@ -15,10 +15,13 @@ export interface OrdenesSlice {
   setOrdenes: (ordenes: Orden[]) => void;
   setUltimaOrdenCreada: (orden: Orden) => void;
 }
-
-export const createOrdenesSlice: StateCreator<OrdenesSlice, [], [], OrdenesSlice> = (set) => ({
+export const ordenesInitialState = {
   ordenes: [],
   ultimaOrdenCreada: null,
+};
+
+export const createOrdenesSlice: StateCreator<OrdenesSlice, [], [], OrdenesSlice> = (set) => ({
+...ordenesInitialState,
   setOrdenes: (ordenes) => set({ ordenes }),
   setUltimaOrdenCreada: (orden) => set({ ultimaOrdenCreada: orden }),
 });

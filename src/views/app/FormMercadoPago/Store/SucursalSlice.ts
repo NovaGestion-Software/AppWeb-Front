@@ -23,11 +23,15 @@ export interface SucursalesSlice {
   setLoadingSucursales: (loading: boolean) => void;
 }
 
-export const createSucursalesSlice: StateCreator<SucursalesSlice, [], [], SucursalesSlice> = (set) => ({
+export const sucursalesInitialState = {
   sucursales: null,
   ultimaSucursalCreada: null,
   sucursalSeleccionada: null,
   isLoadingSucursales: false,
+};
+
+export const createSucursalesSlice: StateCreator<SucursalesSlice, [], [], SucursalesSlice> = (set) => ({
+  ...sucursalesInitialState,
 
   setSucursales: (sucursales) => set({ sucursales, isLoadingSucursales: false }),
   setUltimaSucursalCreada: (sucursal) => set({ ultimaSucursalCreada: sucursal }),

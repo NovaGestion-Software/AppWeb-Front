@@ -18,11 +18,15 @@ export interface CajasSlice {
   setLoadingCajas: (loading: boolean) => void;
 }
 
-export const createCajasSlice: StateCreator<CajasSlice, [], [], CajasSlice> = (set) => ({
+export const cajasInitialState = {
   cajas: null,
   isLoadingCajas: false,
   ultimaCajaCreada: null,
   cajaSeleccionada: null,
+};
+
+export const createCajasSlice: StateCreator<CajasSlice, [], [], CajasSlice> = (set) => ({
+  ...cajasInitialState,
   setCajaSeleccionada: (caja) => set({ cajaSeleccionada: caja }),
   setCajas: (cajas) => set({ cajas, isLoadingCajas: false }),
   setLoadingCajas: (loading) => set({ isLoadingCajas: loading }),

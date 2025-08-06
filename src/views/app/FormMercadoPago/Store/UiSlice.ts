@@ -5,7 +5,11 @@ export interface UiSlice {
   setShowPayForm: (show: boolean) => void;
 }
 
-export const createUiSlice: StateCreator<UiSlice> = (set) => ({
+export const uiInitialState = {
   showPayForm: false,
+};
+
+export const createUiSlice: StateCreator<UiSlice> = (set) => ({
+  ...uiInitialState,
   setShowPayForm: (show: boolean) => set({ showPayForm: show }),
 });

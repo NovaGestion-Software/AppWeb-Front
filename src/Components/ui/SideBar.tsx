@@ -6,7 +6,6 @@ import Cookies from "js-cookie";
 import { useVentasHoraStore } from "@/views/app/informes/Ventas/ventasXHora/store/useVentasHoraStore";
 import { AnimatedOverflowText } from "./layouts/AnimatedOverflowText";
 
-
 import { useEntornoStore } from "@/views/app/config/Store/useEntornoStore";
 import { MenuBase, MenuDev, MenuItem } from "./SideBar/Menus";
 import { getMergedMenu } from "./SideBar/utils/mergeMenu";
@@ -17,6 +16,7 @@ import SidebarMenu from "./SideBar/Components/SidebarMenu";
 import SidebarConfigButton from "./SideBar/Components/SidebarConfigButton";
 import ResizableHandle from "./SideBar/Components/ResizableHandle";
 import SidebarLogoutButton from "./SideBar/Components/SidebarLogoutButton";
+import { useMercadoPagoStore } from "@/views/app/FormMercadoPago/Store/MercadoPagoStore";
 
 type SideBarProps = {
   open: boolean;
@@ -24,8 +24,6 @@ type SideBarProps = {
 };
 
 export default function SideBar({ open, setOpen }: SideBarProps) {
-
-  
   const navigate = useNavigate();
   const location = useLocation();
   const queryClient = useQueryClient();
@@ -40,6 +38,7 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
   const [hoveringArrow, setHoveringArrow] = useState(false);
 
   const { resetStore } = useVentasHoraStore();
+  const resetIntegracionMPStore = useMercadoPagoStore.getState().resetStore;
 
   const storedUser = localStorage.getItem("_u");
   const user = storedUser ? JSON.parse(storedUser) : {};
@@ -158,8 +157,10 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
     localStorage.removeItem("user");
     localStorage.removeItem("_mqr");
 
+    // limpieza store ventas por hora
     resetStore();
-
+    //limpieza store integracion MP
+    resetIntegracionMPStore();
     navigate("/");
   };
 
@@ -229,7 +230,7 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
       {/* Parte inferior: logout y resize */}
       <div className="flex flex-col items-center justify-end h-full gap-4 px-3 pb-4">
         <hr className="w-full mt-4 border-t border-gray-700" />
-        {localStorage.getItem("_tu") === "1" &&  <SidebarConfigButton open={open} />}
+        {localStorage.getItem("_tu") === "1" && <SidebarConfigButton open={open} />}
 
         <SidebarLogoutButton open={open} onLogout={handleLogout} />
       </div>

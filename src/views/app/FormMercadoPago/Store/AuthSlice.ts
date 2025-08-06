@@ -10,11 +10,16 @@ export interface AuthSlice {
   setError: (error: string | null) => void;
 }
 
-export const createAuthSlice: StateCreator<AuthSlice, [], [], AuthSlice> = (set) => ({
+export const authInitialState = {
   token: null,
   userId: null,
   isTokenLoading: false,
   error: null,
+};
+
+export const createAuthSlice: StateCreator<AuthSlice, [], [], AuthSlice> = (set) => ({
+  ...authInitialState,
+
   setToken: (token, userId) => set({ token, userId, isTokenLoading: false }),
   setLoading: (loading) => set({ isTokenLoading: loading }),
   setError: (error) => set({ error, isTokenLoading: false }),
