@@ -44,62 +44,69 @@ type Props = {
 };
 
 export default function PagoAcreditadoInfo({ orden }: Props) {
+  if (!orden || typeof orden !== "object") return null;
+
   const pago = orden.transactions?.payments?.[0];
   const item = orden.items?.[0];
 
+  // Formateo de fecha seguro
+  let fechaFormateada = "Fecha no disponible";
+  try {
+    if (orden.created_date) {
+      fechaFormateada = format(new Date(orden.created_date), "dd/MM/yyyy HH:mm");
+    }
+  } catch (error) {
+    console.warn("Error al formatear la fecha:", error);
+  }
+
   return (
     <div className="bg-white rounded-xl shadow-lg p-6 w-full max-w-md">
-      <h2 className="text-lg font-semibold mb-4 text-green-600 text-center">
-        ✅ Pago Acreditado
-      </h2>
+      <h2 className="text-lg font-semibold mb-4 text-green-600 text-center">✅ Pago Acreditado</h2>
 
       <ul className="text-sm text-gray-700 space-y-2">
         <li>
-          <strong>Orden ID:</strong> {orden.id}
+          <strong>Orden ID:</strong> {orden.id ?? "No disponible"}
         </li>
         <li>
-          <strong>Referencia externa:</strong> {orden.external_reference}
+          <strong>Referencia externa:</strong> {orden.external_reference ?? "No disponible"}
         </li>
         <li>
-          <strong>Descripción:</strong> {orden.description}
+          <strong>Descripción:</strong> {orden.description ?? "Sin descripción"}
         </li>
         <li>
-          <strong>Fecha:</strong>{" "}
-          {format(new Date(orden.created_date), "dd/MM/yyyy HH:mm")}
+          <strong>Fecha:</strong> {fechaFormateada}
         </li>
         <li>
-          <strong>Monto total:</strong> {orden.total_amount} {orden.currency}
+          <strong>Monto total:</strong> {orden.total_amount ?? "-"} {orden.currency ?? ""}
         </li>
         <li>
-          <strong>Monto pagado:</strong> {orden.total_paid_amount}{" "}
-          {orden.currency}
+          <strong>Monto pagado:</strong> {orden.total_paid_amount ?? "-"} {orden.currency ?? ""}
         </li>
 
         {item && (
           <>
             <li>
-              <strong>Producto:</strong> {item.title}
+              <strong>Producto:</strong> {item.title ?? "Sin nombre"}
             </li>
             <li>
-              <strong>Cantidad:</strong> {item.quantity}
+              <strong>Cantidad:</strong> {item.quantity ?? "-"}
             </li>
             <li>
-              <strong>Precio unitario:</strong> {item.unit_price}{" "}
-              {orden.currency}
+              <strong>Precio unitario:</strong> {item.unit_price ?? "-"} {orden.currency ?? ""}
             </li>
           </>
         )}
 
-        {pago && (
+        {pago?.payment_method && (
           <>
             <li>
-              <strong>Método de pago:</strong> {pago.payment_method.type}
+              <strong>Método de pago:</strong> {pago.payment_method.type ?? "Desconocido"}
             </li>
             <li>
-              <strong>ID del pago:</strong> {pago.id}
+              <strong>ID del pago:</strong> {pago.id ?? "-"}
             </li>
             <li>
-              <strong>Referencia del pago:</strong> {pago.reference_id}
+              <strong>Referencia del pago:</strong> {pago.reference_id ?? "-"}
             </li>
           </>
         )}
