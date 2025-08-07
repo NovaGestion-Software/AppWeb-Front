@@ -9,7 +9,7 @@ function getUser() {
   return JSON.parse(localStorage.getItem("_u") || "{}");
 }
 
-function getEmpresa(): string {
+export function getEmpresa(): string {
   const user = getUser();
   return user.empresa?.toString().slice(-2);
 }
@@ -19,7 +19,7 @@ function getBaseSeleccionada(): string {
   return entorno === "development" ? "apinovades" : "apinova";
 }
 
-function getHomologacion(clave = "modo"): string {
+export function getHomologacion(clave = "_m"): string {
   return localStorage.getItem(clave) || "homo";
 }
 
@@ -42,8 +42,25 @@ function manejarErrorAxios(error: unknown, mensajeDefault: string) {
 
 // 💳 MercadoPago
 
+export async function obtenerTokenMP() {
+  const homologacion = getHomologacion();
+  const empresa = getEmpresa();
+
+  const url = `/apinovades/mercadopago/obtenerMercadoToken.php?_i={"_e":"${empresa}",
+  "_m":"${homologacion}","_a":"1"}`;
+
+  try {
+    const { data } = await apiPhp(url);
+    console.log('obtenertokenmp', data)
+    return data;
+  } catch (error) {
+    manejarErrorAxios(error, "Error");
+  }
+}
+
+
 export async function grabarCodeMercadoPago(code: string) {
-  const homologacion = getHomologacion("modo");
+  const homologacion = getHomologacion("_m");
   //const base = getBaseSeleccionada();
   const empresa = getEmpresa();
 

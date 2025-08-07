@@ -3,6 +3,7 @@ import SwitchHomologacion from "./Componentes/SwitchHomologacion";
 import { useEntornoStore } from "./Store/useEntornoStore";
 import SwitchEntorno from "./Componentes/SwtichEntorno";
 import { ViewTitle } from "@/frontend-resourses/components";
+import SwitchProjectType from "./Componentes/SwitchProjectType";
 
 export default function ConfigView() {
   const [config, setConfig] = useState({
@@ -18,6 +19,7 @@ export default function ConfigView() {
   const user = JSON.parse(localStorage.getItem("_u") || "{}");
   const homologacion = useEntornoStore((state) => state.homologacion);
   const entorno = useEntornoStore((state) => state.entorno);
+  const projectType = useEntornoStore((state) => state.projectType);
 
   useEffect(() => {
     setConfig({
@@ -31,6 +33,7 @@ export default function ConfigView() {
 
   let valorEntorno = entorno === "production" ? "Produccion -> Apinova" : "Desarrollo -> ApinovaDes";
   let valorModo = homologacion === "prod" ? "Produccion" : "Homologacion";
+  let valorPT = projectType === "prod" ? "Produccion" : "Desarrollo";
 
   const userData = [
     { label: "Empresa", value: config.empresa },
@@ -40,6 +43,7 @@ export default function ConfigView() {
   const configData = [
     { label: "IPHOST", value: config.iphost },
     { label: "DB", value: config.db },
+    { label: "Tipo Proyecto", value: valorPT },
     { label: "Modo", value: valorModo },
     { label: "Entorno", value: valorEntorno },
   ];
@@ -67,6 +71,8 @@ export default function ConfigView() {
               <SwitchEntorno />
               {/* Cambio de Homologacion */}
               <SwitchHomologacion />
+              {/* Cambio de Tipo de Proyecto */}
+              <SwitchProjectType />
             </div>
           </div>
           {/* Información de Configuración */}

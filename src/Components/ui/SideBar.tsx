@@ -1,44 +1,22 @@
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
-import { MdOutlineAttachMoney } from "react-icons/md";
-import { FaChartLine, FaChevronDown, FaChevronUp, FaThumbtack } from "react-icons/fa";
-import { IoWalletSharp } from "react-icons/io5";
-import { RiDashboardFill } from "react-icons/ri";
-import { TiHome } from "react-icons/ti";
+import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import Cookies from "js-cookie";
-import { GrDocumentTime } from "react-icons/gr";
 import { useVentasHoraStore } from "@/views/app/informes/Ventas/ventasXHora/store/useVentasHoraStore";
 import { AnimatedOverflowText } from "./layouts/AnimatedOverflowText";
-import { TbPlugConnected } from "react-icons/tb";
-import { CiLogout } from "react-icons/ci";
-// import {  FaChartArea, FaCreditCard, FaMapMarkerAlt, FaMoneyCheckAlt, FaRegCreditCard,FaUserSlash } from "react-icons/fa";
-// import { FaRankingStar } from "react-icons/fa6";
-// import { HiCreditCard } from "react-icons/hi";
-// import { TbCashRegister} from "react-icons/tb";
-// import { MdOutlineCategory } from "react-icons/md";
-// import {
-//   FaBalanceScale,
-//   FaFileContract,
-//   FaGift,
-//   FaMoneyBillWave,
-//   FaTags,
-//   FaUserTie,
-// } from "react-icons/fa";
-// import { SiAwsorganizations } from "react-icons/si";
-// import { CiCalendar, CiCalendarDate, CiClock2, CiLogout, CiUser } from "react-icons/ci";
-// import { BiBarChartSquare, BiTransferAlt } from "react-icons/bi";
-// import { FaBoxesPacking, FaMoneyBillTransfer } from "react-icons/fa6";
-// import { BsPerson, BsPersonBoundingBox } from "react-icons/bs";
-// import { GiPayMoney, GiProfit } from "react-icons/gi";
-interface SubMenuItem {
-  title: string;
-  icon?: JSX.Element;
-  href?: string;
-  submenus?: SubMenuItem[];
-}
 
-type MenuItem = SubMenuItem;
+import { useEntornoStore } from "@/views/app/config/Store/useEntornoStore";
+import { MenuBase, MenuDev, MenuItem } from "./SideBar/Menus";
+import { getMergedMenu } from "./SideBar/utils/mergeMenu";
+import ThumbtackButton from "./SideBar/Components/ThumbtackButton";
+import LogoNova from "./SideBar/Components/LogoNova";
+import EmpresaInfo from "./SideBar/Components/EmpresaInfo";
+import SidebarMenu from "./SideBar/Components/SidebarMenu";
+import SidebarConfigButton from "./SideBar/Components/SidebarConfigButton";
+import ResizableHandle from "./SideBar/Components/ResizableHandle";
+import SidebarLogoutButton from "./SideBar/Components/SidebarLogoutButton";
+import { useMercadoPagoStore } from "@/views/app/FormMercadoPago/Store/MercadoPagoStore";
 
 type SideBarProps = {
   open: boolean;
@@ -49,6 +27,8 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
   const navigate = useNavigate();
   const location = useLocation();
   const queryClient = useQueryClient();
+  const projectType = useEntornoStore((state) => state.projectType);
+  const isDev = projectType === "dev";
   const [isPinned, setIsPinned] = useState(false);
   const [openMenus, setOpenMenus] = useState<{ [key: string]: boolean }>({});
   // const [hovering, setHovering] = useState(false);
@@ -58,230 +38,13 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
   const [hoveringArrow, setHoveringArrow] = useState(false);
 
   const { resetStore } = useVentasHoraStore();
+  const resetIntegracionMPStore = useMercadoPagoStore.getState().resetStore;
 
   const storedUser = localStorage.getItem("_u");
   const user = storedUser ? JSON.parse(storedUser) : {};
   //console.log("user sidebar", user);
 
-  const Menus: MenuItem[] = [
-    {
-      title: "Inicio",
-      href: "/home",
-      icon: <TiHome />,
-    },
-    {
-      title: "Dashboard",
-      href: "/dashboard",
-      icon: <RiDashboardFill />,
-    },
-    {
-      title: "Movimientos de Caja",
-      href: "/cajas",
-      icon: <MdOutlineAttachMoney />,
-    },
-    // {
-    //   title: "Stock por Sección",
-    //   href: "/stock-seccion",
-    //   icon: <FaBoxesPacking />,
-    // },
-
-    {
-      title: "Informes Ventas",
-      icon: <FaChartLine />,
-      submenus: [
-        {
-          title: "Importes", // Menú desplegable principal
-          icon: <IoWalletSharp />,
-          submenus: [
-            {
-              title: "Ventas por Hora",
-              href: "/informes/ventas-hora",
-              icon: <GrDocumentTime />,
-            },
-            // {
-            //   title: "Ventas por Condicion",
-            //   href: "/informes/ventas-condicion",
-            //   icon: <GiPayMoney />,
-            // },
-            // {
-            //   title: "Ventas por Sección",
-            //   href: "/informes/ventas-seccion",
-            //   icon: <MdOutlineCategory />,
-            // },
-            // {
-            //   title: "Ingresos",
-            //   href: "/informes/ingresos",
-            //   icon: <TbCashRegister />,
-            // },
-            // {
-            //   title: "Ranking de Clientes",
-            //   href: "/informes/ranking",
-            //   icon: <FaRankingStar />,
-            // },
-            // {
-            //   title: "Rentabilidad ( Artículo )",
-            //   href: "/informes/rentabilidad",
-            //   icon: <GiProfit />,
-            // },
-            // {
-            //   title: "Rentabilidad - Medio de Pago",
-            //   href: "/informes/rentabilidadmp",
-            //   icon: <GiProfit />,
-            // },
-            // {
-            //   title: "Comparativo Mensual de Ventas",
-            //   href: "/informes/comparativo-mensual",
-            //   icon: <FaBalanceScale />,
-            // },
-
-            // {
-            //   title: "Comp. Clientes otras Sucursales",
-            //   href: "/informes/clientes-otras-suc",
-            //   icon: <BsPersonBoundingBox />,
-            // },
-          ],
-        },
-        // {
-        //   title: "Creditos",
-        //   icon: <HiCreditCard />,
-        //   submenus: [
-        //     {
-        //       title: "Ventas de Créditos",
-        //       href: "/informes/ventas-creditos",
-        //       icon: <FaRegCreditCard />,
-        //     },
-        //     {
-        //       title: "Ventas por Localidad",
-        //       href: "/informes/ventas-localidad",
-        //       icon: <FaMapMarkerAlt />,
-        //     },
-        //     {
-        //       title: "Ventas de Créditos por Cliente",
-        //       href: "/informes/creditos-clientes",
-        //       icon: <FaCreditCard />,
-        //     },
-        //     {
-        //       title: "Ranking Clientes Créditos",
-        //       href: "/informes/ranking-creditos-clientes",
-        //       icon: <FaRankingStar />,
-        //     },
-        //     {
-        //       title: "Clientes sin Operaciones",
-        //       href: "/informes/clientes-sin-operaciones",
-        //       icon: <FaUserSlash />,
-        //     },
-        //     {
-        //       title: "Distribucion Mensual de Créditos",
-        //       href: "/informes/dist-men-clientes",
-        //       icon: <FaChartArea />,
-        //     },
-
-        //     {
-        //       title: "Ventas Clientes con Otros Medios",
-        //       href: "/informes/vent-client-otros-medios",
-        //       icon: <FaMoneyCheckAlt />,
-        //     },
-        //   ],
-        // },
-      ],
-    },
-    // {
-    //   title: "Informes Cobranzas",
-    //   icon: <FaMoneyBillWave />,
-    //   submenus: [
-    //     {
-    //       title: "Cobranzas",
-    //       href: "/informes/cobranzas",
-    //       icon: <CiClock2 />,
-    //     },
-    //     {
-    //       title: "Cobranzas por Vencimiento",
-    //       href: "/informes/cobranza-vencim",
-    //       icon: <CiClock2 />,
-    //     },
-    //     {
-    //       title: "Morosidad",
-    //       href: "/informes/morosidad",
-    //       icon: <CiCalendar />,
-    //     },
-    //     {
-    //       title: "Cobranza por Cobrador",
-    //       href: "/informes/cobranzas-cobrador",
-    //       icon: <CiUser />,
-    //     },
-    //     {
-    //       title: "Cobranza por Fecha de Emisíon",
-    //       href: "/informes/cobranzas-fecha-emision",
-    //       icon: <CiCalendarDate />,
-    //     },
-    //     {
-    //       title: "Cobranza y Vto.",
-    //       href: "/informes/cobranza-vto",
-    //       icon: <CiClock2 />,
-    //     },
-    //   ],
-    // },
-
-    // {
-    //   title: "Ventas por Vendedor", // Menú desplegable principal
-    //   icon: <FaUserTie />,
-    //   submenus: [
-    //     {
-    //       title: "Ventas por Vendedor",
-    //       href: "/informes/ventas-vend",
-    //       icon: <BsPerson />,
-    //     },
-    //     {
-    //       title: "Detalle Ventas por Vendedor",
-    //       href: "/informes/detalle-ventas-vend",
-    //       icon: <BsPerson />,
-    //     },
-
-    //     {
-    //       title: "Articulos en Promoción",
-    //       href: "/informes/art-prom",
-    //       icon: <FaTags />,
-    //     },
-    //     {
-    //       title: "Ventas en Promoción",
-    //       href: "/informes/ventas-prom",
-    //       icon: <FaGift />,
-    //     },
-    //   ],
-    // },
-
-    // {
-    //   title: "Otros Informes", // Menú desplegable principal
-    //   icon: <BiBarChartSquare />,
-    //   submenus: [
-    //     {
-    //       title: "Ventas por Unidad de Negocio",
-    //       href: "/informes/ventas-uni-nego",
-    //       icon: <SiAwsorganizations />,
-    //     },
-    //     {
-    //       title: "Garantias",
-    //       href: "/informes/garantias",
-    //       icon: <FaFileContract />,
-    //     },
-    //     {
-    //       title: "Mov. de Cajas",
-    //       href: "/informes/mov-cajas",
-    //       icon: <BiTransferAlt />,
-    //     },
-    //     {
-    //       title: "Mov. de Cajas Totales",
-    //       href: "/informes/mov-cajas-totales",
-    //       icon: <FaMoneyBillTransfer />,
-    //     },
-    //   ],
-    // },
-    {
-      title: "Integraciones",
-      href: "/integraciones",
-      icon: <TbPlugConnected />,
-    },
-  ];
+  const Menus = getMergedMenu(MenuBase, MenuDev, isDev);
 
   // Función para alternar el estado de un menú desplegable
   const toggleMenu = (title: string) => {
@@ -389,12 +152,15 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
     localStorage.removeItem("_ce");
     localStorage.removeItem("_dbp");
     localStorage.removeItem("_dbd");
-    localStorage.removeItem("modo");
+    localStorage.removeItem("_m");
+    localStorage.removeItem("_p");
     localStorage.removeItem("user");
     localStorage.removeItem("_mqr");
 
+    // limpieza store ventas por hora
     resetStore();
-
+    //limpieza store integracion MP
+    resetIntegracionMPStore();
     navigate("/");
   };
 
@@ -421,121 +187,53 @@ export default function SideBar({ open, setOpen }: SideBarProps) {
       window.removeEventListener("mouseup", handleMouseUp);
     };
   }, [isPinned]);
-  const modo = localStorage.getItem("modo");
-  const entorno = localStorage.getItem("_ce");
-  useEffect(() => {
-    console.log("Modo actual:", modo, "Entorno:", entorno);
-  }, [entorno, modo]);
+
   return (
     <div
       ref={sidebarRef}
       style={{ width: `${isSidebarOpen ? sidebarWidth : 80}px` }}
-      className="fixed top-0 left-0 z-50 h-full border-r 
-      border-r-slate-400 bg-gradient-to-b from-slate-900 
-      to-[#081A51] transition-all duration-300 ease-out overflow-hidden"
+      className="fixed top-0 left-0 z-50 h-full 
+      border-r border-r-slate-400 
+      bg-gradient-to-b from-slate-900 
+      to-[#081A51] transition-all duration-300 ease-out overflow-hidden
+             grid grid-rows-[0.2fr_1fr_0.1fr]
+  grid-cols-1"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      {/* thumbtrack */}
-      <div className="flex justify-end left-1 h-5">
-        <div
-          onMouseEnter={() => setHoveringArrow(true)}
-          onMouseLeave={() => setHoveringArrow(false)}
-          onClick={handleThumbtack}
-          className={`
-      cursor-pointer
-      transition-all duration-300 ease-in-out
-      ${isSidebarOpen ? "opacity-100 scale-100" : "opacity-0 scale-90 pointer-events-none"}
-      ${hoveringArrow || isPinned ? "text-yellow-400" : "text-white"}
-    `}
-          style={{ transformOrigin: "center center" }}
-        >
-          <FaThumbtack
-            className={`
-        w-6 h-5 pt-1 mt-0.5
-        transition-all duration-300 ease-in-out
-        ${isPinned ? "scale-90 text-yellow-400" : ""}
-        ${hoveringArrow && !isPinned ? "scale-105 text-yellow-400" : ""}
-      `}
-          />
-        </div>
+      {/* Parte superior: info del usuario */}
+      <div className="px-2 pt-2">
+        <ThumbtackButton isSidebarOpen={isSidebarOpen} isPinned={isPinned} hoveringArrow={hoveringArrow} setHoveringArrow={setHoveringArrow} onClick={handleThumbtack} />
+
+        <LogoNova user={user} open={open} />
+
+        <hr className="w-full border-t border-gray-700 mt-4" />
+
+        <EmpresaInfo user={user} open={open} />
+
+        <hr className="w-full border-t border-gray-700" />
       </div>
 
-      {/* Logo Nova */}
-      <div className="flex items-center justify-start w-full mt-2 ml-1 gap-1">
-        <div className="flex justify-center items-center w-16 h-16 p-2 bg-white rounded-full shadow-md border border-gray-300 flex-shrink-0">
-          <img width={200} height={200} src={`data:image/jpeg;base64,${user.logonova}`} alt="Nova Logo" className="rounded-full w-full h-full object-contain" />
-        </div>
-        <div className={`overflow-hidden transition-all duration-500 min-w-0 ${open ? "max-w-[150px] opacity-100" : "max-w-0 opacity-0"}`}>
-          <span className="text-slate-400 font-bold text-2xl whitespace-nowrap">NovaGestión</span>
-        </div>
+      {/* Parte media: menú con altura relativa */}
+      <div className="overflow-y-auto scrollbar-custom  overflow-x-hidden px-2">
+        <SidebarMenu Menus={Menus} renderMenu={renderMenu} />
       </div>
-
-      <hr className="w-full border-t border-gray-700 mt-4 " />
-
-      {/* Empresa */}
-      <div className="flex flex-col justify-center items-center gap-1">
-        <div className="relative flex flex-col justify-center items-center gap-1 w-16 h-28">
-          <div className={`flex justify-center items-center p-2 w-14 h-14 rounded-full bg-white transition-all duration-500 ${open ? "translate-y-1" : "translate-y-5"}`}>
-            <img width={200} height={200} alt="logoempresa" src={`data:image/jpeg;base64,${user.logoemp}`} className="transition-all duration-500" />
-          </div>
-          <span className={`h-8 text-sm text-white font-semibold origin-left transition-all translate-y-2 2xl:text-xl ${open ? "opacity-100 duration-500" : "opacity-0 duration-100"} overflow-hidden whitespace-nowrap`}>
-            {user.nfantasia}
-          </span>
-        </div>
-      </div>
-
-      <hr className="w-full border-t border-gray-700" />
-
-      {/* Menú */}
-      <ul className={`absolute top-52 mt-3 ml-1 w-full transition-all `}>
-        <div
-          className="min-h-[20rem] 2xl:min-h-[38rem] max-h-[10rem]  
-        overflow-y-auto scrollbar-custom"
-        >
-          {Menus.map((menu) => renderMenu(menu))}
-        </div>
-        <hr className="w-full pt-12 border-t border-gray-700" />
-      </ul>
-
-      {/* Configuración */}
-      {localStorage.getItem("_tu") === "1" && (
-        <Link
-          to="/configuracion"
-          className="flex justify-center
-         items-center gap-1 fixed bottom-16 left-7 duration-100 hover:translate-x-1 transition-all hover:scale-105"
-        >
-          <div className="cursor-pointer w-8">
-            <img src="/img/icons/settings.png" alt="Configuración" className="w-6 h-6" />
-          </div>
-          <span className={`transition-opacity duration-500 ${!open ? "opacity-0 invisible" : "opacity-100 visible text-white"}`}>Configuración</span>
-        </Link>
-      )}
-
       {isPinned && (
-        <div
-          className="absolute top-0 right-0 h-full w-2 cursor-col-resize z-50"
-          onMouseDown={(_e) => {
+        <ResizableHandle
+          onStartResize={() => {
             isResizing.current = true;
-            document.body.style.userSelect = "none"; // bloquear selección
-            document.body.style.cursor = "ew-resize"; // cursor resize horizontal
+            document.body.style.userSelect = "none";
+            document.body.style.cursor = "ew-resize";
           }}
-        ></div>
+        />
       )}
+      {/* Parte inferior: logout y resize */}
+      <div className="flex flex-col items-center justify-end h-full gap-4 px-3 pb-4">
+        <hr className="w-full mt-4 border-t border-gray-700" />
+        {localStorage.getItem("_tu") === "1" && <SidebarConfigButton open={open} />}
 
-      {/* Log out */}
-      <Link to="/" className="flex items-center gap-3 fixed bottom-2 left-5 duration-100 hover:translate-x-1 
-      transition-all hover:scale-105" onClick={handleLogout}>
-        <div className="border bg-white rounded-full cursor-pointer w-8">
-          <CiLogout className="w-6 h-8 font-extrabold" />
-        </div>
-        <span
-          className={`transition-all duration-500 whitespace-nowrap overflow-hidden
-           ${!open ? "max-w-0 opacity-0" : "max-w-full opacity-100 text-white text-lg"}`}
-        >
-          Salir
-        </span>
-      </Link>
+        <SidebarLogoutButton open={open} onLogout={handleLogout} />
+      </div>
     </div>
   );
 }
