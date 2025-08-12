@@ -7,6 +7,7 @@ import TablaVentasPorVendedor from "./components/TablaVentasVendedor";
 import BusquedaInputs from "@/frontend-resourses/components/Tables/Busqueda/BusquedaInputs";
 import BotoneraHerramientas from "./components/HerramientasButtons";
 import { useDetallesVentasPorVendedorStore } from "./store/useVentasPorVendedorStore";
+import BusquedaInputsStore from "@/frontend-resourses/components/Tables/Busqueda/BusquedaInputsStore";
 
 export default function DetallesVentasXVendedorView() {
   const {
@@ -21,18 +22,18 @@ export default function DetallesVentasXVendedorView() {
     // filtros
     // sucursalesSeleccionadas,
     // sucursalesDisponibles,
-    buscado,
-    setBuscado,
-    idsCoincidentes,
-    indiceSeleccionado,
-    setIndiceGlobal,
-    setIdsCoincidentes,
-    setIndiceSeleccionado,
-    ultimoIndiceBusqueda,
-    setUltimoIndiceBusqueda,
-    setNavegandoCoincidentes,
-    indiceGlobal,
-    setModoNavegacion,
+    // buscado,
+    // setBuscado,
+    // idsCoincidentes,
+    // indiceSeleccionado,
+    // setIndiceGlobal,
+    // setIdsCoincidentes,
+    // setIndiceSeleccionado,
+    // ultimoIndiceBusqueda,
+    // setUltimoIndiceBusqueda,
+    // setNavegandoCoincidentes,
+    // indiceGlobal,
+    // setModoNavegacion,
   } = useDetallesVentasPorVendedorStore();
   const [estaProcesado, setEstaProcesado] = useState(false);
   // Formateo a array de strings
@@ -66,31 +67,31 @@ export default function DetallesVentasXVendedorView() {
     { id: 3, nombre: "Tomás", notas: [10, 9, 8] },
   ];
 
-  const propsBusqueda = {
-    data: dataVentaPorVendedor,
-    // busqueda
-    buscado,
-    setBuscado,
-    idsCoincidentes,
-    indiceSeleccionado,
-    setIndiceGlobal,
-    setIdsCoincidentes,
-    setIndiceSeleccionado,
-    ultimoIndiceBusqueda,
-    setUltimoIndiceBusqueda,
-    setNavegandoCoincidentes,
-    indiceGlobal,
-    setModoNavegacion,
-    inputsLength: 2,
-    modoBusqueda: "simple" as "simple",
-    keysBusqueda: {
-      itemKey: "vendedorCodigo",
-      busquedaKeyText: ["vendedorNombre"],
-      busquedaKeyCode: ["vendedorCodigo"],
-      textLabelProperty: "Vendedor",
-      codeLabelProperty: "Codigo",
-    },
-  };
+  // const propsBusqueda = {
+  //   data: dataVentaPorVendedor,
+  //   // busqueda
+  //   buscado,
+  //   setBuscado,
+  //   idsCoincidentes,
+  //   indiceSeleccionado,
+  //   setIndiceGlobal,
+  //   setIdsCoincidentes,
+  //   setIndiceSeleccionado,
+  //   ultimoIndiceBusqueda,
+  //   setUltimoIndiceBusqueda,
+  //   setNavegandoCoincidentes,
+  //   indiceGlobal,
+  //   setModoNavegacion,
+  //   inputsLength: 2,
+  //   modoBusqueda: "simple" as "simple",
+  //   keysBusqueda: {
+  //     itemKey: "vendedorCodigo",
+  //     busquedaKeyText: ["vendedorNombre"],
+  //     busquedaKeyCode: ["vendedorCodigo"],
+  //     textLabelProperty: "Vendedor",
+  //     codeLabelProperty: "Codigo",
+  //   },
+  // };
 
   const propsRangePicker = {
     setFechas: setFechas,
@@ -114,7 +115,6 @@ export default function DetallesVentasXVendedorView() {
           onClearData={handleClearData}
           onFetchData={handleFetchData}
           estaProcesado={estaProcesado}
-      
         />
 
         <BotoneraHerramientas
@@ -127,14 +127,21 @@ export default function DetallesVentasXVendedorView() {
           handleClean={handleClearData}
         />
 
-        <BusquedaInputs
-          props={propsBusqueda}
-          className="bg-white col-start-1 row-start-2 col-span-5
-                 v1440:w-[38rem] v1440:col-start-2  v1440:gap-4 "
+        <BusquedaInputsStore
+          props={{
+            className: "bg-white col-start-1 row-start-2 col-span-5 v1440:w-[38rem] v1440:col-start-2 v1440:gap-4",
+            data: dataVentaPorVendedor,
+            store: useDetallesVentasPorVendedorStore(),
+            modoBusqueda: "simple",
+            keysBusqueda: {
+              itemKey: "vendedorCodigo",
+              busquedaKeyText: ["vendedorNombre"],
+              busquedaKeyCode: ["vendedorCodigo"],
+              textLabelProperty: "Vendedor",
+              codeLabelProperty: "Codigo",
+            },
+          }}
         />
-
-        {/* <ListaFiltrosAplicados className="col-start-1 col-span-5 row-start-12 v1440:mx-6 " itemsDisponibles={sucursalesDisponiblesStr} itemsSeleccionados={sucursalesSeleccionadasStr} /> */}
-
         <TablaVentasPorVendedor
           className="justify-start w-fit h-fit items-start rounded-lg bg-white p-1 overflow-hidden
                   col-start-1 col-span-2  row-start-3
