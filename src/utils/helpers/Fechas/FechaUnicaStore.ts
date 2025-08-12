@@ -1,15 +1,34 @@
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
+
+export type FechasRango = {
+  from: string | Dayjs;
+  to: string | Dayjs;
+};
 
 export type FechaUnicaStore = {
-  fecha: dayjs.Dayjs;
-  setFecha: (date: dayjs.Dayjs) => void;
+  fecha: FechasRango;
+  setFecha: (date: FechasRango) => void;
   clearFecha: () => void;
   resetFechaUnica: () => void;
 };
 
-export const createFechaUnicaStore = (set: (fn: (state: any) => any) => void): FechaUnicaStore => ({
-  fecha: dayjs(),
+export const createFechaUnicaStore = (
+  set: (fn: (state: any) => any) => void
+): FechaUnicaStore => ({
+  fecha: {
+    from: dayjs(),
+    to: dayjs(),
+  },
+
   setFecha: (date) => set(() => ({ fecha: date })),
-  clearFecha: () => set(() => ({ fecha: dayjs() })),
-  resetFechaUnica: () => set(() => ({ fecha: dayjs() })),
+
+  clearFecha: () =>
+    set(() => ({
+      fecha: { from: dayjs(), to: dayjs() },
+    })),
+
+  resetFechaUnica: () =>
+    set(() => ({
+      fecha: { from: dayjs(), to: dayjs() },
+    })),
 });
