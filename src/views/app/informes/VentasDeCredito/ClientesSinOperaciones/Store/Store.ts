@@ -6,8 +6,8 @@ import { persist, createJSONStorage } from "zustand/middleware";
 export type ClientesSinOperaciones = BaseStore & BusquedaState;
 export const useClientesSinOperaciones = create<ClientesSinOperaciones>()(
   persist(
-    (set) => ({
-      ...createBaseStore(set),
+    (set,get) => ({
+      ...createBaseStore(set,get),
       ...withBusqueda(set),
     }),
     {

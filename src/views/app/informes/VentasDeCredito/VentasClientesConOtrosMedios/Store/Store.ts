@@ -6,8 +6,8 @@ import { persist, createJSONStorage } from "zustand/middleware";
 export type VentasClientesOtrosMedios = BaseStore & BusquedaState;
 export const useVentasClientesOtrosMedios = create<VentasClientesOtrosMedios>()(
   persist(
-    (set) => ({
-      ...createBaseStore(set),
+    (set,get) => ({
+      ...createBaseStore(set,get),
       ...withBusqueda(set),
     }),
     {

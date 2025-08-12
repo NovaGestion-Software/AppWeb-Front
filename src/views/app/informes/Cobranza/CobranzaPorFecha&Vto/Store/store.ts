@@ -1,18 +1,31 @@
+import { CheckboxState } from "@/frontend-resourses/components/types";
 import { BaseStore, createBaseStore } from "@/utils/helpers/BaseStore";
-import { RadioInputsState, withRadioInputs } from "@/utils/helpers/RadioInputStore";
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
-export type CobranzasPorFechaYVto = BaseStore &  RadioInputsState
+export type CobranzasPorFechaYVto = BaseStore & {
+  // radio inputs
+  checkboxSeleccionados: CheckboxState;
+  setCheckboxSeleccionados: (grupo: keyof CheckboxState, value: string | null) => void;
+};
 export const useCobranzasPorFechaYVto = create<CobranzasPorFechaYVto>()(
   persist(
-    (set) => ({
-      ...createBaseStore(set),
-      ...withRadioInputs(set, {
+    (set, get) => ({
+      ...createBaseStore(set, get),
+        // Radio Inputs
+      checkboxSeleccionados: {
         grupo1: "Todos",
-        grupo2: "Diario",
-        grupo3: "Con Anticipo"
-      }),
+        grupo2: "Articulo",
+        grupo3: "CONTADO",
+        grupo4: "Codigo",
+      },
+      setCheckboxSeleccionados: (grupo, value) =>
+        set((state) => ({
+          checkboxSeleccionados: {
+            ...state.checkboxSeleccionados,
+            [grupo]: value,
+          },
+        })),
     }),
     {
       name: "cobranzas-fecha-vto-storage",
@@ -20,4 +33,3 @@ export const useCobranzasPorFechaYVto = create<CobranzasPorFechaYVto>()(
     }
   )
 );
-

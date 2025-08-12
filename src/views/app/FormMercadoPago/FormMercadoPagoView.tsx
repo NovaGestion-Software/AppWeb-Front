@@ -6,7 +6,7 @@ import CajasFetcher from "./Components/StepHandlers/CajasFetcher";
 import { useMercadoPagoStore } from "./Store/MercadoPagoStore";
 
 export default function FormMercadoPagoView() {
-  const { token,cajaSeleccionada, sucursalSeleccionada } = useMercadoPagoStore();
+  const { token, cajaSeleccionada, sucursalSeleccionada } = useMercadoPagoStore();
 
   return (
     <>
@@ -14,11 +14,8 @@ export default function FormMercadoPagoView() {
       <div className="m-auto p-12 flex flex-col">
         <div className="flex flex-row gap-3 items-stretch m-auto my-2">
           <TokenFetcher />
-          
-        {token && <SucursalesFetcher />}
-        {sucursalSeleccionada && <CajasFetcher />}
-          
-          
+          {token && <SucursalesFetcher />}
+          {sucursalSeleccionada && <CajasFetcher />}
         </div>
 
         {/* ✅ solo mostrar el formulario si hay caja seleccionada */}

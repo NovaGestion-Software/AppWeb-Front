@@ -28,20 +28,14 @@ export default function TablaVentasPorVendedor({ className }: { className?: stri
     ventasPorVendedor,
     // footer
     ventasPorVendedorFooter,
-    // status de la vista
-    idsCoincidentes,
-    // parametros de fetch
-    indiceSeleccionado,
-    // data.data
-    buscado,
-    // filtros
-    modoNavegacion,
   } = useDetallesVentasPorVendedorStore();
+
   const propsTablaVXV = {
     datosParaTabla: ventasPorVendedor ?? [],
     objectColumns: SeccionRubrosColumns,
     selectFn: true,
     setIdTabla: setId,
+    store: useDetallesVentasPorVendedorStore,
     objectStyles: {
       cursorPointer: true,
       columnasNumber: [2, 3, 4, 5, 6, 7],
@@ -54,7 +48,7 @@ export default function TablaVentasPorVendedor({ className }: { className?: stri
         widthContainer1536px: "70rem",
         addCellClass1536px: "max-height: 80px;",
       },
-       viewport1920: {
+      viewport1920: {
         widthContainer1920px: "90rem",
         addCellClass1536px: "max-height: 80px;",
       },
@@ -64,18 +58,10 @@ export default function TablaVentasPorVendedor({ className }: { className?: stri
       subItemsProperty: subItemsProperty,
       subItemKeyProperty: subItemKeyProperty,
       subItemLabelProperty: subItemLabelProperty,
-      // setItemsSeleccionados: setSeccionesSeleccionadas,
-      // setSubItemsSeleccionados: setRubrosSeleccionados,
-      // subItemsSeleccionados: rubrosSeleccionados,
       itemKey: itemKey,
     },
     searchFunction: {
-      hayFuncionBusqueda: true,
-      idsCoincidentes: idsCoincidentes,
-      indiceSeleccionado: indiceSeleccionado ?? undefined,
-      buscado: buscado,
-      modoNavegacion: modoNavegacion,
-      keyBusqueda: "vendedorCodigo",
+      keyBusqueda: "vendedorCodigo", 
     },
     objectFooter: {
       footer: true,
@@ -83,7 +69,6 @@ export default function TablaVentasPorVendedor({ className }: { className?: stri
       footerHeight: "h-8",
     },
   };
-
   return (
     <div className={`${className}`}>
       <TablaExpandible props={propsTablaVXV} />

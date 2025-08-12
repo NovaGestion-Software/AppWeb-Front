@@ -6,8 +6,8 @@ import { persist, createJSONStorage } from "zustand/middleware";
 export type VentasCreditoPorCliente = BaseStore & RadioInputsState;
 export const useVentasCreditoPorCliente = create<VentasCreditoPorCliente>()(
   persist(
-    (set) => ({
-      ...createBaseStore(set),
+    (set, get) => ({
+      ...createBaseStore(set, get),
       ...withRadioInputs(set),
     }),
     {

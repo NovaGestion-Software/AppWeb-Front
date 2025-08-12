@@ -1,19 +1,19 @@
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { DepositoModal, MarcaModal } from "@/types";
+import { FaWarehouse } from "react-icons/fa6";
 import { useStockPorSeccion } from "@/views/app/stockSeccion/store/useStockPorSeccion";
 import { obtenerRubrosDisponibles } from "@/services/ApiPhpService";
+import { DepositoModal, MarcaModal } from "@/types";
+import { useFiltros } from "./hooks/useFiltros";
 import ViewTitle from "@/frontend-resourses/components/Labels/ViewTitle";
 import ModalFiltro from "@/frontend-resourses/components/Modales/ModalFiltro";
+import showAlert from "@/frontend-resourses/utils/showAlert";
+import BusquedaInputs from "@/frontend-resourses/components/Tables/Busqueda/BusquedaInputs";
 import TablaSeccionRubro from "./componentes/TablaSeccionRubro";
 import TablaStock from "./componentes/TablaStock";
-import { useFiltros } from "./hooks/useFiltros";
-import showAlert from "@/frontend-resourses/utils/showAlert";
 import ListaItemsPedidos from "./componentes/ListaItemsPedidos";
-import { FaWarehouse } from "react-icons/fa6";
 import ShowModalButtons from "./componentes/ShowModalButtons";
 import GrupoInputsRadio from "./componentes/GrupoInputsRadio";
-import BusquedaInputs from "@/frontend-resourses/components/Tables/Busqueda/BusquedaInputs";
 import Botonera from "./componentes/Botonera";
 
 export default function StockPorSeccionView() {
@@ -93,6 +93,40 @@ export default function StockPorSeccionView() {
     { case: "Marca", key: "nmarca", type: "string" },
     { case: "Descripcion", key: "descripcion", type: "string" },
   ];
+  const propsShowModales = {
+    propsShowModal: {
+      setShowRubros: setShowRubrosModal,
+      setShowMarcas: setShowMarcasModal,
+      setShowDepositos: setShowDepositosModal,
+    },
+    status: status,
+  };
+  const propsBusqueda = {
+    data: productos,
+    store: useStockPorSeccion,
+    // busqueda
+    buscado,
+    setBuscado,
+    idsCoincidentes,
+    indiceSeleccionado,
+    setIndiceGlobal,
+    setIdsCoincidentes,
+    setIndiceSeleccionado,
+    ultimoIndiceBusqueda,
+    setUltimoIndiceBusqueda,
+    setNavegandoCoincidentes,
+    indiceGlobal,
+    setModoNavegacion,
+    inputsLength: 2,
+    modoBusqueda: "simple" as "simple",
+    keysBusqueda: {
+      itemKey: "codigo",
+      busquedaKeyText: ["descripcion", "nmarca"],
+      busquedaKeyCode: ["codigo"],
+      textLabelProperty: "Descripción o Marca",
+      codeLabelProperty: "Codigo",
+    },
+  };
   // fetch TABLA PARA RUBROS
   const { data: rubrosDis } = useQuery({
     queryKey: ["rubros-seccion"],
@@ -127,18 +161,6 @@ export default function StockPorSeccionView() {
     setProductos(datosOrdenados);
   }, [stockRenderizado, checkboxSeleccionados.grupo1, checkboxSeleccionados.grupo2, checkboxSeleccionados.grupo3, checkboxSeleccionados.grupo4, depositosSeleccionados, marcasSeleccionadas]);
 
-  // RENDERIZADO DE ITEMS DE LOS MODALES
-  const renderMarcaItem = (item: MarcaModal) => {
-    return <>{item.nmarca}</>;
-  };
-  const renderDepositoItem = (item: DepositoModal) => {
-    return (
-      <>
-        {item.deposito} - {item.ndeposito}{" "}
-      </>
-    );
-  };
-
   // CAMBIO DE ESTADO
   useEffect(() => {
     if (tablaStock?.length === 0) {
@@ -147,6 +169,67 @@ export default function StockPorSeccionView() {
       setStatus("success");
     }
   }, [status, setStatus, tablaStock]);
+
+  useEffect(() => {
+    if (rubrosPendientesData?.length > 0) {
+      handleError();
+    }
+  }, [rubrosPendientesData]);
+
+  // RENDERIZADO DE ITEMS DE LOS MODALES
+  function renderMarcaItem(item: MarcaModal) {
+    return <>{item.nmarca}</>;
+  }
+
+  function renderDepositoItem(item: DepositoModal) {
+    return (
+      <>
+        {item.deposito} - {item.ndeposito}{" "}
+      </>
+    );
+  }
+
+  async function handleClean() {
+    const result = await showAlert({
+      title: "¿Estás seguro?",
+      text: "Todo el progreso se perderá",
+      icon: "warning",
+      showConfirmButton: true,
+      showCancelButton: true,
+      confirmButtonText: "Sí, limpiar todo",
+      cancelButtonText: "Cancelar",
+    });
+
+    if (result.isConfirmed) {
+      resetStore();
+    }
+  }
+
+  // Función para mostrar cartel de error si no hay rubros traídos
+  function handleError() {
+    if (rubrosPendientes?.length > 0) {
+      showAlert({
+        title: "Upps!",
+        html: `
+  <p>Los siguientes rubros no se han podido traer:</p>
+  <ul style="color: #f79c09;">
+    ${rubrosPendientesData.map((rubro) => `<li>${rubro.nombre}</li>`).join("")}
+  </ul>
+`,
+        icon: "info",
+        timer: 3000,
+      });
+    }
+    if (rubrosPendientes?.length > 5) {
+      showAlert({
+        title: "Upps!",
+        text: `Hay rubros que no se han podido traer.`,
+        icon: "info",
+        timer: 3000,
+      });
+    }
+  }
+
   // Tabla stock serian los datos originales del endpoint
   // Stock Renderizado es el resultado de la funcion agrupar por stock
   // Productos es una copia de stock renderizado
@@ -162,92 +245,6 @@ export default function StockPorSeccionView() {
   // Si el filtro es talles o articulos se hace sobre Stock renderizado.
 
   // La busqueda tiene que ser sobre los elementos de la tabla, es decir Productos.
-
-  const handleClean = async () => {
-    const result = await showAlert({
-      title: "¿Estás seguro?",
-      text: "Todo el progreso se perderá",
-      icon: "warning",
-      showConfirmButton: true,
-      showCancelButton: true,
-      confirmButtonText: "Sí, limpiar todo",
-      cancelButtonText: "Cancelar",
-    });
-
-    if (result.isConfirmed) {
-      resetStore();
-    }
-  };
-
-  //Funcion para mostrar cartel de error si no hay rubros traidos.
-  // parece que rubros pendientes esta a destiempo porque utilizxa una variable que se setea antes de que se muestre el error
-  // y toma los datos atrasados.
-  // hacer modos de prueba de cuando data viene vacio y cuando data viene con un item pero menos de 5  o cuando viene con mas
-  const handleError = () => {
-    if (rubrosPendientes?.length > 0) {
-      showAlert({
-        title: "Upps!",
-        html: `
-  <p>Los siguientes rubros no se han podido traer:</p>
-  <ul style="color: #f79c09;">
-    ${rubrosPendientesData.map((rubro) => `<li>${rubro.nombre}</li>`).join('')}
-  </ul>
-`
-,
-        icon: "info",
-        timer: 3000,
-      });
-    }
-    if (rubrosPendientes?.length > 5) {
-      showAlert({
-        title: "Upps!",
-        text: `Hay rubros que no se han podido traer.`,
-        icon: "info",
-        timer: 3000,
-      });
-    }
-  };
-
-useEffect(() => {
-  if (rubrosPendientesData?.length > 0) {
-    handleError();
-  }
-}, [rubrosPendientesData]);
-
-
-  const propsShowModales = {
-    propsShowModal: {
-      setShowRubros: setShowRubrosModal,
-      setShowMarcas: setShowMarcasModal,
-      setShowDepositos: setShowDepositosModal,
-    },
-    status: status,
-  };
-  const propsBusqueda = {
-    data: productos,
-    // busqueda
-    buscado,
-    setBuscado,
-    idsCoincidentes,
-    indiceSeleccionado,
-    setIndiceGlobal,
-    setIdsCoincidentes,
-    setIndiceSeleccionado,
-    ultimoIndiceBusqueda,
-    setUltimoIndiceBusqueda,
-    setNavegandoCoincidentes,
-    indiceGlobal,
-    setModoNavegacion,
-    inputsLength: 2,
-    modoBusqueda: "simple" as "simple",
-    keysBusqueda: {
-      itemKey: "codigo",
-      busquedaKeyText: ["descripcion", "nmarca"],
-      busquedaKeyCode: ["codigo"],
-      textLabelProperty: "Descripción o Marca",
-      codeLabelProperty: "Codigo",
-    },
-  };
 
   return (
     <div className="w-full h-lvh   ">
@@ -290,7 +287,6 @@ useEffect(() => {
           estaProcesado={!isProcessing}
           modalSucursales={false}
           disabled={status === "idle"}
-
         />
       </div>
 
@@ -298,9 +294,7 @@ useEffect(() => {
       <div className="grid grid-cols-10  px-8 py-2">
         <div className="flex items-start gap-2 justify-center col-span-full">
           {/** LISTA */}
-          <ListaItemsPedidos titulo="Rubros" className="h-1/2" 
-          rubrosPendientesData={rubrosPendientesData}
-           rubrosTraidosData={rubrosTraidosData} />
+          <ListaItemsPedidos titulo="Rubros" className="h-1/2" rubrosPendientesData={rubrosPendientesData} rubrosTraidosData={rubrosTraidosData} />
           <TablaStock />
         </div>
       </div>
