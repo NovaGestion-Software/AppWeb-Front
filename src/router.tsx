@@ -58,51 +58,6 @@ export default function Router() {
             <Route path="/integracion" element={<Redirect />} />
             <Route path="/informes">
               <Route path="ventas-hora" element={<VentasHoraView />} />
-<<<<<<< HEAD
-
-              {/** NO VA A LA BUILD s*/}
-
-              {/* <Route path="ventas-seccion" element={<VentasPorSeccionView />} />
-              <Route path="ventas-condicion" element={<VentasPorCondicionView />} />
-              <Route path="ventas-uni-nego" element={<VentasUnidadNegocioView />} />
-              <Route path="comparativo-mensual" element={<ComparativoMensualView />} />
-              <Route path="ingresos" element={<IngresosView />} />
-              <Route path="ranking" element={<RankingClientesView />} />
-              <Route path="rentabilidad" element={<RentabilidadView />} />
-              <Route path="rentabilidadmp" element={<RentabilidadMPagoView />} />
-              <Route path="clientes-otras-suc" element={<CompClientOtrasSucView />} /> */}
-
-              {/** Ventas de credito */}
-              {/* <Route path="ventas-creditos" element={<VentasDeCreditoView />} />
-              <Route path="ventas-localidad" element={<VentasPorLocalidadView />} />
-              <Route path="creditos-clientes" element={<VentasDeCreditoPorClienteView />} />
-              <Route path="ranking-creditos-clientes" element={<RankingClientesCreditoView />} />
-              <Route path="clientes-sin-operaciones" element={<ClientesSinOperacionesView />} />
-              <Route path="dist-men-clientes" element={<DistribucionMensualClientesView />} />
-              <Route path="vent-client-otros-medios" element={<VentasClientesOtrosMediosView />} /> */}
-
-              {/** Cobranzas */}
-              {/* <Route path="cobranza-vencim" element={<CobranzaVencimView />} />
-              <Route path="cobranzas" element={<CobranzasView />} />
-              <Route path="morosidad" element={<MorosidadView />} />
-              <Route path="cobranzas-cobrador" element={<CobranzasPorCobradorView />} />
-              <Route path="cobranzas-fecha-emision" element={<CobranzasPorFechaEmisionView />} />
-                <Route path="cobranza-vto" element={<CobranzasPorFechaYVtoView />} /> */}
-
-              {/** ventas por vendedor */}
-              {/* <Route path="detalle-ventas-vend" element={<DetallesVentasXVendedorView />} />
-              <Route path="ventas-vend" element={<VentasPorVendedorView />} />
-              <Route path="art-prom" element={<ArticulosEnPromocionView />} />
-              <Route path="ventas-prom" element={<VentasEnPromocionView />} /> */}
-
-              {/**Otros */}
-              {/* <Route path="garantias" element={<GarantiasView />} />
-
-              <Route path="mov-cajas" element={<MovCajaView />} />
-              <Route path="mov-cajas-totales" element={<MovCajaTotalesView />} />
-              <Route path="/stock-seccion" element={<StockPorSeccionView />} /> */}
-=======
->>>>>>> f39c123f042f222ae090b5b06a5ae2f681c3e4c7
             </Route>
 
             {/** NO VA A LA BUILD  /form-mercado-pago*/}
