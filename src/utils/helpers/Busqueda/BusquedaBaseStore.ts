@@ -1,14 +1,8 @@
-import { createNavegacionBusquedaStore, NavegacionBusquedaStore } from "./NavegacionBusquedaStore";
-import { createResultadosBusquedaStore, ResultadosBusquedaStore } from "./ResultadosBusquedaStore";
+import { BusquedaState } from "@/frontend-resourses/components/Tables/Busqueda/types";
+import { createNavegacionBusquedaStore } from "./NavegacionBusquedaStore";
+import { createResultadosBusquedaStore } from "./ResultadosBusquedaStore";
 
-export type BusquedaState = NavegacionBusquedaStore &
-  ResultadosBusquedaStore & {
-    withBusqueda: true;
-    textoBusqueda: string;
-    codigoBusqueda: string;
-    setTextoBusqueda: (valor: string) => void;
-    setCodigoBusqueda: (valor: string) => void;
-  };
+
 
 export const createBusquedaBaseStore = (set: (partial: Partial<BusquedaState> | ((state: BusquedaState) => Partial<BusquedaState>)) => void): BusquedaState => ({
   ...createNavegacionBusquedaStore(set),

@@ -1,20 +1,5 @@
-export type ResultadosBusquedaStore = {
-  ultimoIndiceBusqueda: number | null;
-  setUltimoIndiceBusqueda: (i: number | null) => void;
+import { ResultadosBusquedaStore } from "@/frontend-resourses/components/Tables/Busqueda/types";
 
-  indiceBusqueda: number;
-  setIndiceBusqueda: (i: number) => void;
-
-  indiceGlobal: number;
-  setIndiceGlobal: (i: number) => void;
-
-  indiceSeleccionado: number | null;
-  setIndiceSeleccionado: (i: number | null) => void;
-
-  idsCoincidentes: (string | number)[];
-  setIdsCoincidentes: (ids: (string | number)[]) => void;
-
-};
 export const createResultadosBusquedaStore = (set: (partial: Partial<any> | ((state: any) => Partial<any>)) => void): ResultadosBusquedaStore => ({
   ultimoIndiceBusqueda: null,
   setUltimoIndiceBusqueda: (i) => set({ ultimoIndiceBusqueda: i }),
@@ -33,3 +18,4 @@ export const createResultadosBusquedaStore = (set: (partial: Partial<any> | ((st
 
 
 });
+

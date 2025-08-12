@@ -1,15 +1,4 @@
-export type NavegacionBusquedaStore = {
-  buscado: boolean;
-  setBuscado: (v: boolean) => void;
-
-  navegandoCoincidentes: boolean;
-  setNavegandoCoincidentes: (v: boolean) => void;
-
-  modoNavegacion: "normal" | "busqueda";
-  setModoNavegacion: (m: "normal" | "busqueda") => void;
-
-
-};
+import { NavegacionBusquedaStore } from "@/frontend-resourses/components/Tables/Busqueda/types";
 
 export const createNavegacionBusquedaStore = (
   set: (partial: Partial<any> | ((state: any) => Partial<any>)) => void
