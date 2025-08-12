@@ -4,7 +4,6 @@ import { ViewTitle } from "@/frontend-resourses/components";
 import RangeDatesInput from "@/frontend-resourses/components/Inputs/RangeDatesInput";
 import { FechasRango } from "@/types";
 import TablaVentasPorVendedor from "./components/TablaVentasVendedor";
-import BusquedaInputs from "@/frontend-resourses/components/Tables/Busqueda/BusquedaInputs";
 import BotoneraHerramientas from "./components/HerramientasButtons";
 import { useDetallesVentasPorVendedorStore } from "./store/useVentasPorVendedorStore";
 import BusquedaInputsStore from "@/frontend-resourses/components/Tables/Busqueda/BusquedaInputsStore";

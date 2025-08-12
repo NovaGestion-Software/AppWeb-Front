@@ -17,8 +17,8 @@ export type ComparativoMensual = BaseStore &
   };
 export const useComparativoMensual = create<ComparativoMensual>()(
   persist(
-    (set) => ({
-      ...createBaseStore(set),
+    (set,get) => ({
+      ...createBaseStore(set,get),
       showParametros: false,
       setShowParametros: (showParametros: boolean) => set(() => ({ showParametros })),
       parametros: {

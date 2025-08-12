@@ -3,7 +3,8 @@ import { createJSONStorage, persist } from "zustand/middleware";
 import { VentaPorVendedorColumns } from "../data";
 import { BaseStore, createBaseStore } from "@/utils/helpers/BaseStore";
 import { createFiltrosSucursalesStore, FiltrosSucursalesStore } from "@/utils/helpers/FiltrosSucursales/FiltrosSucursalesStore";
-import { BusquedaState, createBusquedaBaseStore } from "@/utils/helpers/Busqueda/BusquedaBaseStore";
+import { createBusquedaBaseStore } from "@/utils/helpers/Busqueda/BusquedaBaseStore";
+import { BusquedaState } from "@/frontend-resourses/components/Tables/Busqueda/types";
 
 type DetalleVenedoresStore = BaseStore &
   FiltrosSucursalesStore &
@@ -32,12 +33,12 @@ export const useDetallesVentasPorVendedorStore = create<DetalleVenedoresStore>()
 
       //data
       ventasPorVendedor: [],
-      setVentasPorVendedor: (data) => set({ ventasPorVendedor: data }),
+      setVentasPorVendedor: (data: VentaPorVendedorColumns[]) => set({ ventasPorVendedor: data }),
       clearVentasPorVendedor: () => set({ ventasPorVendedor: [] }),
 
       //Footer
       ventasPorVendedorFooter: [],
-      setVentasPorVendedorFooter: (dataFooter) => set({ ventasPorVendedorFooter: dataFooter }),
+      setVentasPorVendedorFooter: (dataFooter: VentaPorVendedorColumns[]) => set({ ventasPorVendedorFooter: dataFooter }),
       clearVentasPorVendedorFooter: () => set({ ventasPorVendedorFooter: [] }),
 
       // secciones

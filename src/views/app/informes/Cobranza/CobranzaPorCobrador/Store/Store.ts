@@ -2,8 +2,8 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
 import { BaseStore, createBaseStore } from "@/utils/helpers/BaseStore";
-import { BusquedaState } from "@/utils/helpers/SearchFnStore";
 import { createBusquedaBaseStore } from "@/utils/helpers/Busqueda/BusquedaBaseStore";
+import { BusquedaState } from "@/frontend-resourses/components/Tables/Busqueda/types";
 
 export type CobranzasPorCobrador = BaseStore & BusquedaState;
 

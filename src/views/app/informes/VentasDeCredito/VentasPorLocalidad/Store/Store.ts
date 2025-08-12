@@ -6,8 +6,8 @@ import { persist, createJSONStorage } from "zustand/middleware";
 export type VentasLocalidad = BaseStore 
 export const useVentasLocalidad = create<VentasLocalidad>()(
   persist(
-    (set) => ({
-      ...createBaseStore(set),
+    (set, get) => ({
+      ...createBaseStore(set, get),
     }),
     {
       name: "ventas-localidad-storage",

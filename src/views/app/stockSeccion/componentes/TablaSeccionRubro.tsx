@@ -8,7 +8,6 @@ import { useObtenerProductos } from "../hooks/useObtenerProductos";
 import showAlert from "@/frontend-resourses/utils/showAlert";
 import CheckboxInput from "@/frontend-resourses/components/Inputs/Checkbox";
 import { buscarEnArray, FiltrarItemsTraidos } from "@/frontend-resourses/utils/dataManipulation";
-import BusquedaInputs from "@/frontend-resourses/components/Tables/Busqueda/BusquedaInputs";
 import BusquedaInputsStore from "@/frontend-resourses/components/Tables/Busqueda/BusquedaInputsStore";
 
 function sonArrayIguales(array1: any[], array2: any[]) {

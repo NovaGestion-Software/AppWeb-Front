@@ -5,8 +5,8 @@ import { persist, createJSONStorage } from "zustand/middleware";
 export type DistribucionMensualClientes = BaseStore 
 export const useDistribucionMensualClientes = create<DistribucionMensualClientes>()(
   persist(
-    (set) => ({
-      ...createBaseStore(set),
+    (set,get) => ({
+      ...createBaseStore(set,get),
     }),
     {
       name: "distribucion-mensual-creditos-storage",

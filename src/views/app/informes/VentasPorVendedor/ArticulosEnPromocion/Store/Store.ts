@@ -8,8 +8,8 @@ import { persist, createJSONStorage } from "zustand/middleware";
 export type ArticulosEnPromocion = BaseStore & RadioInputsState & BusquedaState
 export const useArticulosEnPromocion = create<ArticulosEnPromocion>()(
   persist(
-    (set) => ({
-      ...createBaseStore(set),
+    (set,get) => ({
+      ...createBaseStore(set,get),
       ...withRadioInputs(set),
       ...withBusqueda(set),
     }),
