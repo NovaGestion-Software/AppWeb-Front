@@ -9,6 +9,7 @@ import showAlert from "@/frontend-resourses/utils/showAlert";
 import CheckboxInput from "@/frontend-resourses/components/Inputs/Checkbox";
 import { buscarEnArray, FiltrarItemsTraidos } from "@/frontend-resourses/utils/dataManipulation";
 import BusquedaInputs from "@/frontend-resourses/components/Tables/Busqueda/BusquedaInputs";
+import BusquedaInputsStore from "@/frontend-resourses/components/Tables/Busqueda/BusquedaInputsStore";
 
 function sonArrayIguales(array1: any[], array2: any[]) {
   if (array1.length !== array2.length) return false;
@@ -47,17 +48,6 @@ export default function TablaSeccionRubro({ data, showRubrosModal, setShowRubros
     rubrosPendientes,
     rubrosPendientesData,
 
-    //
-    setBuscado,
-    indiceGlobal,
-    setIndiceGlobal,
-    setIdsCoincidentes,
-    setIndiceSeleccionado,
-    ultimoIndiceBusqueda,
-    setUltimoIndiceBusqueda,
-    setNavegandoCoincidentes,
-    setModoNavegacion,
-
     setRubrosPendientesData,
     setRubrosTraidosData,
 
@@ -70,38 +60,8 @@ export default function TablaSeccionRubro({ data, showRubrosModal, setShowRubros
     setSeccionesSeleccionadas,
     clearRubrosSeleccionados,
     clearSeccionesSeleccionadas,
-    buscado,
-    modoNavegacion,
-    idsCoincidentes,
-    indiceSeleccionado,
+
   } = useStockPorSeccion();
-  const propsBusqueda = {
-    data: datosRubros,
-    // busqueda
-    buscado,
-    setBuscado,
-    idsCoincidentes,
-    indiceSeleccionado,
-    setIndiceGlobal,
-    setIdsCoincidentes,
-    setIndiceSeleccionado,
-    ultimoIndiceBusqueda,
-    setUltimoIndiceBusqueda,
-    setNavegandoCoincidentes,
-    setModoNavegacion,
-    indiceGlobal,
-    modoBusqueda: "anidadas" as "anidadas",
-    inputsLength: 1,
-    mostrarResultados: true,
-    keysBusqueda: {
-      subItemsProperty: subItemsProperty,
-      subItemKeyProperty: subItemKeyProperty,
-      subItemLabelProperty: subItemLabelProperty,
-      itemKey: itemKey,
-      busquedaKeyText: ["nrubro"],
-      textLabelProperty: "Rubro",
-    },
-  };
 
   // setear funciones extras de check
   const [updateInstruction, setUpdateInstruction] = useState<null | {
@@ -111,12 +71,6 @@ export default function TablaSeccionRubro({ data, showRubrosModal, setShowRubros
 
   // todos los rubros
   const allRubros = datosRubros.flatMap((item) => item.rubros.map((rubroItem) => rubroItem.rubro));
-
-  // hace falta un cartel que avise que hay rubros que no se trajeron
-  // por ahora tiene que ser de no hay informacion sobre el rubro
-  // despues con las respuestas diferentes del backend se puede ampliar el mensaje a si no hay info o fue un problema de conexion.
-
-  // tiene que haber un estado previo, peticionado = itemPeticionado, peticionado pero no traido: itemPendiente, traido y mostrado en tabla: itemTraido.
 
   // columnas
   const SeccionRubrosColumns: Array<ExtendedColumn<seccionRubros>> = [
@@ -187,7 +141,6 @@ export default function TablaSeccionRubro({ data, showRubrosModal, setShowRubros
   // funcion para checkear rubros pendientes
   function checkAllPending() {
     const isChecked = rubrosSeleccionados.length === rubrosPendientesData.length;
-    console.log("pendientes", rubrosPendientes);
     setUpdateInstruction({
       type: isChecked ? "clearAll" : "selectAllPending",
       payload: isChecked ? [] : rubrosPendientes,
@@ -196,8 +149,6 @@ export default function TablaSeccionRubro({ data, showRubrosModal, setShowRubros
   // funcion para checkear todos
   function checkAll() {
     const isChecked = rubrosSeleccionados.length === allRubros.length;
-    console.log("rubros", rubrosSeleccionados);
-
     setUpdateInstruction({
       type: isChecked ? "clearAll" : "selectAll",
       payload: isChecked ? [] : allRubros,
@@ -205,14 +156,14 @@ export default function TablaSeccionRubro({ data, showRubrosModal, setShowRubros
   }
 
   const propsTablaRubros = {
+    store: useStockPorSeccion,
     datosParaTabla: data,
     objectColumns: SeccionRubrosColumns,
     objectStyles: {
       cursorPointer: true,
       addCellClass: "max-height: 45px; padding: 4px 8px 4px 8px;",
       width: "42rem",
-      heightContainer: "h-[28rem] 2xl:h-[30rem] rounded-md",
-      height: "auto",
+      heightContainer: "h-[21rem] rounded-md",
       viewport1536: {
         width: "60rem",
         addCellClass1536px: "max-height: 80px;",
@@ -235,11 +186,7 @@ export default function TablaSeccionRubro({ data, showRubrosModal, setShowRubros
       setUpdateInstruction: setUpdateInstruction,
     },
     searchFunction: {
-      hayFuncionBusqueda: true,
-      idsCoincidentes: idsCoincidentes,
-      indiceSeleccionado: indiceSeleccionado ?? undefined,
-      buscado: buscado,
-      modoNavegacion: modoNavegacion,
+      keyBusqueda: 'nrubro'
     },
   };
   // Función que busca los elementos en la estructura de datos dinámica.
@@ -268,18 +215,26 @@ export default function TablaSeccionRubro({ data, showRubrosModal, setShowRubros
     setRubrosTraidosData(traidos);
   }, [rubrosPendientes, rubrosTraidos, datosRubros]);
 
-  //console.log
-  // useEffect(() => {
-  //   console.log('rubrosTraidos', rubrosTraidos);
-  //   console.log('pendientes', rubrosPendientes);
-  //   console.log('tablastokc', tablaStock);
-  //   console.log('resultadoPendientes', rubrosPendientesData);
-  //   console.log('resultadoTraidos', rubrosTraidosData);
-  // }, [rubrosTraidos, rubrosPendientes]);
+  // dentro de TablaSeccionRubro
+  const store = useStockPorSeccion();
 
-  // notas estilo: texto pasarlo a primera letra mayuscula de cada palabra.
-  // agrandar para acomodar el boton
-  // mas espacio a la tabla y al header.
+  const propsBusquedaStore = {
+    data: datosRubros,
+    store, 
+    modoBusqueda: "anidadas" as const,
+    mostrarResultados: true,
+    disabled: false,
+    withTooltip: true,
+    keysBusqueda: {
+      subItemsProperty: "rubros",
+      subItemKeyProperty: "rubro",
+      subItemLabelProperty: "nrubro",
+      itemKey: "seccion",
+      busquedaKeyText: ["nrubro"], 
+      textLabelProperty: "Rubro",
+
+    },
+  };
 
   return (
     <ModalBase
@@ -297,7 +252,9 @@ export default function TablaSeccionRubro({ data, showRubrosModal, setShowRubros
         className="flex flex-col gap-4  w-[45rem] px-4
        p-2  overflow-hidden  h-[29rem] 2xl:h-[38rem] mx-auto"
       >
-        <BusquedaInputs props={propsBusqueda} className="py-6 " />
+        <div className="py-2 ">
+          <BusquedaInputsStore props={propsBusquedaStore} />
+        </div>
 
         <div className="flex gap-2 items-center ">
           <CheckboxInput

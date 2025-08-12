@@ -1,15 +1,22 @@
 // import { TablaStock1, TablaStocks } from '@/types';
-import { Status } from '@/frontend-resourses/components/types';
-import { CheckboxState, DepositoModal,  MarcaModal, ProductoAgrupado, TablaSecciones } from '@/types';
-import { create } from 'zustand';
-import { createJSONStorage, persist } from 'zustand/middleware';
+import { Status } from "@/frontend-resourses/components/types";
+import { CheckboxState, DepositoModal, MarcaModal, ProductoAgrupado, TablaSecciones } from "@/types";
+import { create } from "zustand";
+import { createJSONStorage, persist } from "zustand/middleware";
 
 type StockPorSeccionProps = {
-    id: string;
+  id: string;
   setId: (id: string) => void;
   status: Status;
   // MODAL PARA SELECCION DE SECCION Y RUBRO
   footer: boolean;
+
+  withBusqueda: true;
+  textoBusqueda: string;
+  codigoBusqueda: string;
+  setTextoBusqueda: (valor: string) => void;
+  setCodigoBusqueda: (valor: string) => void;
+
   setFooter: (footer: boolean) => void; // El setter para cambiar el estado de `footer`
   datosRubros: TablaSecciones[];
   setDatosRubros: (data: TablaSecciones[]) => void;
@@ -46,8 +53,8 @@ type StockPorSeccionProps = {
   clearRubrosPendientesData: () => void;
 
   // TABLA STOCK
-  tipoPrecio: 'prec1' | 'prec2' | 'prec3'; // Tipo de precio seleccionado (CONTADO, LISTA 2, LISTA 3)
-  setTipoPrecio: (tipo: 'prec1' | 'prec2' | 'prec3') => void; // Setter para el tipo de precio
+  tipoPrecio: "prec1" | "prec2" | "prec3"; // Tipo de precio seleccionado (CONTADO, LISTA 2, LISTA 3)
+  setTipoPrecio: (tipo: "prec1" | "prec2" | "prec3") => void; // Setter para el tipo de precio
 
   // tabla stock como la informacion despues de la peticion, y tabla renderizada como la informacion ordenada
   tablaStock: any[];
@@ -95,9 +102,9 @@ type StockPorSeccionProps = {
   setBuscado: (valor: boolean) => void;
   navegandoCoincidentes: boolean;
   setNavegandoCoincidentes: (valor: boolean) => void;
-  modoNavegacion: 'normal' | 'busqueda';
+  modoNavegacion: "normal" | "busqueda";
   ultimoIndiceBusqueda: number | null;
-  setModoNavegacion: (modo: 'normal' | 'busqueda') => void;
+  setModoNavegacion: (modo: "normal" | "busqueda") => void;
   setUltimoIndiceBusqueda: (index: number | null) => void;
 
   indiceBusqueda: number; // Índice para navegación en resultados (0 a idsCoincidentes.length - 1)
@@ -105,18 +112,25 @@ type StockPorSeccionProps = {
   setIndiceBusqueda: (index: number) => void;
   setIndiceGlobal: (index: number) => void;
 
-  setStatus: (status: 'error' | 'idle' | 'pending' | 'success' | null) => void;
+  setStatus: (status: "error" | "idle" | "pending" | "success" | null) => void;
   resetStore: () => void;
-
 };
 
 export const useStockPorSeccion = create<StockPorSeccionProps>()(
   persist(
     (set) => ({
-       id: "",
+      id: "",
       setId: (id) => set({ id }),
-      status: 'pending',
+      status: "pending",
+      withBusqueda: true,
+      textoBusqueda: "",
+      codigoBusqueda: "",
+      setTextoBusqueda: (valor) => set({ textoBusqueda: valor }),
+      setCodigoBusqueda: (valor) => set({ codigoBusqueda: valor }),
+
+      // data
       footer: true,
+
       setFooter: (footer: boolean) => set({ footer }),
       datosRubros: [],
       setDatosRubros: (data: TablaSecciones[]) => set({ datosRubros: data }),
@@ -136,7 +150,7 @@ export const useStockPorSeccion = create<StockPorSeccionProps>()(
       rubrosPendientesData: [],
       setRubrosPendientesData: (data) =>
         set((state) => ({
-          rubrosPendientesData: typeof data === 'function' ? data(state.rubrosPendientesData) : data,
+          rubrosPendientesData: typeof data === "function" ? data(state.rubrosPendientesData) : data,
         })),
 
       setSeccionesTraidas: (data) => set({ seccionesTraidas: data }),
@@ -156,8 +170,8 @@ export const useStockPorSeccion = create<StockPorSeccionProps>()(
       setTablaStock: (data: any[]) => set({ tablaStock: data }),
       stockRenderizado: [] as any[],
       setStockRenderizado: (data: any[]) => set({ stockRenderizado: data }),
-      tipoPrecio: 'prec1', // Valor inicial
-      setTipoPrecio: (tipo: 'prec1' | 'prec2' | 'prec3') => set({ tipoPrecio: tipo }),
+      tipoPrecio: "prec1", // Valor inicial
+      setTipoPrecio: (tipo: "prec1" | "prec2" | "prec3") => set({ tipoPrecio: tipo }),
       productos: [] as ProductoAgrupado[],
       setProductos: (data: ProductoAgrupado[]) => set({ productos: data }),
 
@@ -171,10 +185,10 @@ export const useStockPorSeccion = create<StockPorSeccionProps>()(
 
       // RE ORDENAMIENTO STOCK
       checkboxSeleccionados: {
-        grupo1: 'Todos',
-        grupo2: 'Todos',
-        grupo3: 'CONTADO',
-        grupo4: 'Codigo',
+        grupo1: "Todos",
+        grupo2: "Todos",
+        grupo3: "CONTADO",
+        grupo4: "Codigo",
       },
       setCheckboxSeleccionados: (grupo, value) =>
         set((state) => ({
@@ -212,10 +226,11 @@ export const useStockPorSeccion = create<StockPorSeccionProps>()(
       setNavegandoCoincidentes: (valor) =>
         set({
           navegandoCoincidentes: valor,
-          modoNavegacion: valor ? 'busqueda' : 'normal',
+          modoNavegacion: valor ? "busqueda" : "normal",
         }),
       indiceBusqueda: 0,
       indiceGlobal: 0,
+
       //limpiar
       resetStore: () =>
         set((_state) => ({
@@ -229,7 +244,7 @@ export const useStockPorSeccion = create<StockPorSeccionProps>()(
           rubrosSeleccionados: [],
           rubrosTraidos: [],
           rubrosPendientes: [],
-          status: 'idle',
+          status: "idle",
           footer: false,
           marcasDisponibles: [],
           marcasSeleccionadas: [],
@@ -246,19 +261,18 @@ export const useStockPorSeccion = create<StockPorSeccionProps>()(
             grupo4: null,
           },
         })),
-      
 
       // Funciones para actualizar los estados - REEMPLAZO
       // setIndiceSeleccionado: (indice) => set({ indiceSeleccionado: indice }), // <-- Eliminar
       setIndiceBusqueda: (index) => set({ indiceBusqueda: index }),
       setIndiceGlobal: (index) => set({ indiceGlobal: index }),
-      modoNavegacion: 'normal',
+      modoNavegacion: "normal",
       ultimoIndiceBusqueda: 0, // Para recordar la posición en resultados de búsqueda
       setModoNavegacion: (modo) => set({ modoNavegacion: modo }),
       setUltimoIndiceBusqueda: (index) => set({ ultimoIndiceBusqueda: index }),
     }),
     {
-      name: 'stock-xseccion-storage',
+      name: "stock-xseccion-storage",
       storage: createJSONStorage(() => sessionStorage),
     }
   )
