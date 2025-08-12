@@ -1,4 +1,3 @@
-
 import { getEmpresa, getHomologacion } from "@/services/ApiPhpService";
 import { apiVercel } from "../Utils/apiVercel";
 import { useMercadoPagoStore } from "../Store/MercadoPagoStore";
@@ -117,6 +116,7 @@ export const MercadoPagoService = {
     const headers = buildAuthHeaders(token ?? undefined, userId ?? undefined);
 
     const res = await apiVercel.get(`/ordenes/${orderId}`, { headers });
+    console.log("obtenido", res.data);
 
     return res.data;
   },

@@ -106,6 +106,7 @@ export default function Router() {
                 </Route>
                 <Route path="/stock-seccion" element={<StockPorSeccionView />} />
                 <Route path="/form-mercado-pago" element={<FormMercadoPagoView />} />
+                <Route path="/form-mercado-pago" element={<FormMercadoPagoView />} />
               </>
             )}
             <Route path="/configuracion" element={<ConfigView />} />
