@@ -1,24 +1,13 @@
-import { useEffect, useState } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
-import Cookies from "js-cookie";
-import SideBar from "../SideBar";
+import { useState } from "react";
+import { Outlet } from "react-router-dom";
 import { useViewportGuard } from "@/Hooks/useViewportGuard";
 import ViewportBlocker from "./ViewportBlocker";
+import SideBar from "@/Components/SideBar/SideBar";
 
 export default function Layout() {
-  const navigate = useNavigate();
-
   const isBlocked = useViewportGuard();
-
   const [open, setOpen] = useState(false);
   const environment = import.meta.env.VITE_ENV;
-
-  useEffect(() => {
-    const refreshToken = Cookies.get("token_refresh");
-    if (!refreshToken) {
-      navigate("/");
-    }
-  }, [navigate]);
 
   return (
     <div className="min-h-screen h-full flex flex-col">
