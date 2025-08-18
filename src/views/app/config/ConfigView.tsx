@@ -4,6 +4,7 @@ import { useEntornoStore } from "./Store/useEntornoStore";
 import SwitchEntorno from "./Componentes/SwtichEntorno";
 import { ViewTitle } from "@/frontend-resourses/components";
 import SwitchProjectType from "./Componentes/SwitchProjectType";
+import { logonovaCuadrado } from "@/frontend-resourses/assets/logos";
 
 export default function ConfigView() {
   const [config, setConfig] = useState({
@@ -61,7 +62,9 @@ export default function ConfigView() {
             {/* Imagen Placeholder */}
             <div className="flex items-center justify-center">
               <div className="flex items-center justify-center w-40 bg-white border-2 rounded-sm p-3">
-                <img width={200} height={200} src="/img/logos/logonovaCuadrado.jpg" alt="Nova Logo" className="rounded-sm w-full h-full object-contain" />
+                <img width={200} 
+                height={200}
+                 src={logonovaCuadrado} alt="Nova Logo" className="rounded-sm w-full h-full object-contain" />
               </div>
             </div>
             {/**switch */}
