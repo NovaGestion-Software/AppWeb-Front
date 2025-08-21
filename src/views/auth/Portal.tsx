@@ -1,6 +1,6 @@
 import { useViewportGuard } from "@/Hooks/useViewportGuard";
 import LoginForm from "./components/LoginForm";
-import ViewportBlocker from "@/Components/ui/layouts/ViewportBlocker";
+import ViewportBlocker from "@/Components/Layouts/ViewportBlocker";
 
 export default function Portal() {
   const isBlocked = useViewportGuard();
