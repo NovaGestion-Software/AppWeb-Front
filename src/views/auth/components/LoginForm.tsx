@@ -4,9 +4,10 @@ import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import { loginEmpresa } from "@/services/UserService";
 import { Account } from "@/types";
-import InputLabel from "@/Components/ui/Inputs/InputLabel";
 import Cookies from "js-cookie";
 import { verificarIntegracionMP } from "../Utils/verificarIntegracionMP";
+import { InputLabel } from "@/frontend-resourses/components";
+import {novaLogo} from "@/frontend-resourses/assets/logos";
 
 export default function LoginForm() {
   const navigate = useNavigate();
@@ -157,7 +158,7 @@ export default function LoginForm() {
         noValidate
       >
         <div className="">
-          <img src="/img/logos/novalogo-normal.png" alt="Nova Logo" width={150} height={150} />
+          <img src={novaLogo} alt="Nova Logo" width={150} height={150} />
         </div>
         <p className="text-sm font-medium">Ingresa tus credenciales debajo</p>
 

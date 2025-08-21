@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { grabarCodeMercadoPago, obtenerUrlAuthorization } from "@/services/ApiPhpService";
+import { grabarMercadoAcceso, obtenerUrlAuthorization } from "@/services/ApiPhpService";
 import { useVerificarIntegracionMP } from "../Hooks/useVerificarIntegracionMP";
 
 type EstadoIntegracion = "no_conectado" | "conectando" | "conectado" | "error";
@@ -31,7 +31,7 @@ export const IntegracionMercadoPago: React.FC = () => {
       if (!code) return;
 
       // Procesar el code
-      grabarCodeMercadoPago(code)
+      grabarMercadoAcceso(code)
         .then((res) => {
           console.log("res", res);
           if (res?.code === 201 && res.message === "grabarMercadoAcceso OK") {

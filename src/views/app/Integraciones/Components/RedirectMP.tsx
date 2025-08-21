@@ -1,4 +1,4 @@
-import { grabarCodeMercadoPago } from "@/services/ApiPhpService";
+import { grabarMercadoAcceso } from "@/services/ApiPhpService";
 import React, { useEffect, useState } from "react";
 
 
@@ -25,7 +25,7 @@ useEffect(() => {
   setCodigo(code);
 
   // Enviar el código al backend usando la función con apiPhp
-  grabarCodeMercadoPago(code)
+  grabarMercadoAcceso(code)
     .then((res) => {
       console.log('res',res)
       if (res?.code === 200 && res.message === "grabarMercadoAcceso OK") {
