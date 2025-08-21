@@ -1,6 +1,5 @@
-// src/utils/mergeMenus.ts
+import { MenuItem } from "../Menus";
 
-import { MenuItem } from "@/Components/ui/SideBar/Menus";
 
 // 🔁 Merge recursivo de submenús
 function mergeSubmenus(base: MenuItem[], dev: MenuItem[]): MenuItem[] {

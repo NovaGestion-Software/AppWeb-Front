@@ -5,7 +5,7 @@ import { Account } from '../types';
 export async function loginEmpresa(formData: Account) {
   try {
     const { data } = await apiNoAuth.post('/login_empresa', formData);
-    // console.log(data);
+     console.log('lign',data);
     return data;
   } catch (error) {
     console.log(error)

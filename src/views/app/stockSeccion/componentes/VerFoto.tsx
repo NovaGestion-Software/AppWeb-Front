@@ -1,7 +1,7 @@
-import ActionButton from '@/Components/ui/Buttons/ActionButton';
 import { BiZoomIn } from 'react-icons/bi';
 import { useState } from 'react';
-import CheckboxInput from '@/Components/ui/Inputs/Checkbox';
+import { ActionButton } from '@/frontend-resourses/components';
+import CheckboxInput from '@/frontend-resourses/components/Inputs/Checkbox';
 
 export default function VerFoto() {
   const [verFotoCheckbox, setVerFotoCheckbox] = useState(false);
