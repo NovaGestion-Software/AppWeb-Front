@@ -1,9 +1,9 @@
-import { Card } from "@/frontend-resourses/components/Cards/CardBase";
 import { BsPersonVcardFill } from "react-icons/bs";
 import { FaCashRegister, FaMoneyBillWave, FaRegCreditCard } from "react-icons/fa";
-import { MdOutlinePointOfSale } from "react-icons/md";
-import { AiFillDollarCircle } from "react-icons/ai";
 import { TbClockDollar, TbClockPlay, TbClockStop, TbClockX } from "react-icons/tb";
+import { AiFillDollarCircle } from "react-icons/ai";
+import { MdOutlinePointOfSale } from "react-icons/md";
+import { Card } from "@/frontend-resourses/components/Cards/CardBase";
 
 type CardSucursalesProps = {
   estado: boolean; // Se refiere a si la fecha_c es null

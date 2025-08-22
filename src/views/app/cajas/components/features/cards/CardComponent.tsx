@@ -1,13 +1,13 @@
 import { Dispatch } from "react";
 import { RefetchOptions, QueryObserverResult } from "@tanstack/react-query";
 import { SucursalCaja } from "@/types";
-
-import CardCaja from "./ui/CardCaja";
 import { useRefetchOnFlag } from "@/Hooks/useRefetchOnFlag";
 import { useCajasKPIs } from "./hooks/useCajasKPIs";
 import { formatCurrency, formatNumber } from "../_shared/domain/format";
 import { CARD_DEFS } from "./config/cards";
+import CardCaja from "./ui/CardCaja";
 import SkCajaComponent from "./skeleton/SkCajaComponent";
+
 
 type CardComponentProps = {
   handleRefetch: boolean;

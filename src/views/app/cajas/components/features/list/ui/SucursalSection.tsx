@@ -1,8 +1,8 @@
 import { SucursalCaja } from "@/types";
-import DotsNav from "./DotsNav";
-import SucursalCarousel from "./SucursalCarousel";
 import { calcularDisponibilidadNumerica } from "../../_shared/domain/totals";
 import { formatNumber } from "../../_shared/domain/format";
+import SucursalCarousel from "./SucursalCarousel";
+import DotsNav from "./DotsNav";
 
 type Props = {
   sucursal: SucursalCaja;

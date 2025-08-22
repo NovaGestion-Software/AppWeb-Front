@@ -1,9 +1,9 @@
-import { DatCaja } from "@/types";
-import CardSucursales from "./CardSucursales";
 import { FaLongArrowAltLeft, FaLongArrowAltRight } from "react-icons/fa";
-
+import { DatCaja } from "@/types";
 import { calcularDisponibilidadNumerica, calcularEfectivo, calcularTotal,  } from "./../../_shared/domain/totals";
 import { formatCurrency, formatISO } from "../../_shared/domain/format";
+import CardSucursales from "./CardSucursales";
+
 
 type Props = {
   sucursalId: number;

@@ -1,12 +1,12 @@
 import { Dispatch } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { obtenerCajasSecciones } from "@/services/AppService";
-import SkeletonTablaCaja from "./skeletons/SkTableComponent";
-import ViewTitle from "@/frontend-resourses/components/Labels/ViewTitle";
-import Tabla from "./ui/Tabla";
 import { useRefetchOnFlag } from "@/Hooks/useRefetchOnFlag";
 import { CajasSeccionResponse } from "../_shared/types/types";
 import { buildTablaSeccion } from "./domain/totals";
+import ViewTitle from "@/frontend-resourses/components/Labels/ViewTitle";
+import SkeletonTablaCaja from "./skeletons/SkTableComponent";
+import Tabla from "./ui/Tabla";
 
 type TablaCajaProps = {
   handleRefetch: boolean;
