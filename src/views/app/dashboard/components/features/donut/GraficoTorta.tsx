@@ -5,7 +5,7 @@ import { getYears } from '../_shared/domain/date';
 import { calcularImportes } from './domain/compute';
 import { buildDonutCardData } from './domain/build';
 import { formatCompactIntegerEsAR } from '../_shared/domain/number';
-import DonutCard from './ui/DonutCard';
+import DonutCard from '../../../../../../Components/DonutsChart/DonutCard';
 import ViewTitle from '@/frontend-resourses/components/Labels/ViewTitle';
 
 interface GraficoTortaProps {

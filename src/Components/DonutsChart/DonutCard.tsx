@@ -1,5 +1,5 @@
 import { DonutChart, Legend } from "@tremor/react";
-import SKDonut from "../skeleton/SKDonut";
+import SKDonut from "./skeleton/SKDonut";
 
 type DonutCardProps = {
   fecha?: string;
