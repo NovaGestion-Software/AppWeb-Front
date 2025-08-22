@@ -1,9 +1,10 @@
-import { useEffect, Dispatch } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { DashboardCard } from '@/types';
-import { obtenerDashboardCards } from '@/services/AppService';
-import CardWithBadge from './CardsWithBadge';
-import SkCard from './SkCard';
+import { Dispatch } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { DashboardCard } from "@/types";
+import { obtenerDashboardCards } from "@/services/AppService";
+import { useRefetchOnFlag } from "@/Hooks/useRefetchOnFlag";
+import CardWithBadge from "./ui/CardsWithBadge";
+import SkCard from "./Skeleton/SkCard";
 
 type CardsComponentProps = {
   handleRefetch: boolean;
@@ -16,21 +17,14 @@ export default function CardsComponent({ handleRefetch, setHandleRefetch }: Card
     refetch: refetchCards,
     isFetching: fetchingCards,
   } = useQuery<DashboardCard[]>({
-    queryKey: ['dashboard-cards'],
+    queryKey: ["dashboard-cards"],
     queryFn: obtenerDashboardCards,
     refetchOnWindowFocus: false,
     staleTime: 1000 * 60 * 5, // Datos frescos por 5 minutos
   });
 
-  useEffect(() => {
-    if (handleRefetch) {
-      refetchCards();
-      setHandleRefetch(false);
-    }
-  }, [handleRefetch]);
-
-  const filteredCards = dataCards?.filter((card: any) => !card.titulo.includes('Ejemplo')) || [];
-  console.log(dataCards, 'dataCards');
+  useRefetchOnFlag(handleRefetch, setHandleRefetch, refetchCards);
+  const filteredCards = dataCards?.filter((card: any) => !card.titulo.includes("Ejemplo")) || [];
 
   return (
     <div>
@@ -44,8 +38,7 @@ export default function CardsComponent({ handleRefetch, setHandleRefetch }: Card
               ) : (
                 // Segunda fila: solo tarjetas 2 y 3, las demás vacías
                 <>
-                  <div className="w-full h-full"></div>{' '}
-                  {/* Espacio vacío para la primera tarjeta */}
+                  <div className="w-full h-full"></div> {/* Espacio vacío para la primera tarjeta */}
                   <SkCard key={1} /> {/* Tarjeta 2 */}
                   <SkCard key={2} /> {/* Tarjeta 3 */}
                   <div className="w-full h-full"></div> {/* Espacio vacío para la cuarta tarjeta */}
@@ -68,8 +61,8 @@ export default function CardsComponent({ handleRefetch, setHandleRefetch }: Card
                 key={rowIndex}
                 className={`flex gap-4 w-full justify-center ${
                   row.length < 4 && rowIndex === allRows.length - 1
-                    ? 'px-80' // Estilo personalizado para filas incompletas
-                    : ''
+                    ? "px-80" // Estilo personalizado para filas incompletas
+                    : ""
                 }`}
               >
                 {row.map((card, cardIndex) => (

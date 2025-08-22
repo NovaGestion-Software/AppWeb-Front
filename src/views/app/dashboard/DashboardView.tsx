@@ -1,8 +1,8 @@
 import { useState } from 'react';
+import ViewTitle from '@/frontend-resourses/components/Labels/ViewTitle';
 import CardsComponent from './components/features/cards/CardsComponent';
 import GraficoVentas from './components/features/graphic/GraficoVentas';
 import GraficoTorta from './components/features/donut/GraficoTorta';
-import ViewTitle from '@/frontend-resourses/components/Labels/ViewTitle';
 
 export default function DashboardView() {
   const [handleRefetch, setHandleRefetch] = useState(false);
