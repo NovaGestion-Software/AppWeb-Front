@@ -51,15 +51,13 @@ export async function obtenerTokenMP() {
 
   try {
     const { data } = await apiPhp(url);
-    console.log('obtenertokenmp', data)
     return data;
   } catch (error) {
     manejarErrorAxios(error, "Error");
   }
 }
 
-
-export async function grabarCodeMercadoPago(code: string) {
+export async function grabarMercadoAcceso(code: string) {
   const homologacion = getHomologacion("_m");
   //const base = getBaseSeleccionada();
   const empresa = getEmpresa();
@@ -72,9 +70,6 @@ export async function grabarCodeMercadoPago(code: string) {
     _a: "1",
     _c: code,
   };
-
-  console.log("📤 Enviando solicitud a:", url);
-  console.log("📝 Payload:", JSON.stringify(payload, null, 2));
 
   try {
     const { data } = await apiPhp(url, {
@@ -89,7 +84,6 @@ export async function grabarCodeMercadoPago(code: string) {
 
 export async function obtenerUrlAuthorization() {
   const homologacion = getHomologacion();
-  //const base = getBaseSeleccionada();
   const empresa = getEmpresa();
 
   const url = `/apinovades/mercadopago/obtenerMpAuth.php?_i={"_e":"${empresa}",
@@ -105,10 +99,8 @@ export async function obtenerUrlAuthorization() {
 
 export async function obtenerEstadoIntegracionMP(empresa: string) {
   const url = `/apinovades/mercadopago/consultaMercado.php?_i={"_e":"${empresa}","_m":"homo","_a":"1"}`;
-  //console.log(url, "URL de consulta de estado de integración MP");
   try {
     const { data } = await apiPhp(url);
-    console.log("data", data);
     return data;
   } catch (error) {
     manejarErrorAxios(error, "Error al obtener la URL de autorización");
@@ -118,14 +110,12 @@ export async function obtenerEstadoIntegracionMP(empresa: string) {
 // 📈 Ventas
 
 export async function obtenerVentasHora(fechas: FechasRango) {
-  //const homologacion = getHomologacion("modo");
-  const homologacion = "prod"
+  const homologacion = "prod";
   const base = getBaseSeleccionada();
   const empresa = getEmpresa();
   const { from, to } = fechas;
 
   const url = `/${base}/generico/obtenerVentasHora.php?_i={"_e":"${empresa}","_m":"${homologacion}","_fi":"${from}","_ff":"${to}"}`;
-
   try {
     const { data } = await apiPhp(url);
     return data;
@@ -159,8 +149,10 @@ export async function obtenerRubrosDisponibles() {
 
   const url = `/${base}/generico/obtenerSeccionesRubros.php?_i={"_e":"${empresa}","_s":"08","_m":"${homologacion}","_o":"1"}`;
 
+  console.log("url", url);
   try {
     const { data } = await apiPhp(url);
+    console.log("obtenerSeccionesRubros", data);
     return data;
   } catch (error) {
     manejarErrorAxios(error, "Error al obtener secciones de rubros");
@@ -174,9 +166,14 @@ export async function obtenerProductos(secciones: string[], rubros: string[]) {
 
   const url = `/${base}/generico/obtenerProducto.php?_i={"_e":"${empresa}","_s":"08","_m":"${homologacion}"}`;
 
+  console.log("url", url);
   try {
     const { data } = await apiPhp(url, {
       method: "POST",
+      data: { secciones, rubros },
+    });
+    console.log("POST obtenerProducto", data);
+    console.log("POST bdoy", {
       data: { secciones, rubros },
     });
     return data;
