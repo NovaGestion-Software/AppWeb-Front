@@ -1,5 +1,5 @@
 import { obtenerNuevoTokenAcceso } from '@/services/AppService';
-import axios, { AxiosRequestConfig, InternalAxiosRequestConfig } from 'axios';
+import axios, { InternalAxiosRequestConfig } from 'axios';
 import Cookies from 'js-cookie';
 
 const api = axios.create({
@@ -13,33 +13,33 @@ const api = axios.create({
 const LOG_HTTP = true;
 let REQ_COUNTER = 0;
 
-const mask = (v?: string) => {
-  if (!v) return v;
-  const str = String(v);
-  if (str.length <= 12) return '***';
-  return `${str.slice(0, 6)}…${str.slice(-4)}`;
-};
+// const mask = (v?: string) => {
+//   if (!v) return v;
+//   const str = String(v);
+//   if (str.length <= 12) return '***';
+//   return `${str.slice(0, 6)}…${str.slice(-4)}`;
+// };
 
-const redactHeaders = (headers: any) => {
-  if (!headers) return headers;
-  const h = { ...headers };
-  if (h.Authorization) h.Authorization = mask(h.Authorization);
-  if (h.authorization) h.authorization = mask(h.authorization);
-  if (h['x-idempotency-key']) h['x-idempotency-key'] = mask(h['x-idempotency-key']);
-  return h;
-};
+// const redactHeaders = (headers: any) => {
+//   if (!headers) return headers;
+//   const h = { ...headers };
+//   if (h.Authorization) h.Authorization = mask(h.Authorization);
+//   if (h.authorization) h.authorization = mask(h.authorization);
+//   if (h['x-idempotency-key']) h['x-idempotency-key'] = mask(h['x-idempotency-key']);
+//   return h;
+// };
 
-const safeData = (data: any) => {
-  try {
-    const s = typeof data === 'string' ? data : JSON.stringify(data);
-    return s.length > 1000 ? `${s.slice(0, 1000)}…[truncated]` : s;
-  } catch {
-    return '[unserializable]';
-  }
-};
+// const safeData = (data: any) => {
+//   try {
+//     const s = typeof data === 'string' ? data : JSON.stringify(data);
+//     return s.length > 1000 ? `${s.slice(0, 1000)}…[truncated]` : s;
+//   } catch {
+//     return '[unserializable]';
+//   }
+// };
 
-const log = (...args: any[]) => LOG_HTTP && console.log(...args);
-const warn = (...args: any[]) => LOG_HTTP && console.warn(...args);
+// const log = (...args: any[]) => LOG_HTTP && console.log(...args);
+// const warn = (...args: any[]) => LOG_HTTP && console.warn(...args);
 const error = (...args: any[]) => LOG_HTTP && console.error(...args);
 
 // ===== Control de refresh y cola =====
@@ -65,12 +65,12 @@ api.interceptors.request.use(
       config.headers.Authorization = `Bearer ${accessToken}`;
     }
 
-    log(
-      `➡️  [${config.metadata.id}] ${config.method?.toUpperCase()} ${config.baseURL ?? ''}${config.url}`,
-      '\nHeaders:', redactHeaders(config.headers),
-      '\nParams:', config.params ?? {},
-      '\nBody:', safeData((config as AxiosRequestConfig).data)
-    );
+    // log(
+    //   `➡️  [${config.metadata.id}] ${config.method?.toUpperCase()} ${config.baseURL ?? ''}${config.url}`,
+    //   '\nHeaders:', redactHeaders(config.headers),
+    //   '\nParams:', config.params ?? {},
+    //   '\nBody:', safeData((config as AxiosRequestConfig).data)
+    // );
 
     return config;
   },
