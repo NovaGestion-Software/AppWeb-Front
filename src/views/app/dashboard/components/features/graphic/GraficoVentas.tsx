@@ -1,21 +1,18 @@
-import { useEffect, Dispatch } from 'react';
-import { AreaChart } from '@tremor/react';
-import { useQuery } from '@tanstack/react-query';
-import { obtenerDashboardGrafico } from '@/services/AppService';
-import SkChart from './skeleton/SkChart';
-import ViewTitle from '@/frontend-resourses/components/Labels/ViewTitle';
-import { DataGrafico, DataGraficoResponse } from '../_shared/Types/types';
-import { obtenerRangoAnios, transformarDatosGrafico } from './domain/transform';
-import { generarPlaceholderChartData } from './domain/placeholders';
-
+import { Dispatch } from "react";
+import { AreaChart } from "@tremor/react";
+import { useQuery } from "@tanstack/react-query";
+import { obtenerDashboardGrafico } from "@/services/AppService";
+import { DataGrafico, DataGraficoResponse } from "../_shared/Types/types";
+import { obtenerRangoAnios, transformarDatosGrafico } from "./domain/transform";
+import { generarPlaceholderChartData } from "./domain/placeholders";
+import { useRefetchOnFlag } from "@/Hooks/useRefetchOnFlag";
+import SkChart from "./skeleton/SkChart";
+import ViewTitle from "@/frontend-resourses/components/Labels/ViewTitle";
 
 export interface GraficoVentasProps {
   handleRefetch: boolean;
-  // setHandleRefetch: (value: boolean) => void;
   setHandleRefetch: Dispatch<React.SetStateAction<boolean>>;
 }
-
-
 
 export default function GraficoVentas({ handleRefetch, setHandleRefetch }: GraficoVentasProps) {
   const {
@@ -23,7 +20,7 @@ export default function GraficoVentas({ handleRefetch, setHandleRefetch }: Grafi
     refetch: refetchGrafico,
     isFetching: fetchingGrafico,
   } = useQuery<DataGraficoResponse[]>({
-    queryKey: ['dashboard-grafico'],
+    queryKey: ["dashboard-grafico"],
     queryFn: obtenerDashboardGrafico,
     refetchOnWindowFocus: false,
     staleTime: 1000 * 60 * 5, // Datos frescos por 5 minutos
@@ -32,26 +29,18 @@ export default function GraficoVentas({ handleRefetch, setHandleRefetch }: Grafi
 
   const chartData = transformarDatosGrafico(dataGrafico);
   const placeholderChartData = generarPlaceholderChartData();
-  const valueFormatter = (number: number): string =>
-    `${Intl.NumberFormat('es-ES', { maximumFractionDigits: 0 }).format(number / 1_000_000)} M`;
-
-  useEffect(() => {
-    if (handleRefetch) {
-      refetchGrafico();
-      setHandleRefetch(false);
-    }
-  }, [handleRefetch, refetchGrafico, setHandleRefetch]);
-
-
+  const valueFormatter = (number: number): string => `${Intl.NumberFormat("es-ES", { maximumFractionDigits: 0 }).format(number / 1_000_000)} M`;
+  
+  useRefetchOnFlag(handleRefetch, setHandleRefetch, refetchGrafico);
 
   const data: DataGrafico = {
-    titulo: 'Ventas Anuales',
+    titulo: "Ventas Anuales",
     dataGrafico: { chartData },
     formatoValor: 1,
     categorias: obtenerRangoAnios(),
-    colores: ['cyan', 'indigo'],
-    xLabel: 'Meses en el año',
-    yLabel: 'Importe (ARS)',
+    colores: ["cyan", "indigo"],
+    xLabel: "Meses en el año",
+    yLabel: "Importe (ARS)",
   };
 
   return (
@@ -63,7 +52,7 @@ export default function GraficoVentas({ handleRefetch, setHandleRefetch }: Grafi
       ) : (
         <div className="flex w-full justify-center">
           <div className="w-full bg-white transition-shadow duration-300 hover:shadow-lg hover:shadow-gray-400 rounded-md">
-            <ViewTitle title="Ventas Anuales"  />
+            <ViewTitle title="Ventas Anuales" />
             <div className="p-5">
               <AreaChart
                 className="h-[400px]"

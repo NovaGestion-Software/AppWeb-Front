@@ -1,10 +1,11 @@
-import { Dispatch, useEffect } from 'react';
+import { Dispatch } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { obtenerTortaCobranzasR } from '@/services/AppService';
 import { getYears } from '../_shared/domain/date';
 import { calcularImportes } from './domain/compute';
 import { buildDonutCardData } from './domain/build';
 import { formatCompactIntegerEsAR } from '../_shared/domain/number';
+import { useRefetchOnFlag } from '@/Hooks/useRefetchOnFlag';
 import DonutCard from '../../../../../../Components/DonutsChart/DonutCard';
 import ViewTitle from '@/frontend-resourses/components/Labels/ViewTitle';
 
@@ -25,12 +26,7 @@ export default function GraficoTorta({ handleRefetch, setHandleRefetch }: Grafic
     staleTime: 1000 * 60 * 5, // Datos frescos por 5 minutos
   });
 
-  useEffect(() => {
-    if (handleRefetch) {
-      refetch();
-      setHandleRefetch(false);
-    }
-  }, [handleRefetch, refetch, setHandleRefetch]);
+  useRefetchOnFlag(handleRefetch, setHandleRefetch, refetch);
 
   // objeto de años devueltos en string.
   const años = getYears({ anteriores: 1, type: 'string' });
