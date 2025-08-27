@@ -1,4 +1,4 @@
-import DonutCard from "@/views/app/dashboard/components/features/donut/DonutCard";
+import DonutCard from "@/Components/DonutsChart/DonutCard";
 import { useVentasPorSeccionStore } from "../useVentasPorSeccionStore";
 import { useEffect, useState } from "react";
 import { extraerItems } from "@/frontend-resourses/utils/dataManipulation";
