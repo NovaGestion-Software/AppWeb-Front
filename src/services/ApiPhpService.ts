@@ -47,7 +47,7 @@ export async function obtenerTokenMP() {
   const empresa = getEmpresa();
 
   const url = `/apinovades/mercadopago/obtenerMercadoToken.php?_i={"_e":"${empresa}",
-  "_m":"${homologacion}","_a":"1"}`;
+  "_m":"${homologacion}","_a":"2"}`;
 
   try {
     const { data } = await apiPhp(url);
@@ -67,7 +67,7 @@ export async function grabarMercadoAcceso(code: string) {
   const payload = {
     _e: empresa,
     _m: homologacion,
-    _a: "1",
+    _a: "2",
     _c: code,
   };
 
@@ -101,7 +101,7 @@ export async function obtenerUrlAuthorization() {
 }
 
 export async function obtenerEstadoIntegracionMP(empresa: string) {
-  const url = `/apinovades/mercadopago/consultaMercado.php?_i={"_e":"${empresa}","_m":"homo","_a":"1"}`;
+  const url = `/apinovades/mercadopago/consultaMercado.php?_i={"_e":"${empresa}","_m":"homo","_a":"2"}`;
   try {
     const { data } = await apiPhp(url);
     return data;
