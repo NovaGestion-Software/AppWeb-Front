@@ -1,19 +1,15 @@
-import { useState } from 'react';
-import CardsComponent from './components/features/cards/CardsComponent';
-import GraficoVentas from './components/features/graphic/GraficoVentas';
-import GraficoTorta from './components/features/donut/GraficoTorta';
-import ViewTitle from '@/frontend-resourses/components/Labels/ViewTitle';
+import { useState } from "react";
+import ViewTitle from "@/frontend-resourses/components/Labels/ViewTitle";
+import CardsComponent from "./components/features/cards/CardsComponent";
+import GraficoVentas from "./components/features/graphic/GraficoVentas";
+import GraficoTorta from "./components/features/donut/GraficoTorta";
 
 export default function DashboardView() {
   const [handleRefetch, setHandleRefetch] = useState(false);
 
   return (
     <>
-      <ViewTitle
-        title={'Dashboard'}
-        showRefreshButton={true}
-        setHandleRefetch={setHandleRefetch}
-      />
+      <ViewTitle title={"Dashboard"} showRefreshButton={true} setHandleRefetch={setHandleRefetch} />
 
       <div className="grid grid-cols-12 gap-4 py-2 pl-8 pr-4 mb-10 2xl:px-20">
         <div className="col-span-12 ">
