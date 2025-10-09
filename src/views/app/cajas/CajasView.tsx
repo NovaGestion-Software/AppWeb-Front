@@ -18,7 +18,7 @@ export default function CajasView() {
     queryKey: ['cajas'],
     queryFn: obtenerCajasImportes,
     refetchOnWindowFocus: false,
-    staleTime: 1000 * 60 * 5, // Datos frescos por 5 minutos
+    staleTime: 1000 * 60 * 5,
   });
 
   return (
