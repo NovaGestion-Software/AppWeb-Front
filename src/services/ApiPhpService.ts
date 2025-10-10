@@ -47,7 +47,7 @@ export async function obtenerTokenMP() {
   const empresa = getEmpresa();
 
   const url = `/apinovades/mercadopago/obtenerMercadoToken.php?_i={"_e":"${empresa}",
-  "_m":"${homologacion}","_a":"1"}`;
+  "_m":"${homologacion}","_a":"2"}`;
 
   try {
     const { data } = await apiPhp(url);
@@ -84,24 +84,25 @@ export async function grabarMercadoAcceso(code: string) {
 }
 
 export async function obtenerUrlAuthorization() {
-  const homologacion = getHomologacion();
+  // const homologacion = getHomologacion();
   const empresa = getEmpresa();
 
   const url = `/apinovades/mercadopago/obtenerMpAuth.php?_i={"_e":"${empresa}",
-  "_m":"${homologacion}","_a":"2"}`;
-
-  console.log(url,homologacion)
+  "_m":"homo","_a":"2"}`;
 
   try {
     const { data } = await apiPhp(url);
     return data;
+
+    // console.log(url);
+    // console.log(data);
   } catch (error) {
     manejarErrorAxios(error, "Error al obtener la URL de autorización");
   }
 }
 
 export async function obtenerEstadoIntegracionMP(empresa: string) {
-  const url = `/apinovades/mercadopago/consultaMercado.php?_i={"_e":"${empresa}","_m":"homo","_a":"1"}`;
+  const url = `/apinovades/mercadopago/consultaMercado.php?_i={"_e":"${empresa}","_m":"homo","_a":"2"}`;
   try {
     const { data } = await apiPhp(url);
     return data;
