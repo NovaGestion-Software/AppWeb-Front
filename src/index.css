@@ -192,3 +192,10 @@ html {
 #innerId {
   border: 2px solid blue;
 }
+
+
+/* 🔧 Ajusta opacidad del label de checkbox deshabilitado */
+.ant-checkbox-wrapper-disabled > span.ant-checkbox + span.ant-checkbox-label {
+  color: rgba(35, 35, 35, 0.95) !important;
+  font-weight: 700;
+}

@@ -4,8 +4,8 @@ import { RiDashboardFill } from "react-icons/ri";
 import { TiHome } from "react-icons/ti";
 import { GrDocumentTime } from "react-icons/gr";
 import { TbPlugConnected } from "react-icons/tb";
-import { FaChartArea, FaCreditCard, FaFileInvoiceDollar, FaMapMarkerAlt, FaMoneyCheckAlt, FaRegCreditCard, FaUserSlash } from "react-icons/fa";
-import { FaRankingStar } from "react-icons/fa6";
+import { FaChartArea, FaCreditCard, FaFileInvoiceDollar, FaHandshake, FaMapMarkerAlt, FaMoneyCheckAlt, FaRegCreditCard, FaUserSlash } from "react-icons/fa";
+import { FaRankingStar, FaTextSlash } from "react-icons/fa6";
 import { HiCreditCard } from "react-icons/hi";
 import { TbCashRegister } from "react-icons/tb";
 import { MdOutlineCategory } from "react-icons/md";
@@ -275,5 +275,17 @@ export const MenuDev: MenuItem[] = [
     href: "/form-mercado-pago",
     icon: <FaFileInvoiceDollar />,
     orden: 10,
+  },
+      {
+    title: "Test Components",
+    href: "/test-component",
+    icon: <FaTextSlash />,
+    orden: 11,
+  },
+        {
+    title: "Proovedores",
+    href: "/Proovedores",
+    icon: <FaHandshake />,
+    orden: 11,
   },
 ];

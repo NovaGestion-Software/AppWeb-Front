@@ -7,7 +7,6 @@ export default function ProtectedRoute() {
   const tokenAcceso = Cookies.get("token_acceso");
   const tokenRefresh = Cookies.get("token_refresh");
   const isAuthenticated = Boolean(tokenAcceso || tokenRefresh);
-  console.log('is autenticated', isAuthenticated)
 
   if (!isAuthenticated) {
     console.log("Redirigiendo a / porque no hay token_acceso ni token_refresh");
