@@ -1,12 +1,12 @@
 // /Store/Form/selectors/datosImpositivos.selectors.ts
 import { useMemo } from "react";
 import { useShallow } from "zustand/react/shallow";
-import { useProovedoresStore } from "../../Store";
+import { useProveedoresStore } from "../../Store";
 import { condTribLabel, tipoDocLabel } from "@/schemas/Proovedores/primitives";
 
 /** Valores de Datos Impositivos (BE) — sólo primitivos/refs estables */
 export const useDatosImpositivosValues = () =>
-  useProovedoresStore(
+  useProveedoresStore(
     useShallow((s) => ({
       // Situación fiscal (BE)
       idctrib: s.idctrib,   // 1|2|3|4
@@ -22,7 +22,7 @@ export const useDatosImpositivosValues = () =>
 
 /** Acciones agrupadas de Datos Impositivos + Retenciones */
 export const useDatosImpositivosActions = () =>
-  useProovedoresStore(
+  useProveedoresStore(
     useShallow((s) => ({
       // Datos Impositivos
       setImpositivosField: s.setDatosImpositivosField,
@@ -42,7 +42,7 @@ export const useDatosImpositivosActions = () =>
 
 /** Solo “situación fiscal” (BE): idctrib, idtdoc, cuit, ibruto */
 export const useSituacionFiscalValues = () =>
-  useProovedoresStore(
+  useProveedoresStore(
     useShallow((s) => ({
       idctrib: s.idctrib,
       idtdoc:  s.idtdoc,
@@ -55,7 +55,7 @@ export const useSituacionFiscalValues = () =>
 
 /** Setters agrupados para situación fiscal */
 export const useSituacionFiscalActions = () =>
-  useProovedoresStore(
+  useProveedoresStore(
     useShallow((s) => ({
       setIdctrib: (v: number) => s.setDatosImpositivosField("idctrib", v as any),
       setIdtdoc:  (v: number) => s.setDatosImpositivosField("idtdoc",  v as any),
@@ -68,7 +68,7 @@ export const useSituacionFiscalActions = () =>
 
 /** Retenciones — valores “flat” (BE) (todo primitivo/ref estable) */
 export const useRetencionesValues = () =>
-  useProovedoresStore(
+  useProveedoresStore(
     useShallow((s) => ({
       // Ingresos Brutos
       idregbru: s.idregbru, exretbru: s.exretbru, nexretbru: s.nexretbru, fecbru: s.fecbru, vtobru: s.vtobru,
@@ -158,7 +158,7 @@ export const useRetencionesArray = (): ReadonlyArray<RetencionRow> => {
 
 /** Acciones específicas de retenciones */
 export const useRetencionesActions = () =>
-  useProovedoresStore(
+  useProveedoresStore(
     useShallow((s) => ({
       setField: s.setRetencionesField,
       setAll:   s.setRetencionesAll,

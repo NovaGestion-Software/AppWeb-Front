@@ -1,63 +1,74 @@
 // /views/app/Proveedores/Actions/useConfirmarModificacion.ts
 import { useCallback } from "react";
-import { useProovedoresStore } from "../Store/Store";
-import { manejarErrorAxios } from "@/services/ApiPhpService";
+import { useProveedoresStore } from "../Store/Store";
 
 // ✅ nuevo repo (DTO out + validación + endpoint grabarDatos.php)
 import { repoModificarProveedor } from "../Data/Service/proveedores.repository";
 import type { ProveedorDomain } from "../Data/domain/proveedor.domain.schema";
+import { manejarErrorAxios } from "@/services/utils/helpers";
+import { useNotifier } from "@/Hooks/useNotifier";
+import { EstadoIMAC } from "../Store/Status/types";
+
 
 export function useConfirmarModificacion(canConfirmModificacion: boolean) {
+  const { notifySuccess, notifyError, confirm } = useNotifier();
+
   const onConfirmMod = useCallback(async () => {
     if (!canConfirmModificacion) return;
 
-    const s = useProovedoresStore.getState();
-
-    // Domain (UI) — snapshots actuales del formulario
+    const s = useProveedoresStore.getState();
     const original: ProveedorDomain | null = s.datosIniciales ?? null;
-    // si no guardaste un "actual", podés construirlo desde los slices
     const modificado: ProveedorDomain | null =
       s.datosActuales ?? s.snapshotActualFromSlices?.();
 
     if (!original || !modificado) {
-      console.warn("No hay datos para modificar");
+      await confirm("No hay datos para modificar.",{cancel:false,});
       return;
     }
 
     const id = Number(original.idprovee);
     if (!Number.isFinite(id) || id <= 0) {
-      console.warn("ID inválido para modificación");
+      await confirm("ID inválido para modificación.", {title:"ID inválido"});
       return;
     }
 
     try {
-      console.log("CONFIRMAR (MODIFICACIÓN) → enviando payload (Domain)", {
-        original,
-        modificado,
-      });
+      s.setProcessing?.(true);
 
-      // 🔁 Repo arma DTO OUT (x2), valida con Zod y hace POST a grabarDatos.php
-      const response = await repoModificarProveedor(id, original, modificado);
+      const resp = await repoModificarProveedor(id, original, modificado);
+      // resp: { ok: boolean; status: number; message?: string; ... }
 
-      console.log("🟢 Respuesta repoModificarProveedor:", response);
+      if (resp.status === 204) {
+        // Modificación sin cambios → confirm para forzar lectura
+        await confirm("No hubo cambios para guardar en este proveedor.", {title:"Sin cambios", cancel:false});
+        // Estado: no tocamos snapshots, limpiamos “pendientes” y quedamos en CONSULTA
+        s.setCambiosPendientes?.(false);
+        s.setEstado?.(EstadoIMAC.CONSULTA);
+        return;
+      }
 
-      if (response?.ok) {
-        // Sincronizá snapshots tras confirmar
+      if (resp.status === 200 && resp.ok) {
+        // Éxito → sincronizar snapshots + transición IMAC + toast
         s.setDatosIniciales?.(modificado);
         s.setDatosActuales?.(null);
         s.setCambiosPendientes?.(false);
-        s.dispatch?.("CONFIRMAR"); // o tu transición IMAC equivalente
-      } else {
-        console.error("❌ Error en respuesta modificar:", response?.message);
-        // Volvemos a dejar el snapshot inicial por seguridad
-        s.setDatosIniciales?.(original);
+        s.dispatch?.("CONFIRMAR");
+        notifySuccess("Cambios guardados correctamente.");
+        return;
       }
+
+      // Otros estados (o ok=false) → confirm como error legible
+      await confirm(resp.message ?? "No se pudo modificar el proveedor.", {title: "Error"});
+      // rollback suave de snapshots
+      s.setDatosIniciales?.(original);
     } catch (err) {
       manejarErrorAxios(err, "Error al modificar proveedor");
-      // rollback suave del snapshot inicial
       s.setDatosIniciales?.(original);
+      notifyError("Ocurrió un error al modificar el proveedor.");
+    } finally {
+      s.setProcessing?.(false);
     }
-  }, [canConfirmModificacion]);
+  }, [canConfirmModificacion, confirm, notifyError, notifySuccess]);
 
   return { onConfirmMod };
 }

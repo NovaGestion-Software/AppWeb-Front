@@ -1,32 +1,8 @@
 // /views/app/Proveedores/Data/services/proveedores.api.ts
 import apiPhp from "@/lib/axiosPhp";
-import {
-  getBaseSeleccionada,
-  getEmpresa,
-  getHomologacion,
-  manejarErrorAxios,
-} from "@/services/ApiPhpService";
-import {
-  ProveedorDtoInResponseSchema,
-  type ProveedorDtoIn,
-  ProveedorDtoOutSchema,
-  type ProveedorDtoOut,
-} from "../dto";
 
-/* ----------------------------------------------------------------------------
- * Utilidades reusadas del servicio anterior
- * ------------------------------------------------------------------------- */
-
-function buildIParam(extra?: Record<string, unknown>) {
-  const _e = getEmpresa();        // p.ej. "12"
-  const _m = getHomologacion();   // p.ej. "homo"
-  return encodeURIComponent(JSON.stringify({ _e, _m, ...(extra ?? {}) }));
-}
-
-function baseUrl(path: string) {
-  const base = getBaseSeleccionada(); // p.ej. "apinovades"
-  return `/${base}${path}`;
-}
+import { ProveedorDtoInResponseSchema, type ProveedorDtoIn, ProveedorDtoOutSchema, type ProveedorDtoOut } from "../dto";
+import { baseUrl, buildIParam, manejarErrorAxios } from "@/services/utils/helpers";
 
 /* ----------------------------------------------------------------------------
  * Tipos de respuesta "envoltorio" PHP (genéricos)
@@ -44,10 +20,6 @@ interface ApiPhpResponse<T = unknown> {
  * GET: obtenerProveedor (SIN cambios de endpoint)
  * ------------------------------------------------------------------------- */
 
-/**
- * 🔎 Obtiene UN proveedor por id (devuelve la fila cruda tipada y validada como DTO IN).
- * Mantiene 1:1 los nombres del backend.
- */
 export async function apiObtenerProveedor(idprovee: number): Promise<ProveedorDtoIn | null> {
   const url = baseUrl(`/comunes/obtenerProveedor.php?_i=${buildIParam({ _id: idprovee })}`);
 
@@ -85,24 +57,23 @@ type Topera = "A" | "M" | "E";
 /** Por consistencia, dejamos el tipo fuerte del body esperado por PHP */
 interface GrabarDatosBody {
   topera: Topera;
-  tabla: "proovedor";   // ⚠️ respetamos el nombre exacto que nos diste
+  tabla: "proovedor"; // ⚠️ respetamos el nombre exacto que nos diste
   tipotabla: "1";
   proovedor: ProveedorDtoOut | null;
   proovedorori: ProveedorDtoOut | null;
 }
 
 /** Respuesta tipificada mínima (ajustable si PHP devuelve más) */
-export interface GrabarDatosResponse {
+type GrabarDatosResponseData = Record<string, unknown>; // payload extra del backend (si hay)
+export type GrabarDatosResponse = {
   ok: boolean;
+  status: number; // ← clave para distinguir 200/204
   message?: string;
-  id?: number;
-}
+} & GrabarDatosResponseData;
 
 /** Utilidad interna: arma la URL base de grabarDatos con _id en _i cuando aplique */
 function urlGrabarDatos(id?: number) {
-  const iParam = (typeof id === "number")
-    ? buildIParam({ _id: id })
-    : buildIParam(); // alta podría no requerir _id
+  const iParam = typeof id === "number" ? buildIParam({ _id: id }) : buildIParam(); // alta podría no requerir _id
   return baseUrl(`/comunes/grabarDatos.php?_i=${iParam}`);
 }
 
@@ -128,7 +99,7 @@ function ensureDtoOut(dto: ProveedorDtoOut | null): ProveedorDtoOut | null {
  * - URL _i sin `_id` (salvo que el backend lo exija)
  */
 export async function apiAltaProveedor(nuevo: ProveedorDtoOut): Promise<GrabarDatosResponse> {
-  const url = urlGrabarDatos(); // sin _id
+  const url = urlGrabarDatos(); // sin _id (alta)
   const body: GrabarDatosBody = {
     topera: "A",
     tabla: "proovedor",
@@ -137,17 +108,24 @@ export async function apiAltaProveedor(nuevo: ProveedorDtoOut): Promise<GrabarDa
     proovedorori: null,
   };
 
-  console.log('datos nuevo',body.proovedor)
   try {
-    const { data } = await apiPhp.post<ApiPhpResponse<GrabarDatosResponse>>(url, body);
-    const ok = Boolean(data?.ok ?? true);
-    return { ok, ...(data?.data ?? {}), message: data?.message };
+    const resp = await apiPhp.post<ApiPhpResponse<unknown>>(url, body);
+    const { status } = resp;
+    const payload = resp.data;
+
+    const ok = Boolean(payload?.ok ?? (status >= 200 && status < 300));
+
+    return {
+      ok,
+      status,
+      ...(payload?.data ?? {}),
+      message: payload?.message,
+    };
   } catch (err) {
     manejarErrorAxios(err, "Error al dar de alta el proveedor");
     throw err;
   }
 }
-
 /**
  * 🟠 Modificar
  * - `topera = "M"`
@@ -155,13 +133,11 @@ export async function apiAltaProveedor(nuevo: ProveedorDtoOut): Promise<GrabarDa
  * - `proovedorori`: datos MODIFICADOS (después del cambio)
  * - URL _i con `_id` (id del registro a modificar)
  */
-export async function apiModificarProveedor(
-  idprovee: number,
-  original: ProveedorDtoOut,
-  modificado: ProveedorDtoOut
-): Promise<GrabarDatosResponse> {
+
+// api/proveedores.api.ts (o donde esté)
+export async function apiModificarProveedor(idprovee: number, original: ProveedorDtoOut, modificado: ProveedorDtoOut): Promise<GrabarDatosResponse> {
   const url = urlGrabarDatos(idprovee);
-  console.log('datos modificados')
+
   const body: GrabarDatosBody = {
     topera: "M",
     tabla: "proovedor",
@@ -169,12 +145,20 @@ export async function apiModificarProveedor(
     proovedor: ensureDtoOut(original),
     proovedorori: ensureDtoOut(modificado),
   };
-  console.log('datos modificados',body.proovedorori)
 
   try {
-    const { data } = await apiPhp.post<ApiPhpResponse<GrabarDatosResponse>>(url, body);
-    const ok = Boolean(data?.ok ?? true);
-    return { ok, ...(data?.data ?? {}), message: data?.message };
+    const resp = await apiPhp.post<ApiPhpResponse<GrabarDatosResponseData>>(url, body);
+    const { status } = resp;
+    const payload = resp.data;
+
+    const ok = Boolean(payload?.ok ?? (status >= 200 && status < 300));
+
+    return {
+      ok,
+      status, // ← devolvemos status
+      ...(payload?.data ?? {}),
+      message: payload?.message,
+    };
   } catch (err) {
     manejarErrorAxios(err, "Error al modificar el proveedor");
     throw err;
@@ -188,10 +172,7 @@ export async function apiModificarProveedor(
  * - `proovedorori`: null
  * - URL _i con `_id`
  */
-export async function apiEliminarProveedor(
-  idprovee: number,
-  original: ProveedorDtoOut
-): Promise<GrabarDatosResponse> {
+export async function apiEliminarProveedor(idprovee: number, original: ProveedorDtoOut): Promise<GrabarDatosResponse> {
   const url = urlGrabarDatos(idprovee);
   const body: GrabarDatosBody = {
     topera: "E",
@@ -202,9 +183,18 @@ export async function apiEliminarProveedor(
   };
 
   try {
-    const { data } = await apiPhp.post<ApiPhpResponse<GrabarDatosResponse>>(url, body);
-    const ok = Boolean(data?.ok ?? true);
-    return { ok, ...(data?.data ?? {}), message: data?.message };
+    const resp = await apiPhp.post<ApiPhpResponse<unknown>>(url, body);
+    const { status } = resp;
+    const payload = resp.data;
+
+    const ok = Boolean(payload?.ok ?? (status >= 200 && status < 300));
+
+    return {
+      ok,
+      status,
+      ...(payload?.data ?? {}),
+      message: payload?.message,
+    };
   } catch (err) {
     manejarErrorAxios(err, "Error al eliminar el proveedor");
     throw err;

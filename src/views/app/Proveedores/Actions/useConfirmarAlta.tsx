@@ -1,62 +1,71 @@
 // /views/app/Proveedores/Actions/useConfirmarAlta.ts
 import { useCallback } from "react";
-import { useProovedoresStore } from "../Store/Store";
-import { manejarErrorAxios } from "@/services/ApiPhpService";
+import { useProveedoresStore } from "../Store/Store";
 import {
   ProveedorDomainSchema,
   type ProveedorDomain,
 } from "../Data/domain/proveedor.domain.schema";
 import { repoAltaProveedor } from "../Data/Service";
+import { manejarErrorAxios } from "@/services/utils/helpers";
+import { useNotifier } from "@/Hooks/useNotifier";
+
 
 export function useConfirmarAlta(canConfirmAlta: boolean) {
+  const { notifySuccess, notifyError, confirm } = useNotifier();
+
   const onConfirmAlta = useCallback(async () => {
     if (!canConfirmAlta) return;
 
-    const s = useProovedoresStore.getState();
-
-    // Evitar doble submit si por algún motivo ya está procesando
+    const s = useProveedoresStore.getState();
     if (s.isProcessing) return;
 
     try {
       s.setProcessing?.(true);
 
-      // Tomamos el “modificado” desde actuales o construimos snapshot desde los slices
-      const modificadoMaybe: unknown =
-        s.datosActuales ?? s.snapshotActualFromSlices?.();
-
+      const modificadoMaybe: unknown = s.datosActuales ?? s.snapshotActualFromSlices?.();
       if (!modificadoMaybe) {
-        console.warn("No hay datos para alta");
+        await confirm("No hay datos para dar de alta.", "Sin datos");
         return;
       }
 
-      // Validar/normalizar a Domain aquí (evita discrepancias de tipos)
+      // Validar/normalizar Domain
       const nuevo: ProveedorDomain = ProveedorDomainSchema.parse(modificadoMaybe);
 
-      console.log("CONFIRMAR (ALTA) → enviando payload (Domain)", { nuevo });
+      const resp = await repoAltaProveedor(nuevo);
+      // resp: { ok: boolean; status: number; message?: string; id? ... }
 
-      // Repo: Domain -> DTO OUT -> valida (Zod) -> POST grabarDatos.php (A)
-      const response = await repoAltaProveedor(nuevo);
+      if (resp.status === 200 && resp.ok) {
+        // si vino id generado, hidratarlo
+        let confirmado: ProveedorDomain = nuevo;
+        const genId = Number((resp as any).id);
+        if (Number.isFinite(genId)) {
+          confirmado = { ...nuevo, idprovee: genId };
+        }
 
-      console.log("🟢 Respuesta repoAltaProveedor:", response);
-
-      // Si el backend devuelve el id generado, actualizamos el snapshot en store
-      let confirmado: ProveedorDomain = nuevo;
-      if (response?.id && Number.isFinite(Number(response.id))) {
-        confirmado = { ...nuevo, idprovee: Number(response.id) };
+        // Snapshots y estado
+        s.setDatosIniciales?.(confirmado);
+        s.setDatosActuales?.(null);
+        s.setCambiosPendientes?.(false);
+        s.dispatch?.("CONFIRMAR"); // transición IMAC a post-alta
+        notifySuccess("Proveedor creado correctamente.");
+        return;
       }
 
-      // Snapshots y flags
-      s.setDatosIniciales?.(confirmado);
-      s.setDatosActuales?.(null);
-      s.setCambiosPendientes?.(false);
-      s.dispatch?.("CONFIRMAR"); // o transición IMAC que uses
+      if (resp.status === 404) {
+        // Error desconocido → confirm para forzar lectura
+        await confirm(resp.message ?? "No se pudo crear el proveedor (404).", "Error");
+        return;
+      }
+
+      // Fallback para cualquier otro caso
+      await confirm(resp.message ?? "No se pudo crear el proveedor.", "Error");
     } catch (err) {
       manejarErrorAxios(err, "Error al dar de alta el proveedor");
-      // No tocamos snapshots si falló
+      notifyError("Ocurrió un error al dar de alta el proveedor.");
     } finally {
       s.setProcessing?.(false);
     }
-  }, [canConfirmAlta]);
+  }, [canConfirmAlta, confirm, notifyError, notifySuccess]);
 
   return { onConfirmAlta };
 }

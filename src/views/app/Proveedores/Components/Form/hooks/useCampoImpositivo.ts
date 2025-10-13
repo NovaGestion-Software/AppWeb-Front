@@ -1,5 +1,5 @@
 import { usePermisosCampos } from "../../../Store/Status/status.selectors";
-import { useProovedoresStore } from "../../../Store/Store";
+import { useProveedoresStore } from "../../../Store/Store";
 import { useEditarActuales } from "./useEditarActuales";
 
 import { z } from "zod";
@@ -25,7 +25,7 @@ export function useCampoImpositivo<K extends SFKey>(
 ) {
   const { canEditCampos } = usePermisosCampos();
   const { isEditable, updateActuales } = useEditarActuales();
-  const actuales = useProovedoresStore((s) => s.datosActuales) as ProveedoresData | null;
+  const actuales = useProveedoresStore((s) => s.datosActuales) as ProveedoresData | null;
 
   const value: ProveedoresData[K] =
     isEditable && actuales

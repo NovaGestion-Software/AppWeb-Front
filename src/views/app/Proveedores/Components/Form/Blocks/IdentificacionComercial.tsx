@@ -5,7 +5,7 @@ import CodigoField from "../Fields/CodigoField";
 
 import { useIdentificacionValues, useIdentificacionActions } from "../../../Store/Form/selectors/identificacion.selectors";
 import { usePermisosCampos } from "../../../Store/Status/status.selectors";
-import { useProovedoresStore } from "../../../Store/Store";
+import { useProveedoresStore } from "../../../Store/Store";
 import { useEditarActuales } from "../hooks/useEditarActuales";
 import { inputsClass } from "../Config/classes";
 
@@ -14,16 +14,14 @@ export type IdentVariant = "full" | "basic";
 export default function IdentificacionComercial({ variant = "full" }: { variant?: IdentVariant }) {
   const { canEditCampos, canEditCodigo } = usePermisosCampos();
 
-  // Identificación (BE keys)
   const { nombre: nombreSlice, nfantasia: nfantasiaSlice } = useIdentificacionValues();
   const { setNombre, setNfantasia } = useIdentificacionActions();
 
-  // Metadatos (BE keys) — inhabilitado ahora es `inha`
-  const inhaSlice = useProovedoresStore((s) => s.inha);
-  const setMetadatosField = useProovedoresStore((s) => s.setMetadatosField);
+  const inhaSlice = useProveedoresStore((s) => s.inha);
+  const setMetadatosField = useProveedoresStore((s) => s.setMetadatosField);
 
   const { isEditable, updateActuales } = useEditarActuales();
-  const actuales = useProovedoresStore((s) => s.datosActuales);
+  const actuales = useProveedoresStore((s) => s.datosActuales);
 
   // Valores efectivos (si estamos en modo “editar actuales”, priorizamos snapshot)
   const nombre = isEditable && actuales ? actuales.nombre ?? nombreSlice : nombreSlice;
@@ -53,7 +51,7 @@ export default function IdentificacionComercial({ variant = "full" }: { variant?
       <Field label="Razón social" rowStart={2} colSpan={2} required>
         <FlexibleInputField
           value={nombre}
-          focusId="proovedores:nombre" // BE key
+          focusId="proveedores:nombre" // BE key
           placeholder="Razón social"
           labelWidth="w-0"
           
@@ -87,3 +85,5 @@ export default function IdentificacionComercial({ variant = "full" }: { variant?
     </>
   );
 }
+
+

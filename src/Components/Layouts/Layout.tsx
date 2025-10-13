@@ -3,6 +3,7 @@ import { Outlet } from "react-router-dom";
 import { useViewportGuard } from "@/Hooks/useViewportGuard";
 import SideBar from "@/Components/SideBar/SideBar";
 import ViewportBlocker from "./ViewportBlocker";
+import { MessageHost } from "../UI/MessageHost";
 
 export default function Layout() {
   const isBlocked = useViewportGuard();
@@ -24,6 +25,7 @@ export default function Layout() {
 
         <div className="relative z-10">
           <Outlet />
+          <MessageHost />
         </div>
       </div>
     </div>

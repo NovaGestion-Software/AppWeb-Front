@@ -10,7 +10,7 @@ export default function FormaPagoBlock() {
   const { fpago, dias_v, dias_e, dias_p, f_pesos, f_dolares, obs } = useFormaPagoValues();
   const { setField } = useFormaPagoActions();
 
-  // Hooks por campo (claves BE)
+  // Hooks por campo
   const fpagoH   = useCampoFormaPago("fpago", fpago, setField);
   const diasVH   = useCampoFormaPago("dias_v", dias_v, setField, (raw) => Number(raw || 0) as any);
   const diasEH   = useCampoFormaPago("dias_e", dias_e, setField, (raw) => Number(raw || 0) as any);
@@ -34,7 +34,7 @@ export default function FormaPagoBlock() {
         </Field>
       </FieldRow>
 
-      <FieldRow>
+      <FieldRow className=" items-center">
         <Field label="Frecuencia de visitas (días)" colSpan={1}>
           <FlexibleInputField
             inputType="number"
@@ -57,7 +57,7 @@ export default function FormaPagoBlock() {
           />
         </Field>
 
-        <Field label="Plazo de pago (días)" colSpan={1}>
+        <Field label="Plazo de pago (días)" className="h-full space-y-5" colSpan={1}>
           <FlexibleInputField
             inputType="number"
             value={String(diasPH.value ?? 0)}

@@ -8,13 +8,14 @@ import { Botonera } from "@/views/app/informes/_components/Botonera";
 import type { BotoneraConfig } from "@/types/ButtonConfig";
 import { Card } from "@/frontend-resourses/components/Cards/CardBase";
 import { useFlagsEstado, useIs, usePermisosIMAC } from "../../Store/Status/status.selectors";
-import { useProovedoresStore } from "../../Store/Store";
+import { useProveedoresStore } from "../../Store/Store";
 import { useConfirmarModificacion } from "../../Actions/useConfirmarModificacion";
 import { EstadoIMAC } from "../../Store/Status/types";
 import { buttonsClass } from "../Form/Config/classes";
 import { useConfirmarAlta } from "../../Actions/useConfirmarAlta";
 import { requestFocusDOM } from "@/frontend-resourses/Hooks/Focus/requestFocusDOM";
 import { useTabsActions } from "../../Store/Tabs/Tab.selectors";
+import { useOnEliminarClick } from "../../Actions/useOnEliminarClick";
 
 type Props = {
   className?: string;
@@ -26,11 +27,11 @@ export default function BotoneraTerciaria({ className }: Props) {
   const { isProcessing } = useFlagsEstado();
   const { canEditar, canEliminar } = usePermisosIMAC();
 
-  const { setActiveTabIndex } = useTabsActions()
+  const { setActiveTabIndex } = useTabsActions();
 
   // Datos
-  const datosIniciales = useProovedoresStore((s) => s.datosIniciales);
-  const datosActuales = useProovedoresStore((s) => s.datosActuales);
+  const datosIniciales = useProveedoresStore((s) => s.datosIniciales);
+  const datosActuales = useProveedoresStore((s) => s.datosActuales);
 
   // Disponibilidades
   const canConfirmAlta = isAlta;
@@ -43,15 +44,16 @@ export default function BotoneraTerciaria({ className }: Props) {
   // Acción: confirmar alta (por ahora local; ajustar cuando haya endpoint de alta)
   const { onConfirmAlta } = useConfirmarAlta(canConfirmAlta);
 
+  const { onEliminar } = useOnEliminarClick();
+
   // Acción: cancelar (alta/mod)
   const onCancel = useCallback(async () => {
-    const s = useProovedoresStore.getState();
+    const s = useProveedoresStore.getState();
     const estado = s.estado as EstadoIMAC;
 
     if (estado === EstadoIMAC.ALTA) {
       console.log("⛔ Cancelar ALTA → resetAll()");
       s.resetAll?.();
-      s.bumpFormEpoch?.(); // 👈 remonta UI
       return;
     }
 
@@ -71,25 +73,18 @@ export default function BotoneraTerciaria({ className }: Props) {
 
   // Acción: MODIFICAR (pasar a estado de edición)
   const onModificar = useCallback(() => {
-    const s = useProovedoresStore.getState();
+    const s = useProveedoresStore.getState();
     if (!s.datosIniciales) {
       console.warn("✏️ MODIFICACIÓN: no hay datosIniciales para clonar");
       return;
     }
-    
+
     // Se clona snapshot de trabajo para edición
     s.setDatosActuales?.(structuredClone(s.datosIniciales));
     s.setCambiosPendientes?.(false);
     setActiveTabIndex(0);
-    requestFocusDOM("proovedores:nombre", { selectAll: true, scrollIntoView: true });
+    requestFocusDOM("proveedores:nombre", { selectAll: true, scrollIntoView: true });
     s.dispatch?.("EDITAR");
-  }, []);
-
-  // Acción: ELIMINAR (reset vista, no DB)
-  const onEliminar = useCallback(() => {
-    const s = useProovedoresStore.getState();
-    s.resetAll?.();
-    console.log("🧹 Reset de vista completado");
   }, []);
 
   // Disponibilidades extras para Modificar/Eliminar (vista)

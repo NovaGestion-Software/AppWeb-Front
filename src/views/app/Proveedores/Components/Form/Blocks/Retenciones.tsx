@@ -13,10 +13,9 @@ export default function Retenciones() {
   const retenciones = useRetencionesArray(); // [{ id, tipo:boolean, regimen:boolean, exento, certificado, ... }]
   const { setField } = useRetencionesActions();
 
-  // Ocultar cuando "regimen" (o "tipo") es false y no hay otros datos
   const visibles = retenciones.filter(
     r =>
-      !!r.regimen || // ← o r.tipo
+      !!r.regimen || 
       !!r.exento ||
       !!(r.certificado && String(r.certificado).trim()) ||
       !!r.vigenciaDesde ||

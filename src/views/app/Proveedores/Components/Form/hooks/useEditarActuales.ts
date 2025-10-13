@@ -1,6 +1,6 @@
 // src/views/app/Proveedores/Components/Form/hooks/useEditarActuales.ts
 import { ProveedorDomain } from "../../../Data/domain";
-import { useProovedoresStore } from "../../../Store/Store";
+import { useProveedoresStore } from "../../../Store/Store";
 
 /** Quita undefined para no pisar con “nada” en el merge */
 function stripUndefined<T extends object>(o: Partial<T>): Partial<T> {
@@ -40,11 +40,11 @@ export function useEditarActuales(): {
   /** REPLACE: reemplaza todo el objeto (usa callback) */
   updateActuales(updater: UpdaterFn): void;
 } {
-  const isEditable = useProovedoresStore((s) => Boolean(s.datosActuales));
-  const setDatosActuales = useProovedoresStore((s) => s.setDatosActuales);
+  const isEditable = useProveedoresStore((s) => Boolean(s.datosActuales));
+  const setDatosActuales = useProveedoresStore((s) => s.setDatosActuales);
 
   function updateActuales(arg: Partial<ProveedorDomain> | UpdaterFn) {
-    const curr = useProovedoresStore.getState()
+    const curr = useProveedoresStore.getState()
       .datosActuales as ProveedorDomain | null;
 
     if (typeof arg === "function") {

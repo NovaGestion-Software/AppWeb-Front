@@ -20,7 +20,7 @@ export const devExtraRoutes: RouteObject[] = [
           { path: "stock-seccion", element: LazyPage(<StockPorSeccionView />) },
           { path: "form-mercado-pago", element: LazyPage(<FormMercadoPagoView />) },
           // { path: "test-component", element: LazyPage(<TestComponentView />) },
-          { path: "proovedores", element: LazyPage(<ProvedoresView />) },
+          { path: "proveedores", element: LazyPage(<ProvedoresView />) },
         ],
       },
     ],

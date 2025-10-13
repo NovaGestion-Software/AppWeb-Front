@@ -4,7 +4,7 @@ import { FlexibleInputField } from "@/frontend-resourses/components";
 import { useSituacionFiscalValues } from "../../../Store/Form/selectors/datosImpositivos.selectors";
 import { useCampoImpositivo } from "../hooks/useCampoImpositivo"; // asegúrate que el archivo/export se llame igual
 import { inputsClass, inputsSelectClass } from "../Config/classes";
-import { useProovedoresStore } from "../../../Store/Store";
+import { useProveedoresStore } from "../../../Store/Store";
 
 /**
  * Bloque de situación fiscal del contribuyente.
@@ -20,14 +20,14 @@ export default function SituacionFiscal({
   const { idctrib, idtdoc, cuit, ibruto } = useSituacionFiscalValues();
 
   // Setter genérico del slice impositivo (BE)
-  const setImpositivosField = useProovedoresStore((s) => s.setDatosImpositivosField);
+  const setImpositivosField = useProveedoresStore((s) => s.setDatosImpositivosField);
 
   // Hooks por campo (con parse para selects numéricos)
   const ct = useCampoImpositivo(
     "idctrib",
     idctrib,
     setImpositivosField as any,
-    (raw) => (Number.isNaN(Number(raw)) ? 1 : (Number(raw) as any)) // default 1=RI si viene vacío
+    (raw) => (Number.isNaN(Number(raw)) ? 1 : (Number(raw) as any)) 
   );
 
   const td = useCampoImpositivo(

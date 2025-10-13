@@ -1,10 +1,10 @@
 // /Store/Form/selectors/identificacion.selectors.ts
 import { useShallow } from "zustand/react/shallow";
-import { useProovedoresStore } from "../../Store";
+import { useProveedoresStore } from "../../Store";
 
 // 🔎 Valores agrupados (BE keys)
 export const useIdentificacionValues = () =>
-  useProovedoresStore(
+  useProveedoresStore(
     useShallow((s) => ({
       idprovee: s.idprovee,     // number
       nombre: s.nombre,         // string (TrimmedStr)
@@ -14,7 +14,7 @@ export const useIdentificacionValues = () =>
 
 // 🛠️ Acciones agrupadas (BE keys)
 export const useIdentificacionActions = () =>
-  useProovedoresStore(
+  useProveedoresStore(
     useShallow((s) => ({
       setIdprovee: s.setIdprovee,
       setNombre: s.setNombre,

@@ -1,3 +1,3 @@
-export const proovedoresData = [{
+export const proveedoresData = [{
     id:1,
 }]

@@ -1,5 +1,5 @@
 import { usePermisosCampos } from "../../../Store/Status/status.selectors";
-import { useProovedoresStore } from "../../../Store/Store";
+import { useProveedoresStore } from "../../../Store/Store";
 import { useEditarActuales } from "./useEditarActuales";
 import type { RetencionesData } from "../../../Store/Form/Slices/retenciones.slice";
 
@@ -33,7 +33,7 @@ export function useCampoRetencion(
 ) {
   const { canEditCampos } = usePermisosCampos();
   const { isEditable, updateActuales } = useEditarActuales();
-  const store = useProovedoresStore.getState();
+  const store = useProveedoresStore.getState();
 
   const beKey = mapKey(id, key);
 

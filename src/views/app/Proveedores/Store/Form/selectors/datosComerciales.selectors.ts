@@ -1,10 +1,10 @@
 // /Store/Form/selectors/datosComerciales.selectors.ts
 import { useShallow } from "zustand/react/shallow";
-import { useProovedoresStore } from "../../Store";
+import { useProveedoresStore } from "../../Store";
 
 /** Valores agrupados SOLO de Datos Comerciales (Ubicación + Contacto) */
 export const useDatosComercialesValues = () =>
-  useProovedoresStore(
+  useProveedoresStore(
     useShallow((s) => ({
       // Ubicación (claves BE)
       domicilio1: s.domicilio1,
@@ -32,7 +32,7 @@ export const useDatosComercialesValues = () =>
 
 /** Acciones agrupadas (Datos Comerciales) */
 export const useDatosComercialesActions = () =>
-  useProovedoresStore(
+  useProveedoresStore(
     useShallow((s) => ({
       setField: s.setDatosComercialesField,
       setAll: s.setDatosComercialesAll,
@@ -42,5 +42,5 @@ export const useDatosComercialesActions = () =>
   );
 
 /** Hooks granulares que ANTES estaban acá pero ahora viven en Metadatos */
-export const useInhabilitado = () => useProovedoresStore((s) => s.inha);       // boolean (0/1 → bool)
-export const useFechaAlta   = () => useProovedoresStore((s) => s.f_alta);      // string | undefined
+export const useInhabilitado = () => useProveedoresStore((s) => s.inha);       // boolean (0/1 → bool)
+export const useFechaAlta   = () => useProveedoresStore((s) => s.f_alta);      // string | undefined

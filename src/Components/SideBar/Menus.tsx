@@ -284,8 +284,8 @@ export const MenuDev: MenuItem[] = [
   //   orden: 11,
   // },
         {
-    title: "Proovedores",
-    href: "/Proovedores",
+    title: "Proveedores",
+    href: "/Proveedores",
     icon: <FaHandshake />,
     orden: 11,
   },

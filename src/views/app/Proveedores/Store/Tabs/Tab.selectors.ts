@@ -1,9 +1,9 @@
 
-import { useProovedoresStore } from "../Store";
+import { useProveedoresStore } from "../Store";
 import { useShallow } from "zustand/react/shallow";
 
 export const useTabs = () =>
-  useProovedoresStore(
+  useProveedoresStore(
     useShallow((s) => ({
       tabs: s.tabs,
       activeTabIndex: s.activeTabIndex,
@@ -12,13 +12,13 @@ export const useTabs = () =>
   );
 
 export const useActiveTabIndex = () =>
-  useProovedoresStore((s) => s.activeTabIndex);
+  useProveedoresStore((s) => s.activeTabIndex);
 
 export const useActiveTabId = () =>
-  useProovedoresStore((s) => s.activeTabId);
+  useProveedoresStore((s) => s.activeTabId);
 
 export const useTabsActions = () =>
-  useProovedoresStore(
+  useProveedoresStore(
     useShallow((s) => ({
       setActiveTabIndex: s.setActiveTabIndex,
       setActiveTabId: s.setActiveTabId,
