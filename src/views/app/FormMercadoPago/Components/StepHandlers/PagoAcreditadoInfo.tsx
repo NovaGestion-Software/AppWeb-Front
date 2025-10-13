@@ -1,4 +1,4 @@
-import { format } from "date-fns";
+import dayjs from "dayjs";
 
 type PaymentMethod = {
   id: string;
@@ -53,7 +53,7 @@ export default function PagoAcreditadoInfo({ orden }: Props) {
   let fechaFormateada = "Fecha no disponible";
   try {
     if (orden.created_date) {
-      fechaFormateada = format(new Date(orden.created_date), "dd/MM/yyyy HH:mm");
+      fechaFormateada = dayjs(orden.created_date).format("DD/MM/YYYY HH:mm");
     }
   } catch (error) {
     console.warn("Error al formatear la fecha:", error);
