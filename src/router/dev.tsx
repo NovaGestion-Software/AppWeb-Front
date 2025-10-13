@@ -3,7 +3,7 @@ import { lazy } from "react";
 import ProtectedRoute from "@/Components/Guards/ProtectedRoute";
 import Layout from "@/Components/Layouts/Layout";
 import { LazyPage } from "./LazyPage";
-import TestComponentView from "@/views/app/TestComponents/TestComponentsView";
+// import TestComponentView from "@/views/app/TestComponents/TestComponentsView";
 import ProvedoresView from "@/views/app/Proveedores/ProveedoresView";
 
 const StockPorSeccionView = lazy(() => import("@/views/app/stockSeccion/StockPorSeccionView"));
@@ -19,7 +19,7 @@ export const devExtraRoutes: RouteObject[] = [
         children: [
           { path: "stock-seccion", element: LazyPage(<StockPorSeccionView />) },
           { path: "form-mercado-pago", element: LazyPage(<FormMercadoPagoView />) },
-          { path: "test-component", element: LazyPage(<TestComponentView />) },
+          // { path: "test-component", element: LazyPage(<TestComponentView />) },
           { path: "proovedores", element: LazyPage(<ProvedoresView />) },
         ],
       },
