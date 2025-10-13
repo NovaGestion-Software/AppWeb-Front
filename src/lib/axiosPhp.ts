@@ -1,7 +1,8 @@
 import axios from 'axios';
 
-const apiPhp = axios.create({
-  baseURL: import.meta.env.VITE_API_PHPURL,
+export const apiPhp = axios.create({
+  baseURL: "/apiphp", // pasa por el proxy
+  timeout: 20000,
 });
 
 // apiPhp.defaults.headers['x-client'] = 'web';

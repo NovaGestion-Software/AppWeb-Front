@@ -3,7 +3,7 @@ import { BotoneraConfig } from "@/types/ButtonConfig";
 
 export function Botonera({ config, className = "" }: { config: BotoneraConfig[]; className?: string }) {
   return (
-    <div className={`${className} flex flex-row gap-3`}>
+    <div className={`${className} min-h-10 flex flex-row items-center gap-3`}>
       {config.map((btn, idx) =>
         btn.type === "custom" ? (
           <div key={idx}>{btn.button}</div>
@@ -15,7 +15,7 @@ export function Botonera({ config, className = "" }: { config: BotoneraConfig[];
             color={btn.color}
             disabled={btn.disabled}
             onClick={btn.onClick}
-            addClassName={btn.addClassName}
+            addClassName={`v1536:min-h-9 ${btn.addClassName}`}
           />
         )
       )}

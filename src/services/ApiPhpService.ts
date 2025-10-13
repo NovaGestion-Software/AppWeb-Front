@@ -14,7 +14,7 @@ export function getEmpresa(): string {
   return user.empresa?.toString().slice(-2);
 }
 
-function getBaseSeleccionada(): string {
+export function getBaseSeleccionada(): string {
   const entorno = localStorage.getItem("_ce") || "development";
   return entorno === "development" ? "apinovades" : "apinova";
 }
@@ -23,7 +23,7 @@ export function getHomologacion(clave = "_m"): string {
   return localStorage.getItem(clave) || "homo";
 }
 
-function manejarErrorAxios(error: unknown, mensajeDefault: string) {
+export function manejarErrorAxios(error: unknown, mensajeDefault: string) {
   if (isAxiosError(error)) {
     console.error("🔴 Axios error");
     console.error("👉 Mensaje:", error.message);
@@ -76,6 +76,7 @@ export async function grabarMercadoAcceso(code: string) {
       method: "POST",
       data: payload,
     });
+    console.log('grabar acceso data',data)
     return data;
   } catch (error) {
     manejarErrorAxios(error, "No se pudo grabar el código de Mercado Pago");
@@ -121,6 +122,7 @@ export async function obtenerVentasHora(fechas: FechasRango) {
   const url = `/${base}/generico/obtenerVentasHora.php?_i={"_e":"${empresa}","_m":"${homologacion}","_fi":"${from}","_ff":"${to}"}`;
   try {
     const { data } = await apiPhp(url);
+   console.log('data11', data)
     return data;
   } catch (error) {
     manejarErrorAxios(error, "Error al obtener ventas por hora");
