@@ -7,7 +7,7 @@ import ProovedorForm from "./Components/Form/ProovedorForm";
 
 export default function ProvedoresView() {
   const { estaProcesado, setEstaProcesado } = useProovedoresStore();
-
+console.log('first')
   const handleClearData = () => {
     setEstaProcesado(false);
   };
