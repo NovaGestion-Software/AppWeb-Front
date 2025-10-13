@@ -1,6 +1,6 @@
 import { useEditarActuales } from "./useEditarActuales";
 import { usePermisosCampos } from "../../../Store/Status/status.selectors";
-import { useProovedoresStore } from "../../../Store/Store";
+import { useProveedoresStore } from "../../../Store/Store";
 
 import type { FormaPagoSlice } from "../../../Store/Form/Slices/formaPago.slice";
 
@@ -27,7 +27,7 @@ export function useCampoFormaPago<K extends FPKey>(
 ) {
   const { canEditCampos } = usePermisosCampos();
   const { isEditable, updateActuales } = useEditarActuales();
-  const actuales = useProovedoresStore((s) => s.datosActuales) as ProveedoresData | null;
+  const actuales = useProveedoresStore((s) => s.datosActuales) as ProveedoresData | null;
 
   const value: FormaPagoSlice[K] =
     isEditable && actuales

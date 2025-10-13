@@ -1,10 +1,10 @@
 // /Store/Form/selectors/formaPago.selectors.ts
 import { useShallow } from "zustand/react/shallow";
-import { useProovedoresStore } from "../../Store";
+import { useProveedoresStore } from "../../Store";
 
 /** 🔎 Valores agrupados (usa shallow para evitar renders innecesarios) */
 export const useFormaPagoValues = () =>
-  useProovedoresStore(
+  useProveedoresStore(
     useShallow((s) => ({
       fpago: s.fpago,          // string (ej: "EFECTIVO")
       dias_p: s.dias_p,        // número: plazo de pago
@@ -18,7 +18,7 @@ export const useFormaPagoValues = () =>
 
 /** 🛠️ Acciones agrupadas */
 export const useFormaPagoActions = () =>
-  useProovedoresStore(
+  useProveedoresStore(
     useShallow((s) => ({
       setField: s.setFormaPagoField,
       setAll: s.setFormaPagoAll,

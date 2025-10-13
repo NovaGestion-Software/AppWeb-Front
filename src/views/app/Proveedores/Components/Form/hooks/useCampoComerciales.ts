@@ -1,5 +1,5 @@
 import { usePermisosCampos } from "../../../Store/Status/status.selectors";
-import { useProovedoresStore } from "../../../Store/Store";
+import { useProveedoresStore } from "../../../Store/Store";
 import { useEditarActuales } from "./useEditarActuales";
 
 import type { DatosComercialesData } from "../../../Store/Form/Slices/datosComerciales.slice";
@@ -28,7 +28,7 @@ export function useCampoComerciales<
 ) {
   const { canEditCampos } = usePermisosCampos();
   const { isEditable, updateActuales } = useEditarActuales();
-  const actuales = useProovedoresStore((s) => s.datosActuales) as ProveedoresData | null;
+  const actuales = useProveedoresStore((s) => s.datosActuales) as ProveedoresData | null;
 
   // Determina el valor fuente (snapshot de edición si aplica; sino el slice)
   const rawValue: DatosComercialesData[K] =

@@ -2,7 +2,7 @@ import { FlexibleInputField } from "@/frontend-resourses/components";
 import { MdAddCircleOutline, MdRemoveCircleOutline } from "react-icons/md";
 import Field from "../../Shared/Field";
 import { useIs, useFormEpoch } from "../../../Store/Status/status.selectors";
-import { useProovedoresStore } from "../../../Store/Store";
+import { useProveedoresStore } from "../../../Store/Store";
 import clsx from "clsx";
 
 type CampoLike = {
@@ -43,9 +43,9 @@ export function TelefonosConCodArea({
   const canEdit = isAlta || isModificacion;
   const formEpoch = useFormEpoch();
 
-  const datosActuales = useProovedoresStore((s) => s.datosActuales);
-  const datosIniciales = useProovedoresStore((s) => s.datosIniciales);
-  const idprovee = useProovedoresStore((s) => s.datosIniciales?.idprovee ?? 0);
+  const datosActuales = useProveedoresStore((s) => s.datosActuales);
+  const datosIniciales = useProveedoresStore((s) => s.datosIniciales);
+  const idprovee = useProveedoresStore((s) => s.datosIniciales?.idprovee ?? 0);
 
   // Fuente para visibilidad/consulta
   const sourceRow = canEdit ? datosActuales : datosIniciales;
@@ -82,7 +82,7 @@ export function TelefonosConCodArea({
 
   // Asegura un objeto editable (si por algo aún no está seteado)
   const ensureEditableRow = () => {
-    const s = useProovedoresStore.getState();
+    const s = useProveedoresStore.getState();
     let curr = s.datosActuales as any;
     if (!curr) {
       const base = sourceRow ? structuredClone(sourceRow) : {};
@@ -95,7 +95,7 @@ export function TelefonosConCodArea({
   // Agregar V1/V2: crea las keys en datosActuales (aunque sea "")
   const addRow1 = () => {
     if (!canEdit) return;
-    const s = useProovedoresStore.getState();
+    const s = useProveedoresStore.getState();
     const curr = ensureEditableRow();
     s.setDatosActuales?.({
       ...curr,
@@ -107,7 +107,7 @@ export function TelefonosConCodArea({
 
   const addRow2 = () => {
     if (!canEdit) return;
-    const s = useProovedoresStore.getState();
+    const s = useProveedoresStore.getState();
     const curr = ensureEditableRow();
     s.setDatosActuales?.({
       ...curr,
@@ -120,7 +120,7 @@ export function TelefonosConCodArea({
   // Quitar V1/V2: limpia valores y mantiene consistencia
   const removeRow1 = () => {
     if (!canEdit) return;
-    const s = useProovedoresStore.getState();
+    const s = useProveedoresStore.getState();
     const curr = ensureEditableRow();
     clearV1?.();
     s.setDatosActuales?.({
@@ -133,7 +133,7 @@ export function TelefonosConCodArea({
 
   const removeRow2 = () => {
     if (!canEdit) return;
-    const s = useProovedoresStore.getState();
+    const s = useProveedoresStore.getState();
     const curr = ensureEditableRow();
     clearV2?.();
     s.setDatosActuales?.({

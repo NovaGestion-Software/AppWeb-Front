@@ -39,6 +39,7 @@ type FieldProps = {
   rowStart?: 1|2|3|4|5|6|7|8|9|10|11|12;
   required?: boolean;
   className?: string;
+  labelClass?: string;
 };
 
 /** Wrapper label+control+help para homogeneizar estilos del formulario. */
@@ -52,6 +53,7 @@ export default function Field({
   required = false,
   className,
   children,
+  labelClass = "",
 }: PropsWithChildren<FieldProps>) {
   return (
     <div
@@ -63,7 +65,7 @@ export default function Field({
         className
       )}
     >
-      <label className="mb-1 block text-xs font-medium text-neutral-950">
+      <label className={`mb-1 block text-xs font-medium text-neutral-950 ${labelClass}`}   >
         {label} {required && <span className="text-red-500">*</span>}
       </label>
       {children}

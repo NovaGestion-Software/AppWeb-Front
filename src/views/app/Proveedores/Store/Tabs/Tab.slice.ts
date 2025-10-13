@@ -1,7 +1,7 @@
 import type { StateCreator } from "zustand";
 export type TabId = "comerciales" | "impositivos" | "formaPago";
 
-export const PROOVEDORES_TABS: { id: TabId; label: string }[] = [
+export const PROVEEDORES_TABS: { id: TabId; label: string }[] = [
   { id: "comerciales", label: "Datos Comerciales" },
   { id: "impositivos", label: "Datos Impositivos" },
   { id: "formaPago", label: "Forma de Pago" },
@@ -41,7 +41,7 @@ export const createTabsSlice: StateCreator<
   [],
   TabsSlice
 > = (set, get) => {
-  const initialTabs = PROOVEDORES_TABS;
+  const initialTabs = PROVEEDORES_TABS;
   const initialId = initialTabs[0]?.id ?? "default";
 
   return {

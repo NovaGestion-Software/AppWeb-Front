@@ -1,6 +1,6 @@
 // /Store/Form/Slices/metadatos.selectors.ts
 import { useShallow } from "zustand/react/shallow";
-import { useProovedoresStore } from "../../Store";
+import { useProveedoresStore } from "../../Store";
 import type { MetadatosData } from "../Slices/metadatos.slice";
 
 /**
@@ -9,7 +9,7 @@ import type { MetadatosData } from "../Slices/metadatos.slice";
  * 🔹 Usa useShallow para evitar re-render si el shape no cambia
  */
 export function useMetadatosValues(): MetadatosData {
-  return useProovedoresStore(
+  return useProveedoresStore(
     useShallow((s) => ({
       inha: s.inha,
       idnodo: s.idnodo,
@@ -31,7 +31,7 @@ export function useMetadatosValues(): MetadatosData {
  * 🔹 Usa useShallow para mantener refs estables sin rerenders innecesarios
  */
 export function useMetadatosActions() {
-  return useProovedoresStore(
+  return useProveedoresStore(
     useShallow((s) => ({
       setMetadatosField: s.setMetadatosField,
       setMetadatosAll: s.setMetadatosAll,
@@ -47,5 +47,5 @@ export function useMetadatosActions() {
  * 🔹 No necesita useShallow (devuelve un valor primitivo/referencia única)
  */
 export function useMetadatosCampo<K extends keyof MetadatosData>(key: K) {
-  return useProovedoresStore((s) => s[key]);
+  return useProveedoresStore((s) => s[key]);
 }

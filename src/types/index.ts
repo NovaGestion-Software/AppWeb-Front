@@ -246,3 +246,12 @@ export interface ExcelExportConfig {
   fileName: string;
 }
 
+
+
+export interface ApiPhpResponse<T = unknown> {
+  ok?: boolean;
+  message?: string;
+  data?: T;
+  code?: number;
+  status?: string;
+}

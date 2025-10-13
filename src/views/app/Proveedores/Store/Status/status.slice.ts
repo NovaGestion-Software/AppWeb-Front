@@ -28,6 +28,11 @@ export interface EstadoSlice extends EstadoSliceState {
   canEliminar: () => boolean;
   canConfirmar: () => boolean;
   canCancelar: () => boolean;
+
+    toInicial: () => void;
+  toAlta: () => void;
+  toModificacion: () => void;
+  toConsulta: () => void;
 }
 
 // ⚠️ Ajustá create function a tu patrón real
@@ -70,30 +75,27 @@ export const createEstadoSlice: StateCreator<any, [], [], EstadoSlice> = (set, g
       return;
     }
     if (estadoActual === EstadoIMAC.CONSULTA && evento === "RESET") {
-      // si lo usás
       set({ estado: EstadoIMAC.INICIAL });
       return;
     }
 
     if (estadoActual === EstadoIMAC.ALTA && evento === "CANCELAR") {
       set({ estado: EstadoIMAC.CONSULTA });
-      get().bumpFormEpoch(); // 👈 re-montar UI
       return;
     }
     if (estadoActual === EstadoIMAC.MODIFICACION && evento === "CANCELAR") {
       set({ estado: EstadoIMAC.CONSULTA });
-      get().bumpFormEpoch(); // 👈 re-montar UI
+  
       return;
     }
 
     if (estadoActual === EstadoIMAC.ALTA && evento === "CONFIRMAR") {
       set({ estado: EstadoIMAC.CONSULTA });
-      get().bumpFormEpoch(); // 👈 re-montar UI
+  
       return;
     }
     if (estadoActual === EstadoIMAC.MODIFICACION && evento === "CONFIRMAR") {
       set({ estado: EstadoIMAC.CONSULTA });
-      get().bumpFormEpoch(); // 👈 re-montar UI
       return;
     }
   },

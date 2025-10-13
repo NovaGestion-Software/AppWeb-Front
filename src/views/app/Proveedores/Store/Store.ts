@@ -20,7 +20,7 @@ import { ProveedorDomainSchema } from "../Data/domain";
 
 
 /** Tipado unificado del store de Proveedores */
-export type Proovedores = BaseStore &
+export type Proveedores = BaseStore &
   EstadoSlice &
   TabsSlice &
   IdentificacionSlice &
@@ -44,7 +44,7 @@ export type Proovedores = BaseStore &
   };
 
 /** 🧠 Store principal de Proveedores */
-export const useProovedoresStore = create<Proovedores>()(
+export const useProveedoresStore = create<Proveedores>()(
   persist(
     (set, get, store) => ({
       ...createBaseStore(set as any, get as any),
@@ -77,7 +77,7 @@ export const useProovedoresStore = create<Proovedores>()(
         }
 
         const p = r.data;
-        const s = useProovedoresStore.getState();
+        const s = useProveedoresStore.getState();
 
         // 1️⃣ Identificación — solo ID + nombres
         s.resetIdentificacion?.();
@@ -183,7 +183,7 @@ export const useProovedoresStore = create<Proovedores>()(
         }
 
         const p = r.data;
-        const s = useProovedoresStore.getState();
+        const s = useProveedoresStore.getState();
 
         // 1️⃣ Identificación
         s.resetIdentificacion?.();
@@ -302,7 +302,7 @@ export const useProovedoresStore = create<Proovedores>()(
       },
     }),
     {
-      name: "proovedores-storage",
+      name: "proveedores-storage",
       storage: createJSONStorage(() => sessionStorage),
     }
   )

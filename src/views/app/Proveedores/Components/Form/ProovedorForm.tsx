@@ -15,7 +15,7 @@ export default function ProovedorForm() {
   const { tabs, activeTabIndex } = useTabs();
   useEffect(() => {
     // Al montar la vista → enfocar el input
-    requestFocusDOM("proovedores:idprovee", { selectAll: true, scrollIntoView: true });
+    requestFocusDOM("proveedores:idprovee", { selectAll: true, scrollIntoView: true });
   }, []);
   return (
     <section className="mx-6 mt-4  col-span-full row-start-2">

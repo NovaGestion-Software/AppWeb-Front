@@ -1,16 +1,16 @@
 // /Proveedores/Store/Status/status.selectors.ts
-import { useProovedoresStore } from "../Store";
+import { useProveedoresStore } from "../Store";
 import { useShallow } from "zustand/react/shallow";
 
 import { EstadoIMAC } from "./types";
 
 /** Estado actual (enum → primitivo, no requiere shallow) */
 export const useEstadoActual = () =>
-  useProovedoresStore((s) => s.estado);
+  useProveedoresStore((s) => s.estado);
 
 /** Flags agrupadas (usa shallow para evitar renders innecesarios por objeto nuevo) */
 export const useFlagsEstado = () =>
-  useProovedoresStore(
+  useProveedoresStore(
     useShallow((s) => ({
       hayCambiosPendientes: s.hayCambiosPendientes,
       isProcessing: s.isProcessing,
@@ -19,7 +19,7 @@ export const useFlagsEstado = () =>
 
 /** Permisos derivados (booleans → primitivos). Igual usamos shallow por el objeto. */
 export const usePermisosIMAC = () =>
-  useProovedoresStore(
+  useProveedoresStore(
     useShallow((s) => ({
       canCrear: s.canCrear(),
       canEditar: s.canEditar(),
@@ -31,7 +31,7 @@ export const usePermisosIMAC = () =>
 
 /** Acciones agrupadas (referencias estables, pero retornamos objeto → usar shallow) */
 export const useEstadoActions = () =>
-  useProovedoresStore(
+  useProveedoresStore(
     useShallow((s) => ({
       dispatch: s.dispatch,
       setCambiosPendientes: s.setCambiosPendientes,
@@ -45,7 +45,7 @@ export const useEstadoActions = () =>
 
 /** Helper estándar para patrón Opción A: estado + dispatch con shallow */
 export const useEstadoAndDispatch = () =>
-  useProovedoresStore(
+  useProveedoresStore(
     useShallow((s) => ({
       estado: s.estado,
       dispatch: s.dispatch,
@@ -65,13 +65,13 @@ export const useIs = () => {
 
 /** Derivados para habilitar/deshabilitar campos del formulario */
 export const usePermisosCampos = () =>
-  useProovedoresStore(
+  useProveedoresStore(
     useShallow((s) => {
       const estado = s.estado as EstadoIMAC;
 
       // Código habilitado en: INICIAL | CONSULTA
       const canEditCodigo =
-        estado === EstadoIMAC.INICIAL || estado === EstadoIMAC.CONSULTA;
+        estado === EstadoIMAC.INICIAL;
 
       // Resto de campos habilitados en: ALTA | MODIFICACION
       const canEditCampos =
@@ -83,4 +83,4 @@ export const usePermisosCampos = () =>
   
 
   export const useFormEpoch = () =>
-  useProovedoresStore((s) => s.formEpoch);
+  useProveedoresStore((s) => s.formEpoch);
