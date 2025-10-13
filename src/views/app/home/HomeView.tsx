@@ -1,5 +1,8 @@
 import { novaLogoSinFondo } from "@/frontend-resourses/assets/logos";
+import { registerGlobalErrorMappers } from "@/lib/errors/mappers/global.mapper";
 export default function Home() {
+  registerGlobalErrorMappers();
+  
   return (
     <div className="flex flex-col min-h-screen w-full items-center justify-center">
       <div className="flex flex-col items-center ">
