@@ -1,6 +1,6 @@
-import { getEmpresa, getHomologacion } from "@/services/ApiPhpService";
 import { apiVercel } from "../Utils/apiVercel";
 import { useMercadoPagoStore } from "../Store/MercadoPagoStore";
+import { getEmpresa, getHomologacion } from "@/services/utils/helpers";
 
 // 🔧 Utilidad para construir los headers con token y userId
 function buildAuthHeaders(token?: string, userId?: string) {
