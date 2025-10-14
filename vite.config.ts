@@ -5,7 +5,6 @@ import path from 'path';
 import packageInfo from './package.json';
 import removeConsole from "vite-plugin-remove-console";
 
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [
     react(),
@@ -19,21 +18,10 @@ export default defineConfig({
       },
     }),
     removeConsole()
-
   ],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src'),
     },
   },
-  server: {
-    proxy: {
-      // cualquier ruta que empiece con /apiphp se reenvía al host real
-      "/apiphp": {
-        target: "https://apiphp.novagestion.com.ar",
-        changeOrigin: true,
-        secure: true,
-        rewrite: (path) => path.replace(/^\/apiphp/, ""),
-      },
-    },}
 });
