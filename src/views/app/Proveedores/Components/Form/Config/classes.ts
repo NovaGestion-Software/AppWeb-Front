@@ -2,7 +2,7 @@
 // Inputs
         //disabled
 export const inputDisabledClass = "disabled:bg-gray-200 disabled:text-black ";
-export const inputDisabledSelectClass = "disabled:bg-[#a3a2a2]  disabled:text-[#FFFFFF]";
+export const inputDisabledSelectClass = "disabled:bg-[#a3a2a2]  disabled:text-black";
         // base
 export const inputsClass = `w-full h-8 bg-gray-100 rounded border px-2 text-sm leading-tight ${inputDisabledClass}`;
 export const inputsSelectClass = `w-full h-8 bg-gray-100 rounded border px-2 text-sm leading-tight ${inputDisabledSelectClass}`;

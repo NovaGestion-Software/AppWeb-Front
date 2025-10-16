@@ -1,22 +1,20 @@
-// /Store/Form/selectors/datosImpositivos.selectors.ts
 import { useMemo } from "react";
 import { useShallow } from "zustand/react/shallow";
 import { useProveedoresStore } from "../../Store";
-import { condTribLabel, tipoDocLabel } from "@/schemas/Proovedores/primitives";
+import { condTribLabel, tipoDocLabel } from "../../../Data/adapters";
 
-/** Valores de Datos Impositivos (BE) — sólo primitivos/refs estables */
+/** Valores de Datos Impositivos — sólo primitivos/refs estables */
 export const useDatosImpositivosValues = () =>
   useProveedoresStore(
     useShallow((s) => ({
-      // Situación fiscal (BE)
-      idctrib: s.idctrib,   // 1|2|3|4
-      idtdoc:  s.idtdoc,    // 0|1|2
-      cuit:    s.cuit,      // string
+      idctrib: s.idctrib,   // number (select)
+      idtdoc:  s.idtdoc,    // number (select)
+      cuit:    s.cuit,      // string (digits-only fuera del selector)
       ibruto:  s.ibruto,    // string
 
-      // Labels derivados (strings puras, no crean refs complejas)
-      idctribLabel: condTribLabel(s.idctrib),
-      idtdocLabel:  tipoDocLabel(s.idtdoc),
+      // Labels derivados (si existen helpers)
+      idctribLabel: condTribLabel?.(s.idctrib),
+      idtdocLabel:  tipoDocLabel?.(s.idtdoc),
     }))
   );
 
@@ -29,18 +27,14 @@ export const useDatosImpositivosActions = () =>
       setImpositivosAll:   s.setDatosImpositivosAll,
       resetImpositivos:    s.resetDatosImpositivos,
 
-      // Retenciones (flat)
+      // Retenciones
       setRetencionesField: s.setRetencionesField,
       setRetencionesAll:   s.setRetencionesAll,
       resetRetenciones:    s.resetRetenciones,
-
-      // Hidratación por sección (si las usás)
-      hydrateImpositivosFromRow: s.hydrateFromRow,
-      hydrateRetencionesFromRow: s.hydrateFromRow,
     }))
   );
 
-/** Solo “situación fiscal” (BE): idctrib, idtdoc, cuit, ibruto */
+/** Solo “situación fiscal”: idctrib, idtdoc, cuit, ibruto */
 export const useSituacionFiscalValues = () =>
   useProveedoresStore(
     useShallow((s) => ({
@@ -48,8 +42,8 @@ export const useSituacionFiscalValues = () =>
       idtdoc:  s.idtdoc,
       cuit:    s.cuit,
       ibruto:  s.ibruto,
-      idctribLabel: condTribLabel(s.idctrib),
-      idtdocLabel:  tipoDocLabel(s.idtdoc),
+      idctribLabel: condTribLabel?.(s.idctrib),
+      idtdocLabel:  tipoDocLabel?.(s.idtdoc),
     }))
   );
 
@@ -57,8 +51,8 @@ export const useSituacionFiscalValues = () =>
 export const useSituacionFiscalActions = () =>
   useProveedoresStore(
     useShallow((s) => ({
-      setIdctrib: (v: number) => s.setDatosImpositivosField("idctrib", v as any),
-      setIdtdoc:  (v: number) => s.setDatosImpositivosField("idtdoc",  v as any),
+      setIdctrib: (v: number) => s.setDatosImpositivosField("idctrib", v),
+      setIdtdoc:  (v: number) => s.setDatosImpositivosField("idtdoc",  v),
       setCuit:    (v: string) => s.setDatosImpositivosField("cuit",    v),
       setIbruto:  (v: string) => s.setDatosImpositivosField("ibruto",  v),
       setSituacionFiscalAll: s.setDatosImpositivosAll,
@@ -66,7 +60,7 @@ export const useSituacionFiscalActions = () =>
     }))
   );
 
-/** Retenciones — valores “flat” (BE) (todo primitivo/ref estable) */
+/** Retenciones — valores “flat” */
 export const useRetencionesValues = () =>
   useProveedoresStore(
     useShallow((s) => ({
@@ -81,18 +75,16 @@ export const useRetencionesValues = () =>
 
 /**
  * Retenciones — vista en array para tablas
- * Derivación local con useMemo (no desde la store) para evitar nuevas refs en getSnapshot.
+ * idreg* ahora es number (0 = sin régimen). Usamos >0 como boolean derivado.
  */
 type RetencionRow = {
   id: "IB" | "GAN" | "IVA";
-  tipo: boolean;                       // ← era number | string; ahora boolean
-  regimen: boolean;                    // ← mismo que tipo (siempre fueron iguales)
+  regimen: boolean;                    // derivado: idreg* > 0
   exento: boolean;
   certificado?: string;
-  vigenciaDesde?: string | null;
-  vigenciaHasta?: string | null;
+  vigenciaDesde?: string;
+  vigenciaHasta?: string;
 };
-
 
 const EMPTY: ReadonlyArray<RetencionRow> = Object.freeze([]);
 
@@ -109,42 +101,36 @@ export const useRetencionesArray = (): ReadonlyArray<RetencionRow> => {
   return useMemo(() => {
     const arr: RetencionRow[] = [];
 
-    // IB
     if (idregbru != null || exretbru != null || nexretbru != null || fecbru || vtobru) {
       arr.push({
         id: "IB",
-        tipo: idregbru,
-        regimen: idregbru,
+        regimen: (idregbru ?? 0) > 0,
         exento: exretbru,
-        certificado: nexretbru as any, // si es nro de cert o similar
-        vigenciaDesde: fecbru,
-        vigenciaHasta: vtobru,
+        certificado: nexretbru || undefined,
+        vigenciaDesde: fecbru || undefined,
+        vigenciaHasta: vtobru || undefined,
       });
     }
 
-    // GAN
     if (idreggan != null || exretgan != null || nexretgan != null || fecgan || vtogan) {
       arr.push({
         id: "GAN",
-        tipo: idreggan,
-        regimen: idreggan,
+        regimen: (idreggan ?? 0) > 0,
         exento: exretgan,
-        certificado: nexretgan as any,
-        vigenciaDesde: fecgan,
-        vigenciaHasta: vtogan,
+        certificado: nexretgan || undefined,
+        vigenciaDesde: fecgan || undefined,
+        vigenciaHasta: vtogan || undefined,
       });
     }
 
-    // IVA
     if (idregiva != null || exretiva != null || nexretiva != null || feciva || vtoiva) {
       arr.push({
         id: "IVA",
-        tipo: idregiva,
-        regimen: idregiva,
+        regimen: (idregiva ?? 0) > 0,
         exento: exretiva,
-        certificado: nexretiva as any,
-        vigenciaDesde: feciva,
-        vigenciaHasta: vtoiva,
+        certificado: nexretiva || undefined,
+        vigenciaDesde: feciva || undefined,
+        vigenciaHasta: vtoiva || undefined,
       });
     }
 

@@ -1,10 +1,13 @@
+// /views/app/Proveedores/Components/Form/blocks/SituacionFiscal.tsx
 import Field from "../../Shared/Field";
 import FieldRow from "../../Shared/FieldRow";
 import { FlexibleInputField } from "@/frontend-resourses/components";
+
 import { useSituacionFiscalValues } from "../../../Store/Form/selectors/datosImpositivos.selectors";
-import { useCampoImpositivo } from "../hooks/useCampoImpositivo"; // asegúrate que el archivo/export se llame igual
+import { useCampoImpositivo } from "../hooks/useCampoImpositivo";
 import { inputsClass, inputsSelectClass } from "../Config/classes";
 import { useProveedoresStore } from "../../../Store/Store";
+import { DatosImpositivosFieldSchemas as FS } from "@/views/app/Proveedores/Data/formDraft/datosImpositivos.schema";
 
 /**
  * Bloque de situación fiscal del contribuyente.
@@ -22,30 +25,31 @@ export default function SituacionFiscal({
   // Setter genérico del slice impositivo (BE)
   const setImpositivosField = useProveedoresStore((s) => s.setDatosImpositivosField);
 
-  // Hooks por campo (con parse para selects numéricos)
-  const ct = useCampoImpositivo(
-    "idctrib",
-    idctrib,
-    setImpositivosField as any,
-    (raw) => (Number.isNaN(Number(raw)) ? 1 : (Number(raw) as any)) 
-  );
+  // Hooks por campo (con parse para selects numéricos y validación por campo)
+  const ct = useCampoImpositivo("idctrib", idctrib, setImpositivosField as any, {
+    parse: (raw) => (Number.isNaN(Number(raw)) ? 1 : (Number(raw) as any)),
+    validator: FS.idctrib,
+  });
 
-  const td = useCampoImpositivo(
-    "idtdoc",
-    idtdoc,
-    setImpositivosField as any,
-    (raw) => (Number.isNaN(Number(raw)) ? 0 : (Number(raw) as any)) // default 0=CUIT
-  );
+  const td = useCampoImpositivo("idtdoc", idtdoc, setImpositivosField as any, {
+    parse: (raw) => (Number.isNaN(Number(raw)) ? 0 : (Number(raw) as any)), // 0 = CUIT
+    validator: FS.idtdoc,
+  });
 
-  const cuitH = useCampoImpositivo("cuit", cuit, setImpositivosField as any);
-  const ib = useCampoImpositivo("ibruto", ibruto, setImpositivosField as any);
+  const cuitH = useCampoImpositivo("cuit", cuit, setImpositivosField as any, {
+    validator: FS.cuit,
+  });
 
-  // Opciones BE
+  const ib = useCampoImpositivo("ibruto", ibruto, setImpositivosField as any, {
+    validator: FS.ibruto,
+  });
+
+  // Opciones BE (string para el <select>)
   const COND_TRIB_OPTS = [
     { label: "Resp. Inscripto", value: "1" },
     { label: "Exento",          value: "2" },
-    { label: "Cat. 3",          value: "3" }, // placeholder
-    { label: "Cat. 4",          value: "4" }, // placeholder
+    { label: "Cat. 3",          value: "3" },
+    { label: "Cat. 4",          value: "4" },
   ];
 
   const DOC_OPTS = [
@@ -61,13 +65,17 @@ export default function SituacionFiscal({
         <FlexibleInputField
           inputType="select"
           options={COND_TRIB_OPTS}
-          value={String(ct.value ?? 1)}                // select espera string
-          onChange={ct.onChange}                       // hook parsea string→number
+          focusId="proveedores:idcodprov" 
+
+          value={ct.value}              
+          onChange={ct.onChange}
+          onBlur={ct.onBlur}
           disabled={ct.disabled}
           labelWidth="w-0"
           labelClassName="hidden"
           inputClassName={inputsSelectClass}
         />
+        {ct.error && <small className="text-red-500">{ct.error}</small>}
       </Field>
 
       {/* Tipo Doc (numérico BE) */}
@@ -75,14 +83,18 @@ export default function SituacionFiscal({
         <Field label="Tipo Doc." colSpan={2}>
           <FlexibleInputField
             inputType="select"
+          focusId="proveedores:idtdoc" 
+
             options={DOC_OPTS}
-            value={String(td.value ?? 0)}              // 0=CUIT
-            onChange={td.onChange}                     // parsea string→number
+            value={td.value}             
+            onChange={td.onChange}
+            onBlur={td.onBlur}
             disabled={td.disabled}
             labelWidth="w-0"
             labelClassName="hidden"
             inputClassName={inputsSelectClass}
           />
+          {td.error && <small className="text-red-500">{td.error}</small>}
         </Field>
       )}
 
@@ -90,28 +102,36 @@ export default function SituacionFiscal({
       <Field label="CUIT" colSpan={showTipoDoc ? 3 : 4} required>
         <FlexibleInputField
           inputType="text"
-          value={(cuitH.value as string) ?? ""}
+          focusId="proveedores:cuit" 
+
+          value={cuitH.value}           
           onChange={cuitH.onChange}
+          onBlur={cuitH.onBlur}
           placeholder="XX-XXXXXXXX-X"
           disabled={cuitH.disabled}
           labelWidth="w-0"
           labelClassName="hidden"
           inputClassName={inputsClass}
         />
+        {cuitH.error && <small className="text-red-500">{cuitH.error}</small>}
       </Field>
 
       {/* Ingresos Brutos */}
       <Field label="Ing. Brutos" colSpan={showTipoDoc ? 3 : 3} required>
         <FlexibleInputField
           inputType="text"
-          value={(ib.value as string) ?? ""}
+          value={ib.value}            
+          focusId="proveedores:ibruto" 
+
           onChange={ib.onChange}
+          onBlur={ib.onBlur}
           placeholder="Padrón / Nº IB"
           disabled={ib.disabled}
           labelWidth="w-0"
           labelClassName="hidden"
           inputClassName={inputsClass}
         />
+        {ib.error && <small className="text-red-500">{ib.error}</small>}
       </Field>
     </FieldRow>
   );

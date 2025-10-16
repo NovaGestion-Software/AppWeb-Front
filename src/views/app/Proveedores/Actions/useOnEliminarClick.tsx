@@ -8,7 +8,7 @@ export function useOnEliminarClick() {
   const { onConfirmEliminar } = useConfirmarEliminar(false);
 
   const onEliminar = useCallback(async () => {
-    const ok = await confirm("¿Seguro que querés eliminar este proveedor?", "Eliminar");
+    const ok = await confirm("¿Seguro que querés eliminar este proveed1241241241or?", "Eliminar");
     if (!ok) return;
     await onConfirmEliminar(); // corre la eliminación real
   }, [confirm, onConfirmEliminar]);

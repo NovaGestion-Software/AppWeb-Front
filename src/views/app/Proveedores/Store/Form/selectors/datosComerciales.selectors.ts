@@ -1,4 +1,3 @@
-// /Store/Form/selectors/datosComerciales.selectors.ts
 import { useShallow } from "zustand/react/shallow";
 import { useProveedoresStore } from "../../Store";
 
@@ -6,18 +5,18 @@ import { useProveedoresStore } from "../../Store";
 export const useDatosComercialesValues = () =>
   useProveedoresStore(
     useShallow((s) => ({
-      // Ubicación (claves BE)
+      // Ubicación
       domicilio1: s.domicilio1,
       domicilio2: s.domicilio2,
       localidad: s.localidad,
       cpostal: s.cpostal,
       calle1: s.calle1,
       calle2: s.calle2,
-      idcodprov: s.idcodprov,
       latitud: s.latitud,
       longitud: s.longitud,
+      idcodprov: s.idcodprov,
 
-      // Contacto (claves BE)
+      // Contacto
       codarea: s.codarea,
       telefono: s.telefono,
       codarea1: s.codarea1,
@@ -25,8 +24,6 @@ export const useDatosComercialesValues = () =>
       codarea2: s.codarea2,
       telefono2: s.telefono2,
       email: s.email,
-      fax: s.fax,
-
     }))
   );
 
@@ -37,10 +34,5 @@ export const useDatosComercialesActions = () =>
       setField: s.setDatosComercialesField,
       setAll: s.setDatosComercialesAll,
       resetDatosComerciales: s.resetDatosComerciales,
-      hydrateFromRow: s.hydrateFromRow, // si usás hidratación por sección
     }))
   );
-
-/** Hooks granulares que ANTES estaban acá pero ahora viven en Metadatos */
-export const useInhabilitado = () => useProveedoresStore((s) => s.inha);       // boolean (0/1 → bool)
-export const useFechaAlta   = () => useProveedoresStore((s) => s.f_alta);      // string | undefined

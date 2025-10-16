@@ -1,74 +1,100 @@
+// /views/app/Proveedores/Components/Form/hooks/useCampoComerciales.ts
+import { useCallback, useMemo, useState } from "react";
+import type { ZodSchema } from "zod";
 import { usePermisosCampos } from "../../../Store/Status/status.selectors";
 import { useProveedoresStore } from "../../../Store/Store";
 import { useEditarActuales } from "./useEditarActuales";
-
 import type { DatosComercialesData } from "../../../Store/Form/Slices/datosComerciales.slice";
+import type { ProveedorDomain } from "../../../Data/domain";
+import type { Guard } from "../Utils/guards";
+import {
+  computeCurrentValue,
+  resolveActiveGuard,
+  normalizeIncoming,
+  runGuardSticky,
+  castToDomainType,
+  syncState,
+  validateWithZodRespectingGuard,
+} from "../Utils/campo.utils";
 
-// 👉 Tipo real del proveedor (derivado del esquema Zod)
-import { z } from "zod";
-import { ProovedoresEsquema } from "@/schemas/Proovedores/proovedores.esquema";
-import { ProveedorDomain } from "../../../Data/domain";
-type ProveedoresData = z.infer<typeof ProovedoresEsquema>;
+type Options<K extends keyof DatosComercialesData> = {
+  parse?: (raw: string) => DatosComercialesData[K];
+  guard?: Guard;
+  validator?: ZodSchema<any>;
+};
 
 /**
- * Hook para editar campos del slice de Datos Comerciales,
- * sincronizando opcionalmente con `datosActuales` (modo edición).
- *
- * Esta versión garantiza:
- * - `value` SIEMPRE string para inputs controlados (evita el warning uncontrolled→controlled)
- * - Al guardar: `""` se transforma a `undefined` (respeta contrato BE/esquema)
+ * Hook tipado por dominio para Datos Comerciales.
+ * - Aplica guard global (bloquea <> y control chars) + meta por clave.
+ * - Error sticky .  Zod solo si no hubo bloqueo/corrección.
+ * - Convierte a number/string según el tipo del slice (no maneja booleans en este slice).
  */
-export function useCampoComerciales<
-  K extends keyof DatosComercialesData & keyof ProveedoresData
->(
+export function useCampoComerciales<K extends keyof DatosComercialesData>(
   key: K,
   sliceValue: DatosComercialesData[K],
   setSliceField: (k: K, v: DatosComercialesData[K]) => void,
-  parse?: (raw: string) => DatosComercialesData[K]
+  options?: Options<K>
 ) {
   const { canEditCampos } = usePermisosCampos();
   const { isEditable, updateActuales } = useEditarActuales();
-  const actuales = useProveedoresStore((s) => s.datosActuales) as ProveedoresData | null;
+  const actuales = useProveedoresStore((s) => s.datosActuales) as ProveedorDomain | null;
 
-  // Determina el valor fuente (snapshot de edición si aplica; sino el slice)
-  const rawValue: DatosComercialesData[K] =
-    isEditable && actuales
-      ? ((actuales[key] as DatosComercialesData[K]) ?? sliceValue)
-      : sliceValue;
+  const [error, setError] = useState<string | undefined>(undefined);
 
-  // ⚠️ Importante: para la UI, el value del input debe ser SIEMPRE string
-  const value: string =
-    rawValue == null ? "" : (typeof rawValue === "string" ? rawValue : String(rawValue));
+  // Valor efectivo normalizado. (Este slice no usa booleans; ignoramos isBoolean/actual)
+  const { valueStr } = computeCurrentValue<keyof DatosComercialesData, DatosComercialesData>(
+    key,
+    sliceValue,
+    (actuales as Partial<DatosComercialesData>) ?? null,
+    isEditable
+  );
 
-  /**
-   * onChange:
-   * - Acepta string o evento (FlexibleInputField puede pasar value directo o event)
-   * - Guarda `undefined` cuando el input queda vacío ("" -> undefined)
-   * - Si hay `parse`, lo aplica sobre el string antes de guardar (útil para números)
-   */
-  const onChange = (v: any) => {
-    const nextStr: string =
-      typeof v === "string" ? v : v?.target?.value ?? String(v ?? "");
+  // Guard: global primero + meta/override
+  const guard = useMemo(() => resolveActiveGuard(String(key), options?.guard), [key, options?.guard]);  
 
-    const trimmed = nextStr.trim();
-    let next: DatosComercialesData[K];
+  const onChange = useCallback(
+    (v: any) => {
+      // 1) Normalizar entrada a string
+      const incoming = normalizeIncoming(v);
+      const prevStr = valueStr;
 
-    if (trimmed === "") {
-      next = undefined as unknown as DatosComercialesData[K];
-    } else if (parse) {
-      next = parse(nextStr);
-    } else {
-      next = nextStr as unknown as DatosComercialesData[K];
-    }
+      // 2) Guard sticky (bloqueo/corrección prioriza error del guard)
+      const { nextStr, blocked, corrected, guardError } = runGuardSticky(guard, incoming, prevStr);
 
-    // 1) actualiza slice visual
-    setSliceField(key, next);
+      if (blocked) {
+        setError((e) => guardError ?? e ?? "Valor inválido o límite alcanzado");
+        return;
+      }
 
-    // 2) sincroniza datosActuales (si corresponde)
-    if (isEditable) {
- updateActuales({ [key]: next } as Partial<ProveedorDomain>);
-    }
+      // 3) Convertir al tipo del dominio (parse custom o inferencia por sample)
+      const nextTyped = castToDomainType<DatosComercialesData[K]>(
+        nextStr,
+        sliceValue as DatosComercialesData[K],
+        options?.parse as ((raw: string) => DatosComercialesData[K]) | undefined
+      );
+
+      // 4) Store + snapshot
+      syncState<DatosComercialesData, K>(setSliceField, key, nextTyped, isEditable, updateActuales as any);
+
+      // 5) Validación Zod sin parpadeo (guard > Zod)
+      const finalError = validateWithZodRespectingGuard(options?.validator, nextStr, blocked, corrected, guardError);
+      setError(finalError);
+    },
+    [guard, valueStr, setSliceField, key, isEditable, updateActuales, sliceValue, options?.parse, options?.validator]
+  );
+
+  const onBlur = useCallback(() => {
+    if (!options?.validator) return;
+    const r = options.validator.safeParse(valueStr);
+    setError(r.success ? undefined : r.error.issues[0]?.message);
+  }, [options?.validator, valueStr]);
+
+  return {
+    value: valueStr, // siempre string en este slice
+    onChange,
+    onBlur,
+    error,
+    setError,
+    disabled: !canEditCampos,
   };
-
-  return { value, onChange, disabled: !canEditCampos };
 }

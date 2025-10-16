@@ -5,9 +5,7 @@ import { z } from "zod";
 export const Bool01In = z.union([z.literal(0), z.literal(1)]);
 
 /** Fechas backend: "YYYY-MM-DD HH:mm:ss" (sin TZ) */
-export const BackendDateTime = z
-  .string()
-  .regex(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/, "Formato de fecha/hora inválido (YYYY-MM-DD HH:mm:ss)");
+export const BackendDateTime = z.string().regex(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/, "Formato de fecha/hora inválido (YYYY-MM-DD HH:mm:ss)");
 
 /**
  * Schema de un proveedor tal como VIENE del backend (DTO de entrada).
@@ -18,11 +16,11 @@ export const ProveedorDtoInSchema = z
     idprovee: z.number(),
     idnodo: z.number(),
 
-    nombre: z.string(),          // puede venir vacío
+    nombre: z.string(), // puede venir vacío
     nfantasia: z.string(),
 
-    idctrib: z.number(),         // select numérico
-    idtdoc: z.number(),          // select numérico
+    idctrib: z.number(), // select numérico
+    idtdoc: z.number(), // select numérico
 
     cuit: z.string(),
     ibruto: z.string(),
@@ -37,7 +35,7 @@ export const ProveedorDtoInSchema = z
     latitud: z.string(),
     longitud: z.string(),
 
-    idcodprov: z.number(),       // select numérico
+    idcodprov: z.number(), // select numérico
 
     codarea: z.string(),
     telefono: z.string(),
@@ -61,10 +59,9 @@ export const ProveedorDtoInSchema = z
 
     obs: z.string(),
 
-    // Según tu indicación, estos idreg* son tratados como flags 0/1
-    idregbru: Bool01In,
-    idregiva: Bool01In,
-    idreggan: Bool01In,
+    idregbru: z.number(),
+    idregiva: z.number(),
+    idreggan: z.number(),
 
     exretbru: Bool01In,
     exretiva: Bool01In,
@@ -84,9 +81,9 @@ export const ProveedorDtoInSchema = z
 
     inha: Bool01In,
 
-   usuario_a: z.number(),  
-  usuario_m: z.number(),   
-  usuario_b: z.number(),
+    usuario_a: z.number(),
+    usuario_m: z.number(),
+    usuario_b: z.number(),
 
     f_alta: BackendDateTime,
     f_modi: BackendDateTime,

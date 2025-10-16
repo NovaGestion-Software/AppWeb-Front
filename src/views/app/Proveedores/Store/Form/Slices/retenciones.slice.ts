@@ -1,15 +1,50 @@
 import type { StateCreator } from "zustand";
 import { z } from "zod";
-import { RetencionesEsquema } from "@/schemas/Proovedores/retenciones.schema";
+import { ProveedorDomainSchema } from "@/views/app/Proveedores/Data/domain/proveedor.domain.schema";
 
 /**
- * Store con nombres BE (flat) tal como vienen en la respuesta.
- * Incluye:
- *  - idregbru, exretbru, nexretbru, fecbru, vtobru
- *  - idreggan, exretgan, nexretgan, fecgan, vtogan
- *  - idregiva, exretiva, nexretiva, feciva, vtoiva
+ * Esquema del slice derivado del Domain.
+ * Nota importante:
+ * - En Domain las fechas vienen como timestamp "YYYY-MM-DDTHH:mm:ss" (opcional).
+ * - En la UI suele usarse <input type="date"> → se maneja "YYYY-MM-DD" o "".
+ *   Para no forzar el formato del Domain en el slice (que es UI), se relajan a string|undefined.
  */
-export type RetencionesData = z.infer<typeof RetencionesEsquema>;
+const RetencionesBase = ProveedorDomainSchema.pick({
+  // Catálogos (enteros)
+  idregbru: true,
+  idreggan: true,
+  idregiva: true,
+
+  // Exento (booleans)
+  exretbru: true,
+  exretgan: true,
+  exretiva: true,
+
+  // Certificados (strings)
+  nexretbru: true,
+  nexretgan: true,
+  nexretiva: true,
+
+  // Fechas (en Domain: ISO ts opcional)
+  fecbru: true,
+  fecgan: true,
+  feciva: true,
+  vtobru: true,
+  vtogan: true,
+  vtoiva: true,
+});
+
+// Relajación de tipos de fechas para UI (acepta "YYYY-MM-DD" o "")
+const RetencionesSchema = RetencionesBase.extend({
+  fecbru: z.string().optional(),
+  fecgan: z.string().optional(),
+  feciva: z.string().optional(),
+  vtobru: z.string().optional(),
+  vtogan: z.string().optional(),
+  vtoiva: z.string().optional(),
+});
+
+export type RetencionesData = z.infer<typeof RetencionesSchema>;
 
 export type RetencionesSlice = RetencionesData & {
   setRetencionesField: <K extends keyof RetencionesData>(
@@ -20,10 +55,7 @@ export type RetencionesSlice = RetencionesData & {
   setRetencionesAll: (p: Partial<RetencionesData>) => void;
   resetRetenciones: () => void;
 
-  /** Hidrata/actualiza desde row crudo (valida con Zod) */
-  hydrateFromRow: (row: unknown) => void;
-
-  /** Selector derivado (opcional): vista “array” para tablas genéricas */
+  /** Vista derivada para tablas genéricas (booleano de “tiene régimen” según id>0). */
   asArrayForTable: () => Array<{
     id: "IB" | "GAN" | "IVA";
     tipo: string;
@@ -35,53 +67,53 @@ export type RetencionesSlice = RetencionesData & {
   }>;
 };
 
-const INITIAL_RET: RetencionesData = {
-  // Ingresos Brutos
-  idregbru: false,
+/** Defaults coherentes con inputs controlados */
+const INITIAL_RET = (): RetencionesData => ({
+  // Catálogos: 0 = sin régimen seleccionado
+  idregbru: 0,
+  idreggan: 0,
+  idregiva: 0,
+
+  // Exentos
   exretbru: false,
-  nexretbru: undefined,
-  fecbru: undefined,
-  vtobru: undefined,
-
-  // Ganancias
-  idreggan: false,
   exretgan: false,
-  nexretgan: undefined,
-  fecgan: undefined,
-  vtogan: undefined,
-
-  // IVA
-  idregiva: false,
   exretiva: false,
-  nexretiva: undefined,
+
+  // Certificados (nullable en BE → aquí "" y dtoOut mapea ""→null)
+  nexretbru: "",
+  nexretgan: "",
+  nexretiva: "",
+
+  // Fechas (UI-friendly, no ISO ts)
+  fecbru: undefined,
+  fecgan: undefined,
   feciva: undefined,
+  vtobru: undefined,
+  vtogan: undefined,
   vtoiva: undefined,
-};
+});
 
 export const createRetencionesSlice: StateCreator<RetencionesSlice> = (set, get) => ({
-  ...INITIAL_RET,
+  ...INITIAL_RET(),
 
   setRetencionesField: (key, value) =>
-    set((s) => ({ ...s, [key]: value })),
+    set(() => ({ [key]: value } as Partial<RetencionesData>)),
 
   setRetencionesAll: (p) =>
-    set((s) => ({ ...s, ...p })),
+    set(() => ({
+      ...INITIAL_RET(),
+      ...p,
+    })),
 
-  resetRetenciones: () => set(INITIAL_RET),
+  resetRetenciones: () => set(INITIAL_RET()),
 
-  hydrateFromRow: (row) => {
-    const parsed = RetencionesEsquema.parse(row);
-    set((s) => ({ ...s, ...parsed }));
-  },
-
-  // Vista derivada tipo array (si necesitás una tabla común)
   asArrayForTable: () => {
     const s = get();
     return [
       {
         id: "IB" as const,
         tipo: "Ingresos Brutos",
-        regimen: s.idregbru,
+        regimen: (s.idregbru ?? 0) > 0,
         exento: s.exretbru,
         certificado: s.nexretbru,
         vigenciaDesde: s.fecbru,
@@ -90,7 +122,7 @@ export const createRetencionesSlice: StateCreator<RetencionesSlice> = (set, get)
       {
         id: "GAN" as const,
         tipo: "Ganancias",
-        regimen: s.idreggan,
+        regimen: (s.idreggan ?? 0) > 0,
         exento: s.exretgan,
         certificado: s.nexretgan,
         vigenciaDesde: s.fecgan,
@@ -99,7 +131,7 @@ export const createRetencionesSlice: StateCreator<RetencionesSlice> = (set, get)
       {
         id: "IVA" as const,
         tipo: "IVA",
-        regimen: s.idregiva,
+        regimen: (s.idregiva ?? 0) > 0,
         exento: s.exretiva,
         certificado: s.nexretiva,
         vigenciaDesde: s.feciva,

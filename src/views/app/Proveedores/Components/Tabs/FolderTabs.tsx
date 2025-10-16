@@ -4,9 +4,17 @@ import { useTabs, useTabsActions } from "../../Store/Tabs/Tab.selectors";
 import TabTrigger from "./TabTrigger";
 
 /**
- * Tabs con subrayado e indicador deslizante (sin dark mode).
+ * Tabs con subrayado e indicador deslizante.
+ * - Modo "auto": reparte el ancho en partes iguales si cada tab puede tener al menos `minTabWidth`.
+ *   Si no alcanza, habilita scroll horizontal y usa min-width por tab.
  */
-export default function FolderTabs({ className }: { className?: string }) {
+export default function FolderTabs({
+  className,
+  minTabWidth = 120, // px mínimos por tab antes de pasar a scroll
+}: {
+  className?: string;
+  minTabWidth?: number;
+}) {
   const { tabs, activeTabIndex } = useTabs();
   const { setActiveTabIndex } = useTabsActions();
 
@@ -14,7 +22,10 @@ export default function FolderTabs({ className }: { className?: string }) {
   const btnRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const [indicator, setIndicator] = useState<{ left: number; width: number }>({ left: 0, width: 0 });
 
-  // mantener longitud de refs
+  // Modo de distribución: "equal" = flex-1 (reparto equitativo), "scroll" = min-width + scroll
+  const [mode, setMode] = useState<"equal" | "scroll">("equal");
+
+  // Mantener longitud de refs en sync con tabs
   btnRefs.current = useMemo(() => Array(tabs.length).fill(null), [tabs.length]);
 
   /** Medir y posicionar el indicador para el índice dado (corrige el “delay”). */
@@ -32,19 +43,49 @@ export default function FolderTabs({ className }: { className?: string }) {
     });
   }, []);
 
+  /** Recalcular modo de distribución según ancho disponible y cantidad de tabs. */
+  const recomputeLayoutMode = useCallback(() => {
+    const el = listRef.current;
+    if (!el) return;
+
+    const containerWidth = el.clientWidth;
+    const count = Math.max(1, tabs.length);
+    const perTab = containerWidth / count;
+
+    // Si cada tab puede tener al menos minTabWidth → repartir igual; si no, scroll
+    setMode(perTab >= minTabWidth ? "equal" : "scroll");
+  }, [tabs.length, minTabWidth]);
+
   // Recalcular cuando cambia el activo realmente
   useEffect(() => {
     updateIndicatorFor(activeTabIndex);
   }, [activeTabIndex, updateIndicatorFor]);
 
-  // Recalcular en resize
+  // Recalcular en resize y cuando cambie cantidad de tabs
   useEffect(() => {
-    const onResize = () => updateIndicatorFor(activeTabIndex);
+    recomputeLayoutMode();
+    const onResize = () => {
+      recomputeLayoutMode();
+      // Mantener indicador consistente tras el resize
+      updateIndicatorFor(activeTabIndex);
+    };
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
-  }, [activeTabIndex, updateIndicatorFor]);
+  }, [activeTabIndex, recomputeLayoutMode, updateIndicatorFor]);
 
-  // teclado con roving tabindex
+  // Observador por si cambia el ancho del contenedor (p. ej., sidebars, layout responsive)
+  useEffect(() => {
+    const el = listRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver(() => {
+      recomputeLayoutMode();
+      updateIndicatorFor(activeTabIndex);
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [activeTabIndex, recomputeLayoutMode, updateIndicatorFor]);
+
+  // Teclado con roving tabindex
   const getTabIndex = (i: number) => (i === activeTabIndex ? 0 : -1);
 
   useEffect(() => {
@@ -93,6 +134,7 @@ export default function FolderTabs({ className }: { className?: string }) {
       aria-label="Secciones del proveedor"
       ref={listRef}
       className={clsx(
+        // Cuando hay scroll, mantener el overflow-x-auto; cuando es equal también puede quedar, no afecta.
         "relative flex gap-2 p-2 overflow-x-auto border-b border-b-neutral-200 rounded-t-lg pb-0.5 bg-white",
         className
       )}
@@ -115,6 +157,9 @@ export default function FolderTabs({ className }: { className?: string }) {
           ariaControls={t.id}
           ref={(el) => (btnRefs.current[i] = el)}
           tabIndex={getTabIndex(i)}
+          // Distribución: equal (flex-1) vs scroll (min-w)
+          variant={mode === "equal" ? "equal" : "scroll"}
+          minWidth={minTabWidth}
         >
           {t.label}
         </TabTrigger>

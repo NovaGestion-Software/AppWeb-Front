@@ -9,13 +9,16 @@ import {
 import { useCampoRetencion } from "../hooks/useCampoRetencion";
 import { inputsClass } from "../Config/classes";
 
+// ✅ validators de formDraft
+import { RetencionesFieldSchemas as FS } from "@/views/app/Proveedores/Data/formDraft/retenciones.schema";
+
 export default function Retenciones() {
-  const retenciones = useRetencionesArray(); // [{ id, tipo:boolean, regimen:boolean, exento, certificado, ... }]
+  const retenciones = useRetencionesArray();
   const { setField } = useRetencionesActions();
 
   const visibles = retenciones.filter(
-    r =>
-      !!r.regimen || 
+    (r) =>
+      !!r.regimen ||
       !!r.exento ||
       !!(r.certificado && String(r.certificado).trim()) ||
       !!r.vigenciaDesde ||
@@ -31,47 +34,119 @@ export default function Retenciones() {
   return (
     <div className="space-y-6">
       {visibles.map((r) => {
-        const reg    = useCampoRetencion(r.id, "regimen",       r.regimen,       setField);
-        const ex     = useCampoRetencion(r.id, "exento",        r.exento,        setField);
-        const cert   = useCampoRetencion(r.id, "certificado",   r.certificado,   setField);
-        const vDesde = useCampoRetencion(r.id, "vigenciaDesde", r.vigenciaDesde, setField);
-        const vHasta = useCampoRetencion(r.id, "vigenciaHasta", r.vigenciaHasta, setField);
+        const reg    = useCampoRetencion(r.id, "regimen",       r.regimen,       setField /* checkbox */);
+        const ex     = useCampoRetencion(r.id, "exento",        r.exento,        setField /* checkbox */);
+
+        // certificado + fechas con validator
+        const cert   = useCampoRetencion(
+          r.id,
+          "certificado",
+          r.certificado,
+          setField,
+          {
+            validator:
+              r.id === "IB"  ? FS.nexretbru :
+              r.id === "GAN" ? FS.nexretgan :
+                                FS.nexretiva
+          }
+        );
+
+        const vDesde = useCampoRetencion(
+          r.id,
+          "vigenciaDesde",
+          r.vigenciaDesde,
+          setField,
+          {
+            validator:
+              r.id === "IB"  ? FS.fecbru :
+              r.id === "GAN" ? FS.fecgan :
+                                FS.feciva
+          }
+        );
+
+        const vHasta = useCampoRetencion(
+          r.id,
+          "vigenciaHasta",
+          r.vigenciaHasta,
+          setField,
+          {
+            validator:
+              r.id === "IB"  ? FS.vtobru :
+              r.id === "GAN" ? FS.vtogan :
+                                FS.vtoiva
+          }
+        );
 
         return (
-          <div key={r.id} className="rounded-md border border-gray-200 p-3 shadow-sm bg-white/50 hover:bg-white/80 transition-all">
+          <div
+            key={r.id}
+            className="rounded-md border border-gray-200 p-3 shadow-sm bg-white/50 hover:bg-white/80 transition-all"
+          >
             <h4 className="mb-3 text-sm font-semibold text-red-900">
               {`Retención de ${labelById[r.id]}`}
             </h4>
 
             <FieldRow cols={12} className="gap-3">
-              {/* Régimen (ahora boolean) */}
               <Field label="Aplicar régimen" colSpan={4}>
-                <CheckboxInput label="Habilitado" checked={!!reg.value} onChangeChecked={reg.onChange} disabled={reg.disabled} />
+                <CheckboxInput
+                  label="Habilitado"
+                  checked={Boolean(reg.value)}
+                  onChangeChecked={(checked: boolean) => reg.onChange(checked)}
+                  disabled={reg.disabled}
+                />
               </Field>
 
-              {/* Exento */}
               <Field label="Exento" colSpan={2}>
-                <CheckboxInput label="Exento" checked={!!ex.value} onChangeChecked={ex.onChange} disabled={ex.disabled} />
+                <CheckboxInput
+                  label="Exento"
+                  checked={Boolean(ex.value)}
+                  onChangeChecked={(checked: boolean) => ex.onChange(checked)}
+                  disabled={ex.disabled}
+                />
               </Field>
 
-              {/* Nº Certificado */}
               <Field label="Nº Certificado Exención" colSpan={4}>
                 <FlexibleInputField
                   inputType="text"
-                  value={(cert.value as string) ?? ""}
+                  value={typeof cert.value === "string" ? cert.value : ""}
                   onChange={cert.onChange}
+                  onBlur={cert.onBlur}
                   disabled={cert.disabled}
                   placeholder="Nº Certificado"
                   labelWidth="w-0"
                   labelClassName="hidden"
                   inputClassName={inputsClass}
                 />
+                {cert.error && <small className="text-red-500">{cert.error}</small>}
               </Field>
 
-              {/* Vigencia */}
               <Field label="Vigencia" colSpan={6} className="flex gap-2">
-                <FlexibleInputField inputType="date" value={(vDesde.value as string) ?? ""} onChange={vDesde.onChange} disabled={vDesde.disabled} labelWidth="w-0" labelClassName="hidden" inputClassName={inputsClass} />
-                <FlexibleInputField inputType="date" value={(vHasta.value as string) ?? ""} onChange={vHasta.onChange} disabled={vHasta.disabled} labelWidth="w-0" labelClassName="hidden" inputClassName={inputsClass} />
+                <div className="flex-1">
+                  <FlexibleInputField
+                    inputType="date"
+                    value={typeof vDesde.value === "string" ? vDesde.value : ""}
+                    onChange={vDesde.onChange}
+                    onBlur={vDesde.onBlur}
+                    disabled={vDesde.disabled}
+                    labelWidth="w-0"
+                    labelClassName="hidden"
+                    inputClassName={inputsClass}
+                  />
+                  {vDesde.error && <small className="text-red-500">{vDesde.error}</small>}
+                </div>
+                <div className="flex-1">
+                  <FlexibleInputField
+                    inputType="date"
+                    value={typeof vHasta.value === "string" ? vHasta.value : ""}
+                    onChange={vHasta.onChange}
+                    onBlur={vHasta.onBlur}
+                    disabled={vHasta.disabled}
+                    labelWidth="w-0"
+                    labelClassName="hidden"
+                    inputClassName={inputsClass}
+                  />
+                  {vHasta.error && <small className="text-red-500">{vHasta.error}</small>}
+                </div>
               </Field>
             </FieldRow>
           </div>
@@ -80,4 +155,3 @@ export default function Retenciones() {
     </div>
   );
 }
-

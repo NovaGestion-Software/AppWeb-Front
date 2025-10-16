@@ -4,6 +4,7 @@ import { useViewportGuard } from "@/Hooks/useViewportGuard";
 import SideBar from "@/Components/SideBar/SideBar";
 import ViewportBlocker from "./ViewportBlocker";
 import { MessageHost } from "../UI/MessageHost";
+import { UnsavedChangesGate } from "../Guards/UnsavedChangesGate";
 
 export default function Layout() {
   const isBlocked = useViewportGuard();
@@ -13,7 +14,7 @@ export default function Layout() {
   return (
     <div className="min-h-screen h-full flex flex-col">
       <SideBar open={open} setOpen={setOpen} />
-
+      <UnsavedChangesGate />
       <div className="flex flex-col w-full min-h-screen pl-16 transition-all duration-300 bg-layout relative">
         {environment === "development" && (
           <div className="fixed top-0 left-1/2 z-50 transform -translate-x-1/2">

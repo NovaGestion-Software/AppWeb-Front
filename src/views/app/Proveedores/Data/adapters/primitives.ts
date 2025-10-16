@@ -1,3 +1,5 @@
+
+
 // Helpers puros y atómicos de conversión/normalización
 export const bool01ToBool = (v: 0 | 1 | null | undefined): boolean => v === 1;
 export const boolTo01 = (b: boolean | null | undefined): 0 | 1 => (b ? 1 : 0);
@@ -20,3 +22,24 @@ export const isoToBackend = (iso: string | undefined): string | null => {
   // TODO: convertir de ISO -> "YYYY-MM-DD HH:mm:ss"
   return iso;
 };
+
+const DOC_LABELS: Record<number, string> = {
+  0: "CUIT",
+  1: "CUIL",
+  2: "DNI",
+};
+
+const COND_LABELS: Record<number, string> = {
+  1: "Responsable Inscripto",
+  2: "Exento",
+  3: "Categoría 3",
+  4: "Categoría 4",
+};
+
+export function tipoDocLabel(id: number): string {
+  return DOC_LABELS[id] ?? "Desconocido";
+}
+
+export function condTribLabel(id: number): string {
+  return COND_LABELS[id] ?? "Desconocido";
+}

@@ -2,23 +2,13 @@
 import { ProveedorDomain } from "../../../Data/domain";
 import { useProveedoresStore } from "../../../Store/Store";
 
-/** Quita undefined para no pisar con “nada” en el merge */
-function stripUndefined<T extends object>(o: Partial<T>): Partial<T> {
-  const out: any = {};
-  for (const [k, v] of Object.entries(o)) {
-    if (v !== undefined) out[k] = v;
-  }
-  return out as Partial<T>;
-}
+
 
 /** Campos string que querés garantizar como string no-undefined */
 const REQUIRED_STRINGS: (keyof ProveedorDomain)[] = ["nfantasia", "nombre"];
 
 /** Coercea a string vacío los requeridos que vengan undefined/null */
-function coerceRequiredStrings<T extends Record<string, any>>(
-  obj: T,
-  keys: (keyof T)[]
-): T {
+function coerceRequiredStrings<T extends Record<string, any>>(obj: T, keys: (keyof T)[]): T {
   const out = { ...obj };
   for (const k of keys) {
     const v = out[k as string];
@@ -44,8 +34,7 @@ export function useEditarActuales(): {
   const setDatosActuales = useProveedoresStore((s) => s.setDatosActuales);
 
   function updateActuales(arg: Partial<ProveedorDomain> | UpdaterFn) {
-    const curr = useProveedoresStore.getState()
-      .datosActuales as ProveedorDomain | null;
+    const curr = useProveedoresStore.getState().datosActuales as ProveedorDomain | null;
 
     if (typeof arg === "function") {
       // REPLACE
@@ -56,9 +45,10 @@ export function useEditarActuales(): {
     }
 
     // PATCH
+    // PATCH
     if (!curr) return;
-    const cleanPatch = stripUndefined<ProveedorDomain>(arg);
-    const merged = { ...curr, ...cleanPatch } as ProveedorDomain;
+    // No quitar undefined: queremos poder "vaciar" el campo
+    const merged = { ...curr, ...arg } as ProveedorDomain;
     const next = finalizeDomain(merged);
     setDatosActuales(next);
   }

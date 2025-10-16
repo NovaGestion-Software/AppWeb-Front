@@ -39,9 +39,6 @@ const BOOL01_KEYS: readonly Bool01Keys[] = [
   "exretiva",
   "f_dolares",
   "f_pesos",
-  "idregbru",
-  "idreggan",
-  "idregiva",
   "inha",
 ] as const;
 

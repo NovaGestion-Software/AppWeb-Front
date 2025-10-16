@@ -1,13 +1,8 @@
-// /Store/Form/Slices/metadatos.selectors.ts
 import { useShallow } from "zustand/react/shallow";
 import { useProveedoresStore } from "../../Store";
 import type { MetadatosData } from "../Slices/metadatos.slice";
 
-/**
- * Selector: valores del slice de metadatos
- * Devuelve sólo las props del slice (sin funciones)
- * 🔹 Usa useShallow para evitar re-render si el shape no cambia
- */
+/** Valores del slice de metadatos */
 export function useMetadatosValues(): MetadatosData {
   return useProveedoresStore(
     useShallow((s) => ({
@@ -25,27 +20,18 @@ export function useMetadatosValues(): MetadatosData {
   );
 }
 
-/**
- * Selector: acciones del slice de metadatos
- * Devuelve sólo las funciones para mutar el slice
- * 🔹 Usa useShallow para mantener refs estables sin rerenders innecesarios
- */
+/** Acciones del slice de metadatos */
 export function useMetadatosActions() {
   return useProveedoresStore(
     useShallow((s) => ({
       setMetadatosField: s.setMetadatosField,
       setMetadatosAll: s.setMetadatosAll,
       resetMetadatos: s.resetMetadatos,
-      hydrateFromRow: s.hydrateFromRow,
     }))
   );
 }
 
-/**
- * Selector fino por campo — útil si querés subscribirte a uno solo
- * Ej: const fAlta = useMetadatosCampo("f_alta")
- * 🔹 No necesita useShallow (devuelve un valor primitivo/referencia única)
- */
+/** Selector fino por campo — suscripción granular */
 export function useMetadatosCampo<K extends keyof MetadatosData>(key: K) {
   return useProveedoresStore((s) => s[key]);
 }

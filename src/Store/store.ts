@@ -28,24 +28,3 @@ export type AppStoreApi = StoreApi<AppRootState>;
 // Helpers de acceso directo (imperativo) cuando no se está dentro de un componente React
 export const appStoreGet = () => useAppStore.getState();
 export const appStoreSet = (partial: Partial<AppRootState>) => useAppStore.setState(partial);
-
-// Ejemplo de integración con middlewares (dejar comentado para activación futura):
-/*
-import { devtools, persist, createJSONStorage } from "zustand/middleware";
-
-export const useAppStore = create<AppRootState>()(
-  devtools(
-    persist(
-      (...a) => ({
-        ...createErrorSlice(...a),
-        ...createUiMessagesSlice(...a),
-      }),
-      {
-        name: "app-root", // clave de storage
-        storage: createJSONStorage(() => sessionStorage), // o localStorage
-        // partialize: (s) => ({ queue: s.queue }) // opcional: qué persistir
-      }
-    )
-  )
-);
-*/

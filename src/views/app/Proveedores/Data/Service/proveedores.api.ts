@@ -25,10 +25,11 @@ export async function apiObtenerProveedor(idprovee: number): Promise<ProveedorDt
 
   try {
     const { data } = await apiPhp.get<ApiPhpResponse>(url);
-    // Validamos el "envelope" y cada fila del array con Zod:
+    console.log("data", data);
     const parsed = ProveedorDtoInResponseSchema.parse(data);
+    console.log("parsed", parsed);
+
     const row = parsed.data?.[0] ?? null;
-    // row ya está validado con ProveedorDtoInSchema dentro del response schema
     return row;
   } catch (err) {
     manejarErrorAxios(err, "Error al obtener proveedor por ID");
@@ -73,7 +74,7 @@ export type GrabarDatosResponse = {
 
 /** Utilidad interna: arma la URL base de grabarDatos con _id en _i cuando aplique */
 function urlGrabarDatos(id?: number) {
-  const iParam = typeof id === "number" ? buildIParam({ _id: id }) : buildIParam(); // alta podría no requerir _id
+  const iParam = typeof id === "number" ? buildIParam({ _id: `${id}` }) : buildIParam(); // alta podría no requerir _id
   return baseUrl(`/comunes/grabarDatos.php?_i=${iParam}`);
 }
 

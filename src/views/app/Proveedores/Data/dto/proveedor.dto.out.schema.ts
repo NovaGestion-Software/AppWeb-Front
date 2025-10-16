@@ -5,9 +5,7 @@ import { z } from "zod";
 export const Bool01Out = z.union([z.literal(0), z.literal(1)]);
 
 /** Fechas backend: "YYYY-MM-DD HH:mm:ss" (o null) al ENVIAR */
-export const BackendDateTimeOut = z
-  .string()
-  .regex(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/, "Formato de fecha/hora inválido (YYYY-MM-DD HH:mm:ss)");
+export const BackendDateTimeOut = z.string().regex(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/, "Formato de fecha/hora inválido (YYYY-MM-DD HH:mm:ss)");
 
 /**
  * DTO de SALIDA (front -> backend).
@@ -47,10 +45,10 @@ export const ProveedorDtoOutSchema = z.strictObject({
 
   codarea: z.string(),
   telefono: z.string(),
-  codarea1: z.string(),
-  telefono1: z.string(),
-  codarea2: z.string(),
-  telefono2: z.string(),
+  telefono1: z.string().optional().nullable().default(""),
+  codarea1: z.string().optional().nullable().default(""),
+  telefono2: z.string().optional().nullable().default(""),
+  codarea2: z.string().optional().nullable().default(""),
 
   email: z.string(),
 
@@ -68,9 +66,9 @@ export const ProveedorDtoOutSchema = z.strictObject({
   obs: z.string(),
 
   // idreg* se tratan como flags 0/1
-  idregbru: Bool01Out,
-  idregiva: Bool01Out,
-  idreggan: Bool01Out,
+idregbru: z.number(),
+idregiva: z.number(),
+idreggan: z.number(),
 
   exretbru: Bool01Out,
   exretiva: Bool01Out,

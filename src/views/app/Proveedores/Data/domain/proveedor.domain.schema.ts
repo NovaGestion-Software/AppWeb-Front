@@ -1,6 +1,9 @@
 // /views/app/Proveedores/Data/domain/proveedor.domain.schema.ts
 import { z } from "zod";
 
+
+export const REQUIRED_ORDER: Array<keyof ProveedorDomain> = ["nombre", "nfantasia", "domicilio1", "localidad", "cpostal", "idcodprov", "idctrib", "idtdoc", "cuit", "ibruto"];
+
 /** ISO-like sin TZ: "YYYY-MM-DDTHH:mm:ss" */
 export const DomainIso = z
   .string()
@@ -17,27 +20,28 @@ export const ProveedorDomainSchema = z.strictObject({
   idprovee: z.number(),
   idnodo: z.number(),
 
-  nombre: z.string(),
-  nfantasia: z.string(),
+  // Requeridos
+  nombre: z.string().min(1, "Campo requerido"),
+  nfantasia: z.string().min(1, "Campo requerido"),
 
-  // selects numéricos
-  idctrib: z.number(),
-  idtdoc: z.number(),
+  // selects numéricos (requeridos)
+  idctrib: z.number().nonnegative("Campo requerido"),
+  idtdoc: z.number().nonnegative("Campo requerido"),
 
-  cuit: z.string(),
-  ibruto: z.string(),
+  cuit: z.string().min(1, "Campo requerido"),
+  ibruto: z.string().min(1, "Campo requerido"),
 
-  domicilio1: z.string(),
+  domicilio1: z.string().min(1, "Campo requerido"),
   domicilio2: z.string(),
-  localidad: z.string(),
-  cpostal: z.string(),
+  localidad: z.string().min(1, "Campo requerido"),
+  cpostal: z.string().min(1, "Campo requerido"),
   calle1: z.string(),
   calle2: z.string(),
 
   latitud: z.string(),
   longitud: z.string(),
 
-  idcodprov: z.number(),
+  idcodprov: z.number().nonnegative("Campo requerido"),
 
   codarea: z.string(),
   telefono: z.string(),
@@ -62,9 +66,9 @@ export const ProveedorDomainSchema = z.strictObject({
   obs: z.string(),
 
   // Retenciones / registros: boolean en domain
-  idregbru: z.boolean(),
-  idregiva: z.boolean(),
-  idreggan: z.boolean(),
+  idregbru: z.number(),
+  idregiva: z.number(),
+  idreggan: z.number(),
 
   exretbru: z.boolean(),
   exretiva: z.boolean(),
@@ -99,3 +103,5 @@ export const ProveedorDomainSchema = z.strictObject({
 });
 
 export type ProveedorDomain = z.infer<typeof ProveedorDomainSchema>;
+
+
