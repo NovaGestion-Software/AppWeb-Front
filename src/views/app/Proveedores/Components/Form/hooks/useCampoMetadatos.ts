@@ -1,5 +1,4 @@
-// /Store/Form/hooks/useCampoMetadatos.ts
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo } from "react";
 import { usePermisosCampos } from "../../../Store/Status/status.selectors";
 import { useProveedoresStore } from "../../../Store/Store";
 import { useEditarActuales } from "./useEditarActuales";
@@ -13,7 +12,6 @@ export function useCampoMetadatos<K extends keyof MetadatosData>(
   sliceValue: MetadatosData[K],
   setMetadatosField: Setter,
   options?: {
-    /** Parser opcional para transformar el string/event al tipo final del slice */
     parse?: (raw: any) => MetadatosData[K];
   }
 ) {
@@ -23,15 +21,11 @@ export function useCampoMetadatos<K extends keyof MetadatosData>(
 
   const disabled = useMemo(() => !canEditCampos, [canEditCampos]);
 
-  // fuente: snapshot de edición si existe; sino el slice
   const fromActuales = isEditable && actuales ? ((actuales as any)[key] as MetadatosData[K]) : undefined;
   const rawValue: MetadatosData[K] = (fromActuales ?? sliceValue) as MetadatosData[K];
 
   // Para la UI: boolean queda boolean; el resto como string controlada
-  const value: any =
-    typeof rawValue === "boolean" ? !!rawValue : rawValue == null ? "" : typeof rawValue === "string" ? rawValue : String(rawValue);
-
-  const [/*error*/, /*setError*/] = useState<string | undefined>(undefined); // reservado por si luego querés validar
+  const value: any = typeof rawValue === "boolean" ? !!rawValue : rawValue == null ? "" : typeof rawValue === "string" ? rawValue : String(rawValue);
 
   const onChange = useCallback(
     (v: any) => {
@@ -49,7 +43,7 @@ export function useCampoMetadatos<K extends keyof MetadatosData>(
           if (typeof v === "boolean") next = v as MetadatosData[K];
           else if (typeof v === "string") {
             const sv = v.toLowerCase().trim();
-            next = ((sv === "true" || sv === "1") ? true : (sv === "false" || sv === "0") ? false : Boolean(sv)) as MetadatosData[K];
+            next = (sv === "true" || sv === "1" ? true : sv === "false" || sv === "0" ? false : Boolean(sv)) as MetadatosData[K];
           } else if (typeof v === "number") {
             next = (v === 1 ? true : v === 0 ? false : Boolean(v)) as MetadatosData[K];
           } else {

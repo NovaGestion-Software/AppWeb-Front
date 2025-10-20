@@ -2,8 +2,6 @@
 import { ProveedorDomain } from "../../../Data/domain";
 import { useProveedoresStore } from "../../../Store/Store";
 
-
-
 /** Campos string que querés garantizar como string no-undefined */
 const REQUIRED_STRINGS: (keyof ProveedorDomain)[] = ["nfantasia", "nombre"];
 
@@ -45,9 +43,7 @@ export function useEditarActuales(): {
     }
 
     // PATCH
-    // PATCH
     if (!curr) return;
-    // No quitar undefined: queremos poder "vaciar" el campo
     const merged = { ...curr, ...arg } as ProveedorDomain;
     const next = finalizeDomain(merged);
     setDatosActuales(next);

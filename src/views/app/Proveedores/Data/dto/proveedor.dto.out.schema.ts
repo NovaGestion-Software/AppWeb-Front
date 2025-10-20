@@ -1,48 +1,97 @@
-// /views/app/Proveedores/Data/dto/proveedor.dto.out.schema.ts
+/**
+ * @module DtoProveedoresOut
+ *
+ * Define el **DTO de salida** (front → backend) para la entidad **Proveedor**.
+ *
+ * Este módulo representa el formato de datos que el frontend envía al backend PHP
+ * durante operaciones de **alta, modificación o eliminación**.
+ *
+ * Características:
+ * - Los **flags booleanos** se expresan como `0` o `1` (`Bool01Out`).
+ * - Las **fechas** se envían como strings con formato `"YYYY-MM-DD HH:mm:ss"` o `null`.
+ * - Los **nombres de campos** y tipos se mantienen idénticos a los del backend.
+ *
+ * Este esquema garantiza la compatibilidad total con PHP, que normalmente
+ * espera objetos completos con todos los `keys` definidos.
+ *
+ * @see ../domain/proveedor.domain.ts
+ * @see ../adapters/proveedores.adapters.ts
+ * @see ../service/proveedores.repository.ts
+ * @see ../service/proveedores.api.ts
+ */
+
 import { z } from "zod";
 
-/** 0/1 numéricos que representan booleanos al ENVIAR al backend */
+/**
+ * Representa los valores válidos para flags numéricos que codifican booleanos
+ * en el backend (`0` = false, `1` = true).
+ *
+ * @example
+ * ```ts
+ * Bool01Out.parse(1); // ✅ true
+ * Bool01Out.parse(0); // ✅ false
+ * Bool01Out.parse(2); // ❌ error
+ * ```
+ */
 export const Bool01Out = z.union([z.literal(0), z.literal(1)]);
 
-/** Fechas backend: "YYYY-MM-DD HH:mm:ss" (o null) al ENVIAR */
-export const BackendDateTimeOut = z.string().regex(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/, "Formato de fecha/hora inválido (YYYY-MM-DD HH:mm:ss)");
+/**
+ * Representa el formato de fecha/hora esperado por el backend PHP:
+ * `"YYYY-MM-DD HH:mm:ss"`, o `null` si no aplica.
+ *
+ * @example
+ * ```ts
+ * BackendDateTimeOut.parse("2025-02-15 13:45:00"); // ✅ válido
+ * BackendDateTimeOut.parse("2025-02-15T13:45:00"); // ❌ formato inválido
+ * ```
+ */
+export const BackendDateTimeOut = z
+  .string()
+  .regex(
+    /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/,
+    "Formato de fecha/hora inválido (YYYY-MM-DD HH:mm:ss)"
+  );
 
 /**
- * DTO de SALIDA (front -> backend).
- * Mantenemos nombres y tipos según backend:
- * - Flags como 0/1 (Bool01Out)
- * - Fechas "YYYY-MM-DD HH:mm:ss" o null
- * - Strings/números tal cual
+ * Esquema Zod para el **DTO de salida** (`ProveedorDtoOut`),
+ * utilizado cuando el frontend envía datos al backend (crear, modificar o eliminar).
  *
- * Nota: Si tu endpoint acepta payloads "parciales" (PATCH),
- * podés volver opcionales algunos campos. Aquí lo dejamos "completo"
- * para máxima compatibilidad con PHP que suele esperar todos los keys.
+ * Este objeto refleja exactamente el contrato esperado por el backend PHP:
+ * - Flags booleanos → `0` o `1`
+ * - Fechas → `"YYYY-MM-DD HH:mm:ss"` o `null`
+ * - Strings y números se mantienen sin transformación
+ *
+ * ⚙️ Si en el futuro se utilizan endpoints que acepten payloads parciales (PATCH),
+ * se pueden volver opcionales algunos campos, pero este esquema define el formato
+ * **completo** para máxima compatibilidad con PHP.
  */
 export const ProveedorDtoOutSchema = z.strictObject({
+  /* -------------------------------- Identificación -------------------------------- */
   idprovee: z.number(),
   idnodo: z.number(),
 
+  /* ------------------------------- Datos generales ------------------------------- */
   nombre: z.string(),
   nfantasia: z.string(),
 
+  /* ------------------------------- Datos fiscales -------------------------------- */
   idctrib: z.number(),
   idtdoc: z.number(),
-
   cuit: z.string(),
   ibruto: z.string(),
 
+  /* ------------------------------- Ubicación ------------------------------------- */
   domicilio1: z.string(),
   domicilio2: z.string(),
   localidad: z.string(),
   cpostal: z.string(),
   calle1: z.string(),
   calle2: z.string(),
-
   latitud: z.string(),
   longitud: z.string(),
-
   idcodprov: z.number(),
 
+  /* ------------------------------- Contacto -------------------------------------- */
   codarea: z.string(),
   telefono: z.string(),
   telefono1: z.string().optional().nullable().default(""),
@@ -52,23 +101,24 @@ export const ProveedorDtoOutSchema = z.strictObject({
 
   email: z.string(),
 
+  /* ------------------------------- Forma de pago -------------------------------- */
   fpago: z.string(),
 
-  // Flags 0/1
+  /* ------------------------------- Monedas y flags ------------------------------- */
   f_pesos: Bool01Out,
   f_dolares: Bool01Out,
 
-  // Plazos
+  /* ---------------------------------- Plazos ------------------------------------- */
   dias_p: z.number(),
   dias_v: z.number(),
   dias_e: z.number(),
 
   obs: z.string(),
 
-  // idreg* se tratan como flags 0/1
-idregbru: z.number(),
-idregiva: z.number(),
-idreggan: z.number(),
+  /* ------------------------- Regímenes / Retenciones ----------------------------- */
+  idregbru: z.number(),
+  idregiva: z.number(),
+  idreggan: z.number(),
 
   exretbru: Bool01Out,
   exretiva: Bool01Out,
@@ -78,7 +128,7 @@ idreggan: z.number(),
   nexretiva: z.string(),
   nexretgan: z.string(),
 
-  // Fechas (o null)
+  /* ---------------------------------- Fechas ------------------------------------- */
   fecbru: BackendDateTimeOut.nullable(),
   feciva: BackendDateTimeOut.nullable(),
   fecgan: BackendDateTimeOut.nullable(),
@@ -86,9 +136,10 @@ idreggan: z.number(),
   vtoiva: BackendDateTimeOut.nullable(),
   vtogan: BackendDateTimeOut.nullable(),
 
+  /* ----------------------------- Estado e inhabilitado ---------------------------- */
   inha: Bool01Out,
 
-  // Usuarios: números incrementales (no 0/1)
+  /* --------------------------------- Auditoría ----------------------------------- */
   usuario_a: z.number(),
   usuario_m: z.number(),
   usuario_b: z.number(),
@@ -101,4 +152,8 @@ idreggan: z.number(),
   ncambio: z.number(),
 });
 
+/**
+ * Tipo TypeScript inferido del esquema `ProveedorDtoOutSchema`.
+ * Representa la estructura exacta que se envía al backend.
+ */
 export type ProveedorDtoOut = z.infer<typeof ProveedorDtoOutSchema>;

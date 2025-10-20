@@ -46,8 +46,8 @@ export async function handleSearchProveedor(idInput: number | string) {
     }
 
     // ok → hidratar dominio en store
-    console.log(domain)
-    s.hydrateAllSlicesFromDomain?.(domain as any);
+    s.hydrateAllSlicesFromSearch?.(domain as any);
+    console.log('domain', domain)
     s.setDatosIniciales?.(domain);
     s.setDatosActuales?.(null);
     s.setEstado?.(EstadoIMAC.CONSULTA);

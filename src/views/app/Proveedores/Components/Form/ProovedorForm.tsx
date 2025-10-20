@@ -10,13 +10,10 @@ import { useProveedoresStore } from "../../Store/Store";
 
 /**
  * Orquesta las secciones del proveedor en tabs.
- * Se deja listo para integrar validación y submit más adelante.
  */
 export default function ProovedorForm() {
   const { tabs, activeTabIndex } = useTabs();
   const { setId } = useProveedoresStore();
-  console.log('tabs', tabs)
-  console.log('activeTabIndex', activeTabIndex)
   useEffect(() => {
     // Al montar la vista → enfocar el input
     requestFocusDOM("proveedores:idprovee", { selectAll: true, scrollIntoView: true });

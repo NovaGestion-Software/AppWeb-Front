@@ -34,12 +34,13 @@ export default function BotoneraTerciaria({ className }: Props) {
   const canConfirmModificacion = isModificacion && !!datosActuales && !isProcessing;
   const canCancel = (isAlta || isModificacion) && !isProcessing;
 
-  // ✅ onConfirmMod viene del hook (usa modificarProveedor(obj1, obj2) y sincroniza la store)
+  // Acción: confirmar modificacion 
   const { onConfirmMod } = useConfirmarModificacion(canConfirmModificacion);
 
-  // Acción: confirmar alta (por ahora local; ajustar cuando haya endpoint de alta)
+  // Acción: confirmar alta 
   const { onConfirmAlta } = useConfirmarAlta(canConfirmAlta);
 
+  // Acción: confirmar Eliminar 
   const { onEliminar } = useOnEliminarClick();
 
   // Acción: cancelar (alta/mod)
@@ -57,13 +58,13 @@ export default function BotoneraTerciaria({ className }: Props) {
       console.log("⛔ Cancelar MODIFICACIÓN → rehidratar desde datosIniciales");
 
       if (s.datosIniciales) {
-        await s.hydrateAllSlicesFromDomain(s.datosIniciales); // 1) rehidratar slices
+        await s.hydrateAllSlicesFromDomain(s.datosIniciales); 
       }
 
-      s.setDatosActuales?.(null); // 2) borrar buffer de edición
-      s.setCambiosPendientes?.(false); // 3) limpiar flag
-      s.bumpFormEpoch?.(); // 4) remonta UI (clave!)
-      s.dispatch?.("CANCELAR"); // 5) transiciona IMAC
+      s.setDatosActuales?.(null);
+      s.setCambiosPendientes?.(false); 
+      s.bumpFormEpoch?.();
+      s.dispatch?.("CANCELAR");
     }
   }, []);
 

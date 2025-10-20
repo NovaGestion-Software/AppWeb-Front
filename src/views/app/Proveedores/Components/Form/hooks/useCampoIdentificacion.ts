@@ -1,4 +1,3 @@
-// /views/app/Proveedores/Components/Form/hooks/useCampoIdentificacion.ts
 import { useCallback, useMemo, useState } from "react";
 import type { ZodSchema } from "zod";
 import { usePermisosCampos } from "../../../Store/Status/status.selectors";
@@ -24,7 +23,7 @@ export function useCampoIdentificacion<K extends "nombre" | "nfantasia">(key: K,
   // Modelamos un subconjunto mínimo del dominio para aprovechar computeCurrentValue
   type IdentData = { nombre: string; nfantasia?: string | null };
 
-  const {valueStr } = computeCurrentValue<keyof IdentData, IdentData>(key, sliceValue, (actuales as Partial<IdentData>) ?? null, isEditable);
+  const { valueStr } = computeCurrentValue<keyof IdentData, IdentData>(key, sliceValue, (actuales as Partial<IdentData>) ?? null, isEditable);
 
   // Siempre aplica guard global + meta por clave
   const guard = useMemo(() => resolveActiveGuard(String(key), undefined), [key]);

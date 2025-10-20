@@ -16,9 +16,9 @@ export type IdentificacionData = z.infer<typeof IdentificacionSchema>;
 
 /** Valores iniciales coherentes con inputs controlados */
 const INITIAL_IDENT: IdentificacionData = {
-  idprovee: 0,           // 0 indica "no asignado" en esta vista
-  nombre: "",            // string vacío para inputs controlados
-  nfantasia: "",  // sin valor asignado
+  idprovee: 0, // 0 indica "no asignado" en esta vista
+  nombre: "", // string vacío para inputs controlados
+  nfantasia: "", // sin valor asignado
 };
 
 /**

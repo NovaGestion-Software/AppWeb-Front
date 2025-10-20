@@ -1,4 +1,3 @@
-// /schemas/Proovedores/formaPago.schema.ts
 import { z } from "zod";
 
 /**

@@ -3,7 +3,7 @@ import Field from "../../Shared/Field";
 import { useProveedoresStore } from "../../../Store/Store";
 import { useFormEpoch } from "../../../Store/Status/status.selectors";
 
-// Tipos de ayuda (asumiendo tus tipos locales)
+// Tipos de ayuda 
 type CampoLike = {
   value: unknown;
   disabled?: boolean;
@@ -61,11 +61,9 @@ export default function TelefonosConCodArea({ label = "Teléfono", inputsClass, 
             onChange={base.tel.onChange}
             onBlur={base.tel.onBlur}
           />
-          {/* sin botón en base */}
           <div />
         </div>
 
-        {/* Versión 1 (siempre visible: usa v1 o fallback deshabilitado) */}
         <div key={`tel-v1-${idprovee}-${formEpoch}`} className={rowGrid}>
           <FlexibleInputField
             value={asStr(v1Safe.area.value)}
@@ -87,7 +85,6 @@ export default function TelefonosConCodArea({ label = "Teléfono", inputsClass, 
           />
         </div>
 
-        {/* Versión 2 (siempre visible: usa v2 o fallback deshabilitado) */}
         <div key={`tel-v2-${idprovee}-${formEpoch}`} className={rowGrid}>
           <FlexibleInputField
             value={asStr(v2Safe.area.value)}

@@ -1,4 +1,3 @@
-// /views/app/Proveedores/Store/Form/form-erros.slice.ts
 import type { StateCreator } from "zustand";
 import type { ZodError } from "zod";
 import type { ProveedorDomain } from "@/views/app/Proveedores/Data/domain/proveedor.domain.schema";

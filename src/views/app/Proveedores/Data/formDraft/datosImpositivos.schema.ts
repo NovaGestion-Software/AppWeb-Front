@@ -1,4 +1,3 @@
-// /src/Api/schemas/datosImpositivos.schema.ts
 import { z } from "zod";
 
 /**

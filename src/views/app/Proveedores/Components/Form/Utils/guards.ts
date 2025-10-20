@@ -1,4 +1,3 @@
-// /views/app/Proveedores/Components/Form/Utils/guards.ts
 export type Guard = (next: string, prev: string) => { value: string; error?: string };
 
 export const noAngleBrackets: Guard = (next, prev) => {

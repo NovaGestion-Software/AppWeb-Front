@@ -4,10 +4,6 @@ import { ProveedorDomainSchema } from "@/views/app/Proveedores/Data/domain/prove
 
 /**
  * Esquema del slice derivado del Domain.
- * Nota importante:
- * - En Domain las fechas vienen como timestamp "YYYY-MM-DDTHH:mm:ss" (opcional).
- * - En la UI suele usarse <input type="date"> → se maneja "YYYY-MM-DD" o "".
- *   Para no forzar el formato del Domain en el slice (que es UI), se relajan a string|undefined.
  */
 const RetencionesBase = ProveedorDomainSchema.pick({
   // Catálogos (enteros)

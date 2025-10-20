@@ -8,21 +8,17 @@ import { inputDisabledClass } from "../Config/classes";
 import { useProveedoresStore } from "../../../Store/Store";
 import { useIdentificacionValues, useIdentificacionActions } from "../../../Store/Form/selectors/identificacion.selectors";
 
-
 import { requestFocusDOM } from "@/frontend-resourses/Hooks/Focus/requestFocusDOM";
 import { handleSearchProveedor } from "../../../Actions/handleSearch";
 
 export default function CodigoField({ disabled = false, variant = "full" }: { disabled?: boolean; variant?: IdentVariant }) {
-  // idprovee viene del slice Identificación (BE)
   const { idprovee } = useIdentificacionValues();
   const { setIdprovee } = useIdentificacionActions();
-
 
   const resetAll = useProveedoresStore((s) => s.resetAll);
 
   // habilita búsqueda si hay id válido, no está deshabilitado y estamos en "full"
   const canSearch = !!idprovee && idprovee > 0 && !disabled && variant === "full";
-
 
   const handleClear = useCallback(() => {
     resetAll?.();
@@ -36,7 +32,7 @@ export default function CodigoField({ disabled = false, variant = "full" }: { di
     <div className="flex items-center gap-2">
       <FlexibleInputField
         inputType="number"
-        value={String(idprovee ?? 0)} // FlexibleInputField (number) espera string
+        value={String(idprovee ?? 0)}
         focusId="proveedores:idprovee"
         placeholder="ID Proveedor"
         labelWidth="w-0"

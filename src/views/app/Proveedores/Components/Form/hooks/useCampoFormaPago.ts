@@ -1,4 +1,3 @@
-// /views/app/Proveedores/Components/Form/hooks/useCampoFormaPago.ts
 import { useCallback, useMemo, useState } from "react";
 import type { ZodSchema } from "zod";
 import { usePermisosCampos } from "../../../Store/Status/status.selectors";
@@ -6,17 +5,7 @@ import { useProveedoresStore } from "../../../Store/Store";
 import { useEditarActuales } from "./useEditarActuales";
 import type { ProveedorDomain } from "../../../Data/domain";
 import type { Guard } from "../Utils/guards";
-import {
-  computeCurrentValue,
-  resolveActiveGuard,
-  normalizeIncoming,
-  runGuardSticky,
-  castToDomainType,
-  syncState,
-  validateWithZodRespectingGuard,
-} from "../Utils/campo.utils";
-
-// importá solo FormaPagoData
+import { computeCurrentValue, resolveActiveGuard, normalizeIncoming, runGuardSticky, castToDomainType, syncState, validateWithZodRespectingGuard } from "../Utils/campo.utils";
 import type { FormaPagoData } from "../../../Store/Form/Slices/formaPago.slice";
 
 type Options<K extends keyof FormaPagoData> = {
@@ -25,24 +14,14 @@ type Options<K extends keyof FormaPagoData> = {
   validator?: ZodSchema<any>;
 };
 
-export function useCampoFormaPago<K extends keyof FormaPagoData>(
-  key: K,
-  sliceValue: FormaPagoData[K],
-  setSliceField: (k: K, v: FormaPagoData[K]) => void,
-  options?: Options<K>
-) {
+export function useCampoFormaPago<K extends keyof FormaPagoData>(key: K, sliceValue: FormaPagoData[K], setSliceField: (k: K, v: FormaPagoData[K]) => void, options?: Options<K>) {
   const { canEditCampos } = usePermisosCampos();
   const { isEditable, updateActuales } = useEditarActuales();
   const actuales = useProveedoresStore((s) => s.datosActuales) as ProveedorDomain | null;
 
   const [error, setError] = useState<string | undefined>(undefined);
 
-  const { actual, isBoolean, valueStr } = computeCurrentValue<keyof FormaPagoData, FormaPagoData>(
-    key,
-    sliceValue,
-    (actuales as unknown as Record<string, any>) ?? null,
-    isEditable
-  );
+  const { actual, isBoolean, valueStr } = computeCurrentValue<keyof FormaPagoData, FormaPagoData>(key, sliceValue, (actuales as unknown as Record<string, any>) ?? null, isEditable);
 
   const guard = useMemo(() => resolveActiveGuard(String(key), options?.guard), [key, options?.guard]);
 
@@ -65,11 +44,7 @@ export function useCampoFormaPago<K extends keyof FormaPagoData>(
         return;
       }
 
-      const nextTyped = castToDomainType<FormaPagoData[K]>(
-        nextStr,
-        sliceValue as FormaPagoData[K],
-        options?.parse as ((raw: string) => FormaPagoData[K]) | undefined
-      );
+      const nextTyped = castToDomainType<FormaPagoData[K]>(nextStr, sliceValue as FormaPagoData[K], options?.parse as ((raw: string) => FormaPagoData[K]) | undefined);
 
       syncState<FormaPagoData, K>(setSliceField, key, nextTyped, isEditable, updateActuales as any);
 

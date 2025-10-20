@@ -28,10 +28,10 @@ export type DatosImpositivosSlice = DatosImpositivosData & {
 
 /** Defaults coherentes con UI; selects en 0 si no hay valor */
 const INITIAL_DI = (): DatosImpositivosData => ({
-  ibruto: "",   // BE exige exactLength, se valida fuera del slice
-  idctrib: 0,   // default 0 (sin selección)
-  idtdoc: 0,    // default 0 (p.ej. CUIT)
-  cuit: "",     // digits-only fuera del slice
+  ibruto: "",   
+  idctrib: 0,  
+  idtdoc: 0, 
+  cuit: "",     
 });
 
 export const createDatosImpositivosSlice: StateCreator<DatosImpositivosSlice> = (set) => ({

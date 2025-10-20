@@ -28,10 +28,10 @@ export default function IdentificacionComercial({ variant = "full" }: { variant?
   const { isEditable, updateActuales } = useEditarActuales();
   const actuales = useProveedoresStore((s) => s.datosActuales);
 
-  // Estado boolean inhabilitado (domain/store ya usan boolean)
+  // Estado boolean inhabilitado
   const inhabilitado = isEditable && actuales ? !!actuales.inha : !!inhaSlice;
 
-  // Hooks controlados por campo (guards + validación local opcional)
+  // Hooks controlados por campo
   const nombreH = useCampoIdentificacion("nombre", nombreSlice, setNombre, { validator: FS?.nombre });
   const nfH = useCampoIdentificacion("nfantasia", nfantasiaSlice ?? "", setNfantasia, { validator: FS?.nfantasia });
 
@@ -66,7 +66,7 @@ export default function IdentificacionComercial({ variant = "full" }: { variant?
       <Field label="Razón social" rowStart={2} colSpan={2} required>
         <FlexibleInputField
           value={nombreH.value}
-          focusId="proveedores:nombre" 
+          focusId="proveedores:nombre"
           placeholder="Razón social"
           labelWidth="w-0"
           labelClassName="hidden"
@@ -88,7 +88,7 @@ export default function IdentificacionComercial({ variant = "full" }: { variant?
         <Field label="Nombre de Fantasía" rowStart={3} colSpan={2} required>
           <FlexibleInputField
             value={nfH.value}
-            focusId="proveedores:nfantasia" 
+            focusId="proveedores:nfantasia"
             placeholder="Nombre de Fantasía"
             labelWidth="w-0"
             labelClassName="hidden"

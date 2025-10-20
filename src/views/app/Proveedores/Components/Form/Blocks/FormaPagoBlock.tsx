@@ -39,8 +39,8 @@ export default function FormaPagoBlock() {
         </Field>
       </FieldRow>
 
-      <FieldRow className="items-center">
-        <Field label="Frecuencia de visitas (días)" colSpan={1}>
+      <FieldRow className="items-center text-nowrap ">
+        <Field label="Frecuencia de visitas (días)"  className="text-nowrap items-center mx-2" colSpan={1}>
           <FlexibleInputField
             inputType="number"
             min={0}
@@ -53,7 +53,7 @@ export default function FormaPagoBlock() {
           {diasVH.error && <small className="text-red-500">{diasVH.error}</small>}
         </Field>
 
-        <Field label="Demora de entregas (días)" colSpan={1}>
+        <Field label="Demora de entregas (días)" colSpan={1} className="text-nowrap left-6 relative items-center mx-2  ">
           <FlexibleInputField
             inputType="number"
             min={0}
@@ -66,7 +66,7 @@ export default function FormaPagoBlock() {
           {diasEH.error && <small className="text-red-500">{diasEH.error}</small>}
         </Field>
 
-        <Field label="Plazo de pago (días)" className="h-full space-y-5" colSpan={1}>
+        <Field label="Plazo de pago (días)" className=" mx-2 left-12 relative " colSpan={1}>
           <FlexibleInputField
             inputType="number"
             min={0}
@@ -85,7 +85,7 @@ export default function FormaPagoBlock() {
           <CheckboxInput
             label="Facturación en pesos"
             checked={Boolean(pesosH.value)}
-            onChangeChecked={(checked: boolean) => pesosH.onChange(checked)} // pasa boolean directo
+            onChangeChecked={(checked: boolean) => pesosH.onChange(checked)} 
             onBlur={() => pesosH.onBlur?.()}
             disabled={pesosH.disabled}
             className="label:opacity-100"
@@ -99,7 +99,7 @@ export default function FormaPagoBlock() {
           <CheckboxInput
             label="Facturación en dólares"
             checked={Boolean(dolaresH.value)}
-            onChangeChecked={(checked: boolean) => dolaresH.onChange(checked)} // pasa boolean directo
+            onChangeChecked={(checked: boolean) => dolaresH.onChange(checked)} 
             onBlur={() => dolaresH.onBlur?.()}
             disabled={dolaresH.disabled}
           />

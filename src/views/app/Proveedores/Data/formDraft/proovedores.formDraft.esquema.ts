@@ -1,4 +1,3 @@
-// /src/Api/schemas/proovedores.formDraft.esquema
 import { z } from "zod";
 
 import { IdentificacionFormDraft }   from "./identificacion.schema";

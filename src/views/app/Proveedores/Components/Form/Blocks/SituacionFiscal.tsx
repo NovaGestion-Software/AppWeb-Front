@@ -1,4 +1,3 @@
-// /views/app/Proveedores/Components/Form/blocks/SituacionFiscal.tsx
 import Field from "../../Shared/Field";
 import FieldRow from "../../Shared/FieldRow";
 import { FlexibleInputField } from "@/frontend-resourses/components";
@@ -47,27 +46,26 @@ export default function SituacionFiscal({
   // Opciones BE (string para el <select>)
   const COND_TRIB_OPTS = [
     { label: "Resp. Inscripto", value: "1" },
-    { label: "Exento",          value: "2" },
-    { label: "Cat. 3",          value: "3" },
-    { label: "Cat. 4",          value: "4" },
+    { label: "Exento", value: "2" },
+    { label: "Cat. 3", value: "3" },
+    { label: "Cat. 4", value: "4" },
   ];
 
   const DOC_OPTS = [
     { label: "CUIT", value: "0" },
     { label: "CUIL", value: "1" },
-    { label: "DNI",  value: "2" },
+    { label: "DNI", value: "2" },
   ];
 
   return (
     <FieldRow cols={12} className="gap-3">
-      {/* Condición Tributaria (numérica BE) */}
-      <Field label="Cond. Trib." colSpan={showTipoDoc ? 4 : 5} required>
+      {/* Condición Tributaria  */}
+      <Field label="Cond. Trib." colSpan={4} required>
         <FlexibleInputField
           inputType="select"
           options={COND_TRIB_OPTS}
-          focusId="proveedores:idcodprov" 
-
-          value={ct.value}              
+          focusId="proveedores:idcodprov"
+          value={ct.value}
           onChange={ct.onChange}
           onBlur={ct.onBlur}
           disabled={ct.disabled}
@@ -79,32 +77,28 @@ export default function SituacionFiscal({
       </Field>
 
       {/* Tipo Doc (numérico BE) */}
-      {showTipoDoc && (
-        <Field label="Tipo Doc." colSpan={2}>
-          <FlexibleInputField
-            inputType="select"
-          focusId="proveedores:idtdoc" 
-
-            options={DOC_OPTS}
-            value={td.value}             
-            onChange={td.onChange}
-            onBlur={td.onBlur}
-            disabled={td.disabled}
-            labelWidth="w-0"
-            labelClassName="hidden"
-            inputClassName={inputsSelectClass}
-          />
-          {td.error && <small className="text-red-500">{td.error}</small>}
-        </Field>
-      )}
+      <Field label="Tipo Doc." colSpan={2}>
+        <FlexibleInputField
+          inputType="select"
+          focusId="proveedores:idtdoc"
+          options={DOC_OPTS}
+          value={td.value}
+          onChange={td.onChange}
+          onBlur={td.onBlur}
+          disabled={td.disabled}
+          labelWidth="w-0"
+          labelClassName="hidden"
+          inputClassName={inputsSelectClass}
+        />
+        {td.error && <small className="text-red-500">{td.error}</small>}
+      </Field>
 
       {/* CUIT */}
       <Field label="CUIT" colSpan={showTipoDoc ? 3 : 4} required>
         <FlexibleInputField
           inputType="text"
-          focusId="proveedores:cuit" 
-
-          value={cuitH.value}           
+          focusId="proveedores:cuit"
+          value={cuitH.value}
           onChange={cuitH.onChange}
           onBlur={cuitH.onBlur}
           placeholder="XX-XXXXXXXX-X"
@@ -120,9 +114,8 @@ export default function SituacionFiscal({
       <Field label="Ing. Brutos" colSpan={showTipoDoc ? 3 : 3} required>
         <FlexibleInputField
           inputType="text"
-          value={ib.value}            
-          focusId="proveedores:ibruto" 
-
+          value={ib.value}
+          focusId="proveedores:ibruto"
           onChange={ib.onChange}
           onBlur={ib.onBlur}
           placeholder="Padrón / Nº IB"

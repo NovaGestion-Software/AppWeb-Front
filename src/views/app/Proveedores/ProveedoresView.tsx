@@ -28,7 +28,6 @@ export default function ProvedoresView() {
       <div className="grid2 gap-1 px-6 py-2 bg-white">
         <BotoneraPrincipal />
         <BotoneraSecundaria />
-        {/* <BotoneraTest /> */}
         <ProovedorForm />
       </div>
     </div>

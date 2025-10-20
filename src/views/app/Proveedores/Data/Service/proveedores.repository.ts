@@ -1,19 +1,45 @@
-// /views/app/Proveedores/Data/services/proveedores.repository.ts
-
-import {
-  apiObtenerProveedor,
-  apiAltaProveedor,
-  apiModificarProveedor,
-  apiEliminarProveedor,
-} from "./proveedores.api";
+/**
+ * @module RepositorioProveedores
+ *
+ * Capa de repositorio para la entidad **Proveedor**.
+ *
+ * Este módulo actúa como intermediario entre:
+ * - La capa **Domain** (modelos internos con tipos nativos y normalizados).
+ * - La capa **API** (métodos HTTP que comunican con el backend PHP).
+ *
+ * Su responsabilidad es:
+ * - Mapear objetos Domain ↔ DTO utilizando los adaptadores (`mapDtoToDomain`, `mapDomainToDto`).
+ * - Garantizar la validación tipada mediante Zod.
+ * - Proveer una API de alto nivel (`repoAltaProveedor`, `repoModificarProveedor`, etc.)
+ *   para ser utilizada directamente desde la store o la UI sin exponer la lógica HTTP.
+ *
+ * @see ./proveedores.api.ts
+ * @see ../adapters
+ * @see ../domain
+ */
+import { apiObtenerProveedor, apiAltaProveedor, apiModificarProveedor, apiEliminarProveedor } from "./proveedores.api";
 import type { ProveedorDtoIn, ProveedorDtoOut } from "../dto";
 import { mapDtoToDomain, mapDomainToDto } from "../adapters";
 import type { ProveedorDomain } from "../domain";
 
+/* ----------------------------------------------------------------------------
+ * Repositorio de Proveedores
+ * Encapsula la lógica de traducción entre capa Domain y capa DTO/Backend.
+ * ------------------------------------------------------------------------- */
+
 /**
- * 🔎 Leer un proveedor por id:
- * 1) Llama a la API (GET), validando el envelope + DTO IN con Zod.
- * 2) Mapea a Domain (booleans reales, fechas ISO/undefined).
+ * 🔎 Obtiene un proveedor por su ID desde la API y lo mapea al dominio de la aplicación.
+ *
+ * **Flujo interno:**
+ * 1. Invoca `apiObtenerProveedor` (GET) y valida la respuesta con Zod.
+ * 2. Mapea el DTO recibido (`ProveedorDtoIn`) al objeto de dominio (`ProveedorDomain`),
+ *    aplicando normalizaciones (booleanos reales, fechas ISO, etc.).
+ *
+ * @async
+ * @function repoGetProveedor
+ * @param {number} idprovee - ID del proveedor a consultar.
+ * @returns {Promise<ProveedorDomain | null>} Promesa que resuelve con el proveedor mapeado o `null` si no existe.
+ * @throws {AxiosError | ZodError} Si falla la validación o la solicitud HTTP.
  */
 export async function repoGetProveedor(idprovee: number): Promise<ProveedorDomain | null> {
   const dtoIn: ProveedorDtoIn | null = await apiObtenerProveedor(idprovee);
@@ -22,10 +48,20 @@ export async function repoGetProveedor(idprovee: number): Promise<ProveedorDomai
 }
 
 /**
- * 🟢 Alta:
- * 1) Recibe Domain desde la UI/store.
- * 2) Mapea a DTO OUT (booleans → 0/1, ISO → "YYYY-MM-DD HH:mm:ss").
- * 3) Llama a la API de alta (valida DTO con Zod y hace POST).
+ * 🟢 Crea un nuevo proveedor.
+ *
+ * **Flujo interno:**
+ * 1. Recibe un objeto de dominio (`ProveedorDomain`) desde la UI o store.
+ * 2. Lo mapea a DTO de salida (`ProveedorDtoOut`) transformando:
+ *    - Booleanos → `0/1`
+ *    - Fechas ISO → `"YYYY-MM-DD HH:mm:ss"`
+ * 3. Envía la solicitud POST mediante `apiAltaProveedor`, validando el DTO con Zod.
+ *
+ * @async
+ * @function repoAltaProveedor
+ * @param {ProveedorDomain} nuevo - Proveedor a registrar.
+ * @returns {Promise<GrabarDatosResponse>} Resultado de la operación de alta.
+ * @throws {AxiosError | ZodError} Si ocurre un error de validación o red.
  */
 export async function repoAltaProveedor(nuevo: ProveedorDomain) {
   const dtoOut: ProveedorDtoOut = mapDomainToDto(nuevo);
@@ -33,53 +69,89 @@ export async function repoAltaProveedor(nuevo: ProveedorDomain) {
 }
 
 /**
- * 🟠 Modificar:
- * 1) Recibe Domain ORIGINAL y MODIFICADO.
- * 2) Mapea ambos a DTO OUT.
- * 3) Llama a la API de modificar con `_id` y el par (original, modificado).
+ * 🟠 Modifica un proveedor existente.
+ *
+ * **Flujo interno:**
+ * 1. Recibe el objeto de dominio original y el modificado.
+ * 2. Ambos se mapean a DTO de salida (`ProveedorDtoOut`).
+ * 3. Llama a `apiModificarProveedor`, enviando `_id` y los dos DTO.
+ *
+ * @async
+ * @function repoModificarProveedor
+ * @param {number} idprovee - ID del proveedor a modificar.
+ * @param {ProveedorDomain} original - Estado original del proveedor.
+ * @param {ProveedorDomain} modificado - Estado actualizado del proveedor.
+ * @returns {Promise<GrabarDatosResponse>} Resultado de la operación de modificación.
+ * @throws {AxiosError | ZodError} Si ocurre un error de validación o red.
  */
-export async function repoModificarProveedor(
-  idprovee: number,
-  original: ProveedorDomain,
-  modificado: ProveedorDomain
-) {
+export async function repoModificarProveedor(idprovee: number, original: ProveedorDomain, modificado: ProveedorDomain) {
   const dtoOriginal: ProveedorDtoOut = mapDomainToDto(original);
   const dtoModificado: ProveedorDtoOut = mapDomainToDto(modificado);
   return apiModificarProveedor(idprovee, dtoOriginal, dtoModificado);
 }
 
 /**
- * 🔴 Eliminar:
- * 1) Recibe Domain ORIGINAL.
- * 2) Mapea a DTO OUT.
- * 3) Llama a la API de eliminar con `_id`.
+ * 🔴 Elimina un proveedor existente.
+ *
+ * **Flujo interno:**
+ * 1. Recibe el objeto de dominio original.
+ * 2. Lo mapea a DTO de salida (`ProveedorDtoOut`).
+ * 3. Llama a `apiEliminarProveedor` con el `_id` correspondiente.
+ *
+ * @async
+ * @function repoEliminarProveedor
+ * @param {number} idprovee - ID del proveedor a eliminar.
+ * @param {ProveedorDomain} original - Proveedor original (antes de eliminarlo).
+ * @returns {Promise<GrabarDatosResponse>} Resultado de la operación de eliminación.
+ * @throws {AxiosError | ZodError} Si ocurre un error de validación o red.
  */
 export async function repoEliminarProveedor(idprovee: number, original: ProveedorDomain) {
   const dtoOriginal: ProveedorDtoOut = mapDomainToDto(original);
   return apiEliminarProveedor(idprovee, dtoOriginal);
 }
 
-/* ----------------------------------------------------------------------------
- * Helpers de conveniencia (opcionales)
- * ------------------------------------------------------------------------- */
+// /* ----------------------------------------------------------------------------
+//  * Helpers de conveniencia
+//  * ------------------------------------------------------------------------- */
 
-/** Trae el DTO IN crudo y devuelve { domain, dtoIn } */
-export async function repoFetchPair(idprovee: number): Promise<{
-  domain: ProveedorDomain | null;
-  dtoIn: ProveedorDtoIn | null;
-}> {
-  const dtoIn = await apiObtenerProveedor(idprovee);
-  const domain = dtoIn ? mapDtoToDomain(dtoIn) : null;
-  return { domain, dtoIn };
-}
+// /**
+//  * Obtiene simultáneamente el DTO crudo y su equivalente en el dominio.
+//  *
+//  * **Uso común:** depuración o sincronización entre store y backend.
+//  *
+//  * @async
+//  * @function repoFetchPair
+//  * @param {number} idprovee - ID del proveedor a obtener.
+//  * @returns {Promise<{ domain: ProveedorDomain | null; dtoIn: ProveedorDtoIn | null }>}
+//  * Objeto con ambas representaciones (`domain` y `dtoIn`).
+//  */
+// export async function repoFetchPair(idprovee: number): Promise<{
+//   domain: ProveedorDomain | null;
+//   dtoIn: ProveedorDtoIn | null;
+// }> {
+//   const dtoIn = await apiObtenerProveedor(idprovee);
+//   const domain = dtoIn ? mapDtoToDomain(dtoIn) : null;
+//   return { domain, dtoIn };
+// }
 
-/** Genera el par (original, modificado) ya mapeado a DTO OUT */
-export function repoBuildOutPair(
-  original: ProveedorDomain,
-  modificado: ProveedorDomain
-): { originalOut: ProveedorDtoOut; modificadoOut: ProveedorDtoOut } {
-  return {
-    originalOut: mapDomainToDto(original),
-    modificadoOut: mapDomainToDto(modificado),
-  };
-}
+// /**
+//  * Construye un par de DTOs de salida (`originalOut`, `modificadoOut`)
+//  * a partir de dos objetos de dominio.
+//  *
+//  * **Uso común:** preparar payloads para `apiModificarProveedor`.
+//  *
+//  * @function repoBuildOutPair
+//  * @param {ProveedorDomain} original - Proveedor original antes de la modificación.
+//  * @param {ProveedorDomain} modificado - Proveedor modificado después del cambio.
+//  * @returns {{ originalOut: ProveedorDtoOut; modificadoOut: ProveedorDtoOut }}
+//  * Objeto con ambos DTO mapeados listos para enviar al backend.
+//  */
+// export function repoBuildOutPair(
+//   original: ProveedorDomain,
+//   modificado: ProveedorDomain
+// ): { originalOut: ProveedorDtoOut; modificadoOut: ProveedorDtoOut } {
+//   return {
+//     originalOut: mapDomainToDto(original),
+//     modificadoOut: mapDomainToDto(modificado),
+//   };
+// }

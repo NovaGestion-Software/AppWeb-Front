@@ -18,7 +18,6 @@ export default function FechasMeta() {
 
   // Campo fecha de alta (normalmente de solo lectura)
   const vAlta = useCampoMetadatos("f_alta", f_alta, setMetadatosField, {
-    // Si alguna vez quisieras permitir edición y convertir "YYYY-MM-DD" → "YYYY-MM-DDTHH:mm:ss":
     parse: (raw) => {
       const s = typeof raw === "string" ? raw : raw?.target?.value ?? "";
       // si viene vacío, mantener undefined

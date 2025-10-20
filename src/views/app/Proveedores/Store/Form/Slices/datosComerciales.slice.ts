@@ -47,14 +47,14 @@ export type DatosComercialesSlice = DatosComercialesData & {
 const initialCom = (): DatosComercialesData => ({
   // Ubicación
   domicilio1: "",
-  domicilio2: "",   // nullable en BE → aquí "" y dtoOut mapeará ""→null
+  domicilio2: "",   
   localidad: "",
   cpostal: "",
   calle1: "",
   calle2: "",
-  latitud: "",      // string en Domain/UI; dtoOut castea a número si hace falta
+  latitud: "",      
   longitud: "",
-  idcodprov: 0,
+  idcodprov: 500,
 
   // Contacto (digits-only se limpia en capa de validación/commit, no acá)
   codarea: "",
@@ -63,7 +63,7 @@ const initialCom = (): DatosComercialesData => ({
   telefono1: "",
   codarea2: "",
   telefono2: "",
-  email: "",        // nullable en BE → aquí "" y dtoOut mapeará ""→null
+  email: "",       
 });
 
 export const createDatosComercialesSlice: StateCreator<DatosComercialesSlice> = (set) => ({

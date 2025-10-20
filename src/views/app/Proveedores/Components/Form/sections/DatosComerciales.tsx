@@ -1,4 +1,3 @@
-// import { SimularCargaRetenciones } from "../../devTools/btnfalse";
 import FieldRow from "../../Shared/FieldRow";
 import ContactoComercial from "../Blocks/ContactoComercial";
 import FechasMeta from "../Blocks/FechasMeta";
@@ -12,8 +11,6 @@ export default function DatosComerciales({ tabId, active = false }: PropsSection
         <FieldRow cols={8} rows={2}>
           <IdentificacionComercial />
           <FechasMeta />
-
-          {/* <SimularCargaRetenciones /> */}
         </FieldRow>
         <FieldRow cols={8} className="gap-y-4 auto-rows-min ">
           <UbicacionComercial />

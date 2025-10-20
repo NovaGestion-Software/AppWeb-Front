@@ -1,4 +1,3 @@
-// /Proveedores/Store/Status/status.selectors.ts
 import { useProveedoresStore } from "../Store";
 import { useShallow } from "zustand/react/shallow";
 

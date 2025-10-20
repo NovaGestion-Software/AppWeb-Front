@@ -1,4 +1,3 @@
-// /views/app/Proveedores/Components/Form/hooks/useCampoComerciales.ts
 import { useCallback, useMemo, useState } from "react";
 import type { ZodSchema } from "zod";
 import { usePermisosCampos } from "../../../Store/Status/status.selectors";
@@ -7,15 +6,7 @@ import { useEditarActuales } from "./useEditarActuales";
 import type { DatosComercialesData } from "../../../Store/Form/Slices/datosComerciales.slice";
 import type { ProveedorDomain } from "../../../Data/domain";
 import type { Guard } from "../Utils/guards";
-import {
-  computeCurrentValue,
-  resolveActiveGuard,
-  normalizeIncoming,
-  runGuardSticky,
-  castToDomainType,
-  syncState,
-  validateWithZodRespectingGuard,
-} from "../Utils/campo.utils";
+import { computeCurrentValue, resolveActiveGuard, normalizeIncoming, runGuardSticky, castToDomainType, syncState, validateWithZodRespectingGuard } from "../Utils/campo.utils";
 
 type Options<K extends keyof DatosComercialesData> = {
   parse?: (raw: string) => DatosComercialesData[K];
@@ -29,28 +20,18 @@ type Options<K extends keyof DatosComercialesData> = {
  * - Error sticky .  Zod solo si no hubo bloqueo/corrección.
  * - Convierte a number/string según el tipo del slice (no maneja booleans en este slice).
  */
-export function useCampoComerciales<K extends keyof DatosComercialesData>(
-  key: K,
-  sliceValue: DatosComercialesData[K],
-  setSliceField: (k: K, v: DatosComercialesData[K]) => void,
-  options?: Options<K>
-) {
+export function useCampoComerciales<K extends keyof DatosComercialesData>(key: K, sliceValue: DatosComercialesData[K], setSliceField: (k: K, v: DatosComercialesData[K]) => void, options?: Options<K>) {
   const { canEditCampos } = usePermisosCampos();
   const { isEditable, updateActuales } = useEditarActuales();
   const actuales = useProveedoresStore((s) => s.datosActuales) as ProveedorDomain | null;
 
   const [error, setError] = useState<string | undefined>(undefined);
 
-  // Valor efectivo normalizado. (Este slice no usa booleans; ignoramos isBoolean/actual)
-  const { valueStr } = computeCurrentValue<keyof DatosComercialesData, DatosComercialesData>(
-    key,
-    sliceValue,
-    (actuales as Partial<DatosComercialesData>) ?? null,
-    isEditable
-  );
+  // Valor efectivo normalizado.
+  const { valueStr } = computeCurrentValue<keyof DatosComercialesData, DatosComercialesData>(key, sliceValue, (actuales as Partial<DatosComercialesData>) ?? null, isEditable);
 
   // Guard: global primero + meta/override
-  const guard = useMemo(() => resolveActiveGuard(String(key), options?.guard), [key, options?.guard]);  
+  const guard = useMemo(() => resolveActiveGuard(String(key), options?.guard), [key, options?.guard]);
 
   const onChange = useCallback(
     (v: any) => {
@@ -67,11 +48,7 @@ export function useCampoComerciales<K extends keyof DatosComercialesData>(
       }
 
       // 3) Convertir al tipo del dominio (parse custom o inferencia por sample)
-      const nextTyped = castToDomainType<DatosComercialesData[K]>(
-        nextStr,
-        sliceValue as DatosComercialesData[K],
-        options?.parse as ((raw: string) => DatosComercialesData[K]) | undefined
-      );
+      const nextTyped = castToDomainType<DatosComercialesData[K]>(nextStr, sliceValue as DatosComercialesData[K], options?.parse as ((raw: string) => DatosComercialesData[K]) | undefined);
 
       // 4) Store + snapshot
       syncState<DatosComercialesData, K>(setSliceField, key, nextTyped, isEditable, updateActuales as any);
@@ -90,7 +67,7 @@ export function useCampoComerciales<K extends keyof DatosComercialesData>(
   }, [options?.validator, valueStr]);
 
   return {
-    value: valueStr, // siempre string en este slice
+    value: valueStr,
     onChange,
     onBlur,
     error,

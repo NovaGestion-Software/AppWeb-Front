@@ -1,4 +1,3 @@
-// /Store/focus.slice.ts
 import type { StateCreator } from "zustand";
 
 type FocusOptions = {
