@@ -1,49 +1,53 @@
 import type { StateCreator } from "zustand";
-import { FormaPagoEsquema, type FormaPago } from "@/schemas/Proovedores/formaPago.schema";
+import { z } from "zod";
+import { ProveedorDomainSchema } from "@/views/app/Proveedores/Data/domain/proveedor.domain.schema";
 
-export type FormaPagoSlice = FormaPago & {
-  setFormaPagoField: <K extends keyof FormaPago>(key: K, value: FormaPago[K]) => void;
-  setFormaPagoAll: (partial: Partial<FormaPago>) => void;
+export type FPKey = keyof FormaPagoData;
+
+/**
+ * Esquema del slice derivado del Domain.
+ * Nota: en Domain `obs` es string (UI controlada). Envío a BE hará ""→null.
+ */
+const FormaPagoSchema = ProveedorDomainSchema.pick({
+  fpago: true,
+  dias_p: true,
+  dias_v: true,
+  dias_e: true,
+  obs: true,
+  f_pesos: true,
+  f_dolares: true,
+});
+
+export type FormaPagoData = z.infer<typeof FormaPagoSchema>;
+
+export type FormaPagoSlice = FormaPagoData & {
+  setFormaPagoField: <K extends keyof FormaPagoData>(key: K, value: FormaPagoData[K]) => void;
+  setFormaPagoAll: (partial: Partial<FormaPagoData>) => void;
   resetFormaPago: () => void;
-  hydrateFromRow: (row: unknown) => void;
 };
 
-const INITIAL_FORMA_PAGO: FormaPago = {
+/** Defaults coherentes con inputs controlados */
+const INITIAL_FORMA_PAGO = (): FormaPagoData => ({
   fpago: "",
   dias_p: 0,
   dias_v: 0,
   dias_e: 0,
-  obs: undefined,     // textarea opcional
-  f_pesos: false,     // 0/1 -> boolean (schema ya lo coacciona)
+  obs: "",          // en UI vacío; dtoOut lo mapeará a null si corresponde
+  f_pesos: false,
   f_dolares: false,
-};
+});
 
 export const createFormaPagoSlice: StateCreator<FormaPagoSlice> = (set) => ({
-  ...INITIAL_FORMA_PAGO,
+  ...INITIAL_FORMA_PAGO(),
 
-  setFormaPagoField: (key, value) => set((s) => ({ ...s, [key]: value })),
+  setFormaPagoField: (key, value) =>
+    set(() => ({ [key]: value } as Partial<FormaPagoData>)),
 
-  setFormaPagoAll: (partial) => set((s) => ({ ...s, ...partial })),
+  setFormaPagoAll: (partial) =>
+    set(() => ({
+      ...INITIAL_FORMA_PAGO(),
+      ...partial,
+    })),
 
-  resetFormaPago: () => set(INITIAL_FORMA_PAGO),
-
-  hydrateFromRow: (row) => {
-    const r = FormaPagoEsquema.safeParse(row);
-    if (!r.success) {
-      console.error("❌ Zod (formaPago):", r.error.issues);
-      // no rompas el flujo; hidrata con lo que se pueda por defecto
-      return;
-    }
-    const p = r.data;
-    set((s) => ({
-      ...s,
-      fpago:    p.fpago ?? s.fpago,
-      dias_p:   p.dias_p ?? s.dias_p,
-      dias_v:   p.dias_v ?? s.dias_v,
-      dias_e:   p.dias_e ?? s.dias_e,
-      obs:      p.obs,                // ya viene undefined si vacío
-      f_pesos:  !!p.f_pesos,
-      f_dolares: !!p.f_dolares,
-    }));
-  },
+  resetFormaPago: () => set(INITIAL_FORMA_PAGO()),
 });

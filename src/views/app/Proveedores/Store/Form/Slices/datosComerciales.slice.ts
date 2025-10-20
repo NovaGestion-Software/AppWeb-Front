@@ -1,51 +1,69 @@
 import type { StateCreator } from "zustand";
 import { z } from "zod";
-import { ContactoEsquema } from "@/schemas/Proovedores/contacto.schema";
-import { UbicacionEsquema } from "@/schemas/Proovedores/ubicacion.schema";
+import { ProveedorDomainSchema } from "@/views/app/Proveedores/Data/domain/proveedor.domain.schema";
 
-/** Esquema combinado (evita merge deprecado) */
-const DatosComercialesEsquema = UbicacionEsquema.extend(ContactoEsquema.shape);
+/**
+ * Esquema del slice derivado del Domain (Ubicación + Contacto).
+ * NOTA: en Domain todos estos campos son string (controlados) excepto idcodprov (number).
+ */
+const DatosComercialesSchema = ProveedorDomainSchema.pick({
+  // Ubicación
+  domicilio1: true,
+  domicilio2: true,
+  localidad: true,
+  cpostal: true,
+  calle1: true,
+  calle2: true,
+  latitud: true,
+  longitud: true,
+  idcodprov: true,
+  // Contacto
+  codarea: true,
+  telefono: true,
+  codarea1: true,
+  telefono1: true,
+  codarea2: true,
+  telefono2: true,
+  email: true,
+});
 
-export type DatosComercialesData = z.infer<typeof DatosComercialesEsquema>;
+export type DatosComercialesData = z.infer<typeof DatosComercialesSchema>;
 
 export type DatosComercialesSlice = DatosComercialesData & {
+  /** Set genérico por clave del slice */
   setDatosComercialesField: <K extends keyof DatosComercialesData>(
     key: K,
     value: DatosComercialesData[K]
   ) => void;
 
-  /** Reemplaza TODO el sub-estado del slice con lo provisto (y defaults). */
+  /** Reemplazo total del sub-estado (merge con defaults) */
   setDatosComercialesAll: (p: Partial<DatosComercialesData>) => void;
 
-  /** Resetea TODO el sub-estado del slice a defaults. */
+  /** Reset del sub-estado a defaults */
   resetDatosComerciales: () => void;
-
-  /** Hidrata desde un row validado: reemplaza TODO el sub-estado. */
-  hydrateFromRow: (row: unknown) => void;
 };
 
-/** ⚙️ Factory: objeto nuevo cada vez (evita referencias compartidas) */
+/** Defaults coherentes con inputs controlados (strings vacíos) */
 const initialCom = (): DatosComercialesData => ({
   // Ubicación
   domicilio1: "",
-  domicilio2: undefined,
+  domicilio2: "",   
   localidad: "",
   cpostal: "",
-  calle1: undefined,
-  calle2: undefined,
-  latitud: "",
+  calle1: "",
+  calle2: "",
+  latitud: "",      
   longitud: "",
-  idcodprov: 0,
-  // Contacto
-  codarea: undefined,
-  telefono: undefined,
-  codarea1: undefined,
-  telefono1: undefined,
-  codarea2: undefined,
-  telefono2: undefined,
-  email: undefined,
-  fax: undefined,
+  idcodprov: 500,
 
+  // Contacto (digits-only se limpia en capa de validación/commit, no acá)
+  codarea: "",
+  telefono: "",
+  codarea1: "",
+  telefono1: "",
+  codarea2: "",
+  telefono2: "",
+  email: "",       
 });
 
 export const createDatosComercialesSlice: StateCreator<DatosComercialesSlice> = (set) => ({
@@ -54,25 +72,11 @@ export const createDatosComercialesSlice: StateCreator<DatosComercialesSlice> = 
   setDatosComercialesField: (key, value) =>
     set(() => ({ [key]: value } as Partial<DatosComercialesData>)),
 
-  // ✅ REEMPLAZO TOTAL DEL SUB-ESTADO DEL SLICE
   setDatosComercialesAll: (p) =>
     set(() => ({
       ...initialCom(),
       ...p,
     })),
 
-  // ✅ REEMPLAZO TOTAL (defaults frescos)
-  resetDatosComerciales: () =>
-    set(() => ({
-      ...initialCom(),
-    })),
-
-  // ✅ REEMPLAZO TOTAL desde row validado (sin mezclar con estado previo)
-  hydrateFromRow: (row) => {
-    const parsed = DatosComercialesEsquema.parse(row);
-    set(() => ({
-      ...initialCom(),
-      ...parsed,
-    }));
-  },
+  resetDatosComerciales: () => set(initialCom()),
 });

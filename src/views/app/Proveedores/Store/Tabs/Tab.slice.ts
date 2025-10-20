@@ -1,10 +1,11 @@
 import type { StateCreator } from "zustand";
-export type TabId = "comerciales" | "impositivos" | "formaPago";
+export type TabId = "comerciales" | "impositivos" | "formaPago" ;
 
 export const PROVEEDORES_TABS: { id: TabId; label: string }[] = [
   { id: "comerciales", label: "Datos Comerciales" },
   { id: "impositivos", label: "Datos Impositivos" },
   { id: "formaPago", label: "Forma de Pago" },
+
 ];
 // /Proovedores/Data/tabs.types.ts
 export type TabsSlice = {

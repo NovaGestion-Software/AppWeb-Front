@@ -1,4 +1,3 @@
-// status.slice.ts
 import { StateCreator } from "zustand";
 import { EstadoIMAC, EstadoSliceState, EventoEstado } from "./types";
 

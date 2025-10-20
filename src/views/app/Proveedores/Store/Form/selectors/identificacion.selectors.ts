@@ -1,18 +1,23 @@
-// /Store/Form/selectors/identificacion.selectors.ts
 import { useShallow } from "zustand/react/shallow";
 import { useProveedoresStore } from "../../Store";
 
-// 🔎 Valores agrupados (BE keys)
+/**
+ * Selector: valores de Identificación
+ * Se exponen únicamente las props necesarias para la UI.
+ */
 export const useIdentificacionValues = () =>
   useProveedoresStore(
     useShallow((s) => ({
       idprovee: s.idprovee,     // number
-      nombre: s.nombre,         // string (TrimmedStr)
+      nombre: s.nombre,         // string
       nfantasia: s.nfantasia,   // string | undefined
     }))
   );
 
-// 🛠️ Acciones agrupadas (BE keys)
+/**
+ * Selector: acciones de Identificación
+ * No se incluyen funciones de hidratación en el slice; la hidratación es global en la Store.
+ */
 export const useIdentificacionActions = () =>
   useProveedoresStore(
     useShallow((s) => ({
@@ -21,7 +26,5 @@ export const useIdentificacionActions = () =>
       setNfantasia: s.setNfantasia,
       setIdentificacionAll: s.setIdentificacionAll,
       resetIdentificacion: s.resetIdentificacion,
-      // Si tu slice expone hidratación por sección, dejalo:
-      hydrateFromRow: s.hydrateFromRow, // <- quitalo si no lo usás
     }))
   );

@@ -27,7 +27,7 @@ export function useEscapeEnProveedores() {
     },
     resetAll: () => s.resetAll?.(),
     getDatosIniciales: () => s.datosIniciales,
-    hydrateFromRow: (row) => s.hydrateAllSlicesFromRow?.(row),
+    hydrateFromRow: (row) => s.hydrateAllSlicesFromDomain?.(row),
     setDatosActuales: (v) => s.setDatosActuales?.(v),
     setCambiosPendientes: (v) => s.setCambiosPendientes?.(v),
     bumpFormEpoch: () => s.bumpFormEpoch?.(),

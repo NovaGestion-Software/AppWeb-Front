@@ -1,24 +1,31 @@
 import type { StateCreator } from "zustand";
-import type { z } from "zod";
-import { IdentificacionEsquema } from "@/schemas/Proovedores/identificacion.schema";
+import { z } from "zod";
+import { ProveedorDomainSchema } from "@/views/app/Proveedores/Data/domain";
 
-// Tipos derivados del esquema Zod (nombres BE)
-export type IdentificacionData = z.infer<typeof IdentificacionEsquema>;
-// Queda equivalente a:
-// interface IdentificacionData {
-//   idprovee: number;
-//   nombre: string;
-//   nfantasia?: string;
-// }
+/**
+ * Esquema del slice derivado del Domain.
+ * Se usa .pick(...) para mantener alineación con la fuente de verdad.
+ */
+const IdentificacionSchema = ProveedorDomainSchema.pick({
+  idprovee: true,
+  nombre: true,
+  nfantasia: true,
+});
 
-/** Defaults del slice (coherentes con la normalización actual) */
+export type IdentificacionData = z.infer<typeof IdentificacionSchema>;
+
+/** Valores iniciales coherentes con inputs controlados */
 const INITIAL_IDENT: IdentificacionData = {
-  idprovee: 0,       // 0 indica “no asignado” en esta vista (se puede ajustar si el flujo lo requiere)
-  nombre: "",        // string vacío para inputs controlados
-  nfantasia: undefined, // undefined cuando no hay valor
+  idprovee: 0, // 0 indica "no asignado" en esta vista
+  nombre: "", // string vacío para inputs controlados
+  nfantasia: "", // sin valor asignado
 };
 
-/** Slice: datos + acciones (nombres BE) */
+/**
+ * Slice de Identificación
+ * Mantiene sólo estado y setters. La hidratación global se realiza en la Store
+ * a partir de un objeto Domain validado (hydrateAllSlicesFromDomain).
+ */
 export type IdentificacionSlice = IdentificacionData & {
   // Setters unitarios
   setIdprovee: (v: number) => void;
@@ -28,21 +35,17 @@ export type IdentificacionSlice = IdentificacionData & {
   // Set masivo y reset
   setIdentificacionAll: (p: Partial<IdentificacionData>) => void;
   resetIdentificacion: () => void;
-
-  // Hidratar desde un row crudo (valida con Zod SOLO esta sección)
-  hydrateFromRow: (row: unknown) => void;
-
 };
 
 export const createIdentificacionSlice: StateCreator<IdentificacionSlice> = (set) => ({
   ...INITIAL_IDENT,
 
-  // Setters unitarios (claves BE)
+  // Setters unitarios
   setIdprovee: (v) => set({ idprovee: v }),
   setNombre: (v) => set({ nombre: v }),
   setNfantasia: (v) => set({ nfantasia: v }),
 
-  // Set masivo parcial
+  // Set masivo parcial (no pisa valores no provistos)
   setIdentificacionAll: (p) =>
     set((s) => ({
       idprovee: p.idprovee ?? s.idprovee,
@@ -52,17 +55,4 @@ export const createIdentificacionSlice: StateCreator<IdentificacionSlice> = (set
 
   // Reset de la sección
   resetIdentificacion: () => set(INITIAL_IDENT),
-
-  // Hidratar desde un “row” de backend (o desde el objeto ya normalizado)
-  hydrateFromRow: (row) => {
-    // Validación/normalización mínima de esta sección (no falla por extras)
-    const parsed = IdentificacionEsquema.parse(row);
-    set({
-      idprovee: parsed.idprovee,
-      nombre: parsed.nombre,
-      nfantasia: parsed.nfantasia, // ya viene trim y null->undefined si usaste NullableTrimToUndef
-    });
-  },
-
-
 });

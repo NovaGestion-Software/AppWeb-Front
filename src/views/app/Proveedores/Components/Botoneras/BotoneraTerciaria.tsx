@@ -1,9 +1,7 @@
-// /views/app/Proveedores/Components/Botonera/BotoneraDB.tsx
 import { useCallback } from "react";
 import clsx from "clsx";
 import { BsDatabaseAdd, BsDatabaseCheck, BsDatabaseX } from "react-icons/bs";
 import { MdDeleteOutline, MdEdit } from "react-icons/md";
-
 import { Botonera } from "@/views/app/informes/_components/Botonera";
 import type { BotoneraConfig } from "@/types/ButtonConfig";
 import { Card } from "@/frontend-resourses/components/Cards/CardBase";
@@ -14,7 +12,6 @@ import { EstadoIMAC } from "../../Store/Status/types";
 import { buttonsClass } from "../Form/Config/classes";
 import { useConfirmarAlta } from "../../Actions/useConfirmarAlta";
 import { requestFocusDOM } from "@/frontend-resourses/Hooks/Focus/requestFocusDOM";
-import { useTabsActions } from "../../Store/Tabs/Tab.selectors";
 import { useOnEliminarClick } from "../../Actions/useOnEliminarClick";
 
 type Props = {
@@ -27,7 +24,6 @@ export default function BotoneraTerciaria({ className }: Props) {
   const { isProcessing } = useFlagsEstado();
   const { canEditar, canEliminar } = usePermisosIMAC();
 
-  const { setActiveTabIndex } = useTabsActions();
 
   // Datos
   const datosIniciales = useProveedoresStore((s) => s.datosIniciales);
@@ -38,12 +34,13 @@ export default function BotoneraTerciaria({ className }: Props) {
   const canConfirmModificacion = isModificacion && !!datosActuales && !isProcessing;
   const canCancel = (isAlta || isModificacion) && !isProcessing;
 
-  // ✅ onConfirmMod viene del hook (usa modificarProveedor(obj1, obj2) y sincroniza la store)
+  // Acción: confirmar modificacion 
   const { onConfirmMod } = useConfirmarModificacion(canConfirmModificacion);
 
-  // Acción: confirmar alta (por ahora local; ajustar cuando haya endpoint de alta)
+  // Acción: confirmar alta 
   const { onConfirmAlta } = useConfirmarAlta(canConfirmAlta);
 
+  // Acción: confirmar Eliminar 
   const { onEliminar } = useOnEliminarClick();
 
   // Acción: cancelar (alta/mod)
@@ -61,13 +58,13 @@ export default function BotoneraTerciaria({ className }: Props) {
       console.log("⛔ Cancelar MODIFICACIÓN → rehidratar desde datosIniciales");
 
       if (s.datosIniciales) {
-        await s.hydrateAllSlicesFromRow(s.datosIniciales); // 1) rehidratar slices
+        await s.hydrateAllSlicesFromDomain(s.datosIniciales); 
       }
 
-      s.setDatosActuales?.(null); // 2) borrar buffer de edición
-      s.setCambiosPendientes?.(false); // 3) limpiar flag
-      s.bumpFormEpoch?.(); // 4) remonta UI (clave!)
-      s.dispatch?.("CANCELAR"); // 5) transiciona IMAC
+      s.setDatosActuales?.(null);
+      s.setCambiosPendientes?.(false); 
+      s.bumpFormEpoch?.();
+      s.dispatch?.("CANCELAR");
     }
   }, []);
 
@@ -82,7 +79,6 @@ export default function BotoneraTerciaria({ className }: Props) {
     // Se clona snapshot de trabajo para edición
     s.setDatosActuales?.(structuredClone(s.datosIniciales));
     s.setCambiosPendientes?.(false);
-    setActiveTabIndex(0);
     requestFocusDOM("proveedores:nombre", { selectAll: true, scrollIntoView: true });
     s.dispatch?.("EDITAR");
   }, []);
